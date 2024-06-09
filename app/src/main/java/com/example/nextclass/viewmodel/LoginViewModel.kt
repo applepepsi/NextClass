@@ -35,7 +35,7 @@ class LoginViewModel @Inject constructor(
     private val _schoolName = mutableStateOf("")
     val schoolName: State<String> = _schoolName
 
-    private val _entranceYear = mutableStateOf("")
+    private val _entranceYear = mutableStateOf("입학 년도")
     val entranceYear: State<String> = _entranceYear
 
     private val _emailCheck= mutableStateOf(false)

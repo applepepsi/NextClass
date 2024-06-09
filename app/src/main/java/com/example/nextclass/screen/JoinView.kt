@@ -33,6 +33,8 @@ import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.viewmodel.LoginViewModel
 import com.example.nextclass.R
 import com.example.nextclass.appComponent.GradeDropDownMenuComponent
+import com.example.nextclass.appComponent.InputButtonComponent
+import com.example.nextclass.appComponent.MainTextComponent
 
 @Composable
 fun JoinView(loginViewModel: LoginViewModel) {
@@ -43,11 +45,13 @@ fun JoinView(loginViewModel: LoginViewModel) {
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(28.dp)
+            .padding(60.dp)
     ){
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
+
+            MainTextComponent(value = "회원가입")
 
             Spacer(modifier = Modifier.height(40.dp))
 
@@ -62,8 +66,6 @@ fun JoinView(loginViewModel: LoginViewModel) {
                 onValueChange = { loginViewModel.updateId(it) },
                 labelValue = stringResource(id = R.string.id),
             )
-
-
 
             PasswordInputFieldComponent(
                 value = loginViewModel.password.value,
@@ -82,7 +84,6 @@ fun JoinView(loginViewModel: LoginViewModel) {
             )
 
 
-
             TextInputFieldComponent(
                 value = loginViewModel.name.value,
                 onValueChange = { loginViewModel.updateName(it) },
@@ -97,28 +98,14 @@ fun JoinView(loginViewModel: LoginViewModel) {
                 labelValue = stringResource(id = R.string.schoolName),
             )
 
-
-            TextInputFieldComponent(
-                value = loginViewModel.entranceYear.value,
-                onValueChange = { loginViewModel.updateEntranceYear(it) },
-                labelValue = stringResource(id = R.string.entranceYear),
-            )
-
             GradeDropDownMenuComponent(
-
                 onValueChange={loginViewModel.updateEntranceYear(it)},
                 labelValue=loginViewModel.entranceYear.value,
                 dropDownMenuOption=loginViewModel.menuVisibility.value,
                 toggleDropDownMenuOption={loginViewModel.toggleMenuVisibility()}
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(onClick = {
-                loginViewModel.joinComplete()
-            }) {
-                Text(text = "가입 완료")
-            }
+            InputButtonComponent("가입 완료")
 
         }
     }

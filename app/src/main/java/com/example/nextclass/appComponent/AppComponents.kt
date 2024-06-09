@@ -1,27 +1,39 @@
 package com.example.nextclass.appComponent
 
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 
 
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -30,15 +42,21 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
@@ -50,7 +68,28 @@ import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.viewmodel.LoginViewModel
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainTextComponent(
+    value: String,
+    ) {
+
+    Text(
+        text=value,
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(),
+        style = TextStyle(
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            fontStyle = FontStyle.Normal,
+        ),
+        color= Color.Black,
+        textAlign = TextAlign.Center
+    )
+}
+
+
+
 @Composable
 fun TextInputFieldComponent(
     value: String,
@@ -64,10 +103,10 @@ fun TextInputFieldComponent(
             .fillMaxWidth()
             .clip(componentShape.small),
         label = {Text(text = labelValue)},
-        colors = TextFieldDefaults.outlinedTextFieldColors(
+        colors = OutlinedTextFieldDefaults.colors(
+            cursorColor = Color.Black,
             focusedBorderColor = Color.Black,
             focusedLabelColor = Color.Black,
-            cursorColor = Color.Black,
         ),
         keyboardOptions=KeyboardOptions.Default,
         value = value,
@@ -76,7 +115,6 @@ fun TextInputFieldComponent(
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasswordInputFieldComponent(
     value: String,
@@ -91,10 +129,10 @@ fun PasswordInputFieldComponent(
             .fillMaxWidth()
             .clip(componentShape.small),
         label = {Text(text = labelValue)},
-        colors = TextFieldDefaults.outlinedTextFieldColors(
+        colors = OutlinedTextFieldDefaults.colors(
+            cursorColor = Color.Black,
             focusedBorderColor = Color.Black,
             focusedLabelColor = Color.Black,
-            cursorColor = Color.Black,
         ),
         keyboardOptions=KeyboardOptions(keyboardType = KeyboardType.Password),
         value = value,
@@ -126,63 +164,116 @@ fun PasswordInputFieldComponent(
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GradeDropDownMenuComponent(
     onValueChange: (String) -> Unit,
     labelValue: String,
-    dropDownMenuOption:Boolean,
-    toggleDropDownMenuOption:()->Unit
-    )  {
+    dropDownMenuOption: Boolean,
+    toggleDropDownMenuOption: () -> Unit
+) {
 
 
-    Column {
-        Button(onClick = toggleDropDownMenuOption) {
-            Text(text = labelValue)
+        ExposedDropdownMenuBox(
+            expanded = dropDownMenuOption,
+            onExpandedChange = { toggleDropDownMenuOption() }) {
+            OutlinedTextField(
+                value = labelValue,
+                onValueChange = onValueChange,
+                readOnly = true,
+
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = dropDownMenuOption)
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    cursorColor = Color.Black,
+                    focusedBorderColor = Color.Black,
+                    focusedLabelColor = Color.Black,
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .menuAnchor()
+                    .padding(vertical = 8.dp)
+
+            )
+
+            ExposedDropdownMenu(
+                expanded = dropDownMenuOption,
+                onDismissRequest = { toggleDropDownMenuOption() }
+            ) {
+                DropdownMenuItem(
+                    text = {
+                        Text(text = "1학년")
+                    },
+                    onClick = {
+                        onValueChange("1학년")
+                        toggleDropDownMenuOption()
+                    }
+                )
+                DropdownMenuItem(
+                    text = {
+                        Text(text = "2학년")
+                    },
+                    onClick = {
+                        onValueChange("2학년")
+                        toggleDropDownMenuOption()
+                    }
+                )
+                DropdownMenuItem(
+                    text = {
+                        Text(text = "3학년")
+                    },
+                    onClick = {
+                        onValueChange("3학년")
+                        toggleDropDownMenuOption()
+                    }
+                )
+                DropdownMenuItem(
+                    text = {
+                        Text(text = "졸업생")
+                    },
+                    onClick = {
+                        onValueChange("졸업생")
+                        toggleDropDownMenuOption()
+                    }
+                )
+            }
         }
-
     }
 
-    DropdownMenu(
-        expanded = dropDownMenuOption,
-        onDismissRequest = {
-            toggleDropDownMenuOption()
-        }
-    ) {
-        // 드롭 다운 메뉴의 각 항목을 나타냄
-        DropdownMenuItem(
-            text = { Text(text = "1학년") },
-            onClick = {
-                onValueChange("1학년")
-                toggleDropDownMenuOption()
-            })
-        DropdownMenuItem(
-            text = { Text(text = "2학년") },
-            onClick = {
-                onValueChange("2학년")
-                toggleDropDownMenuOption()
-            })
-        DropdownMenuItem(
-            text = { Text(text = "3학년") },
-            onClick = {
-                onValueChange("3학년")
-                toggleDropDownMenuOption()
-            })
-        DropdownMenuItem(
-            text = { Text(text = "졸업생") },
-            onClick = {
-                onValueChange("졸업생")
-                toggleDropDownMenuOption()
-            })
-    }
-}
-
-@Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    NextClassTheme {
-//        GradeDropDownMenuComponent()
+fun InputButtonComponent(
+    value: String,
+    ){
+
+    Button(
+        onClick = { TODO()},
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(48.dp),
+        contentPadding= PaddingValues(),
+        colors=ButtonDefaults.buttonColors(Color.Transparent),
+        shape = RoundedCornerShape(50.dp)
+    ){
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(48.dp)
+            .background(
+                brush = Brush.horizontalGradient(listOf(Color.Blue, Color.Gray)),
+                shape= RoundedCornerShape(50.dp)
+            ),
+            contentAlignment = Alignment.Center
+        ){
+            Text(text=value,
+            fontSize=18.sp,
+            color= Color.White,
+            fontWeight = FontWeight.Bold
+            )
+        }
     }
+
 }
+
 
 @Composable
 fun TextInputHelpFieldComponent(loginViewModel:LoginViewModel){
