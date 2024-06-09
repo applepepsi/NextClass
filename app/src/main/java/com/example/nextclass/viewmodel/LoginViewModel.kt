@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.MutableLiveData
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -37,7 +38,14 @@ class LoginViewModel @Inject constructor(
     private val _entranceYear = mutableStateOf("")
     val entranceYear: State<String> = _entranceYear
 
+    private val _emailCheck= mutableStateOf(false)
+    val emailCheck: State<Boolean> = _emailCheck
 
+    private val _passwordVisibility = mutableStateOf(false)
+    val passwordVisibility: State<Boolean> = _passwordVisibility
+
+    private val _menuVisibility=mutableStateOf(false)
+    val menuVisibility: State<Boolean> = _menuVisibility
 
     fun updateEmail(newEmail: String) {
         _email.value = newEmail
@@ -67,11 +75,28 @@ class LoginViewModel @Inject constructor(
         _entranceYear.value = newEntranceYear
     }
 
+    fun togglePasswordVisibility() {
+        _passwordVisibility.value = !_passwordVisibility.value
+    }
 
+    fun toggleMenuVisibility() {
+        _menuVisibility.value = !_menuVisibility.value
+    }
 
     fun setLoginInput(){
 
         Log.d("checkLoginInput", "id : ${id.value}, password : ${password.value}")
+    }
+
+    fun joinComplete(){
+        Log.d("checkLoginInput",
+            "email : ${email.value}," +
+                "id : ${id.value}," +
+                "password : ${password.value}," +
+                "passwordConfirm : ${passwordConfirm.value}," +
+                "name : ${name.value},"+
+                "schoolName : ${schoolName.value},"+
+                "entranceYear : ${entranceYear.value},")
 
     }
 

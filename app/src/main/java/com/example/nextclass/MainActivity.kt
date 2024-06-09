@@ -31,6 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.navigation.compose.rememberNavController
+import com.example.nextclass.appComponent.GradeDropDownMenuComponent
 import com.example.nextclass.screen.LoginNav
 
 @AndroidEntryPoint
@@ -40,12 +41,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             NextClassTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting()
-                }
+                Greeting()
+//                GradeDropDownMenuComponent()
             }
         }
     }
