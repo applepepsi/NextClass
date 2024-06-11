@@ -12,6 +12,7 @@ import com.example.nextclass.viewmodel.LoginViewModel
 
 @Composable
 fun LoginNav(loginViewModel: LoginViewModel = hiltViewModel()) {
+
     val loginNav= rememberNavController()
 
     NavHost(navController = loginNav, startDestination = LoginNavItems.JOIN.name) {

@@ -1,23 +1,20 @@
 package com.example.nextclass.viewmodel
 
-import android.content.res.Resources
 import android.util.Log
+import android.util.Patterns
 import androidx.compose.runtime.State
-import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
-
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.nextclass.R
+import com.example.nextclass.repository.UserInfoRepository
 import com.example.nextclass.utils.StringValue
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.regex.Pattern
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-
+    private val userInfoRepository: UserInfoRepository
 ):ViewModel(){
 
 
@@ -39,11 +36,18 @@ class LoginViewModel @Inject constructor(
     private val _schoolName = mutableStateOf("")
     val schoolName: State<String> = _schoolName
 
-    private val _entranceYear = mutableStateOf("입학 년도")
+    private val _entranceYear = mutableStateOf("")
     val entranceYear: State<String> = _entranceYear
 
-    private val _emailCheck= mutableStateOf(false)
-    val emailCheck: State<Boolean> = _emailCheck
+    private val _passwordVisibility = mutableStateOf(false)
+    val passwordVisibility: State<Boolean> = _passwordVisibility
+
+    private val _menuVisibility=mutableStateOf(false)
+    val menuVisibility: State<Boolean> = _menuVisibility
+
+    //회원가입에서 입력값 유효성 검사에 사용됨
+    private val _emailDuplicateCheck= mutableStateOf(false)
+    val emailDuplicateCheck: State<Boolean> = _emailDuplicateCheck
 
     private val _idDuplicateCheck= mutableStateOf(false)
     val idDuplicateCheck: State<Boolean> = _idDuplicateCheck
@@ -66,15 +70,45 @@ class LoginViewModel @Inject constructor(
     private val _passwordConfirmInputError= mutableStateOf(false)
     val passwordConfirmInputError: State<Boolean> = _passwordConfirmInputError
 
-    private val _passwordVisibility = mutableStateOf(false)
-    val passwordVisibility: State<Boolean> = _passwordVisibility
+    private val _emailInputError= mutableStateOf(false)
+    val emailInputError: State<Boolean> = _emailInputError
 
-    private val _menuVisibility=mutableStateOf(false)
-    val menuVisibility: State<Boolean> = _menuVisibility
+    private val _emailInputErrorMessage = mutableStateOf<StringValue>(StringValue.Empty)
+    val emailInputErrorMessage: State<StringValue> = _emailInputErrorMessage
 
+    private val _nameInputError= mutableStateOf(false)
+    val nameInputError: State<Boolean> = _nameInputError
+
+    private val _nameInputErrorMessage = mutableStateOf<StringValue>(StringValue.Empty)
+    val nameInputErrorMessage: State<StringValue> = _nameInputErrorMessage
+
+    private val _schoolNameInputError= mutableStateOf(false)
+    val schoolNameInputError: State<Boolean> = _schoolNameInputError
+
+    private val _schoolNameInputErrorMessage = mutableStateOf<StringValue>(StringValue.Empty)
+    val schoolNameInputErrorMessage: State<StringValue> = _schoolNameInputErrorMessage
+
+    private val _entranceYearInputError= mutableStateOf(false)
+    val entranceYearInputError: State<Boolean> = _entranceYearInputError
+
+    private val _entranceYearInputErrorMessage = mutableStateOf<StringValue>(StringValue.Empty)
+    val entranceYearInputErrorMessage: State<StringValue> = _entranceYearInputErrorMessage
 
     fun updateEmail(newEmail: String) {
         _email.value = newEmail
+        emailCheck(newEmail)
+    }
+
+    private fun emailCheck(newEmail: String){
+
+        val pattern: Pattern = Patterns.EMAIL_ADDRESS
+
+        val errorMessage = when {
+            !pattern.matcher(newEmail).matches() -> StringValue.StringResource(R.string.wrongEmailType)
+            else -> StringValue.Empty
+        }
+        _emailInputErrorMessage.value = errorMessage
+        _emailInputError.value = errorMessage != StringValue.Empty
     }
 
     fun updateId(newId: String) {
@@ -127,10 +161,34 @@ class LoginViewModel @Inject constructor(
 
     fun updateName(newName: String) {
         _name.value = newName
+        nameCheck(newName)
+    }
+
+    private fun nameCheck(newName: String) {
+
+        val errorMessage = when {
+            newName.length >= 11 -> StringValue.StringResource(R.string.nameLimit)
+            else -> StringValue.Empty
+        }
+
+        _nameInputErrorMessage.value = errorMessage
+        _nameInputError.value = errorMessage != StringValue.Empty
     }
 
     fun updateSchoolName(newSchoolName: String) {
         _schoolName.value = newSchoolName
+        schoolNameCheck(newSchoolName)
+    }
+
+    private fun schoolNameCheck(newSchoolName: String) {
+
+        val errorMessage = when {
+            newSchoolName.length > 21 -> StringValue.StringResource(R.string.schoolNameLimit)
+            else -> StringValue.Empty
+        }
+
+        _schoolNameInputErrorMessage.value = errorMessage
+        _schoolNameInputError.value = errorMessage != StringValue.Empty
     }
 
     fun updateEntranceYear(newEntranceYear: String) {
@@ -141,17 +199,49 @@ class LoginViewModel @Inject constructor(
         _passwordVisibility.value = !_passwordVisibility.value
     }
 
-    fun emailCheck(){
+    fun emailDuplicateCheck(){
+
+        userInfoRepository.emailDuplicateCheck(email.value){serverResponse ->
+            if(serverResponse!=null){
+                if(serverResponse.code !=200){
+                    _emailDuplicateCheck.value=true
+                }
+                else{
+                    _emailInputErrorMessage.value = StringValue.StringResource(R.string.emailDuplicate)
+                    _emailInputError.value = true
+                }
+            }else{
+                _emailInputErrorMessage.value = StringValue.StringResource(R.string.duplicateFail)
+                _emailInputError.value = true
+            }
+        }
+
         //이메일 체크 버튼을 누르면 현재 작성된 이메일을 서버로 전송해서 체크해야함
-        _emailCheck.value=!_emailCheck.value
+//        _emailDuplicateCheck.value=!_emailDuplicateCheck.value
     }
 
     fun idDuplicateCheck(){
-        //이메일 체크 버튼을 누르면 현재 작성된 이메일을 서버로 전송해서 체크해야함
-        _idDuplicateCheck.value=!_idDuplicateCheck.value
+
+        userInfoRepository.idDuplicateCheck(id.value){serverResponse ->
+            if(serverResponse!=null){
+                if(serverResponse.code !=200){
+                    _idDuplicateCheck.value=true
+                }
+                else{
+                    _idInputErrorMessage.value = StringValue.StringResource(R.string.idDuplicate)
+                    _idInputError.value = true
+                }
+            }else{
+                _idInputErrorMessage.value = StringValue.StringResource(R.string.duplicateFail)
+                _idInputError.value = true
+            }
+        }
+        //아이디 체크 버튼을 누르면 현재 작성된 이메일을 서버로 전송해서 체크해야함
+
     }
 
     fun toggleMenuVisibility() {
+
         _menuVisibility.value = !_menuVisibility.value
     }
 
@@ -161,15 +251,33 @@ class LoginViewModel @Inject constructor(
     }
 
     fun joinComplete(){
-        Log.d("checkLoginInput",
-            "email : ${email.value}," +
-                "id : ${id.value}," +
-                "password : ${password.value}," +
-                "passwordConfirm : ${passwordConfirm.value}," +
-                "name : ${name.value},"+
-                "schoolName : ${schoolName.value},"+
-                "entranceYear : ${entranceYear.value},")
 
+        if(joinEmptyAndErrorCheck())
+        {
+            Log.d("가입 성공",
+                "email : ${email.value}," +
+                        "id : ${id.value}," +
+                        "password : ${password.value}," +
+                        "passwordConfirm : ${passwordConfirm.value}," +
+                        "name : ${name.value},"+
+                        "schoolName : ${schoolName.value},"+
+                        "entranceYear : ${entranceYear.value},")
+        }else{
+            Log.d("가입 실패",
+                "가입 실패")
+        }
+    }
+
+    private fun joinEmptyAndErrorCheck(): Boolean {
+        return listOf(
+            email to emailInputError,
+            id to idInputError,
+            password to passwordInputError,
+            passwordConfirm to passwordConfirmInputError,
+            name to nameInputError,
+            schoolName to schoolNameInputError,
+            entranceYear to entranceYearInputError
+        ).all { (userInput, error) -> userInput.value.isNotEmpty() && !error.value }
     }
 
 }

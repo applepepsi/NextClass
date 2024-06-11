@@ -17,6 +17,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.getString
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.nextclass.appComponent.PasswordInputFieldComponent
 import com.example.nextclass.appComponent.TextInputFieldComponent
 import com.example.nextclass.ui.theme.NextClassTheme
@@ -40,10 +42,10 @@ import com.example.nextclass.appComponent.GradeDropDownMenuComponent
 import com.example.nextclass.appComponent.IdInputFieldComponent
 import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.MainTextComponent
+import com.example.nextclass.repository.TestRepository
 
 @Composable
 fun JoinView(loginViewModel: LoginViewModel) {
-
 
 
     Surface(
@@ -64,8 +66,10 @@ fun JoinView(loginViewModel: LoginViewModel) {
                 value = loginViewModel.email.value,
                 onValueChange = { loginViewModel.updateEmail(it) },
                 labelValue = stringResource(id = R.string.email),
-                emailCheckValue = loginViewModel.emailCheck.value,
-                emailCheckProcess = { loginViewModel.emailCheck() }
+                emailCheckValue = loginViewModel.emailDuplicateCheck.value,
+                emailCheckProcess = { loginViewModel.emailDuplicateCheck() },
+                isError = loginViewModel.emailInputError.value,
+                errorMessage=loginViewModel.emailInputErrorMessage.value.asString(LocalContext.current)
             )
 
             IdInputFieldComponent(
@@ -104,6 +108,8 @@ fun JoinView(loginViewModel: LoginViewModel) {
                 value = loginViewModel.name.value,
                 onValueChange = { loginViewModel.updateName(it) },
                 labelValue = stringResource(id = R.string.name),
+                isError = loginViewModel.nameInputError.value,
+                errorMessage=loginViewModel.nameInputErrorMessage.value.asString(LocalContext.current)
             )
 
 
@@ -112,6 +118,8 @@ fun JoinView(loginViewModel: LoginViewModel) {
                 value = loginViewModel.schoolName.value,
                 onValueChange = { loginViewModel.updateSchoolName(it) },
                 labelValue = stringResource(id = R.string.schoolName),
+                isError = loginViewModel.schoolNameInputError.value,
+                errorMessage=loginViewModel.schoolNameInputErrorMessage.value.asString(LocalContext.current)
             )
 
             GradeDropDownMenuComponent(
@@ -128,11 +136,15 @@ fun JoinView(loginViewModel: LoginViewModel) {
 
 }
 
+
+//프리뷰는 hilt를 쓰면 의존성주입을 초기화 하지 않는다고 해서 테스트 용으로 하나 더 만듬
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    NextClassTheme {
-        JoinView(LoginViewModel())
+    val testRepository = TestRepository()
+    val loginViewModel = LoginViewModel(testRepository)
 
+    NextClassTheme {
+        JoinView(loginViewModel)
     }
 }

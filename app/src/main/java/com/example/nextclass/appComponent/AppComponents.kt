@@ -102,7 +102,8 @@ fun TextInputFieldComponent(
     value: String,
     onValueChange: (String) -> Unit,
     labelValue: String,
-
+    isError:Boolean,
+    errorMessage:String,
 ){
 
     OutlinedTextField(
@@ -118,7 +119,20 @@ fun TextInputFieldComponent(
         keyboardOptions=KeyboardOptions.Default,
         value = value,
         onValueChange = onValueChange,
+        isError=isError
     )
+    if(isError){
+        Text(
+            text=errorMessage,
+            color= Pastel_Red,
+            style = TextStyle(
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                fontStyle = FontStyle.Normal,
+            ),
+            modifier = Modifier.padding(start = 16.dp, top = 5.dp)
+        )
+    }
 
 }
 
@@ -128,7 +142,9 @@ fun EmailInputFieldComponent(
     onValueChange: (String) -> Unit,
     labelValue: String,
     emailCheckValue:Boolean,
-    emailCheckProcess:()->Unit
+    emailCheckProcess:()->Unit,
+    isError:Boolean,
+    errorMessage:String,
 ){
 
     OutlinedTextField(
@@ -162,9 +178,20 @@ fun EmailInputFieldComponent(
             }
 
         },
-
+        isError=isError
     )
-
+    if(isError){
+        Text(
+            text=errorMessage,
+            color= Pastel_Red,
+            style = TextStyle(
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                fontStyle = FontStyle.Normal,
+            ),
+            modifier = Modifier.padding(start = 16.dp, top = 5.dp)
+        )
+    }
 }
 
 @Composable
