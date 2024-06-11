@@ -42,6 +42,7 @@ import com.example.nextclass.appComponent.GradeDropDownMenuComponent
 import com.example.nextclass.appComponent.IdInputFieldComponent
 import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.MainTextComponent
+import com.example.nextclass.appComponent.TextInputHelpFieldComponent
 import com.example.nextclass.repository.TestRepository
 
 @Composable
@@ -127,6 +128,14 @@ fun JoinView(loginViewModel: LoginViewModel) {
                 labelValue=loginViewModel.entranceYear.value,
                 dropDownMenuOption=loginViewModel.menuVisibility.value,
                 toggleDropDownMenuOption={loginViewModel.toggleMenuVisibility()}
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            TextInputHelpFieldComponent(
+
+                errorMessage = loginViewModel.joinFailMessage.value.asString(LocalContext.current),
+                isError = loginViewModel.joinFail.value,
             )
 
             InputButtonComponent(value="가입 완료", onClick = {loginViewModel.joinComplete()})

@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -51,9 +52,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -162,9 +166,10 @@ fun EmailInputFieldComponent(
         onValueChange = onValueChange,
         trailingIcon = {
             val iconImage=if(emailCheckValue){
-                Icons.Filled.MarkEmailRead
+                ImageVector.vectorResource(R.drawable.email_duplicate_check_yes)
+
             }else{
-                Icons.Filled.Email
+                ImageVector.vectorResource(R.drawable.email_duplicate_check_no)
             }
 
             val description=if(emailCheckValue){
@@ -222,9 +227,10 @@ fun IdInputFieldComponent(
         onValueChange = onValueChange,
         trailingIcon = {
             val iconImage=if(idDuplicateCheckValue){
-                Icons.Filled.MarkEmailRead
+                ImageVector.vectorResource(R.drawable.id_duplicate_check_yes)
+
             }else{
-                Icons.Filled.Email
+                ImageVector.vectorResource(R.drawable.id_duplicate_check_no)
             }
 
             val description=if(idDuplicateCheckValue){
@@ -434,13 +440,21 @@ fun InputButtonComponent(
 
 
 @Composable
-fun TextInputHelpFieldComponent(){
-
-    Text(
-        text = "",
-        fontSize = 10.sp,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 20.dp, top = 5.dp),
-    )
+fun TextInputHelpFieldComponent(
+    errorMessage: String,
+    isError:Boolean
+){
+    if(isError){
+        Text(
+            text = errorMessage,
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Normal,
+            fontStyle = FontStyle.Normal,
+            color = Pastel_Red,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(13.dp)
+        )
+    }
 }

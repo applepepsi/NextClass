@@ -94,9 +94,16 @@ class LoginViewModel @Inject constructor(
     private val _entranceYearInputErrorMessage = mutableStateOf<StringValue>(StringValue.Empty)
     val entranceYearInputErrorMessage: State<StringValue> = _entranceYearInputErrorMessage
 
+    private val _joinFailMessage = mutableStateOf<StringValue>(StringValue.Empty)
+    val joinFailMessage: State<StringValue> = _joinFailMessage
+
+    private val _joinFail=mutableStateOf(false)
+    val joinFail: State<Boolean> = _joinFail
+
     fun updateEmail(newEmail: String) {
         _email.value = newEmail
         emailCheck(newEmail)
+        _emailDuplicateCheck.value=false
     }
 
     private fun emailCheck(newEmail: String){
@@ -105,6 +112,7 @@ class LoginViewModel @Inject constructor(
 
         val errorMessage = when {
             !pattern.matcher(newEmail).matches() -> StringValue.StringResource(R.string.wrongEmailType)
+            !_emailDuplicateCheck.value -> StringValue.StringResource(R.string.needEmailDuplicateCheck)
             else -> StringValue.Empty
         }
         _emailInputErrorMessage.value = errorMessage
@@ -114,12 +122,15 @@ class LoginViewModel @Inject constructor(
     fun updateId(newId: String) {
         _id.value = newId
         idCheck(newId)
+        //아이디 인증을 하고 텍스트를 바꾸면 인증을 다시하도록
+        _idDuplicateCheck.value=false
     }
 
     private fun idCheck(newId: String){
         val errorMessage = when {
             newId.length !in 5..20 -> StringValue.StringResource(R.string.idSizeLimit)
             !newId.matches(Regex("^[a-zA-Z0-9]*$")) -> StringValue.StringResource(R.string.idOnlyString)
+            !_idDuplicateCheck.value -> StringValue.StringResource(R.string.needIdDuplicateCheck)
             else -> StringValue.Empty
         }
         _idInputErrorMessage.value = errorMessage
@@ -135,6 +146,7 @@ class LoginViewModel @Inject constructor(
         val errorMessage = when {
             newPassword.length !in 8..16 -> StringValue.StringResource(R.string.wrongPasswordLimit)
             !newPassword.matches(Regex("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).+$")) -> StringValue.StringResource(R.string.wrongPasswordRule)
+
             else -> StringValue.Empty
         }
 
@@ -252,7 +264,7 @@ class LoginViewModel @Inject constructor(
 
     fun joinComplete(){
 
-        if(joinEmptyAndErrorCheck())
+        if(joinEmptyAndErrorCheck() && duplicateCheck() )
         {
             Log.d("가입 성공",
                 "email : ${email.value}," +
@@ -262,22 +274,31 @@ class LoginViewModel @Inject constructor(
                         "name : ${name.value},"+
                         "schoolName : ${schoolName.value},"+
                         "entranceYear : ${entranceYear.value},")
+
+            _joinFailMessage.value=StringValue.Empty
+            _joinFail.value=false
         }else{
-            Log.d("가입 실패",
-                "가입 실패")
+            Log.d("가입 실패", "가입실패")
+            _joinFailMessage.value=StringValue.StringResource(R.string.joinFailError)
+            _joinFail.value=true
         }
     }
 
     private fun joinEmptyAndErrorCheck(): Boolean {
         return listOf(
-            email to emailInputError,
-            id to idInputError,
-            password to passwordInputError,
-            passwordConfirm to passwordConfirmInputError,
-            name to nameInputError,
-            schoolName to schoolNameInputError,
-            entranceYear to entranceYearInputError
+            _email to _emailInputError,
+            _id to _idInputError,
+            _password to _passwordInputError,
+            _passwordConfirm to _passwordConfirmInputError,
+            _name to _nameInputError,
+            _schoolName to _schoolNameInputError,
+            _entranceYear to _entranceYearInputError
         ).all { (userInput, error) -> userInput.value.isNotEmpty() && !error.value }
+    }
+
+    private fun duplicateCheck(): Boolean {
+
+        return _idDuplicateCheck.value && _emailDuplicateCheck.value
     }
 
 }
