@@ -1,6 +1,7 @@
 package com.example.nextclass.appComponent
 
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AttachEmail
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.MarkEmailRead
 
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -27,7 +31,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
-
+import com.example.nextclass.R
 
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -64,7 +68,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
 import com.example.nextclass.items.GradeDropDownItems
 import com.example.nextclass.screen.JoinView
+import com.example.nextclass.ui.theme.Feldgrau
 import com.example.nextclass.ui.theme.NextClassTheme
+import com.example.nextclass.ui.theme.Pastel_Red
+import com.example.nextclass.ui.theme.White_Smoke
 import com.example.nextclass.viewmodel.LoginViewModel
 
 
@@ -84,7 +91,7 @@ fun MainTextComponent(
             fontStyle = FontStyle.Normal,
         ),
         color= Color.Black,
-        textAlign = TextAlign.Center
+        textAlign = TextAlign.Left
     )
 }
 
@@ -116,12 +123,121 @@ fun TextInputFieldComponent(
 }
 
 @Composable
+fun EmailInputFieldComponent(
+    value: String,
+    onValueChange: (String) -> Unit,
+    labelValue: String,
+    emailCheckValue:Boolean,
+    emailCheckProcess:()->Unit
+){
+
+    OutlinedTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(componentShape.small),
+        label = {Text(text = labelValue)},
+        colors = OutlinedTextFieldDefaults.colors(
+            cursorColor = Color.Black,
+            focusedBorderColor = Color.Black,
+            focusedLabelColor = Color.Black,
+        ),
+        keyboardOptions=KeyboardOptions.Default,
+        value = value,
+        onValueChange = onValueChange,
+        trailingIcon = {
+            val iconImage=if(emailCheckValue){
+                Icons.Filled.MarkEmailRead
+            }else{
+                Icons.Filled.Email
+            }
+
+            val description=if(emailCheckValue){
+                "사용 가능한 이메일 입니다."
+            }else{
+                "이미 사용중인 이메일 입니다."
+            }
+
+            IconButton(onClick = emailCheckProcess) {
+                Icon(imageVector = iconImage, contentDescription = description)
+            }
+
+        },
+
+    )
+
+}
+
+@Composable
+fun IdInputFieldComponent(
+    value: String,
+    onValueChange: (String) -> Unit,
+    labelValue: String,
+    idDuplicateCheckValue:Boolean,
+    idCheckProcess:()->Unit,
+    isError:Boolean,
+    errorMessage:String,
+){
+
+    Log.d("isError", isError.toString())
+    OutlinedTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(componentShape.small),
+        label = {Text(text = labelValue)},
+        colors = OutlinedTextFieldDefaults.colors(
+            cursorColor = Color.Black,
+            focusedBorderColor = Color.Black,
+            focusedLabelColor = Color.Black,
+            unfocusedBorderColor = Color.Black,
+        ),
+        keyboardOptions=KeyboardOptions.Default,
+        value = value,
+        onValueChange = onValueChange,
+        trailingIcon = {
+            val iconImage=if(idDuplicateCheckValue){
+                Icons.Filled.MarkEmailRead
+            }else{
+                Icons.Filled.Email
+            }
+
+            val description=if(idDuplicateCheckValue){
+                "사용 가능한 이메일 입니다."
+            }else{
+                "이미 사용중인 이메일 입니다."
+            }
+
+            IconButton(onClick = idCheckProcess) {
+                Icon(imageVector = iconImage, contentDescription = description)
+            }
+        },
+        //에러 처리는이걸로
+        isError=isError
+    )
+    //에러라면 경고문을 띄움
+    if(isError){
+        Text(
+            text=errorMessage,
+            color= Pastel_Red,
+            style = TextStyle(
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                fontStyle = FontStyle.Normal,
+            ),
+            modifier = Modifier.padding(start = 16.dp, top = 5.dp)
+        )
+    }
+
+}
+
+@Composable
 fun PasswordInputFieldComponent(
     value: String,
     onValueChange: (String) -> Unit,
     labelValue: String,
     passwordVisibleOption:Boolean,
-    togglePassWordVisibility:()->Unit
+    togglePassWordVisibility:()->Unit,
+    isError:Boolean,
+    errorMessage:String,
     ){
 
     OutlinedTextField(
@@ -159,8 +275,21 @@ fun PasswordInputFieldComponent(
             VisualTransformation.None
         }else{
             PasswordVisualTransformation()
-        }
+        } ,
+        isError=isError
     )
+    if(isError){
+        Text(
+            text=errorMessage,
+            color= Pastel_Red,
+            style = TextStyle(
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                fontStyle = FontStyle.Normal,
+            ),
+            modifier = Modifier.padding(start = 16.dp, top = 5.dp)
+        )
+    }
 
 }
 
@@ -244,10 +373,11 @@ fun GradeDropDownMenuComponent(
 @Composable
 fun InputButtonComponent(
     value: String,
+    onClick:() -> Unit
     ){
 
     Button(
-        onClick = { TODO()},
+        onClick = { onClick()},
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(48.dp),
@@ -259,8 +389,9 @@ fun InputButtonComponent(
             .fillMaxWidth()
             .heightIn(48.dp)
             .background(
-                brush = Brush.horizontalGradient(listOf(Color.Blue, Color.Gray)),
-                shape= RoundedCornerShape(50.dp)
+//                brush = Brush.horizontalGradient(listOf(Pastel_Red, White_Smoke)),
+                color= Pastel_Red,
+                shape = RoundedCornerShape(50.dp)
             ),
             contentAlignment = Alignment.Center
         ){
@@ -276,7 +407,7 @@ fun InputButtonComponent(
 
 
 @Composable
-fun TextInputHelpFieldComponent(loginViewModel:LoginViewModel){
+fun TextInputHelpFieldComponent(){
 
     Text(
         text = "",
