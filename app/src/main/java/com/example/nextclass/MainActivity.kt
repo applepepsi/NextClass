@@ -33,6 +33,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.appComponent.GradeDropDownMenuComponent
+import com.example.nextclass.appComponent.TopNav
 import com.example.nextclass.screen.LoginNav
 
 @AndroidEntryPoint
@@ -45,7 +46,7 @@ class MainActivity : ComponentActivity() {
             NextClassTheme {
 
                 Greeting()
-//                GradeDropDownMenuComponent()
+
             }
         }
     }
@@ -53,8 +54,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting() {
-//    BottomNav()
-    LoginNav()
+
+    TopNav()
 }
 
 
@@ -70,7 +71,6 @@ fun GreetingPreview() {
 
 @Composable
 fun LoginView(loginViewModel: LoginViewModel) {
-
 
     Column(
         modifier = Modifier.fillMaxSize(),

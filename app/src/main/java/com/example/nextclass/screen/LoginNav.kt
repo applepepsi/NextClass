@@ -13,20 +13,20 @@ import com.example.nextclass.viewmodel.LoginViewModel
 @Composable
 fun LoginNav(loginViewModel: LoginViewModel = hiltViewModel()) {
 
-    val loginNav= rememberNavController()
-
-    NavHost(navController = loginNav, startDestination = LoginNavItems.JOIN.name) {
-        composable(route=LoginNavItems.LOGIN.name) {
-            LoginView(loginViewModel)
-        }
-        composable(route=LoginNavItems.JOIN.name) {
-            JoinView(loginViewModel)
-        }
-        composable(route=LoginNavItems.FIND_ID.name) {
-
-        }
-        composable(route=LoginNavItems.FIND_PASSWORD.name) {
-
-        }
-    }
+//    val loginNav= rememberNavController()
+//
+//    NavHost(navController = loginNav, startDestination = LoginNavItems.JOIN.name) {
+//        composable(route=LoginNavItems.LOGIN.name) {
+//            LoginView(loginViewModel)
+//        }
+//        composable(route=LoginNavItems.JOIN.name) {
+//            JoinView(loginViewModel)
+//        }
+//        composable(route=LoginNavItems.FIND_ID.name) {
+//
+//        }
+//        composable(route=LoginNavItems.FIND_PASSWORD.name) {
+//
+//        }
+//    }
 }

@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -44,6 +47,7 @@ import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.MainTextComponent
 import com.example.nextclass.appComponent.TextInputHelpFieldComponent
 import com.example.nextclass.repository.TestRepository
+import com.example.nextclass.ui.theme.Background_Color
 
 @Composable
 fun JoinView(loginViewModel: LoginViewModel) {
@@ -51,12 +55,17 @@ fun JoinView(loginViewModel: LoginViewModel) {
 
     Surface(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .background(Color.White)
-            .padding(30.dp)
+            .padding(10.dp),
+        color= Background_Color,
+        shape = RoundedCornerShape(16.dp),
+
     ){
         Column(
             modifier = Modifier.fillMaxSize()
+                .verticalScroll(rememberScrollState()) ,
+
         ) {
 
             MainTextComponent(value = "회원가입")
@@ -91,7 +100,8 @@ fun JoinView(loginViewModel: LoginViewModel) {
                 passwordVisibleOption = loginViewModel.passwordVisibility.value,
                 togglePassWordVisibility = { loginViewModel.togglePasswordVisibility() },
                 isError = loginViewModel.passwordInputError.value,
-                errorMessage=loginViewModel.passwordInputErrorMessage.value.asString(LocalContext.current)
+                errorMessage=loginViewModel.passwordInputErrorMessage.value.asString(LocalContext.current),
+
             )
 
             PasswordInputFieldComponent(
@@ -114,7 +124,6 @@ fun JoinView(loginViewModel: LoginViewModel) {
             )
 
 
-
             TextInputFieldComponent(
                 value = loginViewModel.schoolName.value,
                 onValueChange = { loginViewModel.updateSchoolName(it) },
@@ -129,6 +138,7 @@ fun JoinView(loginViewModel: LoginViewModel) {
                 dropDownMenuOption=loginViewModel.menuVisibility.value,
                 toggleDropDownMenuOption={loginViewModel.toggleMenuVisibility()}
             )
+
 
             Spacer(modifier = Modifier.height(20.dp))
 
