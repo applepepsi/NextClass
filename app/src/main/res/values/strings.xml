@@ -1,12 +1,20 @@
 <resources>
     <string name="app_name">NextClass</string>
+    <string name="input_email">이메일을 입력해 주세요.</string>
+    <string name="input_id">아이디를 입력해 주세요.</string>
+    <string name="input_password">비밀번호를 입력해 주세요.</string>
+    <string name="input_passwordConfirm">비밀번호와 동일한 비밀번호를 입력해 주세요.</string>
+    <string name="input_name">이름을 입력해 주세요.</string>
+    <string name="input_schoolName">학교 이름을 입력해 주세요.</string>
+    <string name="input_entranceYear">학년을 선택해 주세요.</string>
+
     <string name="email">이메일</string>
-    <string name="id">아이디</string>
-    <string name="password">비밀번호</string>
+    <string name="id">아이디 (5자리 ~ 20자리)</string>
+    <string name="password">비밀번호 (영어,숫자,특수기호 포함,9자리 ~ 18자리)</string>
     <string name="passwordConfirm">비밀번호 확인</string>
-    <string name="name">이름</string>
+    <string name="name">이름을 입력해 주세요.</string>
     <string name="schoolName">학교 이름</string>
-    <string name="entranceYear">입학 년도</string>
+    <string name="entranceYear">학년</string>
 
     //회원가입 에러메세지id
     <string name="idDuplicate">중복된 아이디 입니다.</string>
@@ -20,12 +28,13 @@
     <string name="needEmailDuplicateCheck">이메일 중복체크가 필요합니다.</string>
 
     //회원가입 에러메세지 비밀번호
-    <string name="wrongPasswordRule">비밀번호는 8자리 이상의 영어 대소문자가 포함되어야 합니다.</string>
-    <string name="wrongPasswordLimit">비밀번호는 8자리 이상 16자리 이하의 글자만 허용됩니다.</string>
+    <string name="wrongPasswordRule">비밀번호는 9자리 이상의 영어 대소문자가 포함되어야 합니다.</string>
+    <string name="wrongPasswordLimit">비밀번호는 9자리 이상 18자리 이하의 글자만 허용됩니다.</string>
     <string name="wrongPasswordConfirm">비밀번호와 일치하지 않습니다.</string>
 
     //회원가입 에러메세지 이름
-    <string name="nameLimit">올바른 이름을 입력해 주세요.</string>
+    <string name="nameLimit">이름은 11자 이하로 입력해주세요.</string>
+    <string name="nameOnlyKorean">이름은 한글만 입력 가능합니다</string>
 
     //회원가입 에러메세지 학교명
     <string name="schoolNameLimit">올바른 학교명을 입력해 주세요.</string>
@@ -38,8 +47,7 @@
 
     //서버 통신 불안정
     <string name="duplicateFail">서버와의 연결이 불안정 합니다. 잠시 후 다시 시도해 주세요</string>
-
-
+    <string name="terms_and_conditions">terms_and_conditions</string>
 
 
 </resources>

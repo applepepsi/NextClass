@@ -40,6 +40,7 @@ import com.example.nextclass.appComponent.TextInputFieldComponent
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.viewmodel.LoginViewModel
 import com.example.nextclass.R
+import com.example.nextclass.appComponent.CheckboxComponent
 import com.example.nextclass.appComponent.EmailInputFieldComponent
 import com.example.nextclass.appComponent.GradeDropDownMenuComponent
 import com.example.nextclass.appComponent.IdInputFieldComponent
@@ -53,24 +54,19 @@ import com.example.nextclass.ui.theme.Background_Color
 fun JoinView(loginViewModel: LoginViewModel) {
 
 
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White)
-            .padding(10.dp),
-        color= Background_Color,
-        shape = RoundedCornerShape(16.dp),
 
-    ){
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .verticalScroll(rememberScrollState()) ,
 
         ) {
 
+            Spacer(modifier = Modifier.height(15.dp))
+
             MainTextComponent(value = "회원가입")
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             EmailInputFieldComponent(
                 value = loginViewModel.email.value,
@@ -101,7 +97,7 @@ fun JoinView(loginViewModel: LoginViewModel) {
                 togglePassWordVisibility = { loginViewModel.togglePasswordVisibility() },
                 isError = loginViewModel.passwordInputError.value,
                 errorMessage=loginViewModel.passwordInputErrorMessage.value.asString(LocalContext.current),
-
+                placeholderValue = stringResource(id = R.string.input_password),
             )
 
             PasswordInputFieldComponent(
@@ -111,7 +107,8 @@ fun JoinView(loginViewModel: LoginViewModel) {
                 passwordVisibleOption = loginViewModel.passwordVisibility.value,
                 togglePassWordVisibility = { loginViewModel.togglePasswordVisibility() },
                 isError = loginViewModel.passwordConfirmInputError.value,
-                errorMessage=loginViewModel.passwordConfirmInputErrorMessage.value.asString(LocalContext.current)
+                errorMessage=loginViewModel.passwordConfirmInputErrorMessage.value.asString(LocalContext.current),
+                placeholderValue = stringResource(id = R.string.input_passwordConfirm),
             )
 
 
@@ -120,7 +117,8 @@ fun JoinView(loginViewModel: LoginViewModel) {
                 onValueChange = { loginViewModel.updateName(it) },
                 labelValue = stringResource(id = R.string.name),
                 isError = loginViewModel.nameInputError.value,
-                errorMessage=loginViewModel.nameInputErrorMessage.value.asString(LocalContext.current)
+                errorMessage=loginViewModel.nameInputErrorMessage.value.asString(LocalContext.current),
+                placeholderValue = stringResource(id = R.string.input_name),
             )
 
 
@@ -129,7 +127,8 @@ fun JoinView(loginViewModel: LoginViewModel) {
                 onValueChange = { loginViewModel.updateSchoolName(it) },
                 labelValue = stringResource(id = R.string.schoolName),
                 isError = loginViewModel.schoolNameInputError.value,
-                errorMessage=loginViewModel.schoolNameInputErrorMessage.value.asString(LocalContext.current)
+                errorMessage=loginViewModel.schoolNameInputErrorMessage.value.asString(LocalContext.current),
+                placeholderValue = stringResource(id = R.string.input_schoolName),
             )
 
             GradeDropDownMenuComponent(
@@ -137,6 +136,13 @@ fun JoinView(loginViewModel: LoginViewModel) {
                 labelValue=loginViewModel.entranceYear.value,
                 dropDownMenuOption=loginViewModel.menuVisibility.value,
                 toggleDropDownMenuOption={loginViewModel.toggleMenuVisibility()}
+            )
+
+
+
+            CheckboxComponent(
+                checked = loginViewModel.termsCheckBoxState.value,
+                onClickCheckBox = {loginViewModel.toggleTermsCheckBoxValue()}
             )
 
 
@@ -148,12 +154,14 @@ fun JoinView(loginViewModel: LoginViewModel) {
                 isError = loginViewModel.joinFail.value,
             )
 
+
+
             InputButtonComponent(value="가입 완료", onClick = {loginViewModel.joinComplete()})
 
         }
     }
 
-}
+
 
 
 //프리뷰는 hilt를 쓰면 의존성주입을 초기화 하지 않는다고 해서 테스트 용으로 하나 더 만듬

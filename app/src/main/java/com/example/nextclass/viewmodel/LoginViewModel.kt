@@ -45,6 +45,9 @@ class LoginViewModel @Inject constructor(
     private val _menuVisibility=mutableStateOf(false)
     val menuVisibility: State<Boolean> = _menuVisibility
 
+    private val _termsCheckBoxState=mutableStateOf(false)
+    val termsCheckBoxState: State<Boolean> = _termsCheckBoxState
+
     //회원가입에서 입력값 유효성 검사에 사용됨
     private val _emailDuplicateCheck= mutableStateOf(false)
     val emailDuplicateCheck: State<Boolean> = _emailDuplicateCheck
@@ -144,8 +147,8 @@ class LoginViewModel @Inject constructor(
     }
     private fun passwordCheck(newPassword: String) {
         val errorMessage = when {
-            newPassword.length !in 8..16 -> StringValue.StringResource(R.string.wrongPasswordLimit)
-            !newPassword.matches(Regex("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).+$")) -> StringValue.StringResource(R.string.wrongPasswordRule)
+            newPassword.length !in 9..18 -> StringValue.StringResource(R.string.wrongPasswordLimit)
+            !newPassword.matches(Regex("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#\$%^&*(),.?\":{}|<>]).+$")) -> StringValue.StringResource(R.string.wrongPasswordRule)
 
             else -> StringValue.Empty
         }
@@ -179,7 +182,8 @@ class LoginViewModel @Inject constructor(
     private fun nameCheck(newName: String) {
 
         val errorMessage = when {
-            newName.length >= 11 -> StringValue.StringResource(R.string.nameLimit)
+            newName.length >= 12 -> StringValue.StringResource(R.string.nameLimit)
+            !newName.matches(Regex("^[가-힣]+$")) -> StringValue.StringResource(R.string.nameOnlyKorean)
             else -> StringValue.Empty
         }
 
@@ -209,6 +213,10 @@ class LoginViewModel @Inject constructor(
 
     fun togglePasswordVisibility() {
         _passwordVisibility.value = !_passwordVisibility.value
+    }
+
+    fun toggleTermsCheckBoxValue() {
+        _termsCheckBoxState.value = !_termsCheckBoxState.value
     }
 
     fun emailDuplicateCheck(){
@@ -264,7 +272,7 @@ class LoginViewModel @Inject constructor(
 
     fun joinComplete(){
 
-        if(joinEmptyAndErrorCheck() && duplicateCheck() )
+        if(joinEmptyAndErrorCheck() && duplicateCheck() && termsCheck())
         {
             Log.d("가입 성공",
                 "email : ${email.value}," +
@@ -299,6 +307,10 @@ class LoginViewModel @Inject constructor(
     private fun duplicateCheck(): Boolean {
 
         return _idDuplicateCheck.value && _emailDuplicateCheck.value
+    }
+
+    private fun termsCheck(): Boolean{
+        return _termsCheckBoxState.value
     }
 
 }
