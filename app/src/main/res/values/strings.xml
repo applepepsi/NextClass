@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">NextClass</string>
     <string name="input_email">이메일을 입력해 주세요.</string>
-    <string name="input_id">아이디를 입력해 주세요.</string>
+    <string name="input_Id">아이디를 입력해 주세요.</string>
     <string name="input_password">비밀번호를 입력해 주세요.</string>
     <string name="input_passwordConfirm">비밀번호와 동일한 비밀번호를 입력해 주세요.</string>
     <string name="input_name">이름을 입력해 주세요.</string>
@@ -16,11 +16,13 @@
     <string name="schoolName">학교 이름</string>
     <string name="entranceYear">학년</string>
 
+
+
     //회원가입 에러메세지id
-    <string name="idDuplicate">중복된 아이디 입니다.</string>
-    <string name="idOnlyString">아이디에는 공백없는 숫자와 대소문자만 허용됩니다.</string>
-    <string name="idSizeLimit">아이디는(5~20)자리의 글자만 허용됩니다.</string>
-    <string name="needIdDuplicateCheck">아이디 중복체크가 필요합니다.</string>
+    <string name="joinIdDuplicate">중복된 아이디 입니다.</string>
+    <string name="joinIdOnlyString">아이디에는 공백없는 숫자와 대소문자만 허용됩니다.</string>
+    <string name="joinIdSizeLimit">아이디는(5~20)자리의 글자만 허용됩니다.</string>
+    <string name="needJoinIdDuplicateCheck">아이디 중복체크가 필요합니다.</string>
 
     //회원가입 에러메세지 이메일
     <string name="emailDuplicate">중복된 이메일 입니다. 입니다.</string>
@@ -48,6 +50,11 @@
     //서버 통신 불안정
     <string name="duplicateFail">서버와의 연결이 불안정 합니다. 잠시 후 다시 시도해 주세요</string>
     <string name="terms_and_conditions">terms_and_conditions</string>
+
+
+    //로그인 에러메세지
+    <string name="emptyIdOrPassword">아이디와 비밀번호를 모두 작성해 주세요.</string>
+    <string name="wrongIdOrPassword">아이디 또는 비밀번호가 올바르지 않습니다.</string>
 
 
 </resources>

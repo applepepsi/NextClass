@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class TestRepository : UserInfoRepository {
-    override fun idDuplicateCheck(id: String,callback: (ServerResponse?) -> Unit) {
+    override fun joinIdDuplicateCheck(id: String,callback: (ServerResponse?) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
                 val response = RetrofitBuilder.api.idDuplicateCheck(id)

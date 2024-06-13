@@ -1,57 +1,24 @@
 package com.example.nextclass.appComponent
 
 
-import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.automirrored.filled.ArrowRight
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.AttachEmail
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.MarkEmailRead
 
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DismissValue
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -62,66 +29,29 @@ import com.example.nextclass.R
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.ParagraphStyle
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.PopupProperties
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.example.nextclass.items.GradeDropDownItems
-import com.example.nextclass.items.TopNavItem
-import com.example.nextclass.nav.TopNavGraph
 import com.example.nextclass.repository.TestRepository
-import com.example.nextclass.screen.JoinView
-import com.example.nextclass.ui.theme.Background_Color
-import com.example.nextclass.ui.theme.Feldgrau
-import com.example.nextclass.ui.theme.Navi_Green
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.ui.theme.Pastel_Red
-import com.example.nextclass.ui.theme.White_Smoke
+import com.example.nextclass.view.JoinView
 import com.example.nextclass.viewmodel.LoginViewModel
 
 
@@ -226,6 +156,51 @@ fun TextInputFieldComponent(
 }
 
 @Composable
+fun LoginInputFieldComponent(
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholderValue:String,
+    labelValue: String,
+){
+
+    Text(
+        text = labelValue,
+        fontSize = 15.sp,
+        fontWeight = FontWeight.Bold,
+        fontStyle = FontStyle.Normal,
+        color = Color.DarkGray,
+        textAlign = TextAlign.Start,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 25.dp, bottom = 5.dp, top = 10.dp)
+    )
+    OutlinedTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(componentShape.small)
+            .padding(start = 20.dp, end = 20.dp),
+        placeholder = { Text(text = placeholderValue) },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = Color.White,
+            unfocusedContainerColor = Color.White,
+            disabledContainerColor = Color.White,
+            errorContainerColor = Color.White,
+            focusedBorderColor = Color.Transparent,
+            unfocusedBorderColor = Color.Transparent,
+            disabledBorderColor = Color.Transparent,
+
+            ),
+        keyboardOptions=KeyboardOptions.Default,
+        value = value,
+        onValueChange = onValueChange,
+
+        shape = RoundedCornerShape(15.dp),
+    )
+
+}
+
+
+@Composable
 fun EmailInputFieldComponent(
     value: String,
     onValueChange: (String) -> Unit,
@@ -303,15 +278,19 @@ fun EmailInputFieldComponent(
 }
 
 
+
+
+
 @Composable
 fun IdInputFieldComponent(
     value: String,
     onValueChange: (String) -> Unit,
     labelValue: String,
-    idDuplicateCheckValue:Boolean,
+    idDuplicateCheckValue:Boolean=false,
     idCheckProcess:()->Unit,
-    isError:Boolean,
-    errorMessage:String,
+    isError: Boolean = false,
+    errorMessage: String = "",
+    showTrailingIcon: Boolean = true
 ){
 
     Log.d("isError", isError.toString())
@@ -333,7 +312,7 @@ fun IdInputFieldComponent(
                 .clip(componentShape.small)
                 .padding(start = 20.dp, end = 20.dp),
 
-            placeholder = { Text(text = (stringResource(id = R.string.input_id))) },
+            placeholder = { Text(text = (stringResource(id = R.string.input_Id))) },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = Color.White,
                 unfocusedContainerColor = Color.White,
@@ -347,24 +326,25 @@ fun IdInputFieldComponent(
             keyboardOptions = KeyboardOptions.Default,
             value = value,
             onValueChange = onValueChange,
-            trailingIcon = {
-                val iconImage = if (idDuplicateCheckValue) {
-                    ImageVector.vectorResource(R.drawable.id_duplicate_check_yes)
+            trailingIcon = if (showTrailingIcon) {
+                {
+                    val iconImage = if (idDuplicateCheckValue) {
+                        ImageVector.vectorResource(R.drawable.id_duplicate_check_yes)
+                    } else {
+                        ImageVector.vectorResource(R.drawable.id_duplicate_check_no)
+                    }
 
-                } else {
-                    ImageVector.vectorResource(R.drawable.id_duplicate_check_no)
-                }
+                    val description = if (idDuplicateCheckValue) {
+                        "사용 가능한 이메일 입니다."
+                    } else {
+                        "이미 사용중인 이메일 입니다."
+                    }
 
-                val description = if (idDuplicateCheckValue) {
-                    "사용 가능한 이메일 입니다."
-                } else {
-                    "이미 사용중인 이메일 입니다."
+                    IconButton(onClick = idCheckProcess) {
+                        Icon(imageVector = iconImage, contentDescription = description)
+                    }
                 }
-
-                IconButton(onClick = idCheckProcess) {
-                    Icon(imageVector = iconImage, contentDescription = description)
-                }
-            },
+            } else null,
             //에러 처리는이걸로
             isError = isError,
             shape = RoundedCornerShape(15.dp),
@@ -396,8 +376,8 @@ fun PasswordInputFieldComponent(
     placeholderValue:String,
     passwordVisibleOption:Boolean,
     togglePassWordVisibility:()->Unit,
-    isError:Boolean,
-    errorMessage:String,
+    isError: Boolean = false,
+    errorMessage: String = "",
     ){
 
     Text(
@@ -570,13 +550,10 @@ fun GradeDropDownMenuComponent(
 @Composable
 fun InputButtonComponent(
     value: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    contentAlignment:Alignment=Alignment.BottomCenter
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.BottomCenter
-    ) {
+
         Button(
             onClick = { onClick() },
             modifier = Modifier
@@ -616,7 +593,7 @@ fun InputButtonComponent(
             }
         }
     }
-}
+
 
 @Composable
 fun TextInputHelpFieldComponent(
@@ -639,188 +616,17 @@ fun TextInputHelpFieldComponent(
 }
 
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Composable
-fun TopNav(loginViewModel: LoginViewModel = hiltViewModel()) {
-    val navController = rememberNavController()
-
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White)
-            .padding(10.dp),
-        color = Background_Color,
-        shape = RoundedCornerShape(16.dp)
-    ) {
-        Column {
-            // 중앙에 네비게이션 바 배치
-            TopBarComponent(navController = navController)
-
-            // 아래에 네비게이션 그래프 배치
-            TopNavGraph(loginViewModel = loginViewModel, navController = navController)
-        }
-    }
-}
-
-@Composable
-fun TopBarComponent(navController: NavHostController) {
-    val screens = listOf(
-        TopNavItem.Login,
-        TopNavItem.Join
-    )
-
-    val currentDestination = navController.currentBackStackEntryAsState().value?.destination
-
-    Surface(
-        modifier = Modifier
-            .padding(top = 30.dp, start = 20.dp, end = 20.dp)
-            .fillMaxWidth()
-            .height(50.dp),
-        color = Color.White,
-        shape = RoundedCornerShape(40.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            screens.forEach { screen ->
-                AddItem(screen = screen, currentDestination = currentDestination, navController = navController)
-            }
-        }
-    }
-}
-
-@Composable
-fun RowScope.AddItem(
-    screen: TopNavItem,
-    currentDestination: NavDestination?,
-    navController: NavHostController
-) {
-    val selected = currentDestination?.hierarchy?.any { it.route == screen.screenRoute } == true
-    val background = if (selected) Navi_Green else Color.White
-    val interactionSource = remember { MutableInteractionSource() }
-
-    Surface(
-        shape = RoundedCornerShape(20.dp),
-        modifier = Modifier
-            .weight(1f)
-            .padding(6.dp)
-            .height(60.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .background(background)
-                .clickable(
-                    onClick = {
-                        navController.navigate(screen.screenRoute) {
-                            popUpTo(navController.graph.findStartDestination().id)
-                            launchSingleTop = true
-                        }
-                    },
-                    interactionSource = interactionSource,
-                    indication = null
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = screen.title,
-                color = if (selected) Color.White else Color.Gray.copy(alpha = 0.5f)
-            )
-        }
-    }
-}
-
-@Composable
-fun ClickableTextComponent() {
-
-    val all="모든 "
-    val terms="이용 약관"
-    val agree= "에 동의합니다."
-
-
-
-    val annotatedString = buildAnnotatedString {
-        withStyle(style = SpanStyle(fontSize = 18.sp)) {
-            append(all)
-            withStyle(style = SpanStyle(color = Color.Red)) { // 특정 부분 스타일 설정
-                pushStringAnnotation(tag = terms, annotation = terms)
-                append(terms)
-            }
-            append(agree)
-        }
-    }
-    ClickableText(text = annotatedString, onClick = {offset->
-        annotatedString.getStringAnnotations(offset,offset)
-            .firstOrNull()?.also{span->
-                Log.d("test", span.toString())
-            }
-    })
-
-}
-
-@Composable
-fun CheckboxComponent(
-    checked:Boolean,
-    onClickCheckBox: () -> Unit
-) {
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(56.dp)
-            .padding(start = 15.dp, top = 10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ){
-        Checkbox(checked=checked,
-            onCheckedChange={
-                onClickCheckBox()
-            },
-            colors = CheckboxDefaults.colors(
-                checkedColor = Pastel_Red,
-                uncheckedColor = Color.Gray,
-                checkmarkColor = Navi_Green
-            ))
-
-        ClickableTextComponent()
-    }
-
-}
 
 
 @Preview(showBackground = true)
 @Composable
-fun NavPreview() {
+fun GreetingPreview() {
     val testRepository = TestRepository()
     val loginViewModel = LoginViewModel(testRepository)
 
     NextClassTheme {
-        TopNav(loginViewModel)
-
+        JoinView(loginViewModel)
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun CheckBoxPreview() {
-    val testRepository = TestRepository()
-    val loginViewModel = LoginViewModel(testRepository)
-
-    NextClassTheme {
-        CheckboxComponent(                checked = loginViewModel.termsCheckBoxState.value,
-            onClickCheckBox = {loginViewModel.toggleTermsCheckBoxValue()})
-
-    }
-}
-//@Preview(showBackground = true)
-//@Composable
-//fun GreetingPreview() {
-//    val testRepository = TestRepository()
-//    val loginViewModel = LoginViewModel(testRepository)
-//
-//    NextClassTheme {
-//        JoinView(loginViewModel)
-//    }
-//}
 
 

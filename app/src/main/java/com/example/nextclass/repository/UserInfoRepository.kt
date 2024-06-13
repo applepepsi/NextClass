@@ -9,7 +9,7 @@ import retrofit2.http.Query
 interface UserInfoRepository {
 
 
-    fun idDuplicateCheck(id: String,callback: (ServerResponse?) -> Unit)
+    fun joinIdDuplicateCheck(id: String,callback: (ServerResponse?) -> Unit)
 
     fun emailDuplicateCheck(email: String,callback: (ServerResponse?) -> Unit)
 }

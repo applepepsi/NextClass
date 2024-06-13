@@ -21,8 +21,14 @@ class LoginViewModel @Inject constructor(
     private val _email = mutableStateOf("")
     val email: State<String> = _email
 
+    private val _joinId = mutableStateOf("")
+    val joinId: State<String> = _joinId
+
     private val _id = mutableStateOf("")
     val id: State<String> = _id
+
+    private val _joinPassword = mutableStateOf("")
+    val joinPassword: State<String> = _joinPassword
 
     private val _password = mutableStateOf("")
     val password: State<String> = _password
@@ -52,14 +58,14 @@ class LoginViewModel @Inject constructor(
     private val _emailDuplicateCheck= mutableStateOf(false)
     val emailDuplicateCheck: State<Boolean> = _emailDuplicateCheck
 
-    private val _idDuplicateCheck= mutableStateOf(false)
-    val idDuplicateCheck: State<Boolean> = _idDuplicateCheck
+    private val _joinIdDuplicateCheck= mutableStateOf(false)
+    val joinIdDuplicateCheck: State<Boolean> = _joinIdDuplicateCheck
 
-    private val _idInputErrorMessage = mutableStateOf<StringValue>(StringValue.Empty)
-    val idInputErrorMessage: State<StringValue> = _idInputErrorMessage
+    private val _joinIdInputErrorMessage = mutableStateOf<StringValue>(StringValue.Empty)
+    val joinIdInputErrorMessage: State<StringValue> = _joinIdInputErrorMessage
 
-    private val _idInputError= mutableStateOf(false)
-    val idInputError: State<Boolean> = _idInputError
+    private val _joinIdInputError= mutableStateOf(false)
+    val joinIdInputError: State<Boolean> = _joinIdInputError
 
     private val _passwordInputErrorMessage = mutableStateOf<StringValue>(StringValue.Empty)
     val passwordInputErrorMessage: State<StringValue> = _passwordInputErrorMessage
@@ -103,6 +109,12 @@ class LoginViewModel @Inject constructor(
     private val _joinFail=mutableStateOf(false)
     val joinFail: State<Boolean> = _joinFail
 
+    private val _loginFailMessage = mutableStateOf<StringValue>(StringValue.Empty)
+    val loginFailMessage: State<StringValue> = _loginFailMessage
+
+    private val _loginFail=mutableStateOf(false)
+    val loginFail: State<Boolean> = _loginFail
+
     fun updateEmail(newEmail: String) {
         _email.value = newEmail
         emailCheck(newEmail)
@@ -122,33 +134,45 @@ class LoginViewModel @Inject constructor(
         _emailInputError.value = errorMessage != StringValue.Empty
     }
 
-    fun updateId(newId: String) {
-        _id.value = newId
-        idCheck(newId)
+    fun updateJoinId(newjoinId: String) {
+        _joinId.value = newjoinId
+        joinIdCheck(newjoinId)
+
+        Log.d("joinIdTest",_joinId.value)
         //아이디 인증을 하고 텍스트를 바꾸면 인증을 다시하도록
-        _idDuplicateCheck.value=false
+        _joinIdDuplicateCheck.value=false
     }
 
-    private fun idCheck(newId: String){
+    private fun joinIdCheck(newjoinId: String){
         val errorMessage = when {
-            newId.length !in 5..20 -> StringValue.StringResource(R.string.idSizeLimit)
-            !newId.matches(Regex("^[a-zA-Z0-9]*$")) -> StringValue.StringResource(R.string.idOnlyString)
-            !_idDuplicateCheck.value -> StringValue.StringResource(R.string.needIdDuplicateCheck)
+            newjoinId.length !in 5..20 -> StringValue.StringResource(R.string.joinIdSizeLimit)
+            !newjoinId.matches(Regex("^[a-zA-Z0-9]*$")) -> StringValue.StringResource(R.string.joinIdOnlyString)
+            !_joinIdDuplicateCheck.value -> StringValue.StringResource(R.string.needJoinIdDuplicateCheck)
             else -> StringValue.Empty
         }
-        _idInputErrorMessage.value = errorMessage
-        _idInputError.value = errorMessage != StringValue.Empty
+        _joinIdInputErrorMessage.value = errorMessage
+        _joinIdInputError.value = errorMessage != StringValue.Empty
+    }
+
+    fun updateId(newId: String) {
+        _id.value = newId
+
     }
 
     fun updatePassword(newPassword: String) {
-        
+
         _password.value = newPassword
-        passwordCheck(newPassword)
+
     }
-    private fun passwordCheck(newPassword: String) {
+    fun updateJoinPassword(newJoinPassword: String) {
+        
+        _joinPassword.value = newJoinPassword
+        joinPasswordCheck(newJoinPassword)
+    }
+    private fun joinPasswordCheck(newjoinPassword: String) {
         val errorMessage = when {
-            newPassword.length !in 9..18 -> StringValue.StringResource(R.string.wrongPasswordLimit)
-            !newPassword.matches(Regex("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#\$%^&*(),.?\":{}|<>]).+$")) -> StringValue.StringResource(R.string.wrongPasswordRule)
+            newjoinPassword.length !in 9..18 -> StringValue.StringResource(R.string.wrongPasswordLimit)
+            !newjoinPassword.matches(Regex("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#\$%^&*(),.?\":{}|<>]).+$")) -> StringValue.StringResource(R.string.wrongPasswordRule)
 
             else -> StringValue.Empty
         }
@@ -166,7 +190,7 @@ class LoginViewModel @Inject constructor(
     private fun passwordConfirmCheck(newPasswordConfirm: String) {
 
         val errorMessage = when {
-            newPasswordConfirm !=_password.value -> StringValue.StringResource(R.string.wrongPasswordConfirm)
+            newPasswordConfirm !=_joinPassword.value -> StringValue.StringResource(R.string.wrongPasswordConfirm)
             else -> StringValue.Empty
         }
 
@@ -240,20 +264,20 @@ class LoginViewModel @Inject constructor(
 //        _emailDuplicateCheck.value=!_emailDuplicateCheck.value
     }
 
-    fun idDuplicateCheck(){
+    fun joinIdDuplicateCheck(){
 
-        userInfoRepository.idDuplicateCheck(id.value){serverResponse ->
+        userInfoRepository.joinIdDuplicateCheck(joinId.value){serverResponse ->
             if(serverResponse!=null){
                 if(serverResponse.code !=200){
-                    _idDuplicateCheck.value=true
+                    _joinIdDuplicateCheck.value=true
                 }
                 else{
-                    _idInputErrorMessage.value = StringValue.StringResource(R.string.idDuplicate)
-                    _idInputError.value = true
+                    _joinIdInputErrorMessage.value = StringValue.StringResource(R.string.joinIdDuplicate)
+                    _joinIdInputError.value = true
                 }
             }else{
-                _idInputErrorMessage.value = StringValue.StringResource(R.string.duplicateFail)
-                _idInputError.value = true
+                _joinIdInputErrorMessage.value = StringValue.StringResource(R.string.duplicateFail)
+                _joinIdInputError.value = true
             }
         }
         //아이디 체크 버튼을 누르면 현재 작성된 이메일을 서버로 전송해서 체크해야함
@@ -267,7 +291,7 @@ class LoginViewModel @Inject constructor(
 
     fun setLoginInput(){
 
-        Log.d("checkLoginInput", "id : ${id.value}, password : ${password.value}")
+        Log.d("checkLoginInput", "joinId : ${joinId.value}, password : ${joinPassword.value}")
     }
 
     fun joinComplete(){
@@ -276,8 +300,8 @@ class LoginViewModel @Inject constructor(
         {
             Log.d("가입 성공",
                 "email : ${email.value}," +
-                        "id : ${id.value}," +
-                        "password : ${password.value}," +
+                        "joinId : ${joinId.value}," +
+                        "joinPassword : ${joinPassword.value}," +
                         "passwordConfirm : ${passwordConfirm.value}," +
                         "name : ${name.value},"+
                         "schoolName : ${schoolName.value},"+
@@ -292,11 +316,27 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+
+    fun tryLogin(){
+        if(loginInputCheck()){
+            _loginFailMessage.value=StringValue.StringResource(R.string.emptyIdOrPassword)
+            _loginFail.value=true
+        }else{
+            //todo 서버에 전송해서 값을 받는 로직 추가해야함
+            _loginFailMessage.value=StringValue.StringResource(R.string.wrongIdOrPassword)
+            _loginFail.value=true
+        }
+    }
+
+    private fun loginInputCheck():Boolean{
+        return id.value.isEmpty() || password.value.isEmpty()
+    }
+
     private fun joinEmptyAndErrorCheck(): Boolean {
         return listOf(
             _email to _emailInputError,
-            _id to _idInputError,
-            _password to _passwordInputError,
+            _joinId to _joinIdInputError,
+            _joinPassword to _passwordInputError,
             _passwordConfirm to _passwordConfirmInputError,
             _name to _nameInputError,
             _schoolName to _schoolNameInputError,
@@ -306,7 +346,7 @@ class LoginViewModel @Inject constructor(
 
     private fun duplicateCheck(): Boolean {
 
-        return _idDuplicateCheck.value && _emailDuplicateCheck.value
+        return _joinIdDuplicateCheck.value && _emailDuplicateCheck.value
     }
 
     private fun termsCheck(): Boolean{
