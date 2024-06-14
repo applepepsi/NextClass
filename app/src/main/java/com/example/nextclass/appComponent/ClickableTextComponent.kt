@@ -2,12 +2,18 @@ package com.example.nextclass.appComponent
 
 import android.util.Log
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import com.example.nextclass.repository.TestRepository
+import com.example.nextclass.ui.theme.NextClassTheme
+import com.example.nextclass.view.LoginView
+import com.example.nextclass.viewmodel.LoginViewModel
 
 @Composable
 fun TermsAndConditionsTextComponent() {
@@ -34,6 +40,21 @@ fun TermsAndConditionsTextComponent() {
                 Log.d("test", span.toString())
             }
     })
+
+}
+
+@Composable
+fun RememberUserComponent() {
+
+    val rememberMe="자동 로그인"
+
+    val annotatedString=buildAnnotatedString {
+        withStyle(style = SpanStyle(fontSize = 15.sp, color = Color.Black)) {
+            append(rememberMe)
+        }
+    }
+    Text(text = annotatedString)
+
 
 }
 
@@ -68,5 +89,15 @@ fun FindIdOrPasswordTextComponent() {
             }
     })
 
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TextPreview() {
+
+
+    NextClassTheme {
+        RememberUserComponent()
+    }
 }
 

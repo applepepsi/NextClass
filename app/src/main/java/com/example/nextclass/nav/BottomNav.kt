@@ -35,7 +35,7 @@ fun BottomNav() {
 
 @Composable
 fun TopNavGraph(navController: NavHostController, loginViewModel: LoginViewModel) {
-    NavHost(navController = navController, startDestination = TopNavItem.Join.screenRoute) {
+    NavHost(navController = navController, startDestination = TopNavItem.Login.screenRoute) {
         composable(TopNavItem.Login.screenRoute) {
             LoginView(loginViewModel)
         }

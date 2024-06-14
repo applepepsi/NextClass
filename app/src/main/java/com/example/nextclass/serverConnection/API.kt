@@ -24,10 +24,10 @@ interface API {
 
 
     @POST("/api/server/postJoinForm")
-    suspend fun postJoinForm(@Query("joinForm")joinForm: String):Response<ServerResponse>
+    suspend fun postUserJoinInfo(@Query("joinForm")joinInfo: String):Response<ServerResponse>
 
     @POST("/api/server/postJoinForm")
-    suspend fun postLoginForm(@Query("loginForm")loginForm: String):Response<ServerResponse>
+    suspend fun postUserLoginForm(@Query("loginInfo")loginInfo: String):Response<ServerResponse>
 
 
 }

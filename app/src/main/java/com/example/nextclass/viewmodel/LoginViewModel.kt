@@ -5,8 +5,10 @@ import android.util.Patterns
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.R
 import com.example.nextclass.repository.UserInfoRepository
+import com.example.nextclass.utils.CutEntranceYear
 import com.example.nextclass.utils.StringValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.regex.Pattern
@@ -289,12 +291,18 @@ class LoginViewModel @Inject constructor(
         _menuVisibility.value = !_menuVisibility.value
     }
 
-    fun setLoginInput(){
-
-        Log.d("checkLoginInput", "joinId : ${joinId.value}, password : ${joinPassword.value}")
-    }
 
     fun joinComplete(){
+
+        val joinRequest = JoinRequest(
+            email = email.value,
+            joinId = joinId.value,
+            joinPassword = joinPassword.value,
+            passwordConfirm = passwordConfirm.value,
+            name = name.value,
+            schoolName = schoolName.value,
+            entranceYear = CutEntranceYear.cutEntranceYear(entranceYear.value))
+        Log.d("joinRequest", joinRequest.toString())
 
         if(joinEmptyAndErrorCheck() && duplicateCheck() && termsCheck())
         {
@@ -306,6 +314,7 @@ class LoginViewModel @Inject constructor(
                         "name : ${name.value},"+
                         "schoolName : ${schoolName.value},"+
                         "entranceYear : ${entranceYear.value},")
+
 
             _joinFailMessage.value=StringValue.Empty
             _joinFail.value=false

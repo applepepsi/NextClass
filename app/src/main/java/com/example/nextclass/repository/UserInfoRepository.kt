@@ -12,4 +12,8 @@ interface UserInfoRepository {
     fun joinIdDuplicateCheck(id: String,callback: (ServerResponse?) -> Unit)
 
     fun emailDuplicateCheck(email: String,callback: (ServerResponse?) -> Unit)
+
+    fun postUserJoinInfo(userJoinInfo:String,callback: (ServerResponse?)->Unit)
+
+    fun postUserLoginInfo(userJoinInfo: String,callback: (ServerResponse?) -> Unit)
 }

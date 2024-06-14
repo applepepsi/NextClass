@@ -51,10 +51,9 @@ fun TopNav(loginViewModel: LoginViewModel = hiltViewModel()) {
         shape = RoundedCornerShape(16.dp)
     ) {
         Column {
-            // 중앙에 네비게이션 바 배치
+
             TopBarComponent(navController = navController)
 
-            // 아래에 네비게이션 그래프 배치
             TopNavGraph(loginViewModel = loginViewModel, navController = navController)
         }
     }

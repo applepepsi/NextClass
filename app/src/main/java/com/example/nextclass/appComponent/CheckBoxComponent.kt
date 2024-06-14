@@ -29,7 +29,8 @@ import com.example.nextclass.viewmodel.LoginViewModel
 @Composable
 fun CheckboxComponent(
     checked:Boolean,
-    onClickCheckBox: () -> Unit
+    onClickCheckBox: () -> Unit,
+    checkBoxTextComponent: @Composable () -> Unit
 ) {
 
     Row(
@@ -49,7 +50,7 @@ fun CheckboxComponent(
                 checkmarkColor = Navi_Green
             ))
 
-        TermsAndConditionsTextComponent()
+        checkBoxTextComponent()
     }
 
 }
@@ -66,7 +67,8 @@ fun CheckBoxPreview() {
     NextClassTheme {
         CheckboxComponent(
             checked = loginViewModel.termsCheckBoxState.value,
-            onClickCheckBox = {loginViewModel.toggleTermsCheckBoxValue()})
-
+            onClickCheckBox = {loginViewModel.toggleTermsCheckBoxValue()},
+            checkBoxTextComponent = {TermsAndConditionsTextComponent()}
+        )
     }
 }

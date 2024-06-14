@@ -40,6 +40,8 @@ import com.example.nextclass.appComponent.IdInputFieldComponent
 import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.MainTextComponent
 import com.example.nextclass.appComponent.PasswordInputFieldComponent
+import com.example.nextclass.appComponent.RememberUserComponent
+import com.example.nextclass.appComponent.TermsAndConditionsTextComponent
 import com.example.nextclass.appComponent.TextInputFieldComponent
 import com.example.nextclass.appComponent.TextInputHelpFieldComponent
 import com.example.nextclass.repository.TestRepository
@@ -87,9 +89,11 @@ fun LoginView(loginViewModel: LoginViewModel) {
 
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        Spacer(modifier = Modifier.height(100.dp))
 
         MainTextComponent(value = "로그인")
 
@@ -112,9 +116,18 @@ fun LoginView(loginViewModel: LoginViewModel) {
 
             placeholderValue = stringResource(id = R.string.input_password),
         )
+
+        CheckboxComponent(
+            checked = loginViewModel.termsCheckBoxState.value,
+            onClickCheckBox = {loginViewModel.toggleTermsCheckBoxValue()},
+            checkBoxTextComponent = {RememberUserComponent()}
+        )
+
         Spacer(modifier = Modifier.height(10.dp))
 
         FindIdOrPasswordTextComponent()
+
+        Spacer(modifier = Modifier.height(30.dp))
 
         TextInputHelpFieldComponent(
 
@@ -123,10 +136,8 @@ fun LoginView(loginViewModel: LoginViewModel) {
 
         )
 
-        Spacer(modifier = Modifier.height(25.dp))
-
         InputButtonComponent(
-            value="가입 완료",
+            value="로그인",
             onClick = {loginViewModel.tryLogin()},
         )
     }
@@ -226,7 +237,8 @@ fun JoinView(loginViewModel: LoginViewModel) {
 
         CheckboxComponent(
             checked = loginViewModel.termsCheckBoxState.value,
-            onClickCheckBox = {loginViewModel.toggleTermsCheckBoxValue()}
+            onClickCheckBox = {loginViewModel.toggleTermsCheckBoxValue()},
+            checkBoxTextComponent = {TermsAndConditionsTextComponent()}
         )
 
 
