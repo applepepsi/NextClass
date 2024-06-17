@@ -1,6 +1,7 @@
 package com.example.nextclass.repository
 
 import android.util.Log
+import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.Data.ServerResponse
 import com.example.oneplusone.serverConnection.RetrofitBuilder
 import kotlinx.coroutines.CoroutineScope
@@ -58,7 +59,7 @@ class UserInfoRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun postUserJoinInfo(userJoinInfo: String,callback: (ServerResponse?) -> Unit){
+    override fun postUserJoinInfo(userJoinInfo: JoinRequest, callback: (ServerResponse?) -> Unit){
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
                 val response = RetrofitBuilder.api.postUserJoinInfo(userJoinInfo)

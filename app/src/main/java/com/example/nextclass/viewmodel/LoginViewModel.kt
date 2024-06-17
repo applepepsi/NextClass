@@ -294,18 +294,25 @@ class LoginViewModel @Inject constructor(
 
     fun joinComplete(){
 
-        val joinRequest = JoinRequest(
-            email = email.value,
-            joinId = joinId.value,
-            joinPassword = joinPassword.value,
-            passwordConfirm = passwordConfirm.value,
-            name = name.value,
-            schoolName = schoolName.value,
-            entranceYear = CutEntranceYear.cutEntranceYear(entranceYear.value))
-        Log.d("joinRequest", joinRequest.toString())
+
+//        Log.d("joinRequest", joinRequest.toString())
 
         if(joinEmptyAndErrorCheck() && duplicateCheck() && termsCheck())
         {
+
+            val joinRequest = JoinRequest(
+                email = email.value,
+                joinId = joinId.value,
+                joinPassword = joinPassword.value,
+                passwordConfirm = passwordConfirm.value,
+                name = name.value,
+                schoolName = schoolName.value,
+                entranceYear = CutEntranceYear.cutEntranceYear(entranceYear.value))
+
+            userInfoRepository.postUserJoinInfo(joinRequest){ joinRequestResult->
+                Log.d("serverProductData", joinRequestResult.toString())
+
+            }
             Log.d("가입 성공",
                 "email : ${email.value}," +
                         "joinId : ${joinId.value}," +
@@ -362,4 +369,8 @@ class LoginViewModel @Inject constructor(
         return _termsCheckBoxState.value
     }
 
+
+    //아이디나 비밀번호 찾을때 어떻게 할거임?
+    //
+    //아이디 중복체크, 이메일 중복체크 데이터 타입?
 }
