@@ -35,7 +35,7 @@ import com.example.nextclass.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.example.nextclass.Data.ClassData
-import com.example.nextclass.appComponent.Schedule
+import com.example.nextclass.appComponent.BasicClass
 import com.example.nextclass.appComponent.TopNav
 import com.example.nextclass.appComponent.sampleEvents
 
@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             NextClassTheme {
-                Schedule(sampleEvents)
+//                BasicClass(sampleEvents)
 //                Greeting()
 
             }

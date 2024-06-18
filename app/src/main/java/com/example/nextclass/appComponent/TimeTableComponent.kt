@@ -1,20 +1,17 @@
 package com.example.nextclass.appComponent
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,8 +32,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.nextclass.Data.ClassData
@@ -44,7 +39,7 @@ import com.example.nextclass.Data.ClassData
 import kotlin.math.roundToInt
 
 @Composable
-fun BasicEvent(
+fun OneClassCellDetailComponent(
     classData: ClassData,
     modifier: Modifier = Modifier,
 ) {
@@ -130,17 +125,17 @@ val sampleEvents = emptyList<ClassData>()
 fun EventPreview() {
 
     MaterialTheme {
-        Schedule(sampleEvents)
+        TimeTableComponent(sampleEvents)
     }
 }
 
 @Composable
-fun Schedule(
-    classDatas: List<ClassData>,
+fun TimeTableComponent(
+    classDataList: List<ClassData>,
     modifier: Modifier = Modifier,
-    eventContent: @Composable (classData: ClassData) -> Unit = { BasicEvent(classData = it) },
-    minClassTime: Int = classDatas.minByOrNull(ClassData::startClassTime)?.startClassTime ?:0,
-    maxClassTime: Int = classDatas.maxByOrNull(ClassData::endClassTime)?.endClassTime?:7,
+    classContent: @Composable (classData: ClassData) -> Unit = { OneClassCellDetailComponent(classData = it) },
+    minClassTime: Int = classDataList.minByOrNull(ClassData::startClassTime)?.startClassTime ?:0,
+    maxClassTime: Int = classDataList.maxByOrNull(ClassData::endClassTime)?.endClassTime?:7,
 ) {
     val classTimeHeight = 70.dp
     var sidebarWidth by remember { mutableIntStateOf(0) }
@@ -160,9 +155,9 @@ fun Schedule(
                 hourHeight = classTimeHeight,
                 modifier = Modifier.onGloballyPositioned { sidebarWidth = it.size.width }
             )
-            BasicSchedule(
-                classDatas = classDatas,
-                eventContent = eventContent,
+            BasicClass(
+                classDataList = classDataList,
+                classContent = classContent,
                 minClassTime = minClassTime,
                 maxClassTime = maxClassTime,
                 hourHeight = classTimeHeight,
@@ -174,12 +169,12 @@ fun Schedule(
 }
 
 @Composable
-fun BasicSchedule(
-    classDatas: List<ClassData>,
+fun BasicClass(
+    classDataList: List<ClassData>,
     modifier: Modifier = Modifier,
-    eventContent: @Composable (classData: ClassData) -> Unit = { BasicEvent(classData = it) },
-    minClassTime: Int = classDatas.minByOrNull(ClassData::startClassTime)?.startClassTime?:0,
-    maxClassTime: Int = classDatas.maxByOrNull(ClassData::endClassTime)?.endClassTime?:7,
+    classContent: @Composable (classData: ClassData) -> Unit = { OneClassCellDetailComponent(classData = it) },
+    minClassTime: Int = classDataList.minByOrNull(ClassData::startClassTime)?.startClassTime?:0,
+    maxClassTime: Int = classDataList.maxByOrNull(ClassData::endClassTime)?.endClassTime?:7,
     hourHeight: Dp,
 ) {
     val totalPeriods = maxClassTime - minClassTime + 1
@@ -189,12 +184,12 @@ fun BasicSchedule(
 
     Layout(
         content = {
-            classDatas.sortedBy(ClassData::startClassTime).forEach { classData ->
+            classDataList.sortedBy(ClassData::startClassTime).forEach { classData ->
                 Box(modifier = Modifier
                     .layoutId(classData)
                     .fillMaxSize()
                 ) {
-                    eventContent(classData)
+                    classContent(classData)
                 }
             }
         },
@@ -256,7 +251,7 @@ fun BasicSchedule(
 
 
 @Composable
-fun BasicDayHeader(
+fun DayHeader(
     day: String,
     modifier: Modifier = Modifier,
 ) {
@@ -272,7 +267,7 @@ fun BasicDayHeader(
 @Composable
 fun DayOfWeekHeader(
     modifier: Modifier = Modifier,
-    dayHeader: @Composable (dayOfWeek: String) -> Unit = { BasicDayHeader(day = it) },
+    dayHeader: @Composable (dayOfWeek: String) -> Unit = { DayHeader(day = it) },
 ) {
     val daysOfWeek = listOf("월요일", "화요일", "수요일", "목요일", "금요일")
     Row(modifier = modifier) {
@@ -289,7 +284,7 @@ fun DayOfWeekHeader(
 fun ScheduleSidebar(
     hourHeight: Dp,
     modifier: Modifier = Modifier,
-    label: @Composable (time: Int) -> Unit = { BasicSidebarLabel(time = it) },
+    label: @Composable (time: Int) -> Unit = { TimeLabel(time = it) },
 ) {
     Column(modifier = modifier) {
         repeat(7) { i ->
@@ -305,7 +300,7 @@ fun ScheduleSidebar(
 }
 
 @Composable
-fun BasicSidebarLabel(
+fun TimeLabel(
     time: Int,
     modifier: Modifier = Modifier,
 ) {
@@ -322,8 +317,8 @@ fun BasicSidebarLabel(
 @Composable
 fun ScheduleHeaderPreview() {
     MaterialTheme {
-        BasicSchedule(
-            classDatas = sampleEvents,
+        BasicClass(
+            classDataList = sampleEvents,
 
             hourHeight = 90.dp,
         )

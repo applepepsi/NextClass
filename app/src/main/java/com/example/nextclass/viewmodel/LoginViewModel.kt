@@ -117,6 +117,24 @@ class LoginViewModel @Inject constructor(
     private val _loginFail=mutableStateOf(false)
     val loginFail: State<Boolean> = _loginFail
 
+    private val _findFailId=mutableStateOf(false)
+    val findFailId: State<Boolean> = _findFailId
+
+    private val _findFailIdMessage=mutableStateOf<StringValue>(StringValue.Empty)
+    val findFailIdMessage: State<StringValue> = _findFailIdMessage
+
+    private val _findFailPassword=mutableStateOf(false)
+    val findFailPassword: State<Boolean> = _findFailPassword
+
+    private val _findFailPasswordMessage=mutableStateOf<StringValue>(StringValue.Empty)
+    val findFailPasswordMessage: State<StringValue> = _findFailPasswordMessage
+
+    private val _findIdEmail=mutableStateOf("")
+    val findIdEmail: State<String> = _findIdEmail
+
+    private val _findPasswordId=mutableStateOf("")
+    val findPasswordId: State<String> = _findPasswordId
+
     fun updateEmail(newEmail: String) {
         _email.value = newEmail
         emailCheck(newEmail)
@@ -369,8 +387,32 @@ class LoginViewModel @Inject constructor(
         return _termsCheckBoxState.value
     }
 
+    fun updateForGotIdInput(userInputEmail:String){
+        _findIdEmail.value=userInputEmail
+    }
 
-    //아이디나 비밀번호 찾을때 어떻게 할거임?
-    //
-    //아이디 중복체크, 이메일 중복체크 데이터 타입?
+
+    fun updateForGotPasswordInput(userInputId:String){
+        _findPasswordId.value=userInputId
+    }
+
+
+    fun findIdResult(){
+        _findFailId.value=true
+        _findFailIdMessage.value=StringValue.StringResource(R.string.wrongEmail)
+
+
+    }
+    fun findPasswordResult(){
+        _findFailPassword.value=true
+        _findFailPasswordMessage.value=StringValue.StringResource(R.string.wrongId)
+    }
+
+    fun findId(){
+        _findIdEmail.value
+    }
+
+    fun findPassword(){
+        _findPasswordId.value
+    }
 }

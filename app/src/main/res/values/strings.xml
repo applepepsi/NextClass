@@ -56,5 +56,18 @@
     <string name="emptyIdOrPassword">아이디와 비밀번호를 모두 작성해 주세요.</string>
     <string name="wrongIdOrPassword">아이디 또는 비밀번호가 올바르지 않습니다.</string>
 
+    //아이디 비번찾기 메세지
+    <string name="inputJoinEmail">가입했던 이메일을 입력해 주세요.</string>
+    <string name="inputJoinId">가입했던 아이디를 입력해 주세요.</string>
+
+
+    //아이디 비번찾기 실패
+    <string name="wrongEmail">존재하지 않는 이메일 입니다.</string>
+    <string name="wrongId">존재하지 않는 아이디 입니다.</string>
+
+    //아이디 비번찾기
+    <string name="FindId">아이디 찾기</string>
+    <string name="FindPassword">비밀번호 찾기</string>
+
 
 </resources>

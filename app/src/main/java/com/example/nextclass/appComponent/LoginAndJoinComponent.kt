@@ -6,7 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -55,26 +54,7 @@ import com.example.nextclass.view.JoinView
 import com.example.nextclass.viewmodel.LoginViewModel
 
 
-@Composable
-fun MainTextComponent(
-    value: String,
-    ) {
 
-    Text(
-        text=value,
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn()
-            .padding(start = 20.dp, top = 15.dp),
-        style = TextStyle(
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            fontStyle = FontStyle.Normal,
-        ),
-        color= Color.Black,
-        textAlign = TextAlign.Left
-    )
-}
 
 @Composable
 fun NormalTextComponent(
@@ -551,12 +531,12 @@ fun GradeDropDownMenuComponent(
 fun InputButtonComponent(
     value: String,
     onClick: () -> Unit,
-    contentAlignment:Alignment=Alignment.BottomCenter
+    modifier: Modifier
 ) {
 
         Button(
             onClick = { onClick() },
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .heightIn(48.dp)
                 .padding(start = 10.dp, end = 10.dp),
