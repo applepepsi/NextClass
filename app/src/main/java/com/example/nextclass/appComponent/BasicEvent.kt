@@ -1,6 +1,7 @@
 package com.example.nextclass.appComponent
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -21,7 +22,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
@@ -47,8 +51,8 @@ fun BasicEvent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(end = 2.dp, bottom = 2.dp)
-            .background(classData.color, shape = RoundedCornerShape(4.dp))
+//            .padding(end = 2.dp, bottom = 2.dp)
+            .background(classData.color)
             .padding(4.dp)
     ) {
         Text(
@@ -69,65 +73,61 @@ fun BasicEvent(
     }
 }
 
-val sampleEvents = listOf(
-    ClassData(
-        "컴퓨터수학2",
-        "정보관 201호",
-        1,
-        1,
-        2,
-        3,
-        Color(0xFFF58284)
-    ),
+val sampleEvents = emptyList<ClassData>()
+//    listOf(
+//    ClassData(
+//        "컴퓨터수학2",
+//        "정보관 201호",
+//        1,
+//        1,
+//        2,
+//        3,
+//        Color(0xFFF58284)
+//    ),
+//
+//    ClassData(
+//        "컴퓨터수학3",
+//        "정보관 201호",
+//        2,
+//        2,
+//        3,
+//        3,
+//        Color(0xFFF58284)
+//    ),
+//    ClassData(
+//        "컴퓨터수학6",
+//    "정보관 201호",
+//    5,
+//    3,
+//    4,
+//    3,
+//        Color(0xFFF58284)
+//    ),
+//    ClassData(
+//        "컴퓨터수학6",
+//        "정보관 201호",
+//        5,
+//        1,
+//        2,
+//        3,
+//        Color(0xFFF58284)
+//    ),
+//    ClassData(
+//        "컴퓨터수학6",
+//        "정보관 201호",
+//        3,
+//        2,
+//        2,
+//        3,
+//        Color(0xFFF58284)
+//    )
+//)
 
-    ClassData(
-        "컴퓨터수학3",
-        "정보관 201호",
-        2,
-        2,
-        3,
-        3,
-        Color(0xFFF58284)
-    ),
-    ClassData(
-        "컴퓨터수학6",
-    "정보관 201호",
-    5,
-    3,
-    4,
-    3,
-        Color(0xFFF58284)
-    ),
-    ClassData(
-        "컴퓨터수학6",
-        "정보관 201호",
-        5,
-        1,
-        2,
-        3,
-        Color(0xFFF58284)
-    ),
-    ClassData(
-        "컴퓨터수학6",
-        "정보관 201호",
-        3,
-        2,
-        2,
-        3,
-        Color(0xFFF58284)
-    )
-)
-
-class EventsProvider : PreviewParameterProvider<ClassData> {
-    override val values = sampleEvents.asSequence()
-}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showSystemUi = true)
 @Composable
-fun EventPreview(
-    @PreviewParameter(EventsProvider::class) classData : ClassData,) {
-
+fun EventPreview() {
 
     MaterialTheme {
         Schedule(sampleEvents)
@@ -139,8 +139,8 @@ fun Schedule(
     classDatas: List<ClassData>,
     modifier: Modifier = Modifier,
     eventContent: @Composable (classData: ClassData) -> Unit = { BasicEvent(classData = it) },
-    minClassTime: Int = classDatas.minByOrNull(ClassData::startClassTime)!!.startClassTime,
-    maxClassTime: Int = classDatas.maxByOrNull(ClassData::endClassTime)!!.endClassTime,
+    minClassTime: Int = classDatas.minByOrNull(ClassData::startClassTime)?.startClassTime ?:0,
+    maxClassTime: Int = classDatas.maxByOrNull(ClassData::endClassTime)?.endClassTime?:7,
 ) {
     val classTimeHeight = 70.dp
     var sidebarWidth by remember { mutableIntStateOf(0) }
@@ -178,13 +178,14 @@ fun BasicSchedule(
     classDatas: List<ClassData>,
     modifier: Modifier = Modifier,
     eventContent: @Composable (classData: ClassData) -> Unit = { BasicEvent(classData = it) },
-    minClassTime: Int = classDatas.minByOrNull(ClassData::startClassTime)!!.startClassTime,
-    maxClassTime: Int = classDatas.maxByOrNull(ClassData::endClassTime)!!.endClassTime,
+    minClassTime: Int = classDatas.minByOrNull(ClassData::startClassTime)?.startClassTime?:0,
+    maxClassTime: Int = classDatas.maxByOrNull(ClassData::endClassTime)?.endClassTime?:7,
     hourHeight: Dp,
 ) {
     val totalPeriods = maxClassTime - minClassTime + 1
     val totalDays = 5
-    val totalHourHeight=hourHeight*7
+    val totalHourHeight = hourHeight * 7
+    val dividerColor = Color.LightGray
 
     Layout(
         content = {
@@ -198,9 +199,33 @@ fun BasicSchedule(
             }
         },
         modifier = modifier
+            .drawBehind {
+                val dayWidth = size.width / totalDays
+
+                for (i in 0..totalDays) {
+                    val startX = i * dayWidth
+                    drawLine(
+                        dividerColor,
+                        start = Offset(startX, 0f),
+                        end = Offset(startX, size.height),
+                        strokeWidth = 1.dp.toPx()
+                    )
+                }
+
+                for (i in 0..7) {
+                    val startY = i * hourHeight.toPx()
+                    drawLine(
+                        dividerColor,
+                        start = Offset(0f, startY),
+                        end = Offset(size.width, startY),
+                        strokeWidth = 1.dp.toPx()
+                    )
+                }
+            }
     ) { measurables, constraints ->
         val height = hourHeight.roundToPx() * totalPeriods
         val width = constraints.maxWidth / totalDays
+
 
         val placeablesWithEvents = measurables.map { measurable ->
             val classData = measurable.layoutId as ClassData
@@ -218,7 +243,7 @@ fun BasicSchedule(
             Pair(placeable, classData)
         }
 
-        layout(constraints.maxWidth, height) {
+        layout(constraints.maxWidth, totalHourHeight.roundToPx()) {
             placeablesWithEvents.forEach { (placeable, classData) ->
                 val eventOffsetPeriods = classData.startClassTime - minClassTime
                 val eventY = (eventOffsetPeriods * hourHeight.toPx()).roundToInt()
@@ -240,7 +265,7 @@ fun BasicDayHeader(
         textAlign = TextAlign.Center,
         modifier = modifier
             .fillMaxWidth()
-            .padding(4.dp)
+//            .padding(4.dp)
     )
 }
 
@@ -267,13 +292,14 @@ fun ScheduleSidebar(
     label: @Composable (time: Int) -> Unit = { BasicSidebarLabel(time = it) },
 ) {
     Column(modifier = modifier) {
-
         repeat(7) { i ->
-            Box(modifier = Modifier.height(hourHeight)
+            Box(
+                modifier = Modifier
+                    .height(hourHeight),
+                contentAlignment = Alignment.Center
             ) {
-                label(i+1)
+                label(i + 1)
             }
-
         }
     }
 }
@@ -284,10 +310,10 @@ fun BasicSidebarLabel(
     modifier: Modifier = Modifier,
 ) {
     Text(
-        text = "$time 교시",
-        modifier = modifier
-            .fillMaxHeight()
-            .padding(4.dp)
+        text = "${time}교시",
+        modifier = Modifier
+
+
     )
 }
 
