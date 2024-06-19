@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.nextclass.R
 import com.example.nextclass.repository.TestRepository
@@ -82,7 +83,7 @@ fun DescriptionTextComponent(
 @Composable
 fun AppBarTextAndButtonComponent(
     value: String,
-    backButtonClick: () -> Unit
+    navController: NavController
 ) {
     val background =  Background_Color2
     Column(modifier = Modifier) {
@@ -104,7 +105,7 @@ fun AppBarTextAndButtonComponent(
                         .height(35.dp)
                         .clickable(
                             onClick = {
-                                backButtonClick()
+                                navController.navigateUp()
                             },
                         ),
                     contentAlignment = Alignment.Center
@@ -147,8 +148,8 @@ fun HelpTextPreview() {
 
 
     NextClassTheme {
-        AppBarTextAndButtonComponent(value = "아이디 찾기") {
-
-        }
+//        AppBarTextAndButtonComponent(value = "아이디 찾기") {
+//
+//        }
     }
 }

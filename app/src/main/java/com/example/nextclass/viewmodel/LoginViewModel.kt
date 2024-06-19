@@ -135,6 +135,22 @@ class LoginViewModel @Inject constructor(
     private val _findPasswordId=mutableStateOf("")
     val findPasswordId: State<String> = _findPasswordId
 
+    private val _findId=mutableStateOf("")
+    val findId: State<String> = _findId
+
+    private val _newPassword=mutableStateOf("")
+    val newPassword: State<String> = _newPassword
+
+    private val _verifyCode = mutableStateOf("")
+    val verifyCode: State<String> = _verifyCode
+
+    private val _verifyCodeInputError=mutableStateOf(false)
+    val verifyCodeInputError: State<Boolean> = _verifyCodeInputError
+
+    private val _verifyCodeInputErrorMessage=mutableStateOf<StringValue>(StringValue.Empty)
+    val verifyCodeInputErrorMessage: State<StringValue> = _verifyCodeInputErrorMessage
+
+
     fun updateEmail(newEmail: String) {
         _email.value = newEmail
         emailCheck(newEmail)
@@ -400,12 +416,16 @@ class LoginViewModel @Inject constructor(
     fun findIdResult(){
         _findFailId.value=true
         _findFailIdMessage.value=StringValue.StringResource(R.string.wrongEmail)
-
-
+        //서버에서 아이디 받아오는거 성공하면
+        _findId.value=""
     }
+
+
     fun findPasswordResult(){
         _findFailPassword.value=true
         _findFailPasswordMessage.value=StringValue.StringResource(R.string.wrongId)
+        //비번재설정 코드 입력하는게 성공했다면
+        _newPassword.value=""
     }
 
     fun findId(){
@@ -414,5 +434,15 @@ class LoginViewModel @Inject constructor(
 
     fun findPassword(){
         _findPasswordId.value
+    }
+
+    fun updateVerifyCode(value: String) {
+        Log.d("value",value)
+        _verifyCode.value = value
+    }
+
+    fun submitVerifyCode(){
+        _verifyCodeInputError.value=false
+        _verifyCodeInputErrorMessage.value=StringValue.StringResource(R.string.WrongVerityCodeMassage)
     }
 }

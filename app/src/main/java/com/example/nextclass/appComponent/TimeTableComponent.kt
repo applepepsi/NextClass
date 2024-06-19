@@ -68,55 +68,55 @@ fun OneClassCellDetailComponent(
     }
 }
 
-val sampleEvents = emptyList<ClassData>()
-//    listOf(
-//    ClassData(
-//        "컴퓨터수학2",
-//        "정보관 201호",
-//        1,
-//        1,
-//        2,
-//        3,
-//        Color(0xFFF58284)
-//    ),
-//
-//    ClassData(
-//        "컴퓨터수학3",
-//        "정보관 201호",
-//        2,
-//        2,
-//        3,
-//        3,
-//        Color(0xFFF58284)
-//    ),
-//    ClassData(
-//        "컴퓨터수학6",
-//    "정보관 201호",
-//    5,
-//    3,
-//    4,
-//    3,
-//        Color(0xFFF58284)
-//    ),
-//    ClassData(
-//        "컴퓨터수학6",
-//        "정보관 201호",
-//        5,
-//        1,
-//        2,
-//        3,
-//        Color(0xFFF58284)
-//    ),
-//    ClassData(
-//        "컴퓨터수학6",
-//        "정보관 201호",
-//        3,
-//        2,
-//        2,
-//        3,
-//        Color(0xFFF58284)
-//    )
-//)
+val sampleEvents =
+    listOf(
+    ClassData(
+        "컴퓨터수학2",
+        "정보관 201호",
+        1,
+        1,
+        2,
+        3,
+        Color(0xFFF58284)
+    ),
+
+    ClassData(
+        "컴퓨터수학3",
+        "정보관 201호",
+        2,
+        2,
+        3,
+        3,
+        Color(0xFFF58284)
+    ),
+    ClassData(
+        "컴퓨터수학6",
+    "정보관 201호",
+    5,
+    3,
+    4,
+    3,
+        Color(0xFFF58284)
+    ),
+    ClassData(
+        "컴퓨터수학6",
+        "정보관 201호",
+        5,
+        1,
+        2,
+        3,
+        Color(0xFFF58284)
+    ),
+    ClassData(
+        "컴퓨터수학6",
+        "정보관 201호",
+        3,
+        2,
+        2,
+        3,
+        Color(0xFFF58284)
+    )
+)
 
 
 @RequiresApi(Build.VERSION_CODES.O)

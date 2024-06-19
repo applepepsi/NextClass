@@ -11,6 +11,7 @@ sealed class BottomNavItem(
     object Schedule : BottomNavItem("schedule", R.drawable.map_icon,SCHEDULE)
 
 
+
     companion object{
         const val HOME = "HOME"
         const val TIMETABLE = "TIMETABLE"

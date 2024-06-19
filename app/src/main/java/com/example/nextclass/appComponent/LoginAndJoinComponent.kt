@@ -47,6 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.ui.theme.Pastel_Red
@@ -81,10 +82,11 @@ fun NormalTextComponent(
 fun TextInputFieldComponent(
     value: String,
     onValueChange: (String) -> Unit,
-    placeholderValue:String,
-    labelValue: String,
-    isError:Boolean,
-    errorMessage:String,
+    placeholderValue:String="",
+    labelValue: String="",
+    isError:Boolean=false,
+    errorMessage:String="",
+    readOnly:Boolean=false
 ){
 
     Text(
@@ -119,6 +121,7 @@ fun TextInputFieldComponent(
         onValueChange = onValueChange,
         isError=isError,
         shape = RoundedCornerShape(15.dp),
+        readOnly=readOnly
     )
     if(isError){
         Text(
@@ -531,7 +534,8 @@ fun GradeDropDownMenuComponent(
 fun InputButtonComponent(
     value: String,
     onClick: () -> Unit,
-    modifier: Modifier
+    modifier: Modifier,
+    showImage:Boolean=false
 ) {
 
         Button(
@@ -562,14 +566,16 @@ fun InputButtonComponent(
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
                 )
-                Icon(
-                    modifier = Modifier
-                        .padding(start = 140.dp)
-                        .size(20.dp),
-                    imageVector = ImageVector.vectorResource(R.drawable.arrow),
-                    contentDescription = "가입완료 아이콘",
-                    tint = Color.Unspecified,
-                )
+                if(showImage){
+                    Icon(
+                        modifier = Modifier
+                            .padding(start = 140.dp)
+                            .size(20.dp),
+                        imageVector = ImageVector.vectorResource(R.drawable.arrow),
+                        contentDescription = "가입완료 아이콘",
+                        tint = Color.Unspecified,
+                    )
+                }
             }
         }
     }
@@ -603,9 +609,9 @@ fun TextInputHelpFieldComponent(
 fun GreetingPreview() {
     val testRepository = TestRepository()
     val loginViewModel = LoginViewModel(testRepository)
-
+    val navController = rememberNavController()
     NextClassTheme {
-        JoinView(loginViewModel)
+        JoinView(loginViewModel,navController)
     }
 }
 

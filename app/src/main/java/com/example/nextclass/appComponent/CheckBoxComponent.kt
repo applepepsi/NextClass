@@ -18,6 +18,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.Navi_Green
 import com.example.nextclass.ui.theme.NextClassTheme
@@ -30,7 +31,8 @@ import com.example.nextclass.viewmodel.LoginViewModel
 fun CheckboxComponent(
     checked:Boolean,
     onClickCheckBox: () -> Unit,
-    checkBoxTextComponent: @Composable () -> Unit
+    checkBoxTextComponent: @Composable () -> Unit,
+
 ) {
 
     Row(
@@ -64,11 +66,14 @@ fun CheckBoxPreview() {
     val testRepository = TestRepository()
     val loginViewModel = LoginViewModel(testRepository)
 
-    NextClassTheme {
-        CheckboxComponent(
-            checked = loginViewModel.termsCheckBoxState.value,
-            onClickCheckBox = {loginViewModel.toggleTermsCheckBoxValue()},
-            checkBoxTextComponent = {TermsAndConditionsTextComponent()}
-        )
-    }
+//    NextClassTheme {
+//        CheckboxComponent(
+//            checked = loginViewModel.termsCheckBoxState.value,
+//            onClickCheckBox = {loginViewModel.toggleTermsCheckBoxValue()},
+//            checkBoxTextComponent = {
+//                TermsAndConditionsTextComponent(
+//
+//                )}
+//        )
+//    }
 }

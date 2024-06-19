@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +42,8 @@ import com.example.nextclass.viewmodel.LoginViewModel
 @Composable
 fun TopNav(loginViewModel: LoginViewModel = hiltViewModel()) {
     val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
     Surface(
         modifier = Modifier
@@ -51,8 +54,9 @@ fun TopNav(loginViewModel: LoginViewModel = hiltViewModel()) {
         shape = RoundedCornerShape(16.dp)
     ) {
         Column {
-
-            TopBarComponent(navController = navController)
+            if (currentRoute != "findIdView" && currentRoute != "findPasswordView" && currentRoute != "termsAndConditionsView") {
+                TopBarComponent(navController = navController)
+            }
 
             TopNavGraph(loginViewModel = loginViewModel, navController = navController)
         }

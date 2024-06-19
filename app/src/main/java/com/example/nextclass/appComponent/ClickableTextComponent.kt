@@ -10,13 +10,18 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.example.nextclass.items.TopNavItem
 import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.view.LoginView
 import com.example.nextclass.viewmodel.LoginViewModel
 
 @Composable
-fun TermsAndConditionsTextComponent() {
+fun TermsAndConditionsTextComponent(
+    navController: NavController
+) {
 
     val all="모든 "
     val terms="이용 약관"
@@ -37,7 +42,9 @@ fun TermsAndConditionsTextComponent() {
     ClickableText(text = annotatedString, onClick = {offset->
         annotatedString.getStringAnnotations(offset,offset)
             .firstOrNull()?.also{span->
-                Log.d("test", span.toString())
+                when (span.item) {
+                    terms -> navController.navigate("termsAndConditionsView")
+                }
             }
     })
 
@@ -60,7 +67,9 @@ fun RememberUserComponent() {
 
 
 @Composable
-fun FindIdOrPasswordTextComponent() {
+fun FindIdOrPasswordTextComponent(
+    navController: NavController
+) {
 
     val id="아이디 "
     val or="또는 "
@@ -70,25 +79,55 @@ fun FindIdOrPasswordTextComponent() {
 
     val annotatedString = buildAnnotatedString {
         withStyle(style = SpanStyle(fontSize = 13.sp)) {
-            withStyle(style = SpanStyle(color = Color.Red)) { // 특정 부분 스타일 설정
+            withStyle(style = SpanStyle(color = Color.Red)) {
                 pushStringAnnotation(tag = id, annotation = id)
                 append(id)
             }
             append(or)
-            withStyle(style = SpanStyle(color = Color.Red)) { // 특정 부분 스타일 설정
+            withStyle(style = SpanStyle(color = Color.Red)) {
                 pushStringAnnotation(tag = password, annotation = password)
                 append(password)
             }
             append(forget)
         }
     }
-    ClickableText(text = annotatedString, onClick = {offset->
-        annotatedString.getStringAnnotations(offset,offset)
-            .firstOrNull()?.also{span->
-                Log.d("test", span.toString())
+    ClickableText(text = annotatedString, onClick = { offset ->
+        annotatedString.getStringAnnotations(offset, offset)
+            .firstOrNull()?.also { span ->
+                Log.d("test", span.item.toString())
+                when (span.item) {
+                    id -> navController.navigate("findIdView")
+                    password -> navController.navigate("findPasswordView")
+                }
             }
     })
+}
 
+@Composable
+fun RePostPasswordCodeComponent(
+
+) {
+    val passwordCode="인증 번호를 받지 못하셨나요?    "
+    val repost="다시 보내기"
+
+    val annotatedString = buildAnnotatedString {
+        withStyle(style = SpanStyle(fontSize = 13.sp)) {
+
+            append(passwordCode)
+
+            withStyle(style = SpanStyle(color = Color.Red),) {
+                pushStringAnnotation(tag = repost, annotation = repost)
+                append(repost)
+            }
+        }
+    }
+    ClickableText(text = annotatedString, onClick = { offset ->
+        annotatedString.getStringAnnotations(offset, offset)
+            .firstOrNull()?.also { span ->
+                Log.d("test", span.item.toString())
+
+            }
+    })
 }
 
 @Preview(showBackground = true)
@@ -96,8 +135,9 @@ fun FindIdOrPasswordTextComponent() {
 fun TextPreview() {
 
 
+
     NextClassTheme {
-        RememberUserComponent()
+
     }
 }
 

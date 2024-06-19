@@ -34,10 +34,14 @@ import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.Data.ClassData
 import com.example.nextclass.appComponent.BasicClass
 import com.example.nextclass.appComponent.TopNav
 import com.example.nextclass.appComponent.sampleEvents
+import com.example.nextclass.repository.TestRepository
+import com.example.nextclass.view.InsertPasswordCodeView
 
 
 @AndroidEntryPoint
@@ -48,10 +52,15 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
+            val testRepository = TestRepository()
+            val loginViewModel = LoginViewModel(testRepository)
+
+            val navController = rememberNavController()
+
             NextClassTheme {
 //                BasicClass(sampleEvents)
 //                Greeting()
-
+            InsertPasswordCodeView(loginViewModel = loginViewModel, navController = navController)
             }
         }
     }
@@ -59,8 +68,10 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting() {
-
+    val navController = rememberNavController()
+    val loginViewModel: LoginViewModel = hiltViewModel()
     TopNav()
+
 }
 
 
