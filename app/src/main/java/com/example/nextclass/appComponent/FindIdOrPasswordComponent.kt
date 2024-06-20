@@ -54,10 +54,10 @@ import com.example.nextclass.viewmodel.LoginViewModel
 
 @Composable
 fun FindFieldComponent(
-    placeholderValue:String,
+    placeholderValue:String="",
     value: String,
     onValueChange: (String) -> Unit,
-    labelValue: String,
+    labelValue: String="",
     isError: Boolean = false,
     errorMessage: String = "",
 

@@ -84,7 +84,7 @@ fun TimetableScreen(navController: NavHostController) {
     }
 }
 
-
+//
 @Composable
 fun ScheduleScreen(navController: NavHostController) {
     Box(
@@ -102,7 +102,7 @@ fun ScheduleScreen(navController: NavHostController) {
     }
 }
 
-
+//로그인뷰
 @Composable
 fun LoginView(loginViewModel: LoginViewModel,navController: NavController) {
 
@@ -168,7 +168,7 @@ fun LoginView(loginViewModel: LoginViewModel,navController: NavController) {
 
 }
 
-
+//회원가입뷰
 @Composable
 fun JoinView(loginViewModel: LoginViewModel,navController: NavController) {
 
@@ -306,6 +306,7 @@ fun HomeView(navController: NavHostController) {
     }
 }
 
+//비밀번호 찾기 뷰
 @Composable
 fun ForGotPassword(
     loginViewModel: LoginViewModel,
@@ -390,7 +391,7 @@ fun ForGotPassword(
 
 
 }
-
+//아이디 찾기 뷰
 @Composable
 fun ForGotId(
     loginViewModel: LoginViewModel,
@@ -470,7 +471,7 @@ fun ForGotId(
         }
     }
 }
-
+//이용약관 뷰(제작중)
 @Composable
 fun TermsAndConditionsView(
     loginViewModel: LoginViewModel,
@@ -490,6 +491,7 @@ fun TermsAndConditionsView(
     }
 }
 
+//아이디 찾기의 결과 (쓰지 않기로)
 @Composable
 fun FindIdResult(
     loginViewModel: LoginViewModel,
@@ -556,6 +558,7 @@ fun FindIdResult(
     }
 }
 
+//비밀번호 찾기의 코드 입력 뷰
 @Composable
 fun InsertPasswordCodeView(
     loginViewModel: LoginViewModel,
@@ -647,6 +650,85 @@ fun InsertPasswordCodeView(
     }
 }
 
+//회원정보 수정의 비밀번호 인증 뷰
+@Composable
+fun PasswordConfirm(
+    loginViewModel: LoginViewModel,
+    navController: NavController) {
+
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 20.dp),
+
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+
+    ){
+        AppBarTextAndButtonComponent(value = stringResource(id = R.string.FindId),
+            navController=navController)
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 100.dp),
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Surface(
+            shape = RoundedCornerShape(30.dp),
+            modifier = Modifier
+                .height(350.dp)
+                .padding(start = 20.dp, end = 20.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .background(Background_Color2)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    MainTextComponent(
+                        value = stringResource(id = R.string.UserInfoModify),
+                        modifier=Modifier
+                            .padding(top=20.dp)
+                    )
+
+                    DescriptionTextComponent(
+                        value= stringResource(id = R.string.InputUserInfoModifyPassword),
+                        modifier=Modifier.padding(start = 5.dp,top=5.dp)
+                    )
+
+                    FindFieldComponent(
+                        value = loginViewModel.userInfoModifyPasswordConfirm.value,
+                        onValueChange = { loginViewModel.updateUserInfoModifyPasswordConfirm(it) },
+
+                        placeholderValue = stringResource(id = R.string.input_password),
+                    )
+
+                    Spacer(modifier = Modifier.height(30.dp))
+
+                    TextInputHelpFieldComponent(
+                        errorMessage = loginViewModel.userInfoModifyPasswordConfirmErrorMessage.value.asString(LocalContext.current),
+                        isError = loginViewModel.userInfoModifyPasswordConfirmError.value,
+                    )
+
+                    InputButtonComponent(
+                        value = "비밀번호 확인",
+                        onClick = { loginViewModel.submitUserInfoModifyPasswordConfirm() },
+                        modifier = Modifier.padding(start=15.dp,end=15.dp))
+
+                    Spacer(modifier = Modifier.height(20.dp))
+                }
+            }
+        }
+    }
+}
 
 
 //프리뷰는 hilt를 쓰면 의존성주입을 초기화 하지 않는다고 해서 테스트 용으로 하나 더 만듬
@@ -664,7 +746,7 @@ fun FindPasswordPreview() {
 //        LoginView(loginViewModel)
 //        ForGotId(loginViewModel)
 //        TermsAndConditionsView(loginViewModel,navController)
-        InsertPasswordCodeView(loginViewModel,navController)
+        PasswordConfirm(loginViewModel,navController)
     }
 }
 

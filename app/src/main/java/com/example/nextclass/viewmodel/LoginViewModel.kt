@@ -150,7 +150,14 @@ class LoginViewModel @Inject constructor(
     private val _verifyCodeInputErrorMessage=mutableStateOf<StringValue>(StringValue.Empty)
     val verifyCodeInputErrorMessage: State<StringValue> = _verifyCodeInputErrorMessage
 
+    private val _userInfoModifyPasswordConfirm=mutableStateOf("")
+    val userInfoModifyPasswordConfirm: State<String> = _userInfoModifyPasswordConfirm
 
+    private val _userInfoModifyPasswordConfirmError=mutableStateOf(false)
+    val userInfoModifyPasswordConfirmError: State<Boolean> = _userInfoModifyPasswordConfirmError
+
+    private val _userInfoModifyPasswordConfirmErrorMessage=mutableStateOf<StringValue>(StringValue.Empty)
+    val userInfoModifyPasswordConfirmErrorMessage: State<StringValue> = _userInfoModifyPasswordConfirmErrorMessage
     fun updateEmail(newEmail: String) {
         _email.value = newEmail
         emailCheck(newEmail)
@@ -201,7 +208,7 @@ class LoginViewModel @Inject constructor(
 
     }
     fun updateJoinPassword(newJoinPassword: String) {
-        
+
         _joinPassword.value = newJoinPassword
         joinPasswordCheck(newJoinPassword)
     }
@@ -329,8 +336,6 @@ class LoginViewModel @Inject constructor(
     fun joinComplete(){
 
 
-//        Log.d("joinRequest", joinRequest.toString())
-
         if(joinEmptyAndErrorCheck() && duplicateCheck() && termsCheck())
         {
 
@@ -444,5 +449,14 @@ class LoginViewModel @Inject constructor(
     fun submitVerifyCode(){
         _verifyCodeInputError.value=false
         _verifyCodeInputErrorMessage.value=StringValue.StringResource(R.string.WrongVerityCodeMassage)
+    }
+
+    fun updateUserInfoModifyPasswordConfirm(value: String){
+        _userInfoModifyPasswordConfirm.value=value
+    }
+
+    fun submitUserInfoModifyPasswordConfirm(){
+        _userInfoModifyPasswordConfirmError.value=false
+        _userInfoModifyPasswordConfirmErrorMessage.value=StringValue.StringResource(R.string.WrongVerityCodeMassage)
     }
 }
