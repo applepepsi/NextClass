@@ -71,9 +71,12 @@ class UserInfoRepositoryImpl @Inject constructor(
 
     override fun postUserJoinInfo(userJoinInfo: JoinRequest, callback: (ServerResponse?) -> Unit){
         CoroutineScope(Dispatchers.IO).launch {
+
             val result = try {
+                Log.d("userJoinInfo", userJoinInfo.toString())
                 val response = RetrofitBuilder.api.postUserJoinInfo(userJoinInfo)
                 if (response.isSuccessful){
+                    Log.d("JoinResponse.body()", response.body().toString())
                     response.body()
                 } else{
                     Log.d("id중복체크 실패","id중복체크 실패")

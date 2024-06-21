@@ -372,13 +372,14 @@ class LoginViewModel @Inject constructor(
         {
 
             val joinRequest = JoinRequest(
-                email = email.value,
-                joinId = joinId.value,
-                joinPassword = joinPassword.value,
-                passwordConfirm = passwordConfirm.value,
-                name = name.value,
-                schoolName = schoolName.value,
-                entranceYear = CutEntranceYear.cutEntranceYear(entranceYear.value))
+                id=joinId.value,
+                name=name.value,
+                password=joinPassword.value,
+                email=email.value,
+                member_grade = CutEntranceYear.cutEntranceYear(entranceYear.value),
+                member_school=schoolName.value
+            )
+
 
             userInfoRepository.postUserJoinInfo(joinRequest){ joinRequestResult->
                 Log.d("serverProductData", joinRequestResult.toString())
@@ -492,3 +493,5 @@ class LoginViewModel @Inject constructor(
         _userInfoModifyPasswordConfirmErrorMessage.value=StringValue.StringResource(R.string.WrongVerityCodeMassage)
     }
 }
+
+//todo 가입후 화면이동 + 로그인 처리

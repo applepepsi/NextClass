@@ -25,8 +25,8 @@ interface API {
     suspend fun emailDuplicateCheck(@Body checkRequest: DuplicateCheckRequest): Response<ServerResponse>
 
 
-    @POST("/api/server/postJoinForm")
-    suspend fun postUserJoinInfo(@Query("joinForm")joinInfo: JoinRequest):Response<ServerResponse>
+    @POST("/register")
+    suspend fun postUserJoinInfo(@Body joinInfo: JoinRequest):Response<ServerResponse>
 
     @POST("/api/server/postJoinForm")
     suspend fun postUserLoginForm(@Query("loginInfo")loginInfo: String):Response<ServerResponse>

@@ -5,11 +5,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class JoinRequest(
-    val email: String,
-    val joinId: String,
-    val joinPassword: String,
-    val passwordConfirm: String,
+    val id: String,
     val name: String,
-    val schoolName: String,
-    val entranceYear: Int
+    val password: String,
+    val email: String,
+    val member_grade: Int,
+    val member_school: String,
 )
