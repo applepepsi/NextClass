@@ -192,7 +192,7 @@ fun EmailInputFieldComponent(
     emailCheckProcess:()->Unit,
     isError:Boolean,
     errorMessage:String,
-
+    duplicateCheckButtonState:Boolean,
 ){
 
     Text(
@@ -238,7 +238,9 @@ fun EmailInputFieldComponent(
                 "이미 사용중인 이메일 입니다."
             }
 
-            IconButton(onClick = emailCheckProcess) {
+            IconButton(
+                onClick = emailCheckProcess,
+                enabled = duplicateCheckButtonState) {
                 Icon(imageVector = iconImage, contentDescription = description)
             }
 
@@ -273,7 +275,8 @@ fun IdInputFieldComponent(
     idCheckProcess:()->Unit,
     isError: Boolean = false,
     errorMessage: String = "",
-    showTrailingIcon: Boolean = true
+    showTrailingIcon: Boolean = true,
+    duplicateCheckButtonState:Boolean=false,
 ){
 
     Log.d("isError", isError.toString())
@@ -323,7 +326,9 @@ fun IdInputFieldComponent(
                         "이미 사용중인 이메일 입니다."
                     }
 
-                    IconButton(onClick = idCheckProcess) {
+                    IconButton(
+                        onClick = idCheckProcess,
+                        enabled = duplicateCheckButtonState) {
                         Icon(imageVector = iconImage, contentDescription = description)
                     }
                 }

@@ -58,9 +58,10 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             NextClassTheme {
+                Greeting()
 //                BasicClass(sampleEvents)
 //                Greeting()
-            InsertPasswordCodeView(loginViewModel = loginViewModel, navController = navController)
+//            InsertPasswordCodeView(loginViewModel = loginViewModel, navController = navController)
             }
         }
     }

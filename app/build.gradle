@@ -7,9 +7,14 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     namespace 'com.example.nextclass'
     compileSdk 34
+
+
 
     defaultConfig {
         applicationId "com.example.nextclass"
@@ -22,6 +27,8 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        buildConfigField "String", "SERVER_ADDRESS", properties['server_address']
     }
 
     buildTypes {

@@ -1,6 +1,7 @@
 package com.example.nextclass.repository
 
 import android.util.Log
+import com.example.nextclass.Data.DuplicateCheckRequest
 import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.Data.ServerResponse
 import com.example.oneplusone.serverConnection.RetrofitBuilder
@@ -11,13 +12,22 @@ import kotlinx.coroutines.withContext
 
 class TestRepository : UserInfoRepository {
     override fun joinIdDuplicateCheck(id: String,callback: (ServerResponse?) -> Unit) {
+
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
-                val response = RetrofitBuilder.api.idDuplicateCheck(id)
+                val idRequest = DuplicateCheckRequest(id)
+
+                val response = RetrofitBuilder.api.idDuplicateCheck(idRequest)
+                Log.d("responseCheck", idRequest.toString())
                 if (response.isSuccessful){
+                    Log.d("response.body()", response.body().toString())
                     response.body()
-                } else null
+                } else {
+                    Log.d("id중복체크 실패","id중복체크 실패")
+                    null
+                }
             } catch (e: Exception) {
+                Log.d("id중복체크 실패",e.toString())
                 null
             }
             withContext(Dispatchers.Main) {
@@ -26,15 +36,19 @@ class TestRepository : UserInfoRepository {
             }
         }
     }
-
     override fun emailDuplicateCheck(email: String,callback: (ServerResponse?) -> Unit){
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
-                val response = RetrofitBuilder.api.emailDuplicateCheck(email)
+                val checkRequest = DuplicateCheckRequest("email")
+                val response = RetrofitBuilder.api.emailDuplicateCheck(checkRequest)
                 if (response.isSuccessful){
                     response.body()
-                } else null
+                } else{
+                    Log.d("id중복체크 실패","id중복체크 실패")
+                    null
+                }
             } catch (e: Exception) {
+                Log.d("id중복체크 실패",e.toString())
                 null
             }
             withContext(Dispatchers.Main) {
@@ -43,7 +57,6 @@ class TestRepository : UserInfoRepository {
             }
         }
     }
-
     override fun postUserJoinInfo(userJoinInfo: JoinRequest, callback: (ServerResponse?) -> Unit){
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {

@@ -126,6 +126,7 @@ fun LoginView(loginViewModel: LoginViewModel,navController: NavController) {
             labelValue = stringResource(id = R.string.id),
             idCheckProcess = { loginViewModel.joinIdDuplicateCheck() },
             showTrailingIcon = false
+
         )
 
         PasswordInputFieldComponent(
@@ -196,7 +197,8 @@ fun JoinView(loginViewModel: LoginViewModel,navController: NavController) {
             emailCheckValue = loginViewModel.emailDuplicateCheck.value,
             emailCheckProcess = { loginViewModel.emailDuplicateCheck() },
             isError = loginViewModel.emailInputError.value,
-            errorMessage=loginViewModel.emailInputErrorMessage.value.asString(LocalContext.current)
+            errorMessage=loginViewModel.emailInputErrorMessage.value.asString(LocalContext.current),
+            duplicateCheckButtonState = loginViewModel.emailDuplicateButtonState.value
         )
 
         IdInputFieldComponent(
@@ -206,8 +208,8 @@ fun JoinView(loginViewModel: LoginViewModel,navController: NavController) {
             idDuplicateCheckValue = loginViewModel.joinIdDuplicateCheck.value,
             idCheckProcess = { loginViewModel.joinIdDuplicateCheck() },
             isError = loginViewModel.joinIdInputError.value,
-            errorMessage=loginViewModel.joinIdInputErrorMessage.value.asString(LocalContext.current)
-
+            errorMessage=loginViewModel.joinIdInputErrorMessage.value.asString(LocalContext.current),
+            duplicateCheckButtonState = loginViewModel.idDuplicateButtonState.value
         )
 
         PasswordInputFieldComponent(
@@ -649,7 +651,7 @@ fun InsertPasswordCodeView(
         }
     }
 }
-
+//todo 비밀번호 재설정창 제작해야함
 //회원정보 수정의 비밀번호 인증 뷰
 @Composable
 fun PasswordConfirm(

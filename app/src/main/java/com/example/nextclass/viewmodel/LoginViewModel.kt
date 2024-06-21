@@ -158,20 +158,36 @@ class LoginViewModel @Inject constructor(
 
     private val _userInfoModifyPasswordConfirmErrorMessage=mutableStateOf<StringValue>(StringValue.Empty)
     val userInfoModifyPasswordConfirmErrorMessage: State<StringValue> = _userInfoModifyPasswordConfirmErrorMessage
+
+    private val _emailDuplicateButtonState=mutableStateOf(false)
+    val emailDuplicateButtonState: State<Boolean> = _emailDuplicateButtonState
+
+    private val _idDuplicateButtonState=mutableStateOf(false)
+    val idDuplicateButtonState: State<Boolean> = _idDuplicateButtonState
+
     fun updateEmail(newEmail: String) {
         _email.value = newEmail
-        emailCheck(newEmail)
         _emailDuplicateCheck.value=false
+        emailCheck(newEmail)
     }
 
     private fun emailCheck(newEmail: String){
 
         val pattern: Pattern = Patterns.EMAIL_ADDRESS
 
-        val errorMessage = when {
-            !pattern.matcher(newEmail).matches() -> StringValue.StringResource(R.string.wrongEmailType)
-            !_emailDuplicateCheck.value -> StringValue.StringResource(R.string.needEmailDuplicateCheck)
-            else -> StringValue.Empty
+        val errorMessage: StringValue = when {
+            !pattern.matcher(newEmail).matches() -> {
+                _emailDuplicateButtonState.value = false
+                StringValue.StringResource(R.string.wrongEmailType)
+            }
+            !_emailDuplicateCheck.value -> {
+                _emailDuplicateButtonState.value = true
+                StringValue.StringResource(R.string.needEmailDuplicateCheck)
+            }
+            else -> {
+                _emailDuplicateButtonState.value = true
+                StringValue.Empty
+            }
         }
         _emailInputErrorMessage.value = errorMessage
         _emailInputError.value = errorMessage != StringValue.Empty
@@ -179,19 +195,31 @@ class LoginViewModel @Inject constructor(
 
     fun updateJoinId(newjoinId: String) {
         _joinId.value = newjoinId
+        _joinIdDuplicateCheck.value=false
         joinIdCheck(newjoinId)
-
         Log.d("joinIdTest",_joinId.value)
         //아이디 인증을 하고 텍스트를 바꾸면 인증을 다시하도록
-        _joinIdDuplicateCheck.value=false
+
     }
 
     private fun joinIdCheck(newjoinId: String){
         val errorMessage = when {
-            newjoinId.length !in 5..20 -> StringValue.StringResource(R.string.joinIdSizeLimit)
-            !newjoinId.matches(Regex("^[a-zA-Z0-9]*$")) -> StringValue.StringResource(R.string.joinIdOnlyString)
-            !_joinIdDuplicateCheck.value -> StringValue.StringResource(R.string.needJoinIdDuplicateCheck)
-            else -> StringValue.Empty
+            newjoinId.length !in 5..20 -> {
+                _idDuplicateButtonState.value=false
+                StringValue.StringResource(R.string.joinIdSizeLimit)
+            }
+            !newjoinId.matches(Regex("^[a-zA-Z0-9]*$")) -> {
+                _idDuplicateButtonState.value=false
+                StringValue.StringResource(R.string.joinIdOnlyString)
+            }
+            !_joinIdDuplicateCheck.value -> {
+                _idDuplicateButtonState.value=true
+                StringValue.StringResource(R.string.needJoinIdDuplicateCheck)
+            }
+            else -> {
+                _idDuplicateButtonState.value=true
+                StringValue.Empty
+            }
         }
         _joinIdInputErrorMessage.value = errorMessage
         _joinIdInputError.value = errorMessage != StringValue.Empty
@@ -290,8 +318,10 @@ class LoginViewModel @Inject constructor(
 
         userInfoRepository.emailDuplicateCheck(email.value){serverResponse ->
             if(serverResponse!=null){
-                if(serverResponse.code !=200){
+                if(serverResponse.code ==200){
                     _emailDuplicateCheck.value=true
+                    _emailInputErrorMessage.value = StringValue.Empty
+                    _emailInputError.value = false
                 }
                 else{
                     _emailInputErrorMessage.value = StringValue.StringResource(R.string.emailDuplicate)
@@ -311,8 +341,10 @@ class LoginViewModel @Inject constructor(
 
         userInfoRepository.joinIdDuplicateCheck(joinId.value){serverResponse ->
             if(serverResponse!=null){
-                if(serverResponse.code !=200){
+                if(serverResponse.code ==200){
                     _joinIdDuplicateCheck.value=true
+                    _joinIdInputErrorMessage.value = StringValue.Empty
+                    _joinIdInputError.value = false
                 }
                 else{
                     _joinIdInputErrorMessage.value = StringValue.StringResource(R.string.joinIdDuplicate)

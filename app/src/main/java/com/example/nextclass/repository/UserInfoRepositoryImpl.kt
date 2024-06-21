@@ -1,16 +1,18 @@
 package com.example.nextclass.repository
 
 import android.util.Log
+import com.example.nextclass.Data.DuplicateCheckRequest
 import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.Data.ServerResponse
 import com.example.oneplusone.serverConnection.RetrofitBuilder
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.ResponseBody
-import retrofit2.Response
+import org.json.JSONObject
 import javax.inject.Inject
+
 
 class UserInfoRepositoryImpl @Inject constructor(
 
@@ -18,10 +20,15 @@ class UserInfoRepositoryImpl @Inject constructor(
 
 
     override fun joinIdDuplicateCheck(id: String,callback: (ServerResponse?) -> Unit) {
+
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
-                val response = RetrofitBuilder.api.idDuplicateCheck(id)
+                val idRequest = DuplicateCheckRequest(id=id)
+
+                val response = RetrofitBuilder.api.idDuplicateCheck(idRequest)
+                Log.d("responseCheck", idRequest.toString())
                 if (response.isSuccessful){
+                    Log.d("response.body()", response.body().toString())
                     response.body()
                 } else {
                     Log.d("id중복체크 실패","id중복체크 실패")
@@ -41,8 +48,11 @@ class UserInfoRepositoryImpl @Inject constructor(
     override fun emailDuplicateCheck(email: String,callback: (ServerResponse?) -> Unit){
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
-                val response = RetrofitBuilder.api.emailDuplicateCheck(email)
+                val emailRequest = DuplicateCheckRequest(email=email)
+                Log.d("emailRequest", emailRequest.toString())
+                val response = RetrofitBuilder.api.emailDuplicateCheck(emailRequest)
                 if (response.isSuccessful){
+                    Log.d("response.body()", response.body().toString())
                     response.body()
                 } else{
                     Log.d("id중복체크 실패","id중복체크 실패")
