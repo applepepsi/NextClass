@@ -1,18 +1,26 @@
 package com.example.nextclass.viewmodel
 
+import android.app.Activity
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import android.util.Patterns
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import com.example.nextclass.Data.JoinRequest
+import com.example.nextclass.Data.LoginRequest
 import com.example.nextclass.R
 import com.example.nextclass.repository.UserInfoRepository
 import com.example.nextclass.utils.CutEntranceYear
+import com.example.nextclass.utils.DUPLICATE_PARAMETER
+import com.example.nextclass.utils.SUCCESS_CODE
 import com.example.nextclass.utils.StringValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.regex.Pattern
 import javax.inject.Inject
+
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -165,6 +173,15 @@ class LoginViewModel @Inject constructor(
     private val _idDuplicateButtonState=mutableStateOf(false)
     val idDuplicateButtonState: State<Boolean> = _idDuplicateButtonState
 
+    private val _joinResult=mutableStateOf(false)
+    val joinResult: State<Boolean> = _joinResult
+
+    private val _autoLoginState=mutableStateOf(false)
+    val autoLoginState: State<Boolean> = _autoLoginState
+
+    private val _loginResult=mutableStateOf(false)
+    val loginResult: State<Boolean> = _loginResult
+
     fun updateEmail(newEmail: String) {
         _email.value = newEmail
         _emailDuplicateCheck.value=false
@@ -314,14 +331,23 @@ class LoginViewModel @Inject constructor(
         _termsCheckBoxState.value = !_termsCheckBoxState.value
     }
 
+    fun toggleAutoLoginState() {
+
+        _autoLoginState.value = !_autoLoginState.value
+        Log.d("오토로그인 값",_autoLoginState.value.toString())
+    }
+
     fun emailDuplicateCheck(){
 
         userInfoRepository.emailDuplicateCheck(email.value){serverResponse ->
             if(serverResponse!=null){
-                if(serverResponse.code ==200){
+                if(serverResponse.code ==SUCCESS_CODE){
                     _emailDuplicateCheck.value=true
                     _emailInputErrorMessage.value = StringValue.Empty
                     _emailInputError.value = false
+                }else if(serverResponse.errorCode==DUPLICATE_PARAMETER){
+                    _emailInputErrorMessage.value = StringValue.StringResource(R.string.emailDuplicate)
+                    _emailInputError.value = true
                 }
                 else{
                     _emailInputErrorMessage.value = StringValue.StringResource(R.string.emailDuplicate)
@@ -341,10 +367,13 @@ class LoginViewModel @Inject constructor(
 
         userInfoRepository.joinIdDuplicateCheck(joinId.value){serverResponse ->
             if(serverResponse!=null){
-                if(serverResponse.code ==200){
+                if(serverResponse.code ==SUCCESS_CODE){
                     _joinIdDuplicateCheck.value=true
                     _joinIdInputErrorMessage.value = StringValue.Empty
                     _joinIdInputError.value = false
+                }else if(serverResponse.errorCode==DUPLICATE_PARAMETER){
+                    _joinIdInputErrorMessage.value = StringValue.StringResource(R.string.joinIdDuplicate)
+                    _joinIdInputError.value = true
                 }
                 else{
                     _joinIdInputErrorMessage.value = StringValue.StringResource(R.string.joinIdDuplicate)
@@ -383,7 +412,15 @@ class LoginViewModel @Inject constructor(
 
             userInfoRepository.postUserJoinInfo(joinRequest){ joinRequestResult->
                 Log.d("serverProductData", joinRequestResult.toString())
+                if(joinRequestResult !=null){
+                    if(joinRequestResult.code==SUCCESS_CODE){
+                        _joinResult.value=true
+                    }
+                }else{
 
+                    _joinFailMessage.value=StringValue.StringResource(R.string.duplicateFail)
+                    _joinFail.value=true
+                }
             }
             Log.d("가입 성공",
                 "email : ${email.value}," +
@@ -406,15 +443,56 @@ class LoginViewModel @Inject constructor(
 
 
     fun tryLogin(){
-        if(loginInputCheck()){
-            _loginFailMessage.value=StringValue.StringResource(R.string.emptyIdOrPassword)
-            _loginFail.value=true
+        if(!loginInputCheck()){
+            val loginRequest=LoginRequest(
+                id=id.value,
+                password=password.value
+            )
+            userInfoRepository.postUserLoginInfo(loginRequest){ loginRequestResult->
+                if(loginRequestResult !=null){
+                    if(loginRequestResult.code==SUCCESS_CODE){
+                        Log.d("로그인성공", loginRequestResult.code.toString())
+                        _loginResult.value=true
+//                        saveUserInfo()
+                        //todo 로그인 성공후 기능 구현해야함
+                    }
+//                    else if(loginRequestResult.errorCode=="E00202"){
+//
+//                    }
+                    else{
+                        _loginFailMessage.value=StringValue.StringResource(R.string.wrongIdOrPassword)
+                        _loginFail.value=true
+                    }
+                }else{
+                    _loginFailMessage.value=StringValue.StringResource(R.string.duplicateFail)
+                    _loginFail.value=true
+                }
+            }
         }else{
-            //todo 서버에 전송해서 값을 받는 로직 추가해야함
-            _loginFailMessage.value=StringValue.StringResource(R.string.wrongIdOrPassword)
+            _loginFailMessage.value=StringValue.StringResource(R.string.emptyIdOrPassword)
             _loginFail.value=true
         }
     }
+
+    //자동 로그인이 켜져있다면 사용자의 아이디와 비밀번호를 저장하여 어플을 시작할때 자동로그인이 되도록함
+    //todo 로그아웃을 구현하고 로그아웃시 SharedPreferences에 저장된 아이디와 비밀번호 제거
+    fun tryAutoLogin(autoLoginId:String?,autoLoginPassword:String?){
+        if(autoLoginId!=null && autoLoginPassword !=null){
+            Log.d("자동 로그인시도","자동")
+            val loginRequest=LoginRequest(
+                id=autoLoginId,
+                password=autoLoginPassword
+            )
+            userInfoRepository.postUserLoginInfo(loginRequest){ loginRequestResult->
+                if(loginRequestResult !=null) {
+                    if (loginRequestResult.code == SUCCESS_CODE) {
+                        Log.d("자동 로그인성공", loginRequestResult.code.toString())
+                    }
+                }
+            }
+        }
+    }
+
 
     private fun loginInputCheck():Boolean{
         return id.value.isEmpty() || password.value.isEmpty()
@@ -492,6 +570,8 @@ class LoginViewModel @Inject constructor(
         _userInfoModifyPasswordConfirmError.value=false
         _userInfoModifyPasswordConfirmErrorMessage.value=StringValue.StringResource(R.string.WrongVerityCodeMassage)
     }
+
+
 }
 
 //todo 가입후 화면이동 + 로그인 처리

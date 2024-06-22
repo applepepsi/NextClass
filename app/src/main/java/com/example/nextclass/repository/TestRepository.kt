@@ -3,6 +3,7 @@ package com.example.nextclass.repository
 import android.util.Log
 import com.example.nextclass.Data.DuplicateCheckRequest
 import com.example.nextclass.Data.JoinRequest
+import com.example.nextclass.Data.LoginRequest
 import com.example.nextclass.Data.ServerResponse
 import com.example.oneplusone.serverConnection.RetrofitBuilder
 import kotlinx.coroutines.CoroutineScope
@@ -78,10 +79,10 @@ class TestRepository : UserInfoRepository {
         }
     }
 
-    override fun postUserLoginInfo(userJoinInfo: String,callback: (ServerResponse?) -> Unit){
+    override fun postUserLoginInfo(userLoginInfo: LoginRequest, callback: (ServerResponse?) -> Unit){
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
-                val response = RetrofitBuilder.api.postUserLoginForm(userJoinInfo)
+                val response = RetrofitBuilder.api.postUserLoginForm(userLoginInfo)
                 if (response.isSuccessful){
                     response.body()
                 } else{

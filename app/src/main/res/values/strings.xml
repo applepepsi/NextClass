@@ -25,7 +25,7 @@
     <string name="needJoinIdDuplicateCheck">아이디 중복체크가 필요합니다.</string>
 
     //회원가입 에러메세지 이메일
-    <string name="emailDuplicate">중복된 이메일 입니다. 입니다.</string>
+    <string name="emailDuplicate">중복된 이메일 입니다.</string>
     <string name="wrongEmailType">이메일 형식에 맞춰서 작성해 주세요.</string>
     <string name="needEmailDuplicateCheck">이메일 중복체크가 필요합니다.</string>
 
@@ -80,6 +80,7 @@
     //회원정보 수정
     <string name="UserInfoModify">회원 정보 수정</string>
     <string name="InputUserInfoModifyPassword">회원 정보를 수정하기 위해서는 비밀번호 확인이 필요합니다.</string>
+
 
 
 </resources>

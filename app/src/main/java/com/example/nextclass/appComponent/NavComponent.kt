@@ -40,7 +40,7 @@ import com.example.nextclass.viewmodel.LoginViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun TopNav(loginViewModel: LoginViewModel = hiltViewModel()) {
+fun TopNav(loginViewModel: LoginViewModel) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route

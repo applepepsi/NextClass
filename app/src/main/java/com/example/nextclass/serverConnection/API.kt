@@ -3,6 +3,7 @@ package com.example.oneplusone.serverConnection
 
 import com.example.nextclass.Data.DuplicateCheckRequest
 import com.example.nextclass.Data.JoinRequest
+import com.example.nextclass.Data.LoginRequest
 import com.example.nextclass.Data.ServerResponse
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -28,8 +29,8 @@ interface API {
     @POST("/register")
     suspend fun postUserJoinInfo(@Body joinInfo: JoinRequest):Response<ServerResponse>
 
-    @POST("/api/server/postJoinForm")
-    suspend fun postUserLoginForm(@Query("loginInfo")loginInfo: String):Response<ServerResponse>
+    @POST("/login")
+    suspend fun postUserLoginForm(@Body loginInfo: LoginRequest):Response<ServerResponse>
 
 
 }

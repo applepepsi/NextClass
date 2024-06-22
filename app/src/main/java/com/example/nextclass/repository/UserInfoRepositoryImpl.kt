@@ -3,6 +3,7 @@ package com.example.nextclass.repository
 import android.util.Log
 import com.example.nextclass.Data.DuplicateCheckRequest
 import com.example.nextclass.Data.JoinRequest
+import com.example.nextclass.Data.LoginRequest
 import com.example.nextclass.Data.ServerResponse
 import com.example.oneplusone.serverConnection.RetrofitBuilder
 import com.google.gson.Gson
@@ -93,18 +94,19 @@ class UserInfoRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun postUserLoginInfo(userJoinInfo: String,callback: (ServerResponse?) -> Unit){
+    override fun postUserLoginInfo(userLoginInfo: LoginRequest,callback: (ServerResponse?) -> Unit){
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
-                val response = RetrofitBuilder.api.postUserLoginForm(userJoinInfo)
+                val response = RetrofitBuilder.api.postUserLoginForm(userLoginInfo)
                 if (response.isSuccessful){
+                    Log.d("로그인.body()", response.body().toString())
                     response.body()
                 } else{
-                    Log.d("id중복체크 실패","id중복체크 실패")
+                    Log.d("로그인 실패","id중복체크 실패")
                     null
                 }
             } catch (e: Exception) {
-                Log.d("id중복체크 실패",e.toString())
+                Log.d("로그인 실패",e.toString())
                 null
             }
             withContext(Dispatchers.Main) {

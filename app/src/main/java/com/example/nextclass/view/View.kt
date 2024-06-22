@@ -1,5 +1,6 @@
 package com.example.nextclass.view
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,6 +26,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -62,6 +64,7 @@ import com.example.nextclass.appComponent.TextInputFieldComponent
 import com.example.nextclass.appComponent.TextInputHelpFieldComponent
 import com.example.nextclass.appComponent.TopNav
 import com.example.nextclass.appComponent.VerifyCodeInputComponent
+import com.example.nextclass.items.TopNavItem
 import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.NextClassTheme
@@ -105,7 +108,7 @@ fun ScheduleScreen(navController: NavHostController) {
 //로그인뷰
 @Composable
 fun LoginView(loginViewModel: LoginViewModel,navController: NavController) {
-
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -140,12 +143,9 @@ fun LoginView(loginViewModel: LoginViewModel,navController: NavController) {
         )
 
         CheckboxComponent(
-            checked = loginViewModel.termsCheckBoxState.value,
-            onClickCheckBox = {loginViewModel.toggleTermsCheckBoxValue()},
-            checkBoxTextComponent = {
-                RememberUserComponent(
-
-                )}
+            checked = loginViewModel.autoLoginState.value,
+            onClickCheckBox = {loginViewModel.toggleAutoLoginState()},
+            checkBoxTextComponent = { RememberUserComponent()}
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -163,17 +163,30 @@ fun LoginView(loginViewModel: LoginViewModel,navController: NavController) {
 
         InputButtonComponent(
             value="로그인",
-            onClick = {loginViewModel.tryLogin()},
+            onClick = {
+                loginViewModel.tryLogin()
+                if (loginViewModel.loginResult.value && loginViewModel.autoLoginState.value) {
+                    saveAutoLoginInfo(context, loginViewModel.id.value, loginViewModel.password.value)
+                }
+            },
             modifier = Modifier)
     }
 
 }
 
+fun saveAutoLoginInfo(context: Context, userId: String, userPassword: String) {
+    val autoLoginInfo = context.getSharedPreferences("autoLoginInfo", Context.MODE_PRIVATE)
+    val editor = autoLoginInfo.edit()
+    editor.putString("userId", userId)
+    editor.putString("userPassword", userPassword)
+    editor.apply()
+}
+
 //회원가입뷰
 @Composable
-fun JoinView(loginViewModel: LoginViewModel,navController: NavController) {
-
-
+fun JoinView(
+    loginViewModel: LoginViewModel,
+    navController: NavController) {
 
     Column(
         modifier = Modifier
@@ -286,8 +299,19 @@ fun JoinView(loginViewModel: LoginViewModel,navController: NavController) {
         InputButtonComponent(
             value="가입 완료",
             onClick = {loginViewModel.joinComplete()},
-            modifier = Modifier)
+            modifier = Modifier,
 
+        )
+
+        //LaunchedEffect는 코루틴
+        //가입이 완료됐다면 로그인페이지로 이동
+        LaunchedEffect(loginViewModel.joinResult.value) {
+            if (loginViewModel.joinResult.value) {
+                navController.navigate(TopNavItem.Login.screenRoute) {
+                    popUpTo(TopNavItem.Join.screenRoute) { inclusive = true }
+                }
+            }
+        }
     }
 }
 

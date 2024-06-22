@@ -1,0 +1,10 @@
+package com.example.nextclass.utils
+
+const val SUCCESS_CODE = 200
+
+const val DUPLICATE_PARAMETER="E00202"
+const val INVALID_JSON_TYPE="E00101"
+const val REQUEST_BODY_EMPTY="E00102"
+const val INVALID_PARAMETER_CONTAINS="E00103"
+const val INVALID_PARAMETER_NAME="E00201"
+const val USER_NOT_EXIST="E00203"
