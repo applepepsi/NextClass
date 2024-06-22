@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -31,16 +32,17 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.items.TopNavItem
-import com.example.nextclass.nav.TopNavGraph
+import com.example.nextclass.nav.LoginOrJoinNavGraph
+
+
 import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.Background_Color
 import com.example.nextclass.ui.theme.Navi_Green
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.viewmodel.LoginViewModel
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun TopNav(loginViewModel: LoginViewModel) {
+fun LoginOrJoinNav(loginViewModel: LoginViewModel, mainNavController: NavHostController) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -58,7 +60,11 @@ fun TopNav(loginViewModel: LoginViewModel) {
                 TopBarComponent(navController = navController)
             }
 
-            TopNavGraph(loginViewModel = loginViewModel, navController = navController)
+            LoginOrJoinNavGraph(
+                loginViewModel = loginViewModel,
+                navController = navController,
+                mainNavHostController = mainNavController
+            )
         }
     }
 }
@@ -136,11 +142,13 @@ fun RowScope.AddItem(
 @Preview(showBackground = true)
 @Composable
 fun NavPreview() {
+
+    val mainNavController= rememberNavController()
     val testRepository = TestRepository()
     val loginViewModel = LoginViewModel(testRepository)
 
     NextClassTheme {
-        TopNav(loginViewModel)
+        LoginOrJoinNav(loginViewModel,mainNavController)
 
     }
 }

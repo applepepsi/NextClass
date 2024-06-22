@@ -182,6 +182,8 @@ class LoginViewModel @Inject constructor(
     private val _loginResult=mutableStateOf(false)
     val loginResult: State<Boolean> = _loginResult
 
+    private val _loading=mutableStateOf(false)
+    val loading: State<Boolean> = _loading
     fun updateEmail(newEmail: String) {
         _email.value = newEmail
         _emailDuplicateCheck.value=false
@@ -479,6 +481,7 @@ class LoginViewModel @Inject constructor(
     fun tryAutoLogin(autoLoginId:String?,autoLoginPassword:String?){
         if(autoLoginId!=null && autoLoginPassword !=null){
             Log.d("자동 로그인시도","자동")
+            _loading.value=true
             val loginRequest=LoginRequest(
                 id=autoLoginId,
                 password=autoLoginPassword
@@ -487,9 +490,13 @@ class LoginViewModel @Inject constructor(
                 if(loginRequestResult !=null) {
                     if (loginRequestResult.code == SUCCESS_CODE) {
                         Log.d("자동 로그인성공", loginRequestResult.code.toString())
+                        _loginResult.value=true
+                        _loading.value=false
                     }
                 }
             }
+        }else{
+            _loading.value=false
         }
     }
 

@@ -2,6 +2,7 @@ package com.example.nextclass.appComponent
 
 
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 
@@ -243,7 +244,7 @@ fun EmailInputFieldComponent(
             IconButton(
                 onClick = emailCheckProcess,
                 enabled = duplicateCheckButtonState) {
-                Icon(imageVector = iconImage, contentDescription = description)
+                Image(imageVector = iconImage, contentDescription = description)
             }
 
         },
@@ -331,7 +332,7 @@ fun IdInputFieldComponent(
                     IconButton(
                         onClick = idCheckProcess,
                         enabled = duplicateCheckButtonState) {
-                        Icon(imageVector = iconImage, contentDescription = description)
+                        Image(imageVector = iconImage, contentDescription = description)
                     }
                 }
             } else null,
