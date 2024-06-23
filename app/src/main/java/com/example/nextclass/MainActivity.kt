@@ -43,22 +43,29 @@ class MainActivity : ComponentActivity() {
 fun Greeting() {
 
     //저장된 사용자 정보가있다면 로그인 시도
-    val context = LocalContext.current
+//    val context = LocalContext.current
     val loginViewModel: LoginViewModel = hiltViewModel()
-    val autoLoginInfo = context.getSharedPreferences("autoLoginInfo", Context.MODE_PRIVATE)
-
-    val autoLoginId=autoLoginInfo.getString("userId",null)
-    val autoLoginPassword=autoLoginInfo.getString("userPassword",null)
-
-    LaunchedEffect(autoLoginId, autoLoginPassword) {
-        loginViewModel.tryAutoLogin(autoLoginId, autoLoginPassword)
-    }
-    if (!loginViewModel.loading.value) {
-        AppNav(loginViewModel)
-    } else {
-        // 로딩 중일때 로딩 화면 표시
-        CircularProgressIndicator()
-    }
+//    val autoLoginInfo = context.getSharedPreferences("autoLoginInfo", Context.MODE_PRIVATE)
+//
+//    val autoLoginId=autoLoginInfo.getString("userId",null)
+//    val autoLoginPassword=autoLoginInfo.getString("userPassword",null)
+//
+//    if (autoLoginId != null) {
+//        Log.d("자동로그인 id",autoLoginId)
+//    }
+//    if (autoLoginPassword != null) {
+//        Log.d("자동로그인 password",autoLoginPassword)
+//    }
+//    LaunchedEffect(autoLoginId, autoLoginPassword) {
+//        loginViewModel.tryAutoLogin(autoLoginId, autoLoginPassword)
+//    }
+//    if (!loginViewModel.loading.value) {
+//        AppNav(loginViewModel)
+//    } else {
+//        // 로딩 중일때 로딩 화면 표시
+//        CircularProgressIndicator()
+//    }
+    AppNav(loginViewModel)
 }
 
 

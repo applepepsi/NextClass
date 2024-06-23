@@ -578,6 +578,11 @@ class LoginViewModel @Inject constructor(
         _userInfoModifyPasswordConfirmErrorMessage.value=StringValue.StringResource(R.string.WrongVerityCodeMassage)
     }
 
+    fun logOut(){
+        _loginResult.value=false
+        _id.value=""
+        _password.value=""
+    }
 
 }
 

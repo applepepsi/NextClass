@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -14,30 +13,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.example.nextclass.R
-import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
-import com.example.nextclass.appComponent.DescriptionTextComponent
-import com.example.nextclass.appComponent.FindFieldComponent
-import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.MainTextComponent
-import com.example.nextclass.appComponent.TextInputHelpFieldComponent
-import com.example.nextclass.repository.TestRepository
+import com.example.nextclass.appComponent.TimeTableComponent
+import com.example.nextclass.appComponent.sampleEvents
 import com.example.nextclass.ui.theme.Background_Color2
-import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.viewmodel.LoginViewModel
 
 @Composable
-fun MainView(
+fun TimeTableView(
     navController: NavController,
     loginViewModel: LoginViewModel,
     mainNavController: NavController
 ) {
-
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -74,27 +64,13 @@ fun MainView(
                 ) {
 
                     MainTextComponent(
-                        value = "메인뷰",
+                        value = "시간표",
                         modifier= Modifier
                             .padding(top=20.dp)
                     )
-
-
+                    TimeTableComponent(sampleEvents)
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MainViewPreview() {
-//    val testRepository = TestRepository()
-//    val loginViewModel = LoginViewModel(testRepository)
-
-    NextClassTheme {
-//        LoginView(loginViewModel)
-//        ForGotId(loginViewModel)
-//        MainView()
     }
 }

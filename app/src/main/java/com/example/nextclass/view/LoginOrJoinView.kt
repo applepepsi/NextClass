@@ -322,22 +322,7 @@ fun JoinView(
     }
 }
 
-@Composable
-fun HomeView(navController: NavHostController) {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-
-    ) {
-        Text(
-            text = "wdwdwd",
-            fontSize = 40.sp
-        )
-    }
-}
 
 //비밀번호 찾기 뷰
 @Composable
