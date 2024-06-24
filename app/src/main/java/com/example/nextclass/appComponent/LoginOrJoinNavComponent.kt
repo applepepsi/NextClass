@@ -53,7 +53,7 @@ fun LoginOrJoinNav(loginViewModel: LoginViewModel, mainNavController: NavHostCon
         shape = RoundedCornerShape(16.dp)
     ) {
         Column {
-            if (currentRoute != "findIdView" && currentRoute != "findPasswordView" && currentRoute != "termsAndConditionsView") {
+            if (currentRoute == TopNavItem.Login.screenRoute || currentRoute==TopNavItem.Join.screenRoute) {
                 TopBarComponent(navController = navController)
             }
 

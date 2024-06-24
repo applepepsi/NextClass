@@ -1,9 +1,11 @@
 package com.example.nextclass.nav
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.appComponent.LoginOrJoinNav
 import com.example.nextclass.appComponent.MainBottomNav
@@ -49,11 +51,23 @@ fun AppNav(loginViewModel: LoginViewModel) {
 //        }
 //    }
 
+//    NavHost(
+//        navController = mainNavController,
+//        startDestination = "loginOrJoinGraph"
+//    ) {
+//        //약간 구조가 이상함 나중에 수정 예정
+//        composable("loginOrJoinGraph") {
+//            LoginOrJoinNav(loginViewModel, mainNavController)
+//        }
+//        composable("mainNav") {
+//            MainBottomNav(loginViewModel,mainNavController)
+//        }
+//    }
+
     NavHost(
         navController = mainNavController,
         startDestination = "mainNav"
     ) {
-        //약간 구조가 이상함 나중에 수정 예정
         composable("loginOrJoinGraph") {
             LoginOrJoinNav(loginViewModel, mainNavController)
         }
@@ -63,55 +77,6 @@ fun AppNav(loginViewModel: LoginViewModel) {
     }
 }
 
-@Composable
-fun LoginOrJoinNavGraph(
-    navController: NavHostController,
-    loginViewModel: LoginViewModel,
-    mainNavHostController: NavHostController
-) {
-    NavHost(navController = navController, startDestination = TopNavItem.Login.screenRoute) {
-        composable(TopNavItem.Login.screenRoute) {
-            LoginView(loginViewModel, navController, mainNavHostController)
-        }
-        composable(TopNavItem.Join.screenRoute) {
-            JoinView(loginViewModel, navController)
-        }
-        composable("findIdView") {
-            ForGotId(loginViewModel, navController)
-        }
-        composable("findPasswordView") {
-            ForGotPassword(loginViewModel, navController)
-        }
-        composable("termsAndConditionsView") {
-            TermsAndConditionsView(loginViewModel, navController)
-        }
-    }
-}
-
-@Composable
-fun MainNavGraph(
-    navController: NavHostController,
-    loginViewModel: LoginViewModel,
-    mainNavHostController: NavHostController) {
-
-    NavHost(navController = navController, startDestination = BottomNavItem.Home.screenRoute) {
-        composable(BottomNavItem.Home.screenRoute) {
-            HomeView(navController,loginViewModel,mainNavHostController)
-        }
-        composable(BottomNavItem.Timetable.screenRoute) {
-            TimeTableView(navController,loginViewModel,mainNavHostController)
-        }
-        composable(BottomNavItem.Community.screenRoute) {
-            CommunityView(navController,loginViewModel,mainNavHostController)
-        }
-        composable(BottomNavItem.Schedule.screenRoute) {
-            ScheduleView(navController,loginViewModel,mainNavHostController)
-        }
-        composable(BottomNavItem.UserProfile.screenRoute) {
-            UserProfileView(navController,loginViewModel,mainNavHostController)
-        }
-    }
-}
 
 @Composable
 fun TimeTableNav() {
