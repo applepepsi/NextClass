@@ -60,7 +60,7 @@ fun MainBottomNav(loginViewModel: LoginViewModel, mainNavController: NavHostCont
                 .fillMaxWidth()
                 .background(Color.White)
                 .padding(10.dp),
-            color = Background_Color,
+//            color = Background_Color,
             shape = RoundedCornerShape(16.dp)
         ) {
             Column {
@@ -104,9 +104,9 @@ fun MainBottomNavComponent(navController: NavHostController) {
         modifier = Modifier
 
             .fillMaxWidth()
-            .height(50.dp),
+            .height(70.dp),
 
-        shape = RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp)
+        shape = RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp)
     ) {
         Row(
             modifier = Modifier
@@ -138,8 +138,8 @@ fun RowScope.AddBottomNavItem(
         shape = RoundedCornerShape(30.dp),
         modifier = Modifier
             .weight(1f)
-            .padding(start=13.dp,end=13.dp)
-            .height(30.dp)
+            .padding(start=12.dp,end=12.dp,bottom=10.dp)
+            .height(35.dp)
 
     ) {
         Box(
@@ -161,7 +161,7 @@ fun RowScope.AddBottomNavItem(
                 painter = painterResource(id = screen.icon),
                 contentDescription = screen.title,
                 modifier = Modifier
-                    .size(24.dp)
+                    .size(28.dp)
             )
         }
     }

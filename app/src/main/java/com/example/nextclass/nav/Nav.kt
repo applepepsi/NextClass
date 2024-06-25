@@ -22,7 +22,6 @@ import com.example.nextclass.view.ScheduleScreen
 import com.example.nextclass.view.ScheduleView
 import com.example.nextclass.view.TermsAndConditionsView
 import com.example.nextclass.view.TimeTableView
-import com.example.nextclass.view.TimetableScreen
 import com.example.nextclass.view.UserProfileView
 import com.example.nextclass.viewmodel.LoginViewModel
 
@@ -78,20 +77,7 @@ fun AppNav(loginViewModel: LoginViewModel) {
 }
 
 
-@Composable
-fun TimeTableNav() {
-    val navController= rememberNavController()
 
-    NavHost(navController = navController, startDestination = BottomNavItem.Home.screenRoute) {
-
-        composable(BottomNavItem.Timetable.screenRoute) {
-            TimetableScreen(navController)
-        }
-        composable(BottomNavItem.Schedule.screenRoute) {
-            ScheduleScreen(navController)
-        }
-    }
-}
 
 
 

@@ -20,7 +20,7 @@ fun LoginOrJoinNavGraph(
     loginViewModel: LoginViewModel,
     mainNavHostController: NavHostController
 ) {
-    NavHost(navController = navController, startDestination = "loginGraph") {
+    NavHost(navController = navController, startDestination = "loginRoute") {
         loginRoute(navController, loginViewModel, mainNavHostController)
         joinRoute(navController, loginViewModel)
     }
@@ -32,7 +32,7 @@ private fun NavGraphBuilder.loginRoute(
     mainNavHostController: NavHostController
 ) {
     navigation(
-        route = "loginGraph",
+        route = "loginRoute",
         startDestination = TopNavItem.Login.screenRoute
     ) {
         loginView(navController, loginViewModel, mainNavHostController)
@@ -46,7 +46,7 @@ private fun NavGraphBuilder.joinRoute(
     loginViewModel: LoginViewModel
 ) {
     navigation(
-        route = "joinGraph",
+        route = "joinRoute",
         startDestination = TopNavItem.Join.screenRoute
     ) {
         joinView(navController, loginViewModel)

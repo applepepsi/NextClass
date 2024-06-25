@@ -3,14 +3,20 @@ package com.example.nextclass.appComponent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+
+
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -46,7 +52,6 @@ fun OneClassCellDetailComponent(
     Column(
         modifier = modifier
             .fillMaxSize()
-//            .padding(end = 2.dp, bottom = 2.dp)
             .background(classData.color)
             .padding(4.dp)
     ) {
@@ -137,10 +142,16 @@ fun TimeTableComponent(
     minClassTime: Int = classDataList.minByOrNull(ClassData::startClassTime)?.startClassTime ?:0,
     maxClassTime: Int = classDataList.maxByOrNull(ClassData::endClassTime)?.endClassTime?:7,
 ) {
-    val classTimeHeight = 70.dp
+    val classTimeHeight = 60.dp
     var sidebarWidth by remember { mutableIntStateOf(0) }
 
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(modifier = modifier
+        .padding(5.dp)
+        .background(Color.White,shape = RoundedCornerShape(10.dp))
+        .border(1.dp, Color.LightGray, shape = RoundedCornerShape(10.dp)),
+
+
+        ) {
         DayOfWeekHeader(
             modifier = Modifier
                 .fillMaxWidth()
@@ -148,8 +159,7 @@ fun TimeTableComponent(
         )
 
         Row(modifier = Modifier
-//            .weight(1f)
-
+            .padding(bottom=10.dp,end=10.dp)
         ) {
             ScheduleSidebar(
                 hourHeight = classTimeHeight,
@@ -188,6 +198,7 @@ fun BasicClass(
                 Box(modifier = Modifier
                     .layoutId(classData)
                     .fillMaxSize()
+
                 ) {
                     classContent(classData)
                 }
@@ -260,7 +271,7 @@ fun DayHeader(
         textAlign = TextAlign.Center,
         modifier = modifier
             .fillMaxWidth()
-//            .padding(4.dp)
+            .padding(2.dp)
     )
 }
 
@@ -269,10 +280,12 @@ fun DayOfWeekHeader(
     modifier: Modifier = Modifier,
     dayHeader: @Composable (dayOfWeek: String) -> Unit = { DayHeader(day = it) },
 ) {
-    val daysOfWeek = listOf("월요일", "화요일", "수요일", "목요일", "금요일")
+    val daysOfWeek = listOf("월", "화", "수", "목", "금")
     Row(modifier = modifier) {
         daysOfWeek.forEach { day ->
-            Box(modifier = Modifier.weight(1f)) {
+            Box(modifier = Modifier
+                .weight(1f)
+                ) {
                 dayHeader(day)
             }
         }
@@ -290,7 +303,9 @@ fun ScheduleSidebar(
         repeat(7) { i ->
             Box(
                 modifier = Modifier
-                    .height(hourHeight),
+                    .height(hourHeight)
+                    .padding(5.dp)
+                    ,
                 contentAlignment = Alignment.Center
             ) {
                 label(i + 1)
@@ -305,10 +320,8 @@ fun TimeLabel(
     modifier: Modifier = Modifier,
 ) {
     Text(
-        text = "${time}교시",
+        text = time.toString(),
         modifier = Modifier
-
-
     )
 }
 

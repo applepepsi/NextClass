@@ -19,3 +19,6 @@ val Navi_Green= Color(0xFF262F2C)
 val Background_Color= Color(0xFFE2E1DA)
 
 val Background_Color2= Color(0xFFEBEBE6)
+
+
+

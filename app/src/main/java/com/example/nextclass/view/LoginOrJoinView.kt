@@ -55,22 +55,6 @@ import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.viewmodel.LoginViewModel
 
-@Composable
-fun TimetableScreen(navController: NavHostController) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.onPrimary)
-    ) {
-        Text(
-            text = "wdwdwd",
-
-            textAlign = TextAlign.Center,
-            color = Color.White,
-            modifier = Modifier.align(Alignment.Center)
-        )
-    }
-}
 
 //
 @Composable
@@ -153,7 +137,9 @@ fun LoginView(
             value="로그인",
             onClick = {
                 loginViewModel.tryLogin()
-
+//            mainNavHostController.navigate("mainNav") {
+//                popUpTo("loginOrJoinGraph") { inclusive = true }
+//            }
             },
             modifier = Modifier)
     }
