@@ -104,9 +104,7 @@ fun TimeTableView(
                 }
             }
             if(timeTableViewModel.insertClassDataDialogState.value){
-                InsertClassData {
-                    timeTableViewModel.toggleInsertClassDataDialogState()
-                }
+                InsertClassData (timeTableViewModel=timeTableViewModel)
             }
             TimeTableComponent(
                 sampleEvents,

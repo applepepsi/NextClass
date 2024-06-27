@@ -1,6 +1,7 @@
 package com.example.nextclass.appComponent
 
 import android.R
+import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -27,9 +28,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -53,8 +60,10 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,6 +73,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.SecureFlagPolicy
 import com.example.nextclass.Data.ClassData
+import com.example.nextclass.ui.theme.Background_Color2
+import com.example.nextclass.viewmodel.TimeTableViewModel
 
 import kotlin.math.roundToInt
 
@@ -91,7 +102,7 @@ fun OneClassCellDetailComponent(
             text = classData.className,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
-            fontSize = 15.sp
+            fontSize = 13.sp
         )
 
         Text(
@@ -199,7 +210,8 @@ fun InsertClassDataPreview() {
 
     MaterialTheme {
         InsertClassData(
-            setShowInsertClassDataDialog = {setShowInsertClassDataDialog=it},
+//            setShowInsertClassDataDialog = {setShowInsertClassDataDialog=it},
+            timeTableViewModel = TimeTableViewModel()
         )
 
     }
@@ -494,23 +506,98 @@ fun ClassModify(
 
 }
 
+val daysOfWeek = listOf("월", "화", "수", "목", "금")
+val classTime=listOf("1", "2", "3", "4", "5", "6", "7")
+val credit=listOf("1", "2", "3")
+val checkBoxName= listOf("학점","요일","시작 교시","종료 교시","학년")
+
 @Composable
 fun InsertClassData(
+    timeTableViewModel: TimeTableViewModel,
 
-    setShowInsertClassDataDialog: (Boolean) -> Unit
 ){
 
-    Dialog(onDismissRequest = { setShowInsertClassDataDialog(false) }) {
+    Dialog(onDismissRequest = { timeTableViewModel.toggleInsertClassDataDialogState() }) {
         Surface(
             shape = RoundedCornerShape(16.dp),
-            color = Color.White
+            color = Background_Color2,
+
         ) {
-            Column(modifier = Modifier.padding(20.dp)) {
 
 
+            Column(modifier = Modifier.padding(5.dp)) {
 
-                Spacer(modifier = Modifier.height(20.dp))
+                MainTextComponent(value = "수업 추가하기", modifier = Modifier)
 
+                TextInputFieldComponent(
+                    value="",
+                    onValueChange = {},
+                    labelValue = "수업 이름")
+
+
+                TextInputFieldComponent(
+                    value="",
+                    onValueChange = {},
+                    labelValue = "교사명")
+
+
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    TimeTableDownMenuComponent(
+                        onValueChange = {timeTableViewModel.updateCredit(it.toInt())},
+                        value = timeTableViewModel.credit.value.toString(),
+                        dropDownMenuOption = timeTableViewModel.toggleCreditDropDownMenu.value,
+                        menuItems = credit,
+                        dropDownMenuName = checkBoxName[0],
+                        toggleDropDownMenuOption = {timeTableViewModel.toggleCreditDropDownMenu()}
+                    )
+                    TimeTableDownMenuComponent(
+                        onValueChange = {timeTableViewModel.updateDayOfWeek(it)},
+                        value = timeTableViewModel.dayOfWeek.value,
+                        dropDownMenuOption = timeTableViewModel.toggleDayOfWeekDropDownMenu.value,
+                        menuItems = daysOfWeek,
+                        dropDownMenuName = checkBoxName[1],
+                        toggleDropDownMenuOption = {timeTableViewModel.toggleDayOfWeekDropDownMenu()}
+                    )
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    TimeTableDownMenuComponent(
+                        onValueChange = {timeTableViewModel.updateStartClassTime(it.toInt())},
+                        value = timeTableViewModel.startClassTime.value.toString(),
+                        dropDownMenuOption = timeTableViewModel.toggleStartClassTimeDropDownMenu.value,
+                        menuItems = classTime,
+                        dropDownMenuName = checkBoxName[2],
+                        toggleDropDownMenuOption = {timeTableViewModel.toggleStartClassTimeDropDownMenu()}
+                    )
+                    TimeTableDownMenuComponent(
+                        onValueChange = {timeTableViewModel.updateEndClassTime(it.toInt())},
+                        value = timeTableViewModel.endClassTime.value.toString(),
+                        dropDownMenuOption = timeTableViewModel.toggleEndClassTimeDropDownMenu.value,
+                        menuItems = classTime,
+                        dropDownMenuName = checkBoxName[3],
+                        toggleDropDownMenuOption = {timeTableViewModel.toggleEndClassTimeDropDownMenu()}
+                    )
+                }
+
+                GradeDropDownMenuComponent(
+                    onValueChange = {timeTableViewModel.updateGrade(it)},
+
+                    labelValue = timeTableViewModel.grade.value,
+                    dropDownMenuOption = timeTableViewModel.toggleGradeDropDownMenu.value,
+                    placeholderValue = "",
+                    toggleDropDownMenuOption = {timeTableViewModel.toggleGradeDropDownMenu()}
+                )
+
+                TextInputFieldComponent(
+                    value="",
+                    onValueChange = {},
+                    labelValue = "학교")
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -518,7 +605,7 @@ fun InsertClassData(
                 ) {
                     TextButton(
                         onClick = {
-                            setShowInsertClassDataDialog(false)
+                            timeTableViewModel.toggleInsertClassDataDialogState()
                         },
                         modifier = Modifier
                     ) {
@@ -526,7 +613,7 @@ fun InsertClassData(
                     }
                     TextButton(
                         onClick = {
-                            setShowInsertClassDataDialog(false)
+                            timeTableViewModel.toggleInsertClassDataDialogState()
                         },
                         modifier = Modifier
                     ) {
@@ -663,7 +750,7 @@ fun DayOfWeekHeader(
     modifier: Modifier = Modifier,
     dayHeader: @Composable (dayOfWeek: String) -> Unit = { DayHeader(day = it) },
 ) {
-    val daysOfWeek = listOf("월", "화", "수", "목", "금")
+
     Row(modifier = modifier) {
         daysOfWeek.forEach { day ->
             Box(modifier = Modifier
@@ -709,8 +796,75 @@ fun TimeLabel(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TimeTableDownMenuComponent(
+    value: String="",
+    onValueChange: (String) -> Unit,
+    dropDownMenuOption: Boolean,
+    toggleDropDownMenuOption: () -> Unit,
+    menuItems: List<String>,
+    dropDownMenuName:String,
 
+) {
+    Column {
+        Text(
+            text = dropDownMenuName,
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Bold,
+            fontStyle = FontStyle.Normal,
+            color = Color.DarkGray,
+            textAlign = TextAlign.Start,
+            modifier = Modifier
 
+                .padding(start = 3.dp, bottom = 5.dp, top = 10.dp)
+        )
+        ExposedDropdownMenuBox(
+            expanded = dropDownMenuOption,
+            onExpandedChange = { toggleDropDownMenuOption() }
+        ) {
+            OutlinedTextField(
+                value = value,
+                onValueChange = onValueChange,
+                readOnly = true,
+                textStyle = TextStyle.Default.copy(fontSize = 25.sp),
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = dropDownMenuOption)
+                },
+
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                    disabledContainerColor = Color.White,
+                    errorContainerColor = Color.White,
+                    focusedBorderColor = Color.Transparent,
+                    unfocusedBorderColor = Color.Transparent,
+                    disabledBorderColor = Color.Transparent,
+                ),
+                modifier = Modifier
+                    .width(120.dp)
+                    .height(60.dp)
+                    .menuAnchor(),
+                shape = RoundedCornerShape(15.dp),
+            )
+
+            ExposedDropdownMenu(
+                expanded = dropDownMenuOption,
+                onDismissRequest = { toggleDropDownMenuOption() }
+            ) {
+                menuItems.forEach { item ->
+                    DropdownMenuItem(
+                        text = { Text(text = item) },
+                        onClick = {
+                            onValueChange(item)
+                            toggleDropDownMenuOption()
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable

@@ -449,7 +449,8 @@ fun GradeDropDownMenuComponent(
     onValueChange: (String) -> Unit,
     labelValue: String,
     dropDownMenuOption: Boolean,
-    toggleDropDownMenuOption: () -> Unit
+    toggleDropDownMenuOption: () -> Unit,
+    placeholderValue: String=stringResource(id = R.string.input_entranceYear)
 ) {
 
     Text(
@@ -475,7 +476,7 @@ fun GradeDropDownMenuComponent(
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = dropDownMenuOption)
                 },
-                placeholder = { Text(text = (stringResource(id = R.string.input_entranceYear))) },
+                placeholder = { Text(text = placeholderValue) },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White,
