@@ -11,5 +11,5 @@ data class ClassData(
     val startClassTime: Int,
     val endClassTime: Int,
     val credit:Int,
-    val color: Color = Color.Gray,
+    val color: Color,
 )

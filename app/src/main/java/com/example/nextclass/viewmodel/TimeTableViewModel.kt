@@ -5,28 +5,41 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.nextclass.Data.ClassData
 import javax.inject.Inject
 
 class TimeTableViewModel @Inject constructor(): ViewModel(){
-    private var _layoutHeight= mutableStateOf(0)
 
-    val layoutHeight: State<Int> = _layoutHeight
+    private var _insertClassDataDialogState= mutableStateOf(false)
 
-    fun updateLayoutHeight(
-        initialHeight: Int,
-        initialTouchY: Float,
-        currentTouchY: Float,
-        screenHeight: Int
-    ){
-        val heightChange = (currentTouchY - initialTouchY).toInt()
-        var newHeight = initialHeight - heightChange
+    val insertClassDataDialogState: State<Boolean> = _insertClassDataDialogState
 
-        newHeight = newHeight.coerceAtLeast((screenHeight * MIN_HEIGHT_PERCENT).toInt())
-        newHeight = newHeight.coerceAtMost((screenHeight * MAX_HEIGHT_PERCENT).toInt())
+    private var _setShowClassDetailDialog= mutableStateOf(false)
 
-        _layoutHeight.value = newHeight
+    val setShowClassDetailDialog: State<Boolean> = _setShowClassDetailDialog
+
+    private var _setShowClassDataModifyDialog= mutableStateOf(false)
+
+    val setShowClassDataModifyDialog: State<Boolean> = _setShowClassDataModifyDialog
+
+    private var _selectClassData= mutableStateOf<ClassData?>(null)
+
+    val selectClassData: State<ClassData?> = _selectClassData
+    fun toggleInsertClassDataDialogState(){
+        _insertClassDataDialogState.value=!_insertClassDataDialogState.value
     }
 
+    fun toggleSetShowClassDetailDialogState(){
+        _setShowClassDetailDialog.value=!_setShowClassDetailDialog.value
+    }
+
+    fun toggleSetShowClassDataModifyDialogState(){
+        _setShowClassDataModifyDialog.value=!_setShowClassDataModifyDialog.value
+    }
+
+    fun setSelectClassData(classData: ClassData){
+        _selectClassData.value=classData
+    }
     companion object{
         const val MIN_HEIGHT_PERCENT=0.3
         const val MAX_HEIGHT_PERCENT=0.9
