@@ -19,6 +19,8 @@ import androidx.navigation.NavController
 import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.MainTextComponent
 import com.example.nextclass.ui.theme.Background_Color2
+import com.example.nextclass.utils.TokenManager
+import com.example.nextclass.utils.UserInfoManager
 import com.example.nextclass.viewmodel.LoginViewModel
 
 @Composable
@@ -73,7 +75,10 @@ fun UserProfileView(
                         onClick = {
                             //todo 토큰을 제거하는 기능도 추가해야함
                             loginViewModel.logOut()
-                            deleteUserInfo(context)
+
+                            UserInfoManager.clearUserInfo(context)
+                            TokenManager.clearToken(context)
+
                             mainNavController.navigate("loginOrJoinGraph") {
                                 popUpTo("mainNav") { inclusive = true }
                             }

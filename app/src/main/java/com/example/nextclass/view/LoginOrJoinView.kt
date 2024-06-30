@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.nextclass.Data.TokenData
 import com.example.nextclass.R
 import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
 import com.example.nextclass.appComponent.CheckboxComponent
@@ -53,6 +54,8 @@ import com.example.nextclass.items.TopNavItem
 import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.NextClassTheme
+import com.example.nextclass.utils.TokenManager
+import com.example.nextclass.utils.UserInfoManager
 import com.example.nextclass.viewmodel.LoginViewModel
 
 
@@ -147,9 +150,14 @@ fun LoginView(
     //로그인에 성공했다면 메인화면으로 이동 + 만약 자동 로그인 기능을 체크했다면 아이디 기억하도록
     LaunchedEffect(loginViewModel.loginResult.value) {
         if (loginViewModel.loginResult.value) {
+
+            //로그인에 성공했다면 토큰을 저장
+            TokenManager.saveToken(context, loginViewModel.tokenData.value)
+
             if(loginViewModel.autoLoginState.value){
-                saveAutoLoginInfo(context, loginViewModel.id.value, loginViewModel.password.value)
+                UserInfoManager.saveAutoLoginInfo(context, loginViewModel.id.value, loginViewModel.password.value)
             }
+
             mainNavHostController.navigate("mainNav") {
                 popUpTo("loginOrJoinGraph") { inclusive = true }
             }
@@ -164,14 +172,18 @@ fun saveAutoLoginInfo(context: Context, userId: String, userPassword: String) {
     val autoLoginInfo = context.getSharedPreferences("autoLoginInfo", Context.MODE_PRIVATE)
     val editor = autoLoginInfo.edit()
 
-
-
-    Log.d("autoLoginId",userId)
-
-    Log.d("autoLoginPassword",userPassword)
-
     editor.putString("userId", userId)
     editor.putString("userPassword", userPassword)
+    editor.apply()
+}
+
+fun saveToken(context: Context, tokenData: TokenData) {
+    val tokenInfo = context.getSharedPreferences("tokenInfo", Context.MODE_PRIVATE)
+    val editor = tokenInfo.edit()
+
+
+    editor.putString("accessToken", tokenData.accessToken)
+    editor.putString("refreshToken", tokenData.refreshToken)
     editor.apply()
 }
 

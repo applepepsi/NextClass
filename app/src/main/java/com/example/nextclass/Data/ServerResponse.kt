@@ -10,6 +10,6 @@ data class ServerResponse(
 
 
 data class TokenData(
-    val accessToken: String,
-    val refreshToken: String
+    val accessToken: String="",
+    val refreshToken: String=""
 )

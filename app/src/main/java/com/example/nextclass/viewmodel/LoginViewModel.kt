@@ -11,6 +11,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.Data.LoginRequest
+import com.example.nextclass.Data.ServerResponse
+import com.example.nextclass.Data.TokenData
 import com.example.nextclass.R
 import com.example.nextclass.repository.UserInfoRepository
 import com.example.nextclass.utils.CutEntranceYear
@@ -184,6 +186,10 @@ class LoginViewModel @Inject constructor(
 
     private val _loading=mutableStateOf(false)
     val loading: State<Boolean> = _loading
+
+    private val _tokenData=mutableStateOf(TokenData())
+    val tokenData: State<TokenData> = _tokenData
+
     fun updateEmail(newEmail: String) {
         _email.value = newEmail
         _emailDuplicateCheck.value=false
@@ -455,6 +461,8 @@ class LoginViewModel @Inject constructor(
                     if(loginRequestResult.code==SUCCESS_CODE){
                         Log.d("로그인성공", loginRequestResult.code.toString())
                         _loginResult.value=true
+                        //로그인 성공후 토큰 데이터를 받는다
+                        _tokenData.value=loginRequestResult.data!!
 //                        saveUserInfo()
                         //todo 로그인 성공후 기능 구현해야함
                     }
@@ -492,6 +500,7 @@ class LoginViewModel @Inject constructor(
                         Log.d("자동 로그인성공", loginRequestResult.code.toString())
                         _loginResult.value=true
                         _loading.value=false
+                        _tokenData.value=loginRequestResult.data!!
                     }
                 }
             }
