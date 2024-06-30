@@ -132,10 +132,7 @@ fun TimeTableView(
             }
             if (timeTableViewModel.setShowClassDataModifyDialog.value) {
                 ClassModify(
-                    timeTableViewModel.selectClassData.value!!,
-                    setShowClassDataModifyDialog = {
-                        timeTableViewModel.toggleSetShowClassDataModifyDialogState()
-                    }
+                    timeTableViewModel=timeTableViewModel
                 )
             }
         }

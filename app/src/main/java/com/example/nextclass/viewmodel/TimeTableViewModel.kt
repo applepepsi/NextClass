@@ -26,29 +26,9 @@ class TimeTableViewModel @Inject constructor(): ViewModel(){
 
     val selectClassData: State<ClassData?> = _selectClassData
 
-    private var _className= mutableStateOf("")
-    val className: State<String> = _className
+    private var _classData = mutableStateOf(ClassData())
 
-    private var _grade= mutableStateOf("")
-    val grade: State<String> = _grade
-
-    private var _teacherName= mutableStateOf("")
-    val teacherName: State<String> = _teacherName
-
-    private var _credit= mutableStateOf(1)
-    val credit: State<Int> = _credit
-
-    private var _dayOfWeek= mutableStateOf("월")
-    val dayOfWeek: State<String> = _dayOfWeek
-
-    private var _startClassTime= mutableStateOf(1)
-    val startClassTime: State<Int> = _startClassTime
-
-    private var _endClassTime= mutableStateOf(1)
-    val endClassTime: State<Int> = _endClassTime
-
-    private var _schoolName= mutableStateOf("")
-    val schoolName: State<String> = _schoolName
+    val classData: State<ClassData> = _classData
 
     private var _toggleGradeDropDownMenu= mutableStateOf(false)
     val toggleGradeDropDownMenu: State<Boolean> = _toggleGradeDropDownMenu
@@ -64,16 +44,35 @@ class TimeTableViewModel @Inject constructor(): ViewModel(){
 
     private var _toggleCreditDropDownMenu= mutableStateOf(false)
     val toggleCreditDropDownMenu: State<Boolean> = _toggleCreditDropDownMenu
+
+
     fun toggleInsertClassDataDialogState(){
         _insertClassDataDialogState.value=!_insertClassDataDialogState.value
+        if(!_insertClassDataDialogState.value){
+            resetClassData()
+        }
+    }
+
+    private fun resetClassData() {
+        _classData.value = ClassData()
     }
 
     fun toggleSetShowClassDetailDialogState(){
         _setShowClassDetailDialog.value=!_setShowClassDetailDialog.value
+        if(_setShowClassDetailDialog.value){
+            setModifyClassData()
+        }
+    }
+
+    private fun setModifyClassData(){
+        _classData.value=selectClassData.value!!
     }
 
     fun toggleSetShowClassDataModifyDialogState(){
         _setShowClassDataModifyDialog.value=!_setShowClassDataModifyDialog.value
+        if(!_setShowClassDataModifyDialog.value){
+            resetClassData()
+        }
     }
 
     fun setSelectClassData(classData: ClassData){
@@ -81,36 +80,37 @@ class TimeTableViewModel @Inject constructor(): ViewModel(){
     }
 
     fun updateClassName(className: String) {
-        _className.value = className
+        _classData.value = _classData.value.copy(className = className)
     }
 
     fun updateGrade(grade: String) {
-        _grade.value = grade
+        _classData.value = _classData.value.copy(grade = grade)
     }
 
     fun updateTeacherName(teacherName: String) {
-        _teacherName.value = teacherName
+        _classData.value = _classData.value.copy(teacherName = teacherName)
     }
 
     fun updateCredit(credit: Int) {
-        _credit.value = credit
+        _classData.value = _classData.value.copy(credit = credit)
     }
 
     fun updateDayOfWeek(dayOfWeek: String) {
-        _dayOfWeek.value = dayOfWeek
+        _classData.value = _classData.value.copy(dayOfWeek = dayOfWeek)
     }
 
     fun updateStartClassTime(startClassTime: Int) {
-        _startClassTime.value = startClassTime
+        _classData.value = _classData.value.copy(startClassTime = startClassTime)
     }
 
     fun updateEndClassTime(endClassTime: Int) {
-        _endClassTime.value = endClassTime
+        _classData.value = _classData.value.copy(endClassTime = endClassTime)
     }
 
     fun updateSchoolName(schoolName: String) {
-        _schoolName.value = schoolName
+        _classData.value = _classData.value.copy(schoolName = schoolName)
     }
+
 
     fun toggleGradeDropDownMenu() {
         _toggleGradeDropDownMenu.value = !_toggleGradeDropDownMenu.value

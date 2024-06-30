@@ -5,11 +5,12 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 
 data class ClassData(
-    val className: String,
-    val teacherName:String,
-    val dayOfWeek:Int,
-    val startClassTime: Int,
-    val endClassTime: Int,
-    val credit:Int,
-    val color: Color,
+    var className: String = "",
+    var grade: String = "1학년",
+    var teacherName: String = "",
+    var credit: Int = 1,
+    var dayOfWeek: String = "월",
+    var startClassTime: Int = 1,
+    var endClassTime: Int = 1,
+    var schoolName: String = ""
 )

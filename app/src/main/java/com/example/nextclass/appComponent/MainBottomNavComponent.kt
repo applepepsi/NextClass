@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -54,6 +55,15 @@ fun MainBottomNav(loginViewModel: LoginViewModel, mainNavController: NavHostCont
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    val showBottomNavScreens = listOf(
+        BottomNavItem.Home.screenRoute,
+        BottomNavItem.Timetable.screenRoute,
+        BottomNavItem.Community.screenRoute,
+        BottomNavItem.Schedule.screenRoute,
+        BottomNavItem.UserProfile.screenRoute
+    )
+
+
     Box(modifier = Modifier.fillMaxSize()) {
         Surface(
             modifier = Modifier
@@ -64,6 +74,9 @@ fun MainBottomNav(loginViewModel: LoginViewModel, mainNavController: NavHostCont
             shape = RoundedCornerShape(16.dp)
         ) {
             Column {
+
+
+
                 MainNavGraph(
                     loginViewModel = loginViewModel,
                     navController = navController,
@@ -72,16 +85,18 @@ fun MainBottomNav(loginViewModel: LoginViewModel, mainNavController: NavHostCont
             }
         }
 
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-        ) {
-            Row(
-                modifier = Modifier,
-                verticalAlignment = Alignment.Bottom,
+        if (currentRoute in showBottomNavScreens) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
             ) {
-                MainBottomNavComponent(navController = navController)
+                Row(
+                    modifier = Modifier,
+                    verticalAlignment = Alignment.Bottom,
+                ) {
+                    MainBottomNavComponent(navController = navController)
+                }
             }
         }
     }
@@ -98,6 +113,7 @@ fun MainBottomNavComponent(navController: NavHostController) {
         BottomNavItem.UserProfile,
     )
 
+
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
 
     Surface(
@@ -112,7 +128,7 @@ fun MainBottomNavComponent(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Background_Color2)
-                .padding(bottom=2.dp),
+                .padding(bottom = 2.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.Bottom,
 
@@ -138,7 +154,7 @@ fun RowScope.AddBottomNavItem(
         shape = RoundedCornerShape(30.dp),
         modifier = Modifier
             .weight(1f)
-            .padding(start=12.dp,end=12.dp,bottom=10.dp)
+            .padding(start = 12.dp, end = 12.dp, bottom = 10.dp)
             .height(35.dp)
 
     ) {

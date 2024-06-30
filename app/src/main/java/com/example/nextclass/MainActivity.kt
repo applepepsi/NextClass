@@ -20,6 +20,7 @@ import com.example.nextclass.nav.AppNav
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 
 
 @AndroidEntryPoint
@@ -28,6 +29,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setAppLocale()
 
         setContent {
             NextClassTheme {
@@ -36,7 +38,15 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+    private fun setAppLocale() {
+        val locale=Locale.KOREA
+        val config = resources.configuration
+        Locale.setDefault(locale)
+        config.setLocale(locale)
+        createConfigurationContext(config)
+    }
 }
+
 
 
 @Composable

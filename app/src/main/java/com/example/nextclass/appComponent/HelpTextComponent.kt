@@ -2,8 +2,11 @@ package com.example.nextclass.appComponent
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -29,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.R
 import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
@@ -83,7 +87,11 @@ fun DescriptionTextComponent(
 @Composable
 fun AppBarTextAndButtonComponent(
     value: String,
-    navController: NavController
+    buttonText:String="",
+    navRoute:String="",
+    navController: NavController,
+    showLeftButton:Boolean=true,
+    showRightButton:Boolean=false,
 ) {
     val background =  Background_Color2
     Column(modifier = Modifier) {
@@ -94,33 +102,84 @@ fun AppBarTextAndButtonComponent(
             Surface(
                 shape = RoundedCornerShape(20.dp),
                 modifier = Modifier
-                    .padding(start=15.dp)
+                    .padding(start = 15.dp)
                     .align(Alignment.CenterStart)
             ) {
-                Box(
-                    modifier = Modifier
-
-                        .background(background)
-                        .width(50.dp)
-                        .height(35.dp)
-                        .clickable(
-                            onClick = {
-                                navController.navigateUp()
-                            },
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
+                if(showLeftButton){
+                    Box(
                         modifier = Modifier
 
-                            .align(Alignment.Center)
-                            .size(20.dp),
-                        imageVector = ImageVector.vectorResource(R.drawable.arrow_back),
-                        contentDescription = "",
-                        tint = Color.Unspecified,
-                    )
+                            .background(background)
+                            .width(50.dp)
+                            .height(35.dp)
+                            .clickable(
+                                onClick = {
+                                    navController.navigateUp()
+                                },
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+
+                        Icon(
+                            modifier = Modifier
+
+                                .align(Alignment.Center)
+                                .size(20.dp),
+                            imageVector = ImageVector.vectorResource(R.drawable.arrow_back),
+                            contentDescription = "",
+                            tint = Color.Unspecified,
+                        )
+
+                    }
                 }
             }
+            Surface(
+                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier
+                    .padding(start = 15.dp)
+                    .align(Alignment.CenterEnd)
+            ) {
+                if (showRightButton) {
+                    Box(
+                        modifier = Modifier
+                            .background(background)
+                            .width(100.dp)
+                            .height(35.dp)
+                            .clickable(
+                                onClick = {
+                                    navController.navigate(navRoute)
+                                },
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 18.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = value,
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                ),
+                                color = Color.Black,
+                                textAlign = TextAlign.Start
+                            )
+                            Icon(
+                                modifier = Modifier.size(17.dp),
+                                imageVector = ImageVector.vectorResource(R.drawable.plus_icon),
+                                contentDescription = "",
+                                tint = Color.Unspecified,
+                            )
+                        }
+                    }
+                }
+            }
+
             Text(
                 text=value,
                 modifier = Modifier
@@ -146,10 +205,9 @@ fun AppBarTextAndButtonComponent(
 @Composable
 fun HelpTextPreview() {
 
+    var navController= rememberNavController()
 
     NextClassTheme {
-//        AppBarTextAndButtonComponent(value = "아이디 찾기") {
-//
-//        }
+        AppBarTextAndButtonComponent(value = "test", navController = navController)
     }
 }
