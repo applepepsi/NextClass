@@ -30,11 +30,11 @@ import com.example.nextclass.viewmodel.LoginViewModel
 fun AppNav(loginViewModel: LoginViewModel) {
     val mainNavController = rememberNavController()
 
-//    val startDestination=if(loginViewModel.loginResult.value){
-//        "mainNav"
-//    } else {
-//        "loginOrJoinGraph"
-//    }
+    val startDestination=if(loginViewModel.loginResult.value){
+        "mainNav"
+    } else {
+        "loginOrJoinGraph"
+    }
 
 
 //    NavHost(

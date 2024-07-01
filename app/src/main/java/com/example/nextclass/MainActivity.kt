@@ -1,25 +1,16 @@
 package com.example.nextclass
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.nav.AppNav
 import com.example.nextclass.ui.theme.NextClassTheme
-import com.example.nextclass.utils.TokenManager
-import com.example.nextclass.utils.UserInfoManager
 import com.example.nextclass.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
@@ -30,6 +21,8 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
 
         setAppLocale()
 
@@ -73,6 +66,7 @@ fun Greeting() {
 //
 //    if(loginViewModel.loginResult.value){
 //        TokenManager.saveToken(context,loginViewModel.tokenData.value)
+//
 //    }
 //
 //    if (!loginViewModel.loading.value) {

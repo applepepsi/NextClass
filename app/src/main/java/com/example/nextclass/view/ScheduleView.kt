@@ -49,6 +49,7 @@ import com.example.nextclass.appComponent.ScheduleTextInsertView
 import com.example.nextclass.appComponent.SelectDateBottomSheet
 import com.example.nextclass.appComponent.SelectTimeBottomSheet
 import com.example.nextclass.appComponent.TextInputHelpFieldComponent
+import com.example.nextclass.repository.ScheduleTestRepository
 
 import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
@@ -246,9 +247,9 @@ fun InsertScheduleView(
 fun ScheduleViewPreview() {
     val mainNavController= rememberNavController()
     val navController= rememberNavController()
-    val testRepository = TestRepository()
-    val loginViewModel = LoginViewModel(testRepository)
-    val scheduleViewModel:ScheduleViewModel= hiltViewModel()
+//    val testRepository = TestRepository()
+    val testRepository = ScheduleTestRepository()
+    val scheduleViewModel=ScheduleViewModel(testRepository)
     MaterialTheme {
         ScheduleView(navController, scheduleViewModel)
     }
@@ -260,8 +261,8 @@ fun ScheduleViewPreview() {
 fun InsertScheduleViewPreview() {
     val mainNavController= rememberNavController()
     val navController= rememberNavController()
-    val testRepository = TestRepository()
-    val scheduleViewModel:ScheduleViewModel= hiltViewModel()
+    val testRepository = ScheduleTestRepository()
+    val scheduleViewModel=ScheduleViewModel(testRepository)
 
     MaterialTheme {
         InsertScheduleView(navController, scheduleViewModel)

@@ -18,3 +18,10 @@ const val USER_NOT_EXIST="E00203"
 
 //상수
 const val MaxTextCount = 64
+
+
+
+//주소
+const val DUPLICATED_CHECK_ADDRESS="/duplicated_check"
+const val REGISTER_ADDRESS="/register"
+const val LOGIN_ADDRESS="/login"

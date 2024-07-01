@@ -5,20 +5,26 @@ import com.example.nextclass.Data.DuplicateCheckRequest
 import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.Data.LoginRequest
 import com.example.nextclass.Data.ServerResponse
-import com.example.oneplusone.serverConnection.RetrofitBuilder
+import com.example.oneplusone.serverConnection.API
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
 
 class TestRepository : UserInfoRepository {
+    val retrofit: Retrofit
+        get() {
+            TODO()
+        }
+    private val api: API = retrofit.create(API::class.java)
     override fun joinIdDuplicateCheck(id: String,callback: (ServerResponse?) -> Unit) {
 
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
                 val idRequest = DuplicateCheckRequest(id)
 
-                val response = RetrofitBuilder.api.idDuplicateCheck(idRequest)
+                val response = api.idDuplicateCheck(idRequest)
                 Log.d("responseCheck", idRequest.toString())
                 if (response.isSuccessful){
                     Log.d("response.body()", response.body().toString())
@@ -41,7 +47,7 @@ class TestRepository : UserInfoRepository {
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
                 val checkRequest = DuplicateCheckRequest("email")
-                val response = RetrofitBuilder.api.emailDuplicateCheck(checkRequest)
+                val response = api.emailDuplicateCheck(checkRequest)
                 if (response.isSuccessful){
                     response.body()
                 } else{
@@ -61,7 +67,7 @@ class TestRepository : UserInfoRepository {
     override fun postUserJoinInfo(userJoinInfo: JoinRequest, callback: (ServerResponse?) -> Unit){
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
-                val response = RetrofitBuilder.api.postUserJoinInfo(userJoinInfo)
+                val response = api.postUserJoinInfo(userJoinInfo)
                 if (response.isSuccessful){
                     response.body()
                 } else{
@@ -82,7 +88,7 @@ class TestRepository : UserInfoRepository {
     override fun postUserLoginInfo(userLoginInfo: LoginRequest, callback: (ServerResponse?) -> Unit){
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
-                val response = RetrofitBuilder.api.postUserLoginForm(userLoginInfo)
+                val response = api.postUserLoginForm(userLoginInfo)
                 if (response.isSuccessful){
                     response.body()
                 } else{
@@ -99,4 +105,6 @@ class TestRepository : UserInfoRepository {
             }
         }
     }
+
+
 }

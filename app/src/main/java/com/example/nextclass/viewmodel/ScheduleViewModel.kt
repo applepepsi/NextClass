@@ -7,14 +7,19 @@ import androidx.lifecycle.ViewModel
 import com.example.nextclass.Data.ScheduleData
 import com.example.nextclass.Data.TimeData
 import com.example.nextclass.R
+import com.example.nextclass.repository.ScheduleRepository
+import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.utils.StringValue
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import javax.inject.Inject
 
-
-class ScheduleViewModel @Inject constructor(): ViewModel(){
+@HiltViewModel
+class ScheduleViewModel @Inject constructor(
+    private val scheduleRepository: ScheduleRepository
+): ViewModel(){
 
     private var _timeData= mutableStateOf(TimeData())
 
@@ -72,6 +77,9 @@ class ScheduleViewModel @Inject constructor(): ViewModel(){
 
         if(checkScheduleData()){
             //서버로 전송
+            scheduleRepository.tokenCheck {
+
+            }
         }
 
     }

@@ -5,6 +5,9 @@ import com.example.nextclass.Data.DuplicateCheckRequest
 import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.Data.LoginRequest
 import com.example.nextclass.Data.ServerResponse
+import com.example.nextclass.utils.DUPLICATED_CHECK_ADDRESS
+import com.example.nextclass.utils.LOGIN_ADDRESS
+import com.example.nextclass.utils.REGISTER_ADDRESS
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -19,18 +22,20 @@ interface API {
 
     //key value 형식으로 달라고 했음
 
-    @POST("/duplicated_check")
+    @POST(DUPLICATED_CHECK_ADDRESS)
     suspend fun idDuplicateCheck(@Body checkRequest: DuplicateCheckRequest): Response<ServerResponse>
 
-    @POST("/duplicated_check")
+    @POST(DUPLICATED_CHECK_ADDRESS)
     suspend fun emailDuplicateCheck(@Body checkRequest: DuplicateCheckRequest): Response<ServerResponse>
 
 
-    @POST("/register")
+    @POST(REGISTER_ADDRESS)
     suspend fun postUserJoinInfo(@Body joinInfo: JoinRequest):Response<ServerResponse>
 
-    @POST("/login")
+    @POST(LOGIN_ADDRESS)
     suspend fun postUserLoginForm(@Body loginInfo: LoginRequest):Response<ServerResponse>
 
 
+    @POST("/test")
+    suspend fun tokenTest():Response<ServerResponse>
 }

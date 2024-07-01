@@ -23,4 +23,9 @@ object TokenManager {
         editor.putString(REFRESH_TOKEN_KEY,null)
         editor.apply()
     }
+
+    fun getAccessToken(context: Context): String? {
+        val tokenInfo = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return tokenInfo.getString(ACCESS_TOKEN_KEY,null)
+    }
 }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,6 +31,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -379,13 +381,79 @@ fun ScheduleTextInsertView(
             text="${textCount}/${MaxTextCount}",
             modifier = Modifier
                 .align(Alignment.End)
-                .padding(end=25.dp,top=3.dp),
+                .padding(end = 25.dp, top = 3.dp),
             fontSize = 12.sp,
             color = Color.DarkGray
             )
     }
 }
 
+@Composable
+fun SingleScheduleView(
+    scheduleDetail:String="물방울이 떨어지는 소리를 들으며 창밖을 바라보는 시간은 참 평화로워.",
+    scheduleDate:Pair<String,String> = TimeFormatter.formatTimeAndSplit( LocalDateTime.now()),
+
+) {
+
+
+        Surface(
+            shape = RoundedCornerShape(30.dp),
+            modifier = Modifier
+                .height(130.dp)
+                .padding(start = 20.dp, end = 20.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .background(Background_Color2)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize(),
+
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(top=20.dp,bottom=20.dp,start=15.dp,end=10.dp)
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(Feldgrau)
+                            .fillMaxHeight(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = scheduleDate.first,
+                            color=Color.White,
+                            fontSize = 15.sp,
+                            modifier = Modifier
+
+                                .padding(start=10.dp,end=10.dp,bottom=3.dp)
+                        )
+                        Text(
+                            text = scheduleDate.second,
+                            color=Color.White,
+                            modifier = Modifier
+
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically),
+
+                            text = scheduleDetail,
+                            color = Color.Black
+                        )
+                    }
+                }
+
+            }
+        }
+}
 
 
 @Preview(showBackground = true)
@@ -407,6 +475,7 @@ fun SelectTimePreview() {
 @Preview(showBackground = true)
 @Composable
 fun ScheduleTextInsertPreview() {
-    ScheduleTextInsertView(text = "", onValueChange = {}, textCount = 0)
+//    ScheduleTextInsertView(text = "", onValueChange = {}, textCount = 0)
+    SingleScheduleView()
 
 }

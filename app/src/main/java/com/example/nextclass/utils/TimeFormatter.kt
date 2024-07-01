@@ -1,6 +1,7 @@
 package com.example.nextclass.utils
 
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
@@ -29,4 +30,10 @@ object TimeFormatter {
         return time.format(outputFormatter)
     }
 
+    fun formatTimeAndSplit(time: LocalDateTime):Pair<String,String>{
+        val dateString = formatDate(time.toLocalDate())
+        val timeString = formatTime(time.toLocalTime())
+
+        return Pair(dateString, timeString)
+    }
 }
