@@ -3,30 +3,37 @@ package com.example.nextclass.appComponent
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text2.input.rememberTextFieldState
 import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -46,12 +53,16 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nextclass.R
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.Feldgrau
+import com.example.nextclass.ui.theme.Pastel_Red
+import com.example.nextclass.utils.MaxTextCount
 import com.example.nextclass.utils.TimeFormatter
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -84,6 +95,20 @@ fun SelectDateBottomSheet(
 
             updateSelectData = updateSelectData
         )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 20.dp),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            Button(onClick = {
+                onDismiss()
+            }) {
+                Text(text = "확인")
+            }
+
+        }
     }
 }
 
@@ -104,17 +129,31 @@ fun CustomDatePicker(
         }
     }
 
-    Column {
-        DatePicker(
-            state = dateState,
-            title = {
-                Text(text = "날짜 선택")
-            },
-            headline = {
-                Text(text = "날짜를 선택해 주세요.")
-            }
+    MaterialTheme(
+        colorScheme = MaterialTheme.colorScheme.copy(
+            primary = Pastel_Red, // 선택된 날짜 색상
         )
-
+    ) {
+        Column {
+            DatePicker(
+                state = dateState,
+                title = {
+                    Text(
+                        modifier = Modifier.padding(start = 10.dp, top = 10.dp),
+                        text = "날짜 선택",
+                        fontSize = 20.sp
+                    )
+                },
+                headline = {
+                    Text(
+                        modifier = Modifier.padding(start = 10.dp,bottom=10.dp),
+                        text = "날짜를 선택해 주세요.",
+                        fontSize = 15.sp
+                    )
+                },
+                showModeToggle = false
+            )
+        }
     }
 }
 
@@ -137,7 +176,22 @@ fun SelectTimeBottomSheet(
 
             updateSelectTime=updateSelectTime
         )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 20.dp),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            Button(onClick = {
+                onDismiss()
+            }) {
+                Text(text = "확인")
+            }
+
+        }
     }
+
 }
 
 
@@ -152,11 +206,24 @@ fun CustomTimePicker(
         val selectedTime = LocalTime.of(timeState.hour, timeState.minute)
         updateSelectTime(selectedTime)
     }
-
-    Column {
-        TimePicker(
-            state = timeState,
+    MaterialTheme(
+        colorScheme = MaterialTheme.colorScheme.copy(
+            primary = Pastel_Red,
+            onPrimary = Color.White,
         )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+
+            ) {
+            TimePicker(
+                state = timeState,
+            )
+        }
     }
 }
 
@@ -252,35 +319,70 @@ fun ScheduleDateTimePickerView(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ScheduleTextInsertView(
-
+    text:String,
+    onValueChange:(String)->Unit,
+    textCount:Int
 ) {
 
-    var text by remember { mutableStateOf("") }
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(15.dp))
-            .background(Background_Color2)
-            .padding(start = 7.dp,end=7.dp),
-        contentAlignment = Alignment.Center,
-    ) {
-        BasicTextField(
-            value = text,
-            onValueChange = {
-                text = it
-            },
-            modifier = Modifier
+    Column() {
 
-                .fillMaxWidth()
-                //defaultMinSize를 사용해 자동으로 늘어나도록 함
-                .defaultMinSize(minHeight = 200.dp)
-                .padding(12.dp),
-            textStyle = TextStyle.Default.copy(fontSize = 20.sp)
+        Text(
+            text="스케쥴 내용",
+            fontSize = 20.sp,
+            modifier = Modifier.padding(start = 12.dp,bottom=20.dp),
+            fontWeight = FontWeight.Bold
         )
+
+        Box(
+            modifier = Modifier
+                .padding(start = 7.dp, end = 7.dp)
+                .clip(RoundedCornerShape(15.dp))
+                .background(Color.White)
+                .border(1.5.dp, Color.LightGray, shape = RoundedCornerShape(15.dp))
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center,
+        ) {
+
+            BasicTextField(
+                value = text,
+                onValueChange = {
+                    if (it.length <= MaxTextCount) {
+                        onValueChange(it)
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .defaultMinSize(minHeight = 200.dp)
+                    .padding(14.dp),
+                textStyle = TextStyle.Default.copy(fontSize = 20.sp),
+                decorationBox = { innerTextField ->
+                    Box(
+                        contentAlignment = Alignment.TopStart
+                    ) {
+                        if (text.isEmpty()) {
+                            Text(
+                                text = "내용을 입력해 주세요",
+                                style = TextStyle.Default.copy(color = Color.Gray, fontSize = 20.sp)
+                            )
+                        }
+                        innerTextField()
+                    }
+                }
+            )
+        }
+
+
+        Text(
+            text="${textCount}/${MaxTextCount}",
+            modifier = Modifier
+                .align(Alignment.End)
+                .padding(end=25.dp,top=3.dp),
+            fontSize = 12.sp,
+            color = Color.DarkGray
+            )
     }
 }
 
@@ -305,6 +407,6 @@ fun SelectTimePreview() {
 @Preview(showBackground = true)
 @Composable
 fun ScheduleTextInsertPreview() {
-    ScheduleTextInsertView()
+    ScheduleTextInsertView(text = "", onValueChange = {}, textCount = 0)
 
 }

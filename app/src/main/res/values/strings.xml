@@ -83,4 +83,8 @@
 
 
 
+    //스케쥴 에러
+    <string name="WrongDate">올바르지 않은 날짜입니다.</string>
+    <string name="WrongScheduleDetail">스케쥴 내용을 입력해 주세요.</string>
+
 </resources>

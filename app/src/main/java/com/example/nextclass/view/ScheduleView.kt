@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,11 +42,13 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.R
 import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
+import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.MainTextComponent
 import com.example.nextclass.appComponent.ScheduleDateTimePickerView
 import com.example.nextclass.appComponent.ScheduleTextInsertView
 import com.example.nextclass.appComponent.SelectDateBottomSheet
 import com.example.nextclass.appComponent.SelectTimeBottomSheet
+import com.example.nextclass.appComponent.TextInputHelpFieldComponent
 
 import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
@@ -54,6 +57,9 @@ import com.example.nextclass.ui.theme.Feldgrau
 import com.example.nextclass.utils.TimeFormatter
 import com.example.nextclass.viewmodel.LoginViewModel
 import com.example.nextclass.viewmodel.ScheduleViewModel
+
+
+
 
 @Composable
 fun ScheduleView(
@@ -127,9 +133,13 @@ fun InsertScheduleView(
 ) {
     val context = LocalContext.current
 
+
+
     Column(
-        modifier = Modifier.padding(bottom = 20.dp),
-        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+
+            .fillMaxSize(),
+
     ) {
         if (scheduleViewModel.datePickerState.value) {
             SelectDateBottomSheet(
@@ -145,7 +155,11 @@ fun InsertScheduleView(
             )
         }
 
-        Row(modifier = Modifier.padding(top = 20.dp)) {
+        Row(
+            modifier = Modifier
+                .padding(top = 20.dp),
+
+        ) {
             AppBarTextAndButtonComponent(
                 value = "스케쥴 추가 하기",
                 navController = navController,
@@ -155,18 +169,75 @@ fun InsertScheduleView(
             )
         }
 
-        Spacer(modifier = Modifier.padding(top=70.dp))
 
 
-        ScheduleDateTimePickerView(
-            selectDate = scheduleViewModel.timeData.value.selectDate,
-            selectTime = scheduleViewModel.timeData.value.selectTime,
-            onDateClick = { scheduleViewModel.toggleDatePickerState() },
-            onTimeClick = { scheduleViewModel.toggleTimePickerState() }
-        )
-        Spacer(modifier = Modifier.padding(top=70.dp))
+        Column(
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 70.dp)
+        ) {
+            ScheduleDateTimePickerView(
+                selectDate = scheduleViewModel.timeData.value.selectDate,
+                selectTime = scheduleViewModel.timeData.value.selectTime,
+                onDateClick = { scheduleViewModel.toggleDatePickerState() },
+                onTimeClick = { scheduleViewModel.toggleTimePickerState() }
+            )
 
-        ScheduleTextInsertView()
+            Spacer(modifier = Modifier.padding(top = 15.dp))
+
+            Surface(
+                shape = RoundedCornerShape(30.dp),
+                modifier = Modifier
+                    .padding(start = 10.dp, end = 10.dp)
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .background(Background_Color2),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    Spacer(modifier = Modifier.padding(top = 50.dp))
+
+                    ScheduleTextInsertView(
+                        text = scheduleViewModel.scheduleData.value.scheduleDetail,
+                        onValueChange = {
+                            scheduleViewModel.updateScheduleDetail(it)
+                        },
+                        textCount = scheduleViewModel.textCounter.value
+                    )
+
+
+                    Spacer(modifier = Modifier.padding(top = 40.dp))
+
+
+                    TextInputHelpFieldComponent(
+                        errorMessage = scheduleViewModel.scheduleErrorMessage.value.asString(LocalContext.current),
+                        isError = scheduleViewModel.scheduleErrorState.value,
+                    )
+
+                    Spacer(modifier = Modifier.padding(top = 5.dp))
+
+                    Box(
+                        modifier = Modifier,
+                        contentAlignment = Alignment.Center
+                    ) {
+
+
+                        InputButtonComponent(
+                            value = "추가 하기",
+                            onClick = { scheduleViewModel.postScheduleDate() },
+                            modifier = Modifier
+                                .padding(start = 30.dp, end = 30.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.padding(top = 40.dp))
+                }
+            }
+        }
     }
 }
 
