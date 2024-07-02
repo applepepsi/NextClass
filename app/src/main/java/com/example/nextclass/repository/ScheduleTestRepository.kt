@@ -15,7 +15,7 @@ class ScheduleTestRepository:ScheduleRepository {
         .build()
     private val api: API = retrofit.create(API::class.java)
 
-    override fun tokenCheck(callback: (ServerResponse?) -> Unit) {
+    override fun tokenCheck(callback: (String?) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
 

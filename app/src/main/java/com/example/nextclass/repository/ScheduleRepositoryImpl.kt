@@ -18,7 +18,7 @@ class ScheduleRepositoryImpl @Inject constructor(
 ) : ScheduleRepository {
 
 
-    override fun tokenCheck(callback: (ServerResponse?) -> Unit) {
+    override fun tokenCheck(callback: (String?) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             val response = api.tokenTest()
             val result = try {

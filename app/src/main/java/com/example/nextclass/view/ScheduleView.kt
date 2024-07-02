@@ -1,6 +1,8 @@
 package com.example.nextclass.view
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -127,6 +129,7 @@ fun ScheduleView(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun InsertScheduleView(
     navController: NavController,
@@ -256,6 +259,7 @@ fun ScheduleViewPreview() {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun InsertScheduleViewPreview() {

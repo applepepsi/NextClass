@@ -71,7 +71,6 @@ fun Greeting() {
 
     if(loginViewModel.loginResult.value){
         TokenManager.saveToken(context,loginViewModel.tokenData.value)
-
     }
 
     if (!loginViewModel.loading.value) {
@@ -80,6 +79,8 @@ fun Greeting() {
         // 로딩 중일때 로딩 화면 표시
         CircularProgressIndicator()
     }
+
+
 //    AppNav(loginViewModel)
 }
 

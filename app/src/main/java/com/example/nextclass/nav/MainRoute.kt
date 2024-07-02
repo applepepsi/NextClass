@@ -55,6 +55,7 @@ private fun NavGraphBuilder.timetableRoute(
     loginViewModel: LoginViewModel,
     mainNavHostController: NavHostController
 ) {
+
     navigation(
         route = "timetableRoute",
         startDestination = BottomNavItem.Timetable.screenRoute

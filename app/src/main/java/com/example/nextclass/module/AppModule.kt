@@ -3,8 +3,6 @@ package com.example.nextclass.module
 
 import com.example.nextclass.repository.ScheduleRepository
 import com.example.nextclass.repository.ScheduleRepositoryImpl
-import com.example.nextclass.repository.TokenRepository
-import com.example.nextclass.repository.TokenRepositoryImpl
 import com.example.nextclass.repository.UserInfoRepository
 import com.example.nextclass.repository.UserInfoRepositoryImpl
 import com.example.oneplusone.serverConnection.API
@@ -19,12 +17,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
-    @Provides
-    @Singleton
-    fun provideTokenRepository(api: API): TokenRepository {
-        return TokenRepositoryImpl(api)
-    }
 
     @Provides
     @Singleton

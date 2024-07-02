@@ -93,6 +93,7 @@ fun TimeTableView(
                 IconButton(
                     onClick = {
                         timeTableViewModel.toggleInsertClassDataDialogState()
+
                     },
                     modifier = Modifier.padding(end=10.dp)
                 ){

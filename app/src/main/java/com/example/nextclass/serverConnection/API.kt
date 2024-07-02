@@ -37,7 +37,7 @@ interface API {
 
 
     @POST("/test")
-    suspend fun tokenTest():Response<ServerResponse>
+    suspend fun tokenTest():Response<String?>
 
     @POST("/test")
     suspend fun refreshTest():Response<ServerResponse>

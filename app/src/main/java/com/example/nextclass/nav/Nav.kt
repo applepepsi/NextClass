@@ -37,32 +37,6 @@ fun AppNav(loginViewModel: LoginViewModel) {
     }
 
 
-//    NavHost(
-//        navController = mainNavController,
-//        startDestination = startDestination
-//    ) {
-//        //약간 구조가 이상함 나중에 수정 예정
-//        composable("loginOrJoinGraph") {
-//            LoginOrJoinNav(loginViewModel, mainNavController)
-//        }
-//        composable("mainNav") {
-//            MainBottomNav(loginViewModel,mainNavController)
-//        }
-//    }
-
-//    NavHost(
-//        navController = mainNavController,
-//        startDestination = "loginOrJoinGraph"
-//    ) {
-//        //약간 구조가 이상함 나중에 수정 예정
-//        composable("loginOrJoinGraph") {
-//            LoginOrJoinNav(loginViewModel, mainNavController)
-//        }
-//        composable("mainNav") {
-//            MainBottomNav(loginViewModel,mainNavController)
-//        }
-//    }
-
     NavHost(
         navController = mainNavController,
         startDestination = startDestination
