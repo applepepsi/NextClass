@@ -15,10 +15,9 @@ import javax.inject.Inject
 
 
 class UserInfoRepositoryImpl @Inject constructor(
-    retrofit: Retrofit
+    private val api: API
 ) :UserInfoRepository{
 
-    private val api: API = retrofit.create(API::class.java)
     override fun joinIdDuplicateCheck(id: String,callback: (ServerResponse?) -> Unit) {
 
         CoroutineScope(Dispatchers.IO).launch {

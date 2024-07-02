@@ -65,7 +65,7 @@ fun AppNav(loginViewModel: LoginViewModel) {
 
     NavHost(
         navController = mainNavController,
-        startDestination = "mainNav"
+        startDestination = startDestination
     ) {
         composable("loginOrJoinGraph") {
             LoginOrJoinNav(loginViewModel, mainNavController)

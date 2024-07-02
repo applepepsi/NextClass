@@ -28,4 +28,9 @@ object TokenManager {
         val tokenInfo = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         return tokenInfo.getString(ACCESS_TOKEN_KEY,null)
     }
+
+    fun getRefreshToken(context: Context): String? {
+        val tokenInfo = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return tokenInfo.getString(REFRESH_TOKEN_KEY,null)
+    }
 }

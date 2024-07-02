@@ -1,6 +1,8 @@
 package com.example.nextclass.viewmodel
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -67,11 +69,13 @@ class ScheduleViewModel @Inject constructor(
         updateTextCount(scheduleDetail)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun combinedDateTime(): LocalDateTime {
 
         return LocalDateTime.of(timeData.value.selectDate, timeData.value.selectTime)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun postScheduleDate(){
         _scheduleData.value=_scheduleData.value.copy(scheduleDate = combinedDateTime())
 
@@ -84,6 +88,7 @@ class ScheduleViewModel @Inject constructor(
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun checkScheduleData():Boolean{
         if(_scheduleData.value.scheduleDate<=LocalDateTime.now()){
             //에러 처리

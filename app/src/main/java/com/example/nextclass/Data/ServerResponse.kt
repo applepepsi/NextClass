@@ -5,7 +5,8 @@ data class ServerResponse(
     val description: String,
     val data: TokenData? = null,
     val errorCode: String? = null,
-    val errorDescription: String? = null
+    val errorDescription: String? = null,
+    val accessToken:String?=null,
 )
 
 
