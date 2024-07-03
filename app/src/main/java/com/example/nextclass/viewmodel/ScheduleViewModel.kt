@@ -7,10 +7,12 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.nextclass.Data.ScheduleData
+import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.Data.TimeData
 import com.example.nextclass.R
 import com.example.nextclass.repository.ScheduleRepository
 import com.example.nextclass.repository.TestRepository
+import com.example.nextclass.utils.EXPIRED_REFRESH_TOKEN
 import com.example.nextclass.utils.StringValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
@@ -48,6 +50,8 @@ class ScheduleViewModel @Inject constructor(
     private val _scheduleErrorMessage=mutableStateOf<StringValue>(StringValue.Empty)
     val scheduleErrorMessage: State<StringValue> = _scheduleErrorMessage
 
+    private val _tokenCheckResult=mutableStateOf(false)
+    val tokenCheckResult: State<Boolean> = _tokenCheckResult
     fun updateScheduleDate(selectDate: LocalDate) {
         Log.d("selectDate", selectDate.toString())
         _timeData.value=_timeData.value.copy(selectDate=selectDate)
@@ -79,10 +83,15 @@ class ScheduleViewModel @Inject constructor(
     fun postScheduleDate(){
         _scheduleData.value=_scheduleData.value.copy(scheduleDate = combinedDateTime())
 
+        Log.d("스케쥴 시간", _scheduleData.value.toString())
         if(checkScheduleData()){
             //서버로 전송
-            scheduleRepository.tokenCheck {
-
+            scheduleRepository.tokenCheck { ServerResponse->
+                if (ServerResponse != null) {
+                    if(ServerResponse.errorCode== EXPIRED_REFRESH_TOKEN){
+                        _tokenCheckResult.value=true
+                    }
+                }
             }
         }
 

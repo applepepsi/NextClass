@@ -9,6 +9,7 @@ import androidx.navigation.compose.navigation
 import com.example.nextclass.items.TopNavItem
 import com.example.nextclass.view.ForGotId
 import com.example.nextclass.view.ForGotPassword
+import com.example.nextclass.view.InsertCodeView
 import com.example.nextclass.view.JoinView
 import com.example.nextclass.view.LoginView
 import com.example.nextclass.view.TermsAndConditionsView
@@ -51,6 +52,7 @@ private fun NavGraphBuilder.joinRoute(
     ) {
         joinView(navController, loginViewModel)
         termsAndConditionsView(navController, loginViewModel)
+        insertVerifyCodeView(navController,loginViewModel)
     }
 }
 
@@ -80,6 +82,17 @@ private fun NavGraphBuilder.termsAndConditionsView(
         TermsAndConditionsView(loginViewModel, navController)
     }
 }
+
+private fun NavGraphBuilder.insertVerifyCodeView(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+
+    ) {
+    composable("insertVerifyCodeView") {
+        InsertCodeView(loginViewModel, navController)
+    }
+}
+
 private fun NavGraphBuilder.forgotId(
     navController: NavHostController,
     loginViewModel: LoginViewModel,

@@ -93,26 +93,28 @@ private fun NavGraphBuilder.scheduleRoute(
         route = "scheduleRoute",
         startDestination = BottomNavItem.Schedule.screenRoute
     ) {
-        scheduleView(navController,scheduleViewModel)
-        insertScheduleView(navController,scheduleViewModel)
+        scheduleView(navController,scheduleViewModel,loginViewModel)
+        insertScheduleView(navController,scheduleViewModel,loginViewModel)
     }
 }
 
 private fun NavGraphBuilder.scheduleView(
     navController: NavHostController,
     scheduleViewModel: ScheduleViewModel,
+    loginViewModel: LoginViewModel,
 ) {
     composable(BottomNavItem.Schedule.screenRoute) {
-        ScheduleView(navController,scheduleViewModel)
+        ScheduleView(navController,scheduleViewModel,loginViewModel)
     }
 }
 
 private fun NavGraphBuilder.insertScheduleView(
     navController: NavHostController,
     scheduleViewModel: ScheduleViewModel,
+    loginViewModel: LoginViewModel,
 ) {
     composable("insertScheduleView") {
-        InsertScheduleView(navController,scheduleViewModel)
+        InsertScheduleView(navController,scheduleViewModel,loginViewModel)
     }
 }
 

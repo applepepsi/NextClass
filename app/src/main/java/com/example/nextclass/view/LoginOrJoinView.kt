@@ -301,22 +301,40 @@ fun JoinView(
 
 
 
+//        InputButtonComponent(
+//            value="가입 완료",
+//            onClick = {loginViewModel.joinComplete()},
+//            modifier = Modifier,
+//
+//        )
+
         InputButtonComponent(
             value="가입 완료",
-            onClick = {loginViewModel.joinComplete()},
+            onClick = {
+                loginViewModel.joinDataCheck()
+            },
             modifier = Modifier,
 
-        )
+            )
 
-        //LaunchedEffect는 코루틴
-        //가입이 완료됐다면 로그인페이지로 이동
-        LaunchedEffect(loginViewModel.joinResult.value) {
-            if (loginViewModel.joinResult.value) {
-                navController.navigate(TopNavItem.Login.screenRoute) {
+        LaunchedEffect(loginViewModel.joinDataCheckResult.value) {
+            if (loginViewModel.joinDataCheckResult.value) {
+                navController.navigate("insertVerifyCodeView") {
                     popUpTo(TopNavItem.Join.screenRoute) { inclusive = true }
                 }
             }
         }
+
+
+        //LaunchedEffect는 코루틴
+        //가입이 완료됐다면 로그인페이지로 이동
+//        LaunchedEffect(loginViewModel.joinResult.value) {
+//            if (loginViewModel.joinResult.value) {
+//                navController.navigate(TopNavItem.Login.screenRoute) {
+//                    popUpTo(TopNavItem.Join.screenRoute) { inclusive = true }
+//                }
+//            }
+//        }
     }
 }
 
@@ -576,7 +594,7 @@ fun FindIdResult(
 
 //비밀번호 찾기의 코드 입력 뷰
 @Composable
-fun InsertPasswordCodeView(
+fun InsertCodeView(
     loginViewModel: LoginViewModel,
     navController: NavController)  {
 
@@ -589,7 +607,7 @@ fun InsertPasswordCodeView(
         horizontalAlignment = Alignment.CenterHorizontally
 
     ){
-        AppBarTextAndButtonComponent(value = stringResource(id = R.string.FindPassword),
+        AppBarTextAndButtonComponent(value = stringResource(id = R.string.InputVerifyCode),
             navController=navController)
     }
     Column(
@@ -649,14 +667,12 @@ fun InsertPasswordCodeView(
                     )
 
 
-
                     InputButtonComponent(
-                        value = "다음",
+                        value = "확인",
                         onClick = { loginViewModel.submitVerifyCode() },
                         modifier = Modifier.padding(start=15.dp,end=15.dp),
                         showImage = true
                     )
-
 
 
                     Spacer(modifier = Modifier.height(10.dp))
@@ -746,6 +762,124 @@ fun PasswordConfirm(
     }
 }
 
+@Composable
+fun ChangeUserInfo(
+    loginViewModel: LoginViewModel,
+    navController: NavController
+) {
+    val scrollState = rememberScrollState()
+
+    Column() {
+
+        Column(
+            modifier = Modifier
+                .padding(top = 20.dp),
+
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+
+        ){
+            AppBarTextAndButtonComponent(value = stringResource(id = R.string.FindId),
+                navController=navController)
+        }
+
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(bottom=20.dp),
+            verticalArrangement = Arrangement.Center,
+        ) {
+            Surface(
+                shape = RoundedCornerShape(30.dp),
+                modifier = Modifier
+
+                    .padding(start = 10.dp, end = 10.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .background(Background_Color2)
+                ) {
+                    Column(
+                        modifier = Modifier,
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+
+                    ) {
+
+                        MainTextComponent(
+                            value = stringResource(id = R.string.UserInfoModify),
+                            modifier=Modifier
+                                .padding(top=20.dp)
+                        )
+                        Spacer(modifier = Modifier.height(15.dp))
+                        TextInputFieldComponent(
+                            value = loginViewModel.name.value,
+                            onValueChange = { loginViewModel.updateName(it) },
+                            labelValue = stringResource(id = R.string.name),
+                            isError = loginViewModel.nameInputError.value,
+                            errorMessage=loginViewModel.nameInputErrorMessage.value.asString(LocalContext.current),
+                            placeholderValue = stringResource(id = R.string.input_name),
+                        )
+                        Spacer(modifier = Modifier.height(15.dp))
+
+                        PasswordInputFieldComponent(
+                            value = loginViewModel.joinPassword.value,
+                            onValueChange = { loginViewModel.updateJoinPassword(it) },
+                            labelValue = stringResource(id = R.string.password),
+                            passwordVisibleOption = loginViewModel.passwordVisibility.value,
+                            togglePassWordVisibility = { loginViewModel.togglePasswordVisibility() },
+                            isError = loginViewModel.passwordInputError.value,
+                            errorMessage=loginViewModel.passwordInputErrorMessage.value.asString(LocalContext.current),
+                            placeholderValue = stringResource(id = R.string.input_password),
+                        )
+
+                        Spacer(modifier = Modifier.height(15.dp))
+
+                        PasswordInputFieldComponent(
+                            value = loginViewModel.passwordConfirm.value,
+                            onValueChange = { loginViewModel.updatePasswordConfirm(it) },
+                            labelValue = stringResource(id = R.string.passwordConfirm),
+                            passwordVisibleOption = loginViewModel.passwordVisibility.value,
+                            togglePassWordVisibility = { loginViewModel.togglePasswordVisibility() },
+                            isError = loginViewModel.passwordConfirmInputError.value,
+                            errorMessage=loginViewModel.passwordConfirmInputErrorMessage.value.asString(LocalContext.current),
+                            placeholderValue = stringResource(id = R.string.input_passwordConfirm),
+                        )
+
+                        Spacer(modifier = Modifier.height(15.dp))
+
+                        GradeDropDownMenuComponent(
+                            onValueChange={loginViewModel.updateEntranceYear(it)},
+                            labelValue=loginViewModel.entranceYear.value,
+                            dropDownMenuOption=loginViewModel.menuVisibility.value,
+                            toggleDropDownMenuOption={loginViewModel.toggleMenuVisibility()}
+                        )
+
+
+                    Spacer(modifier = Modifier.height(30.dp))
+
+                        TextInputHelpFieldComponent(
+                            errorMessage = loginViewModel.userInfoModifyPasswordConfirmErrorMessage.value.asString(LocalContext.current),
+                            isError = loginViewModel.userInfoModifyPasswordConfirmError.value,
+                        )
+
+                        InputButtonComponent(
+                            value = "정보 변경",
+                            onClick = { loginViewModel.submitUserInfoModifyPasswordConfirm() },
+                            modifier = Modifier.padding(start=15.dp,end=15.dp))
+
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
+                }
+            }
+        }
+    }
+
+
+}
+
 
 //프리뷰는 hilt를 쓰면 의존성주입을 초기화 하지 않는다고 해서 테스트 용으로 하나 더 만듬
 @Preview(showBackground = true)
@@ -758,18 +892,32 @@ fun FindPasswordPreview() {
 
 
     NextClassTheme {
-//        FindIdResult(loginViewModel,navController)
-//        LoginView(loginViewModel)
-//        ForGotId(loginViewModel)
-//        TermsAndConditionsView(loginViewModel,navController)
+
         PasswordConfirm(loginViewModel,navController)
     }
+//}
 }
+
+//@Preview(showBackground = true)
+//@Composable
+//fun FindIdPreview() {
+//    val navController = rememberNavController()
+//    val testRepository = TestRepository()
+//    val loginViewModel = LoginViewModel(testRepository)
+//
+//    NextClassTheme {
+////        LoginView(loginViewModel)
+////        ForGotId(loginViewModel)
+////        TopNav(loginViewModel)
+//        InsertCodeView(loginViewModel = loginViewModel, navController = navController)
+//    }
+//}
 
 
 @Preview(showBackground = true)
 @Composable
-fun FindIdPreview() {
+fun ChangeUserInfoPreview() {
+    val navController = rememberNavController()
     val testRepository = TestRepository()
     val loginViewModel = LoginViewModel(testRepository)
 
@@ -777,5 +925,6 @@ fun FindIdPreview() {
 //        LoginView(loginViewModel)
 //        ForGotId(loginViewModel)
 //        TopNav(loginViewModel)
+        ChangeUserInfo(loginViewModel = loginViewModel, navController = navController)
     }
 }

@@ -1,48 +1,29 @@
 package com.example.nextclass.view
 
-import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.nextclass.R
 import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
 import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.MainTextComponent
@@ -53,11 +34,9 @@ import com.example.nextclass.appComponent.SelectTimeBottomSheet
 import com.example.nextclass.appComponent.TextInputHelpFieldComponent
 import com.example.nextclass.repository.ScheduleTestRepository
 
-import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
-import com.example.nextclass.ui.theme.Charleston_Green
-import com.example.nextclass.ui.theme.Feldgrau
-import com.example.nextclass.utils.TimeFormatter
+import com.example.nextclass.utils.TokenManager
+import com.example.nextclass.utils.UserInfoManager
 import com.example.nextclass.viewmodel.LoginViewModel
 import com.example.nextclass.viewmodel.ScheduleViewModel
 
@@ -68,7 +47,7 @@ import com.example.nextclass.viewmodel.ScheduleViewModel
 fun ScheduleView(
     navController: NavController,
     scheduleViewModel: ScheduleViewModel,
-
+    loginViewModel: LoginViewModel
     ) {
 
 
@@ -127,6 +106,10 @@ fun ScheduleView(
             }
         }
     }
+
+    if(scheduleViewModel.tokenCheckResult.value){
+        loginViewModel.logOut()
+    }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -134,6 +117,7 @@ fun ScheduleView(
 fun InsertScheduleView(
     navController: NavController,
     scheduleViewModel: ScheduleViewModel,
+    loginViewModel: LoginViewModel,
 ) {
     val context = LocalContext.current
 
@@ -243,6 +227,11 @@ fun InsertScheduleView(
             }
         }
     }
+    if(scheduleViewModel.tokenCheckResult.value){
+        loginViewModel.logOut()
+        UserInfoManager.clearUserInfo(context)
+        TokenManager.clearToken(context)
+    }
 }
 
 @Preview(showBackground = true)
@@ -253,8 +242,9 @@ fun ScheduleViewPreview() {
 //    val testRepository = TestRepository()
     val testRepository = ScheduleTestRepository()
     val scheduleViewModel=ScheduleViewModel(testRepository)
+    val loginViewModel:LoginViewModel= hiltViewModel()
     MaterialTheme {
-        ScheduleView(navController, scheduleViewModel)
+        ScheduleView(navController, scheduleViewModel,loginViewModel)
     }
 }
 
@@ -267,8 +257,9 @@ fun InsertScheduleViewPreview() {
     val navController= rememberNavController()
     val testRepository = ScheduleTestRepository()
     val scheduleViewModel=ScheduleViewModel(testRepository)
+    val loginViewModel:LoginViewModel= hiltViewModel()
 
     MaterialTheme {
-        InsertScheduleView(navController, scheduleViewModel)
+        InsertScheduleView(navController, scheduleViewModel,loginViewModel)
     }
 }

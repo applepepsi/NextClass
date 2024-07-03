@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.Data.LoginRequest
+import com.example.nextclass.Data.ModifyUserData
 import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.Data.TokenData
 import com.example.nextclass.R
@@ -189,6 +190,12 @@ class LoginViewModel @Inject constructor(
 
     private val _tokenData=mutableStateOf(TokenData())
     val tokenData: State<TokenData> = _tokenData
+
+    private val _joinDataCheckResult=mutableStateOf(false)
+    val joinDataCheckResult: State<Boolean> = _joinDataCheckResult
+
+    private val _modifyUserInfo= mutableStateOf(ModifyUserData())
+    val modifyUserInfo: State<ModifyUserData> = _modifyUserInfo
 
     fun updateEmail(newEmail: String) {
         _email.value = newEmail
@@ -401,6 +408,16 @@ class LoginViewModel @Inject constructor(
         _menuVisibility.value = !_menuVisibility.value
     }
 
+    fun joinDataCheck(){
+        if(joinEmptyAndErrorCheck() && duplicateCheck() && termsCheck()){
+            _joinDataCheckResult.value=true
+        }else{
+            Log.d("가입 실패", "가입실패")
+            _joinFailMessage.value=StringValue.StringResource(R.string.joinFailError)
+            _joinFail.value=true
+        }
+    }
+
 
     fun joinComplete(){
 
@@ -585,12 +602,19 @@ class LoginViewModel @Inject constructor(
     fun submitUserInfoModifyPasswordConfirm(){
         _userInfoModifyPasswordConfirmError.value=false
         _userInfoModifyPasswordConfirmErrorMessage.value=StringValue.StringResource(R.string.WrongVerityCodeMassage)
+
+        //여기서 비밀번호가 맞다면 회원정보 변경창으로
     }
 
     fun logOut(){
         _loginResult.value=false
         _id.value=""
         _password.value=""
+    }
+
+    fun getUserInfo(){
+        //서버에서 받아온 유저 정보를 삽입해야함
+        _modifyUserInfo.value
     }
 
 }

@@ -49,7 +49,7 @@ import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.ui.theme.Pastel_Red
 import com.example.nextclass.view.ForGotId
-import com.example.nextclass.view.InsertPasswordCodeView
+import com.example.nextclass.view.InsertCodeView
 import com.example.nextclass.viewmodel.LoginViewModel
 
 @Composable
@@ -200,6 +200,6 @@ fun FindPreview() {
 //        LoginView(loginViewModel)
 //        ForGotId(loginViewModel)
 //        TermsAndConditionsView(loginViewModel,navController)
-        InsertPasswordCodeView(loginViewModel,navController)
+        InsertCodeView(loginViewModel,navController)
     }
 }

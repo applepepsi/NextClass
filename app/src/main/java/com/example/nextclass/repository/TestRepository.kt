@@ -13,10 +13,10 @@ import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 
 class TestRepository : UserInfoRepository {
-    val retrofit: Retrofit
-        get() {
-            TODO()
-        }
+    val retrofit: Retrofit = Retrofit.Builder()
+        .baseUrl("https://example.com/")
+        .build()
+
     private val api: API = retrofit.create(API::class.java)
     override fun joinIdDuplicateCheck(id: String,callback: (ServerResponse?) -> Unit) {
 
