@@ -13,12 +13,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.MainTextComponent
+import com.example.nextclass.repository.ScheduleTestRepository
+import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
+import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.viewmodel.LoginViewModel
+import com.example.nextclass.viewmodel.ScheduleViewModel
 
 @Composable
 fun CommunityView(
@@ -71,5 +78,20 @@ fun CommunityView(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CommunityViewPreview() {
+    val mainNavController= rememberNavController()
+    val navController= rememberNavController()
+    val testRepository = TestRepository()
+
+
+    val loginViewModel=LoginViewModel(testRepository)
+
+    NextClassTheme {
+        CommunityView(navController = navController, loginViewModel = loginViewModel, mainNavController = mainNavController)
     }
 }
