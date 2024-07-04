@@ -1,5 +1,7 @@
 package com.example.nextclass.appComponent
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -49,6 +51,7 @@ import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.ui.theme.Pastel_Red
 import com.example.nextclass.viewmodel.LoginViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainBottomNav(loginViewModel: LoginViewModel, mainNavController: NavHostController) {
     val navController = rememberNavController()

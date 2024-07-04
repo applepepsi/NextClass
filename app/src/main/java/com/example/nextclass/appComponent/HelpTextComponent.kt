@@ -44,7 +44,8 @@ import com.example.nextclass.viewmodel.LoginViewModel
 @Composable
 fun MainTextComponent(
     value: String,
-    modifier: Modifier
+    modifier: Modifier,
+    color:Color= Color.Black
 ) {
 
     Text(
@@ -58,7 +59,7 @@ fun MainTextComponent(
             fontWeight = FontWeight.Bold,
             fontStyle = FontStyle.Normal,
         ),
-        color= Color.Black,
+        color= color,
         textAlign = TextAlign.Left
     )
 }

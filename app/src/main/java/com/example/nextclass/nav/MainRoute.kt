@@ -1,5 +1,7 @@
 package com.example.nextclass.nav
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
@@ -8,15 +10,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.nextclass.items.BottomNavItem
+import com.example.nextclass.view.ChangeUserInfo
 import com.example.nextclass.view.CommunityView
 import com.example.nextclass.view.HomeView
 import com.example.nextclass.view.InsertScheduleView
+import com.example.nextclass.view.PasswordConfirm
 import com.example.nextclass.view.ScheduleView
 import com.example.nextclass.view.TimeTableView
 import com.example.nextclass.view.UserProfileView
 import com.example.nextclass.viewmodel.LoginViewModel
 import com.example.nextclass.viewmodel.ScheduleViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainNavGraph(
     navController: NavHostController,
@@ -81,6 +86,7 @@ private fun NavGraphBuilder.communityRoute(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 private fun NavGraphBuilder.scheduleRoute(
     navController: NavHostController,
     loginViewModel: LoginViewModel,
@@ -108,6 +114,7 @@ private fun NavGraphBuilder.scheduleView(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 private fun NavGraphBuilder.insertScheduleView(
     navController: NavHostController,
     scheduleViewModel: ScheduleViewModel,
@@ -128,7 +135,44 @@ private fun NavGraphBuilder.userProfileRoute(
         startDestination = BottomNavItem.UserProfile.screenRoute
     ) {
         composable(BottomNavItem.UserProfile.screenRoute) {
-            UserProfileView(navController, loginViewModel, mainNavHostController)
+            userProfileView(navController, loginViewModel, mainNavHostController)
+            passwordConfirmView(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController)
+            changeUserInfo(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController)
         }
     }
 }
+
+
+
+private fun NavGraphBuilder.userProfileView(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController
+) {
+    composable(BottomNavItem.UserProfile.screenRoute) {
+        UserProfileView(navController,loginViewModel,mainNavHostController)
+    }
+}
+
+
+private fun NavGraphBuilder.passwordConfirmView(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController
+) {
+    composable("passwordConfirmView") {
+        PasswordConfirm(loginViewModel,navController,mainNavHostController)
+    }
+}
+
+
+private fun NavGraphBuilder.changeUserInfo(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController
+) {
+    composable("changeUserInfo") {
+        ChangeUserInfo(loginViewModel,navController,mainNavHostController)
+    }
+}
+
