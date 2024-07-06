@@ -1,22 +1,23 @@
 package com.example.nextclass.appComponent
 
-import android.location.Address
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -36,8 +38,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.R
 import com.example.nextclass.ui.theme.Background_Color2
-import com.example.nextclass.ui.theme.Feldgrau
 import com.example.nextclass.ui.theme.Pastel_Red
+import com.example.nextclass.viewmodel.UserInfoViewModel
 
 @Composable
 fun UserProfilePreviewComponent(
@@ -202,6 +204,240 @@ fun UserProfileItemComponent(
 
 }
 
+@Composable
+fun ChangePasswordComponent(
+    userInfoViewModel: UserInfoViewModel,
+    navController: NavController
+
+){
+    val scrollState = rememberScrollState()
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(bottom = 20.dp),
+            verticalArrangement = Arrangement.Center,
+        ) {
+            Surface(
+                shape = RoundedCornerShape(30.dp),
+                modifier = Modifier
+
+                    .padding(start = 10.dp, end = 10.dp,bottom=20.dp)
+            ) {
+
+
+                Column(
+                    modifier = Modifier
+                        .background(Background_Color2)
+                        .padding(top = 30.dp, bottom = 20.dp)
+                    ,
+                    verticalArrangement = Arrangement.SpaceEvenly,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    PasswordInputFieldComponent(
+                        value = "",
+                        onValueChange = {},
+                        labelValue = "기존 비밀번호",
+                        placeholderValue = "",
+                        passwordVisibleOption = false,
+                        togglePassWordVisibility = { /*TODO*/ })
+
+                    PasswordInputFieldComponent(
+                        value = "",
+                        onValueChange = {},
+                        labelValue = "새 비밀번호",
+                        placeholderValue = "",
+                        passwordVisibleOption = false,
+                        togglePassWordVisibility = { /*TODO*/ })
+
+                    PasswordInputFieldComponent(
+                        value = "",
+                        onValueChange = {},
+                        labelValue = "새 비밀번호 확인",
+                        placeholderValue = "",
+                        passwordVisibleOption = false,
+                        togglePassWordVisibility = { /*TODO*/ })
+
+                    Spacer(modifier = Modifier.height(30.dp))
+
+                    InputButtonComponent(
+                        value = "변경하기",
+                        onClick = {
+                            if(userInfoViewModel.passwordChangeState.value){
+
+                            }
+                        },
+                        modifier = Modifier.padding(start=15.dp,end=15.dp))
+
+                }
+            }
+
+        }
+    }
+
+
+@Composable
+fun ChangeEmailComponent(
+    userInfoViewModel: UserInfoViewModel,
+    navController: NavController
+){
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .padding(bottom = 20.dp),
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Surface(
+            shape = RoundedCornerShape(30.dp),
+            modifier = Modifier
+
+                .padding(start = 10.dp, end = 10.dp,bottom=10.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .background(Background_Color2)
+                    .height(350.dp)
+                    .padding(bottom = 20.dp),
+                verticalArrangement = Arrangement.SpaceAround,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+
+                Spacer(modifier = Modifier.height(30.dp))
+
+                EmailInputFieldComponent(
+                    value = "",
+                    onValueChange = { },
+                    labelValue = "새 이메일",
+                    emailCheckValue = false,
+                    emailCheckProcess = { /*TODO*/ },
+                    isError = false,
+                    errorMessage = "",
+                    duplicateCheckButtonState = true
+                )
+
+                PasswordInputFieldComponent(
+                    value = "",
+                    onValueChange = {},
+                    labelValue = stringResource(id = R.string.password),
+                    placeholderValue = stringResource(id = R.string.input_password),
+                    passwordVisibleOption = false,
+                    togglePassWordVisibility = { /*TODO*/ })
+
+
+
+                Spacer(modifier = Modifier.height(30.dp))
+
+                InputButtonComponent(
+                    value = "변경하기",
+                    onClick = {
+                        if(userInfoViewModel.emailChangeState.value){
+
+                        }
+                    },
+                    modifier = Modifier.padding(start=15.dp,end=15.dp))
+
+            }
+        }
+
+    }
+}
+
+@Composable
+fun ChangeUserInfoComponent(
+    userInfoViewModel: UserInfoViewModel,
+    navController: NavController
+) {
+    val scrollState = rememberScrollState()
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(bottom = 20.dp),
+            verticalArrangement = Arrangement.Center,
+        ) {
+            Surface(
+                shape = RoundedCornerShape(30.dp),
+                modifier = Modifier
+
+                    .padding(start = 10.dp, end = 10.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .background(Background_Color2)
+                ) {
+                    Column(
+                        modifier = Modifier,
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+
+                    ) {
+
+                        MainTextComponent(
+                            value = stringResource(id = R.string.UserInfoModify),
+                            modifier=Modifier
+                                .padding(top=20.dp)
+                        )
+                        Spacer(modifier = Modifier.height(15.dp))
+                        TextInputFieldComponent(
+                            value = "",
+                            onValueChange = {  },
+                            labelValue = stringResource(id = R.string.name),
+                            isError = false,
+                            errorMessage="",
+                            placeholderValue =  stringResource(id = R.string.input_name),
+                        )
+
+                        Spacer(modifier = Modifier.height(15.dp))
+
+                        TextInputFieldComponent(
+                            value = "",
+                            onValueChange = {  },
+                            labelValue = stringResource(id = R.string.schoolName),
+                            isError = false,
+                            errorMessage="",
+                            placeholderValue = stringResource(id = R.string.input_schoolName),
+                        )
+
+                        Spacer(modifier = Modifier.height(15.dp))
+
+
+                        GradeDropDownMenuComponent(
+                            onValueChange={},
+                            labelValue="",
+                            dropDownMenuOption=false,
+                            toggleDropDownMenuOption={}
+                        )
+
+
+                        Spacer(modifier = Modifier.height(30.dp))
+
+                        TextInputHelpFieldComponent(
+                            errorMessage = "",
+                            isError = false,
+                        )
+
+                        InputButtonComponent(
+                            value = "변경하기",
+                            onClick = {
+                                if(userInfoViewModel.userInfoChangeState.value){
+
+                                }
+                            },
+                            modifier = Modifier.padding(start=15.dp,end=15.dp))
+
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
+                }
+            }
+        }
+    }
+
+
 
 @Preview(showBackground = true)
 @Composable
@@ -221,3 +457,4 @@ fun UserProfileItemComponentPreview() {
     )
 
 }
+

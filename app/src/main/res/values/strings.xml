@@ -80,8 +80,8 @@
     //회원정보 수정
     <string name="UserInfoModify">회원 정보 수정</string>
     <string name="InputUserInfoModifyPassword">회원 정보를 수정하기 위해서는 비밀번호 확인이 필요합니다.</string>
-
-
+    <string name="changePassword">비밀번호 변경</string>
+    <string name="changeEmail">이메일 변경</string>
 
     //스케쥴 에러
     <string name="WrongDate">올바르지 않은 날짜입니다.</string>

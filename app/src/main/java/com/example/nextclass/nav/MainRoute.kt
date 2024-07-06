@@ -9,10 +9,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.example.nextclass.appComponent.ChangePasswordComponent
 import com.example.nextclass.items.BottomNavItem
+import com.example.nextclass.view.ChangeEmailInsertCodeView
+import com.example.nextclass.view.ChangeEmailView
+import com.example.nextclass.view.ChangePasswordView
 import com.example.nextclass.view.ChangeUserInfo
+import com.example.nextclass.view.ChangeUserInfoView
 import com.example.nextclass.view.CommunityView
 import com.example.nextclass.view.HomeView
+import com.example.nextclass.view.InsertCodeView
 import com.example.nextclass.view.InsertScheduleView
 import com.example.nextclass.view.PasswordConfirm
 import com.example.nextclass.view.ScheduleView
@@ -20,6 +26,7 @@ import com.example.nextclass.view.TimeTableView
 import com.example.nextclass.view.UserProfileView
 import com.example.nextclass.viewmodel.LoginViewModel
 import com.example.nextclass.viewmodel.ScheduleViewModel
+import com.example.nextclass.viewmodel.UserInfoViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -29,13 +36,14 @@ fun MainNavGraph(
     mainNavHostController: NavHostController
 ) {
     val scheduleViewModel:ScheduleViewModel = hiltViewModel()
+    val userInfoViewModel:UserInfoViewModel= hiltViewModel()
 
     NavHost(navController = navController, startDestination = "homeRoute") {
         homeRoute(navController, loginViewModel, mainNavHostController)
         timetableRoute(navController, loginViewModel, mainNavHostController)
         communityRoute(navController, loginViewModel, mainNavHostController)
         scheduleRoute(navController, loginViewModel, mainNavHostController,scheduleViewModel)
-        userProfileRoute(navController, loginViewModel, mainNavHostController)
+        userProfileRoute(navController, loginViewModel, mainNavHostController,userInfoViewModel)
     }
 }
 
@@ -128,16 +136,19 @@ private fun NavGraphBuilder.insertScheduleView(
 private fun NavGraphBuilder.userProfileRoute(
     navController: NavHostController,
     loginViewModel: LoginViewModel,
-    mainNavHostController: NavHostController
+    mainNavHostController: NavHostController,
+    userInfoViewModel: UserInfoViewModel
 ) {
     navigation(
         route = "userProfileRoute",
         startDestination = BottomNavItem.UserProfile.screenRoute
     ) {
         composable(BottomNavItem.UserProfile.screenRoute) {
-            userProfileView(navController, loginViewModel, mainNavHostController)
-            passwordConfirmView(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController)
-            changeUserInfo(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController)
+            userProfileView(navController, loginViewModel, mainNavHostController,userInfoViewModel)
+            changePasswordRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel)
+            changeEmailRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel)
+
+            changeUserProfileRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel)
         }
     }
 }
@@ -147,32 +158,111 @@ private fun NavGraphBuilder.userProfileRoute(
 private fun NavGraphBuilder.userProfileView(
     navController: NavHostController,
     loginViewModel: LoginViewModel,
-    mainNavHostController: NavHostController
+    mainNavHostController: NavHostController,
+    userInfoViewModel: UserInfoViewModel
 ) {
+
+
     composable(BottomNavItem.UserProfile.screenRoute) {
-        UserProfileView(navController,loginViewModel,mainNavHostController)
+        UserProfileView(navController,loginViewModel,mainNavHostController,userInfoViewModel)
     }
 }
 
-
-private fun NavGraphBuilder.passwordConfirmView(
+private fun NavGraphBuilder.changePasswordRoute(
     navController: NavHostController,
     loginViewModel: LoginViewModel,
-    mainNavHostController: NavHostController
+    mainNavHostController: NavHostController,
+    userInfoViewModel: UserInfoViewModel
 ) {
-    composable("passwordConfirmView") {
-        PasswordConfirm(loginViewModel,navController,mainNavHostController)
+    navigation(
+        route = "changePasswordRoute",
+        startDestination = "passwordConfirmView"
+    ) {
+        composable("passwordConfirmView") {
+            changePasswordView(navController, loginViewModel, mainNavHostController,userInfoViewModel)
+
+        }
     }
 }
 
-
-private fun NavGraphBuilder.changeUserInfo(
+private fun NavGraphBuilder.changeEmailRoute(
     navController: NavHostController,
     loginViewModel: LoginViewModel,
-    mainNavHostController: NavHostController
+    mainNavHostController: NavHostController,
+    userInfoViewModel: UserInfoViewModel
 ) {
-    composable("changeUserInfo") {
-        ChangeUserInfo(loginViewModel,navController,mainNavHostController)
+    navigation(
+        route = "changeEmailRoute",
+        startDestination = "changeEmailView"
+    ) {
+        composable("changeEmailView") {
+            changeEmailView(navController, loginViewModel, mainNavHostController,userInfoViewModel)
+
+            changeEmailInsertCodeView(navController, loginViewModel, mainNavHostController,userInfoViewModel)
+
+        }
     }
 }
+
+private fun NavGraphBuilder.changeUserProfileRoute(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController,
+    userInfoViewModel: UserInfoViewModel
+) {
+    navigation(
+        route = "changeUserProfileRoute",
+        startDestination = "changeUserInfoView"
+    ) {
+        composable("changeUserInfoView") {
+            changeUserInfoView(navController, loginViewModel, mainNavHostController,userInfoViewModel)
+        }
+    }
+}
+
+private fun NavGraphBuilder.changeUserInfoView(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController,
+    userInfoViewModel: UserInfoViewModel
+) {
+    composable("changeUserInfoView") {
+        ChangeUserInfoView(navController = navController, userInfoViewModel = userInfoViewModel)
+    }
+}
+
+private fun NavGraphBuilder.changePasswordView(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController,
+    userInfoViewModel: UserInfoViewModel
+) {
+    composable("changePasswordView") {
+        ChangePasswordView(navController = navController, userInfoViewModel = userInfoViewModel)
+    }
+}
+
+private fun NavGraphBuilder.changeEmailView(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController,
+    userInfoViewModel: UserInfoViewModel
+) {
+    composable("changeEmailView") {
+        ChangeEmailView(navController = navController, userInfoViewModel = userInfoViewModel)
+    }
+}
+
+private fun NavGraphBuilder.changeEmailInsertCodeView(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController,
+    userInfoViewModel: UserInfoViewModel
+) {
+    composable("changeEmailInsertCodeView") {
+        ChangeEmailInsertCodeView(navController = navController, userInfoViewModel = userInfoViewModel)
+    }
+}
+
+
 
