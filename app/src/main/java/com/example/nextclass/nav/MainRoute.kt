@@ -14,7 +14,7 @@ import com.example.nextclass.items.BottomNavItem
 import com.example.nextclass.view.ChangeEmailInsertCodeView
 import com.example.nextclass.view.ChangeEmailView
 import com.example.nextclass.view.ChangePasswordView
-import com.example.nextclass.view.ChangeUserInfo
+
 import com.example.nextclass.view.ChangeUserInfoView
 import com.example.nextclass.view.CommunityView
 import com.example.nextclass.view.HomeView
@@ -143,13 +143,12 @@ private fun NavGraphBuilder.userProfileRoute(
         route = "userProfileRoute",
         startDestination = BottomNavItem.UserProfile.screenRoute
     ) {
-        composable(BottomNavItem.UserProfile.screenRoute) {
-            userProfileView(navController, loginViewModel, mainNavHostController,userInfoViewModel)
-            changePasswordRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel)
-            changeEmailRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel)
 
-            changeUserProfileRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel)
-        }
+        userProfileView(navController, loginViewModel, mainNavHostController,userInfoViewModel)
+        changePasswordRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel)
+        changeEmailRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel)
+        changeUserProfileRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel)
+
     }
 }
 
@@ -178,10 +177,9 @@ private fun NavGraphBuilder.changePasswordRoute(
         route = "changePasswordRoute",
         startDestination = "passwordConfirmView"
     ) {
-        composable("passwordConfirmView") {
-            changePasswordView(navController, loginViewModel, mainNavHostController,userInfoViewModel)
 
-        }
+        changePasswordView(navController, loginViewModel, mainNavHostController,userInfoViewModel)
+
     }
 }
 
@@ -195,12 +193,11 @@ private fun NavGraphBuilder.changeEmailRoute(
         route = "changeEmailRoute",
         startDestination = "changeEmailView"
     ) {
-        composable("changeEmailView") {
-            changeEmailView(navController, loginViewModel, mainNavHostController,userInfoViewModel)
 
-            changeEmailInsertCodeView(navController, loginViewModel, mainNavHostController,userInfoViewModel)
+        changeEmailView(navController, loginViewModel, mainNavHostController,userInfoViewModel)
 
-        }
+        changeEmailInsertCodeView(navController, loginViewModel, mainNavHostController,userInfoViewModel)
+
     }
 }
 
@@ -214,9 +211,9 @@ private fun NavGraphBuilder.changeUserProfileRoute(
         route = "changeUserProfileRoute",
         startDestination = "changeUserInfoView"
     ) {
-        composable("changeUserInfoView") {
-            changeUserInfoView(navController, loginViewModel, mainNavHostController,userInfoViewModel)
-        }
+
+        changeUserInfoView(navController, loginViewModel, mainNavHostController,userInfoViewModel)
+
     }
 }
 

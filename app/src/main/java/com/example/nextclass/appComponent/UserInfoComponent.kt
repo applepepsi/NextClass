@@ -1,5 +1,6 @@
 package com.example.nextclass.appComponent
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
@@ -204,6 +206,7 @@ fun UserProfileItemComponent(
 
 }
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun ChangePasswordComponent(
     userInfoViewModel: UserInfoViewModel,
@@ -236,37 +239,54 @@ fun ChangePasswordComponent(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     PasswordInputFieldComponent(
-                        value = "",
-                        onValueChange = {},
+                        value = userInfoViewModel.changePasswordData.value.existingPassword,
+                        onValueChange = {
+                            userInfoViewModel.updateOldPassword(it)
+                        },
                         labelValue = "기존 비밀번호",
                         placeholderValue = "",
-                        passwordVisibleOption = false,
-                        togglePassWordVisibility = { /*TODO*/ })
+                        passwordVisibleOption = userInfoViewModel.oldPasswordVisibility.value,
+                        togglePassWordVisibility = {
+                            userInfoViewModel.toggleOldPasswordVisibility()
+                        })
 
                     PasswordInputFieldComponent(
-                        value = "",
-                        onValueChange = {},
+                        value = userInfoViewModel.changePasswordData.value.newPassword,
+                        onValueChange = {
+                            userInfoViewModel.updateNewPassword(it)
+                        },
                         labelValue = "새 비밀번호",
                         placeholderValue = "",
-                        passwordVisibleOption = false,
-                        togglePassWordVisibility = { /*TODO*/ })
+                        passwordVisibleOption = userInfoViewModel.newPasswordVisibility.value,
+                        togglePassWordVisibility = {
+                            userInfoViewModel.toggleNewPasswordVisibility()
+                        })
 
                     PasswordInputFieldComponent(
-                        value = "",
-                        onValueChange = {},
+                        value = userInfoViewModel.newPasswordConfirm.value,
+                        onValueChange = {
+                            userInfoViewModel.updateNewPasswordConfirm(it)
+                        },
                         labelValue = "새 비밀번호 확인",
                         placeholderValue = "",
-                        passwordVisibleOption = false,
-                        togglePassWordVisibility = { /*TODO*/ })
+                        passwordVisibleOption = userInfoViewModel.newPasswordVisibility.value,
+                        togglePassWordVisibility = {
+                            userInfoViewModel.toggleNewPasswordVisibility()
+                        })
 
                     Spacer(modifier = Modifier.height(30.dp))
+
+                    TextInputHelpFieldComponent(
+
+                        errorMessage = userInfoViewModel.passwordChangeErrorMessage.value.asString(LocalContext.current),
+                        isError = userInfoViewModel.passwordChangeErrorState.value,
+
+                        )
 
                     InputButtonComponent(
                         value = "변경하기",
                         onClick = {
-                            if(userInfoViewModel.passwordChangeState.value){
-
-                            }
+                            userInfoViewModel.postPasswordChangeData()
                         },
                         modifier = Modifier.padding(start=15.dp,end=15.dp))
 
@@ -334,9 +354,7 @@ fun ChangeEmailComponent(
                 InputButtonComponent(
                     value = "변경하기",
                     onClick = {
-                        if(userInfoViewModel.emailChangeState.value){
 
-                        }
                     },
                     modifier = Modifier.padding(start=15.dp,end=15.dp))
 
@@ -346,6 +364,7 @@ fun ChangeEmailComponent(
     }
 }
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun ChangeUserInfoComponent(
     userInfoViewModel: UserInfoViewModel,
@@ -384,8 +403,10 @@ fun ChangeUserInfoComponent(
                         )
                         Spacer(modifier = Modifier.height(15.dp))
                         TextInputFieldComponent(
-                            value = "",
-                            onValueChange = {  },
+                            value = userInfoViewModel.changeUserData.value.name,
+                            onValueChange = {
+                                            userInfoViewModel.updateNewName(it)
+                            },
                             labelValue = stringResource(id = R.string.name),
                             isError = false,
                             errorMessage="",
@@ -395,8 +416,10 @@ fun ChangeUserInfoComponent(
                         Spacer(modifier = Modifier.height(15.dp))
 
                         TextInputFieldComponent(
-                            value = "",
-                            onValueChange = {  },
+                            value = userInfoViewModel.changeUserData.value.member_school,
+                            onValueChange = {
+                                userInfoViewModel.updateNewSchool(it)
+                            },
                             labelValue = stringResource(id = R.string.schoolName),
                             isError = false,
                             errorMessage="",
@@ -407,10 +430,14 @@ fun ChangeUserInfoComponent(
 
 
                         GradeDropDownMenuComponent(
-                            onValueChange={},
-                            labelValue="",
-                            dropDownMenuOption=false,
-                            toggleDropDownMenuOption={}
+                            onValueChange={
+                                userInfoViewModel.updateNewGrade(it)
+                            },
+                            labelValue=userInfoViewModel.changeUserData.value.member_grade,
+                            dropDownMenuOption=userInfoViewModel.gradeDropDownMenuState.value,
+                            toggleDropDownMenuOption={
+                                userInfoViewModel.toggleGradeDropBox()
+                            }
                         )
 
 
@@ -424,9 +451,7 @@ fun ChangeUserInfoComponent(
                         InputButtonComponent(
                             value = "변경하기",
                             onClick = {
-                                if(userInfoViewModel.userInfoChangeState.value){
 
-                                }
                             },
                             modifier = Modifier.padding(start=15.dp,end=15.dp))
 

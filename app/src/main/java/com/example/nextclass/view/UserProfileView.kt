@@ -1,6 +1,7 @@
 package com.example.nextclass.view
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -65,6 +66,7 @@ fun UserProfileView(
 ) {
     val context = LocalContext.current
 
+    Log.d("이동","프로파일로 이동")
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -130,7 +132,7 @@ fun UserProfileView(
                         UserProfileItemComponent(
                             image = ImageVector.vectorResource(R.drawable.password_icon),
                             text = "비밀번호 변경",
-                            address = "passwordConfirmView",
+                            address = "changePasswordView",
                             navController = navController
                         )
 
