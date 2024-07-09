@@ -1,5 +1,7 @@
 package com.example.nextclass.view
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,18 +32,20 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.nextclass.Data.ClassData
 import com.example.nextclass.R
 import com.example.nextclass.appComponent.AccreditationCalculationComponent
 import com.example.nextclass.appComponent.ClassDetail
 import com.example.nextclass.appComponent.ClassModify
 import com.example.nextclass.appComponent.InsertClassData
 import com.example.nextclass.appComponent.TimeTableComponent
-import com.example.nextclass.appComponent.sampleEvents
+
 import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.viewmodel.LoginViewModel
 import com.example.nextclass.viewmodel.TimeTableViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimeTableView(
@@ -108,7 +112,8 @@ fun TimeTableView(
                 InsertClassData (timeTableViewModel=timeTableViewModel)
             }
             TimeTableComponent(
-                sampleEvents,
+                classDataList = listOf(ClassData()),
+//                sampleEvents,
                 setShowClassDetailDialog={
                     timeTableViewModel.toggleSetShowClassDetailDialogState()
                 },
@@ -117,17 +122,20 @@ fun TimeTableView(
                 },
                 setSelectClassData = {
                     classData -> timeTableViewModel.setSelectClassData(classData)
-                }
+                },
             )
 
             if (timeTableViewModel.setShowClassDetailDialog.value) {
                 ClassDetail(
-                    timeTableViewModel.selectClassData.value!!,
+                    timeTableViewModel.selectClassData.value,
                     setShowClassDetailDialog = {
                         timeTableViewModel.toggleSetShowClassDetailDialogState()
                     },
                     setShowClassDataModifyDialog = {
                         timeTableViewModel.toggleSetShowClassDataModifyDialogState()
+                    },
+                    deleteClassData = {
+                        timeTableViewModel.postDeleteScheduleData()
                     }
                 )
             }

@@ -1,12 +1,15 @@
 package com.example.oneplusone.serverConnection
 
 
+import com.example.nextclass.Data.ClassData
 import com.example.nextclass.Data.DuplicateCheckRequest
 import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.Data.LoginRequest
 import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.utils.DUPLICATED_CHECK_ADDRESS
 import com.example.nextclass.utils.LOGIN_ADDRESS
+import com.example.nextclass.utils.POST_MODIFY_TIMETABLE_DATA
+import com.example.nextclass.utils.POST_TIMETABLE_DATA
 import com.example.nextclass.utils.REGISTER_ADDRESS
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -34,6 +37,16 @@ interface API {
 
     @POST(LOGIN_ADDRESS)
     suspend fun postUserLoginForm(@Body loginInfo: LoginRequest):Response<ServerResponse>
+
+    @POST(POST_TIMETABLE_DATA)
+    suspend fun postTimeTableData(@Body classData: ClassData):Response<ServerResponse>
+
+    @POST(POST_MODIFY_TIMETABLE_DATA)
+    suspend fun postModifyTimeTableData(@Body classData: ClassData):Response<ServerResponse>
+
+    //주소 미정
+    @POST(POST_MODIFY_TIMETABLE_DATA)
+    suspend fun postDeleteTimeTableData(@Body classData: ClassData):Response<ServerResponse>
 
 
     @POST("/test")

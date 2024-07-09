@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -66,10 +67,12 @@ fun UserProfileView(
 ) {
     val context = LocalContext.current
 
+    val scrollState = rememberScrollState()
     Log.d("이동","프로파일로 이동")
     Column(
         modifier = Modifier
             .fillMaxSize(),
+
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -101,14 +104,15 @@ fun UserProfileView(
                 modifier = Modifier
 
                     .fillMaxSize()
-                    .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 15.dp),
+                    .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 30.dp),
 
             ) {
-                UserProfilePreviewComponent()
+
 
                     Column(
                         modifier = Modifier
-                            .background(Feldgrau),
+                            .background(Feldgrau)
+                            .verticalScroll(scrollState),
                         verticalArrangement = Arrangement.SpaceBetween,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {

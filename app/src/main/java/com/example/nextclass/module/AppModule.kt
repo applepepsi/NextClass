@@ -3,6 +3,8 @@ package com.example.nextclass.module
 
 import com.example.nextclass.repository.ScheduleRepository
 import com.example.nextclass.repository.ScheduleRepositoryImpl
+import com.example.nextclass.repository.TimeTableRepository
+import com.example.nextclass.repository.TimeTableRepositoryImpl
 import com.example.nextclass.repository.UserInfoRepository
 import com.example.nextclass.repository.UserInfoRepositoryImpl
 import com.example.oneplusone.serverConnection.API
@@ -28,6 +30,12 @@ object AppModule {
     @Singleton
     fun provideScheduleRepository(api: API): ScheduleRepository {
         return ScheduleRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTimeTableRepository(api: API): TimeTableRepository {
+        return TimeTableRepositoryImpl(api)
     }
 
     @Provides

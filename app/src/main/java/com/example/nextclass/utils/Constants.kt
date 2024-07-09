@@ -25,3 +25,5 @@ const val MaxTextCount = 64
 const val DUPLICATED_CHECK_ADDRESS="/duplicated_check"
 const val REGISTER_ADDRESS="/register"
 const val LOGIN_ADDRESS="/login"
+const val POST_TIMETABLE_DATA="/timetable"
+const val POST_MODIFY_TIMETABLE_DATA="/timetable_change"

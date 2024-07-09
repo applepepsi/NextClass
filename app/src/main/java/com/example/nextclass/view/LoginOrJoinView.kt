@@ -166,24 +166,6 @@ fun LoginView(
 //    }
 }
 
-fun saveAutoLoginInfo(context: Context, userId: String, userPassword: String) {
-    val autoLoginInfo = context.getSharedPreferences("autoLoginInfo", Context.MODE_PRIVATE)
-    val editor = autoLoginInfo.edit()
-
-    editor.putString("userId", userId)
-    editor.putString("userPassword", userPassword)
-    editor.apply()
-}
-
-fun saveToken(context: Context, tokenData: TokenData) {
-    val tokenInfo = context.getSharedPreferences("tokenInfo", Context.MODE_PRIVATE)
-    val editor = tokenInfo.edit()
-
-
-    editor.putString("accessToken", tokenData.accessToken)
-    editor.putString("refreshToken", tokenData.refreshToken)
-    editor.apply()
-}
 
 //회원가입뷰
 @Composable

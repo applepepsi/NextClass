@@ -139,7 +139,7 @@ fun ZipperPreview() {
 //    val mainNavController= rememberNavController()
 //    val testRepository = TestRepository()
 //    val loginViewModel = LoginViewModel(testRepository)
-    val timeTableViewModel = TimeTableViewModel()
+//    val timeTableViewModel = TimeTableViewModel()
     NextClassTheme {
 
         AccreditationCalculationComponent()

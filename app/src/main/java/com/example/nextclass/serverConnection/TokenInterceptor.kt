@@ -44,17 +44,17 @@ class TokenInterceptor(
             Log.d("newToken",accessToken)
         }
         // 새로운 요청 빌더 생성
-//        val newRequest = originalRequest.newBuilder().apply {
-//            accessToken?.let {
-//                header("Authorization", "Bearer $it")
-//            }
-//        }.build()
-
         val newRequest = originalRequest.newBuilder().apply {
             accessToken?.let {
-                header("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxOTY1N2VjNy0zYzA3LTRlN2ItOTU0NC0zMDA4M2M2MjgxYWM6VVNFUiIsImlzcyI6IkRhZUhhbiIsImlhdCI6MTcxOTg0MjYyMSwiZXhwIjoxNzE5ODUzNDIxfQ.UUl12nnhbMUjqgC5MQc3axo3tLvTppkAmVD-vBEEYxPg7RFJ6cf3wlemG7Y7AF6X15HkTUdwafMUVmO7Ba4nXQ")
+                header("Authorization", "Bearer $it")
             }
         }.build()
+//
+//        val newRequest = originalRequest.newBuilder().apply {
+//            accessToken?.let {
+//                header("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxOTY1N2VjNy0zYzA3LTRlN2ItOTU0NC0zMDA4M2M2MjgxYWM6VVNFUiIsImlzcyI6IkRhZUhhbiIsImlhdCI6MTcxOTg0MjYyMSwiZXhwIjoxNzE5ODUzNDIxfQ.UUl12nnhbMUjqgC5MQc3axo3tLvTppkAmVD-vBEEYxPg7RFJ6cf3wlemG7Y7AF6X15HkTUdwafMUVmO7Ba4nXQ")
+//            }
+//        }.build()
 
         var response=chain.proceed(newRequest)
 
@@ -75,9 +75,14 @@ class TokenInterceptor(
                 //새로운 엑세스 키를 받아오지 못했다면
 
                 // 임시로 리프레시요청을 보내보기로함
+//                val newAccessTokenRequest = originalRequest.newBuilder()
+//                    .header("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxOTY1N2VjNy0zYzA3LTRlN2ItOTU0NC0zMDA4M2M2MjgxYWM6VVNFUiIsImlzcyI6IkRhZUhhbiIsImlhdCI6MTcxOTg0MjYyMSwiZXhwIjoxNzE5ODUzNDIxfQ.UUl12nnhbMUjqgC5MQc3axo3tLvTppkAmVD-vBEEYxPg7RFJ6cf3wlemG7Y7AF6X15HkTUdwafMUVmO7Ba4nXQ")
+//                    .header("refresh-token", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxOTY1N2VjNy0zYzA3LTRlN2ItOTU0NC0zMDA4M2M2MjgxYWM6VVNFUiIsImlzcyI6IkRhZUhhbiIsImlhdCI6MTcxOTY3NzMyMiwiZXhwIjoxNzEwODg2OTIyfQ.9tMOXIy1rkMcSGcjDtftshSFT4L6Kf9bJnjFTfdCFJTlGw7iqBriv2bWdwURz-2qqXfM_iOWGlm4MJZH1KN5pg")
+//                    .build()
+                val refreshToken = TokenManager.getRefreshToken(context)
                 val newAccessTokenRequest = originalRequest.newBuilder()
-                    .header("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxOTY1N2VjNy0zYzA3LTRlN2ItOTU0NC0zMDA4M2M2MjgxYWM6VVNFUiIsImlzcyI6IkRhZUhhbiIsImlhdCI6MTcxOTg0MjYyMSwiZXhwIjoxNzE5ODUzNDIxfQ.UUl12nnhbMUjqgC5MQc3axo3tLvTppkAmVD-vBEEYxPg7RFJ6cf3wlemG7Y7AF6X15HkTUdwafMUVmO7Ba4nXQ")
-                    .header("refresh-token", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxOTY1N2VjNy0zYzA3LTRlN2ItOTU0NC0zMDA4M2M2MjgxYWM6VVNFUiIsImlzcyI6IkRhZUhhbiIsImlhdCI6MTcxOTY3NzMyMiwiZXhwIjoxNzEwODg2OTIyfQ.9tMOXIy1rkMcSGcjDtftshSFT4L6Kf9bJnjFTfdCFJTlGw7iqBriv2bWdwURz-2qqXfM_iOWGlm4MJZH1KN5pg")
+                    .header("Authorization", "Bearer $newAccessToken")
+                    .header("refresh-token", refreshToken!!)
                     .build()
 
                 return chain.proceed(newAccessTokenRequest)
@@ -108,11 +113,11 @@ class TokenInterceptor(
             try {
                 // 리프레시 토큰 가져옴
                 val refreshToken = TokenManager.getRefreshToken(context)
-
+                val accessToken = TokenManager.getAccessToken(context)
                 // 토큰 갱신 요청 생성
                 val newAccessTokenRequest = originalRequest.newBuilder()
-                    .header("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxOTY1N2VjNy0zYzA3LTRlN2ItOTU0NC0zMDA4M2M2MjgxYWM6VVNFUiIsImlzcyI6IkRhZUhhbiIsImlhdCI6MTcxOTg0MjYyMSwiZXhwIjoxNzE5ODUzNDIxfQ.UUl12nnhbMUjqgC5MQc3axo3tLvTppkAmVD-vBEEYxPg7RFJ6cf3wlemG7Y7AF6X15HkTUdwafMUVmO7Ba4nXQ")
-                    .header("refresh-token", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxOTY1N2VjNy0zYzA3LTRlN2ItOTU0NC0zMDA4M2M2MjgxYWM6VVNFUiIsImlzcyI6IkRhZUhhbiIsImlhdCI6MTcxOTY3NzMyMiwiZXhwIjoxNzEwODg2OTIyfQ.9tMOXIy1rkMcSGcjDtftshSFT4L6Kf9bJnjFTfdCFJTlGw7iqBriv2bWdwURz-2qqXfM_iOWGlm4MJZH1KN5pg")
+                    .header("Authorization", "Bearer $accessToken")
+                    .header("refresh-token", refreshToken!!)
                     .build()
 
                 // 토큰 갱신 요청

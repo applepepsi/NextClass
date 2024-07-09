@@ -85,7 +85,8 @@ fun OneClassCellDetailComponent(
     modifier: Modifier = Modifier,
     setSelectClassData: (ClassData) -> Unit,
     setShowClassDetailDialog: () -> Unit,
-    setShowClassDataModifyDialog: () -> Unit
+    setShowClassDataModifyDialog: () -> Unit,
+
 ) {
     val backGroundColor= Pastel_Red
 
@@ -101,24 +102,24 @@ fun OneClassCellDetailComponent(
     ) {
 
         Text(
-            text = classData.className,
+            text = classData.title,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
             fontSize = 13.sp
         )
 
         Text(
-            text =if(classData.startClassTime==classData.endClassTime){
-                "${classData.startClassTime}교시"
+            text =if(classData.class_start_time==classData.class_end_time){
+                "${classData.class_start_time}교시"
             }else{
-                "${classData.startClassTime}교시 - ${classData.endClassTime}교시"
+                "${classData.class_start_time}교시 - ${classData.class_end_time}교시"
             },
             fontSize = 10.sp
         )
 
 
         Text(
-            text = classData.dayOfWeek,
+            text = classData.week,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
         )
@@ -126,71 +127,71 @@ fun OneClassCellDetailComponent(
 
     }
 }
-
-val sampleEvents =
-    listOf(
-//        ClassData(
-//            "컴퓨터수학2",
-//            "정보관 201호",
-//            "오이",
-//            1,
-//            "월",
-//            1,
-//            1,
-//            "아산중",
-//        ),
-//        ClassData(
-//            "컴퓨터수학2",
-//            "정보관 201호",
-//            "오이",
-//            1,
-//            "화",
-//            1,
-//            2,
-//            "아산중",
-//        ),
 //
-//        ClassData(
-//            "컴퓨터수학3",
-//            "정보관 201호",
-//            "물",
-//            2,
-//            "수",
-//            3,
-//            4,
-//            "아산중",
-//        ),
-        ClassData(
-            "컴퓨터수학6",
-            "정보관 201호",
-            "수박",
-            3,
-            "수",
-            5,
-            6,
-            "아산중",
-        ),
-        ClassData(
-            "컴퓨터수학6",
-            "정보관 201호",
-            "새우",
-            1,
-            "수",
-            2,
-            3,
-            "아산중",
-        ),
-//        ClassData(
-//            "컴퓨터수학6",
-//            "정보관 201호",
-//            "감자",
-//            2,
-//            "금",
-//            3,
-//            4,
-//            "아산중",
-//        )
-    )
+//val sampleEvents =
+//    listOf(
+////        ClassData(
+////            "컴퓨터수학2",
+////            "정보관 201호",
+////            "오이",
+////            1,
+////            "월",
+////            1,
+////            1,
+////            "아산중",
+////        ),
+////        ClassData(
+////            "컴퓨터수학2",
+////            "정보관 201호",
+////            "오이",
+////            1,
+////            "화",
+////            1,
+////            2,
+////            "아산중",
+////        ),
+////
+////        ClassData(
+////            "컴퓨터수학3",
+////            "정보관 201호",
+////            "물",
+////            2,
+////            "수",
+////            3,
+////            4,
+////            "아산중",
+////        ),
+////        ClassData(
+////            "컴퓨터수학6",
+////            "정보관 201호",
+////            "수박",
+////            3,
+////            "수",
+////            5,
+////            6,
+////            "아산중",
+////        ),
+////        ClassData(
+////            "컴퓨터수학6",
+////            "정보관 201호",
+////            "새우",
+////            1,
+////            "수",
+////            2,
+////            3,
+////            "아산중",
+////        ),
+////        ClassData(
+////            "컴퓨터수학6",
+////            "정보관 201호",
+////            "감자",
+////            2,
+////            "금",
+////            3,
+////            4,
+////            "아산중",
+////        )
+//    )
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -200,24 +201,24 @@ fun EventPreview() {
     var setShowClassDetailDialog by remember { mutableStateOf(false) }
     var setShowClassDataModifyDialog by remember { mutableStateOf(false) }
 
-    val classData=ClassData(
-        "컴퓨터수학2",
-        "정보관 201호",
-        "굴",
-        1,
-        "금",
-        3,
-        4,
-        "아산중",
-    )
-    MaterialTheme {
-        TimeTableComponent(
-            classDataList = sampleEvents,
-            setShowClassDetailDialog = { /*TODO*/ },
-            setShowClassDataModifyDialog = { /*TODO*/ },
-            setSelectClassData = {}
-        )
-    }
+//    val classData=ClassData(
+//        "컴퓨터수학2",
+//        "정보관 201호",
+//        "굴",
+//        1,
+//        "금",
+//        3,
+//        4,
+//        "아산중",
+//    )
+//    MaterialTheme {
+//        TimeTableComponent(
+//            classDataList = sampleEvents,
+//            setShowClassDetailDialog = { /*TODO*/ },
+//            setShowClassDataModifyDialog = { /*TODO*/ },
+//            setSelectClassData = {}
+//        )
+//    }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -228,13 +229,13 @@ fun InsertClassDataPreview() {
     var setShowClassDataModifyDialog by remember { mutableStateOf(false) }
     var setShowInsertClassDataDialog by remember { mutableStateOf(false) }
 
-    MaterialTheme {
-        InsertClassData(
-//            setShowInsertClassDataDialog = {setShowInsertClassDataDialog=it},
-            timeTableViewModel = TimeTableViewModel()
-        )
-
-    }
+//    MaterialTheme {
+//        InsertClassData(
+////            setShowInsertClassDataDialog = {setShowInsertClassDataDialog=it},
+//            timeTableViewModel = TimeTableViewModel()
+//        )
+//
+//    }
 }
 
 
@@ -245,13 +246,15 @@ fun TimeTableComponent(
     setShowClassDetailDialog: () -> Unit,
     setShowClassDataModifyDialog: () -> Unit,
     setSelectClassData: (ClassData) -> Unit,
+
     classContent: @Composable (classData: ClassData) -> Unit = {
         OneClassCellDetailComponent(
             classData = it,
             modifier = Modifier,
             setShowClassDetailDialog = setShowClassDetailDialog,
             setShowClassDataModifyDialog = setShowClassDataModifyDialog,
-            setSelectClassData=setSelectClassData
+            setSelectClassData=setSelectClassData,
+
         )
     },
 
@@ -299,7 +302,8 @@ fun TimeTableComponent(
 fun ClassDetail(
     classData:ClassData,
     setShowClassDetailDialog: () -> Unit,
-    setShowClassDataModifyDialog: () -> Unit
+    setShowClassDataModifyDialog: () -> Unit,
+    deleteClassData: () -> Unit
 ){
 
     Dialog(onDismissRequest = { setShowClassDetailDialog() }) {
@@ -316,7 +320,7 @@ fun ClassDetail(
 
 
                         Text(
-                            text = classData.className,
+                            text = classData.title,
                             style = TextStyle(
                                 fontSize = 24.sp,
                                 fontFamily = FontFamily.Default,
@@ -326,7 +330,7 @@ fun ClassDetail(
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(
 
-                            text = classData.teacherName,
+                            text = classData.teacher_name,
                             style = TextStyle(
                                 fontSize = 24.sp,
                                 fontFamily = FontFamily.Default,
@@ -335,7 +339,7 @@ fun ClassDetail(
                         )
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = classData.dayOfWeek,
+                            text = classData.week,
                             style = TextStyle(
                                 fontSize = 15.sp,
                                 fontFamily = FontFamily.Default,
@@ -344,7 +348,7 @@ fun ClassDetail(
                         )
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = classData.grade,
+                            text = classData.class_grade.toString(),
                             style = TextStyle(
                                 fontSize = 15.sp,
                                 fontFamily = FontFamily.Default,
@@ -353,7 +357,7 @@ fun ClassDetail(
                         )
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = "${classData.credit}학점",
+                            text = "${classData.score}학점",
                             style = TextStyle(
                                 fontSize = 15.sp,
                                 fontFamily = FontFamily.Default,
@@ -362,7 +366,7 @@ fun ClassDetail(
                         )
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = classData.schoolName,
+                            text = classData.school,
                             style = TextStyle(
                                 fontSize = 15.sp,
                                 fontFamily = FontFamily.Default,
@@ -371,10 +375,10 @@ fun ClassDetail(
                         )
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text =if(classData.startClassTime==classData.endClassTime){
-                                "${classData.startClassTime}교시"
+                            text =if(classData.class_start_time==classData.class_end_time){
+                                "${classData.class_start_time}교시"
                             }else{
-                                "${classData.startClassTime}교시 - ${classData.endClassTime}교시"
+                                "${classData.class_start_time}교시 - ${classData.class_end_time}교시"
                             },
                             style = TextStyle(
                                 fontSize = 15.sp,
@@ -393,8 +397,9 @@ fun ClassDetail(
                         ) {
                         TextButton(
                             onClick = {
-                                setShowClassDataModifyDialog()
-                                setShowClassDetailDialog()
+//                                setShowClassDataModifyDialog()
+//                                setShowClassDetailDialog()
+                                deleteClassData()
                             },
                             modifier = Modifier
                         ) {
@@ -423,6 +428,7 @@ fun ClassDetail(
         }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ClassModify(
 
@@ -442,13 +448,13 @@ fun ClassModify(
                 MainTextComponent(value = "수업 추가하기", modifier = Modifier)
 
                 TextInputFieldComponent(
-                    value=timeTableViewModel.classData.value.className,
+                    value=timeTableViewModel.classData.value.title,
                     onValueChange = {timeTableViewModel.updateClassName(it)},
                     labelValue = "수업 이름")
 
 
                 TextInputFieldComponent(
-                    value=timeTableViewModel.classData.value.teacherName,
+                    value=timeTableViewModel.classData.value.teacher_name,
                     onValueChange = {timeTableViewModel.updateTeacherName(it)},
                     labelValue = "교사명")
 
@@ -459,7 +465,7 @@ fun ClassModify(
                 ) {
                     TimeTableDownMenuComponent(
                         onValueChange = {timeTableViewModel.updateCredit(it.toInt())},
-                        value = timeTableViewModel.classData.value.credit.toString(),
+                        value = "${timeTableViewModel.classData.value.class_grade}학년",
                         dropDownMenuOption = timeTableViewModel.toggleCreditDropDownMenu.value,
                         menuItems = credit,
                         dropDownMenuName = checkBoxName[0],
@@ -467,7 +473,7 @@ fun ClassModify(
                     )
                     TimeTableDownMenuComponent(
                         onValueChange = {timeTableViewModel.updateDayOfWeek(it)},
-                        value = timeTableViewModel.classData.value.dayOfWeek,
+                        value = timeTableViewModel.classData.value.week,
                         dropDownMenuOption = timeTableViewModel.toggleDayOfWeekDropDownMenu.value,
                         menuItems = daysOfWeek,
                         dropDownMenuName = checkBoxName[1],
@@ -481,7 +487,7 @@ fun ClassModify(
                 ) {
                     TimeTableDownMenuComponent(
                         onValueChange = {timeTableViewModel.updateStartClassTime(it.toInt())},
-                        value = timeTableViewModel.classData.value.startClassTime.toString(),
+                        value = timeTableViewModel.classData.value.class_start_time.toString(),
                         dropDownMenuOption = timeTableViewModel.toggleStartClassTimeDropDownMenu.value,
                         menuItems = classTime,
                         dropDownMenuName = checkBoxName[2],
@@ -489,7 +495,7 @@ fun ClassModify(
                     )
                     TimeTableDownMenuComponent(
                         onValueChange = {timeTableViewModel.updateEndClassTime(it.toInt())},
-                        value = timeTableViewModel.classData.value.endClassTime.toString(),
+                        value = timeTableViewModel.classData.value.class_end_time.toString(),
                         dropDownMenuOption = timeTableViewModel.toggleEndClassTimeDropDownMenu.value,
                         menuItems = classTime,
                         dropDownMenuName = checkBoxName[3],
@@ -500,14 +506,14 @@ fun ClassModify(
                 GradeDropDownMenuComponent(
                     onValueChange = {timeTableViewModel.updateGrade(it)},
 
-                    labelValue = timeTableViewModel.classData.value.grade,
+                    labelValue = timeTableViewModel.classData.value.class_grade.toString(),
                     dropDownMenuOption = timeTableViewModel.toggleGradeDropDownMenu.value,
                     placeholderValue = "",
                     toggleDropDownMenuOption = {timeTableViewModel.toggleGradeDropDownMenu()}
                 )
 
                 TextInputFieldComponent(
-                    value=timeTableViewModel.classData.value.schoolName,
+                    value=timeTableViewModel.classData.value.school,
                     onValueChange = {timeTableViewModel.updateSchoolName(it)},
                     labelValue = "학교")
 
@@ -517,7 +523,8 @@ fun ClassModify(
                 ) {
                     TextButton(
                         onClick = {
-                            timeTableViewModel.toggleSetShowClassDataModifyDialogState()
+                                  timeTableViewModel.postModifyScheduleData()
+//                            timeTableViewModel.toggleSetShowClassDataModifyDialogState()
                         },
                         modifier = Modifier
                     ) {
@@ -543,6 +550,7 @@ val classTime=listOf("1", "2", "3", "4", "5", "6", "7")
 val credit=listOf("1", "2", "3")
 val checkBoxName= listOf("학점","요일","시작 교시","종료 교시","학년")
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun InsertClassData(
     timeTableViewModel: TimeTableViewModel,
@@ -562,13 +570,13 @@ fun InsertClassData(
                 MainTextComponent(value = "수업 추가하기", modifier = Modifier)
 
                 TextInputFieldComponent(
-                    value=timeTableViewModel.classData.value.className,
+                    value=timeTableViewModel.classData.value.title,
                     onValueChange = {timeTableViewModel.updateClassName(it)},
                     labelValue = "수업 이름")
 
 
                 TextInputFieldComponent(
-                    value=timeTableViewModel.classData.value.teacherName,
+                    value=timeTableViewModel.classData.value.teacher_name,
                     onValueChange = {timeTableViewModel.updateTeacherName(it)},
                     labelValue = "교사명")
 
@@ -579,7 +587,7 @@ fun InsertClassData(
                 ) {
                     TimeTableDownMenuComponent(
                         onValueChange = {timeTableViewModel.updateCredit(it.toInt())},
-                        value = timeTableViewModel.classData.value.credit.toString(),
+                        value = timeTableViewModel.classData.value.score.toString(),
                         dropDownMenuOption = timeTableViewModel.toggleCreditDropDownMenu.value,
                         menuItems = credit,
                         dropDownMenuName = checkBoxName[0],
@@ -587,7 +595,7 @@ fun InsertClassData(
                     )
                     TimeTableDownMenuComponent(
                         onValueChange = {timeTableViewModel.updateDayOfWeek(it)},
-                        value = timeTableViewModel.classData.value.dayOfWeek,
+                        value = timeTableViewModel.classData.value.week,
                         dropDownMenuOption = timeTableViewModel.toggleDayOfWeekDropDownMenu.value,
                         menuItems = daysOfWeek,
                         dropDownMenuName = checkBoxName[1],
@@ -601,7 +609,7 @@ fun InsertClassData(
                 ) {
                     TimeTableDownMenuComponent(
                         onValueChange = {timeTableViewModel.updateStartClassTime(it.toInt())},
-                        value = timeTableViewModel.classData.value.startClassTime.toString(),
+                        value = timeTableViewModel.classData.value.class_start_time.toString(),
                         dropDownMenuOption = timeTableViewModel.toggleStartClassTimeDropDownMenu.value,
                         menuItems = classTime,
                         dropDownMenuName = checkBoxName[2],
@@ -609,7 +617,7 @@ fun InsertClassData(
                     )
                     TimeTableDownMenuComponent(
                         onValueChange = {timeTableViewModel.updateEndClassTime(it.toInt())},
-                        value = timeTableViewModel.classData.value.endClassTime.toString(),
+                        value = timeTableViewModel.classData.value.class_end_time.toString(),
                         dropDownMenuOption = timeTableViewModel.toggleEndClassTimeDropDownMenu.value,
                         menuItems = classTime,
                         dropDownMenuName = checkBoxName[3],
@@ -620,14 +628,14 @@ fun InsertClassData(
                 GradeDropDownMenuComponent(
                     onValueChange = {timeTableViewModel.updateGrade(it)},
 
-                    labelValue = timeTableViewModel.classData.value.grade,
+                    labelValue = "${timeTableViewModel.classData.value.class_grade}학년",
                     dropDownMenuOption = timeTableViewModel.toggleGradeDropDownMenu.value,
                     placeholderValue = "",
                     toggleDropDownMenuOption = {timeTableViewModel.toggleGradeDropDownMenu()}
                 )
 
                 TextInputFieldComponent(
-                    value=timeTableViewModel.classData.value.schoolName,
+                    value=timeTableViewModel.classData.value.school,
                     onValueChange = {timeTableViewModel.updateSchoolName(it)},
                     labelValue = "학교")
 
@@ -637,7 +645,8 @@ fun InsertClassData(
                 ) {
                     TextButton(
                         onClick = {
-                            timeTableViewModel.toggleInsertClassDataDialogState()
+//                            timeTableViewModel.toggleInsertClassDataDialogState()
+                            timeTableViewModel.postScheduleData()
                         },
                         modifier = Modifier
                     ) {
@@ -646,6 +655,7 @@ fun InsertClassData(
                     TextButton(
                         onClick = {
                             timeTableViewModel.toggleInsertClassDataDialogState()
+                            timeTableViewModel.postScheduleData()
                         },
                         modifier = Modifier
                     ) {
@@ -682,7 +692,7 @@ fun BasicClass(
             modifier = Modifier,
             setShowClassDetailDialog = setShowClassDetailDialog,
             setShowClassDataModifyDialog = setShowClassDataModifyDialog,
-            setSelectClassData = {}
+            setSelectClassData = {},
         )
     },
 
@@ -695,7 +705,7 @@ fun BasicClass(
 //        0
 //    }
     val minClassTime=1
-    val maxClassTime: Int = classDataList.maxByOrNull(ClassData::endClassTime)?.endClassTime ?: 7
+    val maxClassTime: Int = classDataList.maxByOrNull(ClassData::class_end_time)?.class_end_time ?: 7
 
     val totalPeriods = maxClassTime - minClassTime + 1
     val totalDays = 5
@@ -708,7 +718,7 @@ fun BasicClass(
     Log.d("maxClassTime", maxClassTime.toString())
     Layout(
         content = {
-            classDataList.sortedBy(ClassData::startClassTime).forEach { classData ->
+            classDataList.sortedBy(ClassData::class_start_time).forEach { classData ->
                 Box(modifier = Modifier
                     .layoutId(classData)
                     .fillMaxSize()
@@ -749,7 +759,7 @@ fun BasicClass(
 
         val placeablesWithEvents = measurables.map { measurable ->
             val classData = measurable.layoutId as ClassData
-            val classDurationPeriods = (classData.endClassTime - classData.startClassTime + 1)
+            val classDurationPeriods = (classData.class_end_time - classData.class_start_time + 1)
             val classHeight = (classDurationPeriods * hourHeight.toPx()).roundToInt()
 
             val placeable = measurable.measure(
@@ -765,11 +775,11 @@ fun BasicClass(
 
         layout(constraints.maxWidth, totalHourHeight.roundToPx()) {
             placeablesWithEvents.forEach { (placeable, classData) ->
-                Log.d("ClassMinTime", classData.startClassTime.toString())
-                val eventOffsetPeriods = classData.startClassTime - minClassTime
+                Log.d("ClassMinTime", classData.class_start_time.toString())
+                val eventOffsetPeriods = classData.class_start_time - minClassTime
                 Log.d("eventOffsetPeriods", eventOffsetPeriods.toString())
                 val eventY = (eventOffsetPeriods * hourHeight.toPx()).roundToInt()
-                val eventX = (convertDayOfWeek(classData.dayOfWeek) - 1) * width
+                val eventX = (convertDayOfWeek(classData.week) - 1) * width
                 placeable.place(eventX, eventY)
             }
         }
