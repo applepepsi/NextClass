@@ -8,14 +8,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class ScheduleTestRepository:ScheduleRepository {
     val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl("https://example.com/")
+        .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val api: API = retrofit.create(API::class.java)
 
-    override fun tokenCheck(callback: (ServerResponse?) -> Unit) {
+    override fun tokenCheck(callback: (ServerResponse<Any>?) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
 

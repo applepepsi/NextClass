@@ -5,6 +5,8 @@ import com.example.nextclass.Data.DuplicateCheckRequest
 import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.Data.LoginRequest
 import com.example.nextclass.Data.ServerResponse
+import com.example.nextclass.Data.TokenData
+import com.example.nextclass.Data.UserData
 import com.example.oneplusone.serverConnection.API
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +20,7 @@ class TestRepository : UserInfoRepository {
         .build()
 
     private val api: API = retrofit.create(API::class.java)
-    override fun joinIdDuplicateCheck(id: String,callback: (ServerResponse?) -> Unit) {
+    override fun joinIdDuplicateCheck(id: String,callback: (ServerResponse<Any>?) -> Unit) {
 
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
@@ -43,7 +45,7 @@ class TestRepository : UserInfoRepository {
             }
         }
     }
-    override fun emailDuplicateCheck(email: String,callback: (ServerResponse?) -> Unit){
+    override fun emailDuplicateCheck(email: String,callback: (ServerResponse<Any>?) -> Unit){
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
                 val checkRequest = DuplicateCheckRequest("email")
@@ -64,7 +66,7 @@ class TestRepository : UserInfoRepository {
             }
         }
     }
-    override fun postUserJoinInfo(userJoinInfo: JoinRequest, callback: (ServerResponse?) -> Unit){
+    override fun postUserJoinInfo(userJoinInfo: JoinRequest, callback: (ServerResponse<Any>?) -> Unit){
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
                 val response = api.postUserJoinInfo(userJoinInfo)
@@ -85,7 +87,7 @@ class TestRepository : UserInfoRepository {
         }
     }
 
-    override fun postUserLoginInfo(userLoginInfo: LoginRequest, callback: (ServerResponse?) -> Unit){
+    override fun postUserLoginInfo(userLoginInfo: LoginRequest, callback: (ServerResponse<TokenData>?) -> Unit){
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
                 val response = api.postUserLoginForm(userLoginInfo)
@@ -106,5 +108,26 @@ class TestRepository : UserInfoRepository {
         }
     }
 
+    override fun getUserInfo(callback: (ServerResponse<UserData>?) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = try {
+                val response = api.getUserInfo()
+                if (response.isSuccessful){
+                    Log.d("사용자 정보 가져오기 실패", response.body().toString())
+                    response.body()
+                } else{
+                    Log.d("사용자 정보 가져오기 실패","사용자 정보 가져오기 실패")
+                    null
+                }
+            } catch (e: Exception) {
+                Log.d("사용자 정보 가져오기 실패",e.toString())
+                null
+            }
+            withContext(Dispatchers.Main) {
+
+                callback(result)
+            }
+        }
+    }
 
 }

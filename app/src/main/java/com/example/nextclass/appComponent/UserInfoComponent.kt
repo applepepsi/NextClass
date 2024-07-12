@@ -45,17 +45,19 @@ import com.example.nextclass.viewmodel.UserInfoViewModel
 
 @Composable
 fun UserProfilePreviewComponent(
-
+    name:String,
+    schoolName:String,
+    grade:Int,
 ){
     Row(
         modifier = Modifier
-            .padding(start=10.dp,end=10.dp)
+            .padding(start = 10.dp, end = 10.dp)
             .clip(RoundedCornerShape(35.dp))
             .fillMaxWidth()
-            .height(120.dp)
+            .height(100.dp)
 //            .border(1.dp, Color.LightGray, shape = RoundedCornerShape(15.dp))
             .background(Pastel_Red)
-            .padding(start=25.dp),
+            .padding(start = 25.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
@@ -88,7 +90,7 @@ fun UserProfilePreviewComponent(
             Text(
                 modifier = Modifier
                     .padding(2.dp),
-                text = "홍길동",
+                text = name,
                 style = TextStyle(
                     fontSize = 17.sp,
                     fontWeight = FontWeight.Bold,
@@ -101,7 +103,7 @@ fun UserProfilePreviewComponent(
                 Text(
                     modifier = Modifier
                         .padding(2.dp),
-                    text = "아산 고등학교",
+                    text = schoolName,
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Normal,
@@ -112,7 +114,7 @@ fun UserProfilePreviewComponent(
                 Text(
                     modifier = Modifier
                         .padding(2.dp),
-                    text = "1 학년",
+                    text = "$grade 학년",
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Normal,
@@ -134,7 +136,7 @@ fun UserProfileItemComponent(
 ){
     Row(
         modifier = Modifier
-            .padding(start=30.dp,end=30.dp)
+            .padding(start = 30.dp, end = 30.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -467,7 +469,8 @@ fun ChangeUserInfoComponent(
 @Preview(showBackground = true)
 @Composable
 fun UserProfilePreviewComponentPreview() {
-    UserProfilePreviewComponent()
+
+    UserProfilePreviewComponent(name = "DK", schoolName = "아산고", grade = 1)
 }
 
 @Preview(showBackground = true)
@@ -482,4 +485,6 @@ fun UserProfileItemComponentPreview() {
     )
 
 }
+
+
 

@@ -1,12 +1,14 @@
 package com.example.nextclass.viewmodel
 
 import android.graphics.Paint.Join
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.State
 import androidx.lifecycle.ViewModel
 import com.example.nextclass.Data.ChangePassword
 import com.example.nextclass.Data.ChangeUserData
 import com.example.nextclass.Data.JoinRequest
+import com.example.nextclass.Data.UserData
 import com.example.nextclass.R
 import com.example.nextclass.repository.UserInfoRepository
 import com.example.nextclass.utils.CutEntranceYear
@@ -20,8 +22,8 @@ class UserInfoViewModel @Inject constructor(
 ): ViewModel(){
 
 
-    private val _userProfile= mutableStateOf(JoinRequest())
-    val userProfile: State<JoinRequest> = _userProfile
+    private val _userProfile= mutableStateOf(UserData())
+    val userProfile: State<UserData> = _userProfile
 
 
     private val _emailChangeState= mutableStateOf(false)
@@ -65,6 +67,9 @@ class UserInfoViewModel @Inject constructor(
 
     private val _gradeDropDownMenuState=mutableStateOf(false)
     val gradeDropDownMenuState: State<Boolean> = _gradeDropDownMenuState
+
+    private val _loading=mutableStateOf(false)
+    val loading: State<Boolean> = _loading
 
     fun updateVerifyCode(code: String) {
 
@@ -168,6 +173,21 @@ class UserInfoViewModel @Inject constructor(
             //서버로 전송
         }
     }
+
+    //사용자의 정보를 가져와서 화면에 출력해야함
+    fun getUserInfo(){
+        _loading.value=true
+
+        userInfoRepository.getUserInfo(){serverResponse ->
+            Log.d("serverResponse", serverResponse.toString())
+            if (serverResponse != null) {
+                _userProfile.value= serverResponse.data!!
+            }
+
+            _loading.value=false
+        }
+    }
+
 
     fun submitVerifyCode() {
         TODO("Not yet implemented")

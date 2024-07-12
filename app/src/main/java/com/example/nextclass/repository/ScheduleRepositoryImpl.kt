@@ -21,7 +21,7 @@ class ScheduleRepositoryImpl @Inject constructor(
 ) : ScheduleRepository {
 
 
-    override fun tokenCheck(callback: (ServerResponse?) -> Unit) {
+    override fun tokenCheck(callback: (ServerResponse<Any>?) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             val response = api.tokenTest()
             val result = try {
@@ -33,10 +33,8 @@ class ScheduleRepositoryImpl @Inject constructor(
 
                     response.body()
                 } else {
-                    val errorBody = response.errorBody()?.string()
-                    val serverResponse = parseErrorBody(errorBody)
-                    Log.d("에러", serverResponse.toString())
-                    serverResponse?.description
+
+
                 }
                 response.body()
             } catch (e: Exception) {
@@ -48,16 +46,6 @@ class ScheduleRepositoryImpl @Inject constructor(
             }
         }
     }
-    private fun parseErrorBody(errorBody: String?): ServerResponse? {
-        return try {
 
-            errorBody?.let {
-                Gson().fromJson(it, ServerResponse::class.java)
-            }
-        } catch (e: Exception) {
-            Log.d("에러 파싱 실패", e.toString())
-            null
-        }
-    }
 }
 

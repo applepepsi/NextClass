@@ -24,6 +24,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.regex.Pattern
 import javax.inject.Inject
 
+import com.google.gson.Gson
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -479,7 +480,7 @@ class LoginViewModel @Inject constructor(
                         Log.d("로그인성공", loginRequestResult.code.toString())
                         _loginResult.value=true
                         //로그인 성공후 토큰 데이터를 받는다
-                        _tokenData.value=loginRequestResult.data!!
+                        _tokenData.value= loginRequestResult.data!!
 //                        saveUserInfo()
                         //todo 로그인 성공후 기능 구현해야함
                     }
@@ -517,7 +518,7 @@ class LoginViewModel @Inject constructor(
                         Log.d("자동 로그인성공", loginRequestResult.code.toString())
                         _loginResult.value=true
                         _loading.value=false
-                        _tokenData.value=loginRequestResult.data!!
+                        _tokenData.value= loginRequestResult.data!!
                     }
                 }
             }

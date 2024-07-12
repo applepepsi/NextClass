@@ -344,19 +344,7 @@ fun CommentComponent(
                     ),
                     color=Color.Gray
                 )
-                Text(
-                    modifier = Modifier
-                        .clickable {
-                        }
-                        .padding(5.dp),
-                    text = "댓글 달기",
-                    style = TextStyle(
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Normal,
-                        fontStyle = FontStyle.Normal
-                    ),
-                    color=Color.Gray
-                )
+
                 Text(
                     modifier = Modifier
                         .clickable {

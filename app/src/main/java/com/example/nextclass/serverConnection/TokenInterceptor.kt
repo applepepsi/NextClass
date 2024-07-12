@@ -59,6 +59,7 @@ class TokenInterceptor(
         var response=chain.proceed(newRequest)
 
         if (isTokenExpired(response)) {
+            Log.d("토큰만료","만료")
             // 토큰 갱신 로직을 실행
             response.close()
 
@@ -71,7 +72,7 @@ class TokenInterceptor(
                     header("Authorization", "Bearer $newAccessToken")
                 }.build()
                 response = chain.proceed(lastRequest)
-            }else{
+            }else {
                 //새로운 엑세스 키를 받아오지 못했다면
 
                 // 임시로 리프레시요청을 보내보기로함

@@ -6,11 +6,11 @@ import kotlinx.serialization.json.Json
 
 object ParseServerResponse {
 
-    private val json = Json {
-        ignoreUnknownKeys = true
-    }
-
-    fun parseResponse(jsonString: String): ServerResponse {
-        return json.decodeFromString(jsonString)
-    }
+//    private val json = Json {
+//        ignoreUnknownKeys = true
+//    }
+//
+//    fun parseResponse(jsonString: String): ServerResponse {
+//        return json.decodeFromString(jsonString)
+//    }
 }

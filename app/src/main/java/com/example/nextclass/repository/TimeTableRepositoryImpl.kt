@@ -14,7 +14,7 @@ import javax.inject.Inject
 class TimeTableRepositoryImpl  @Inject constructor(
     private val api: API
 ) :TimeTableRepository{
-    override fun postTimeTableData(classData: ClassData,callback: (ServerResponse?) -> Unit) {
+    override fun postTimeTableData(classData: ClassData,callback: (ServerResponse<Any>?) -> Unit) {
 
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
@@ -41,7 +41,7 @@ class TimeTableRepositoryImpl  @Inject constructor(
     }
 
 
-    override fun postModifyTimeTableData(classData: ClassData,callback: (ServerResponse?) -> Unit) {
+    override fun postModifyTimeTableData(classData: ClassData,callback: (ServerResponse<Any>?) -> Unit) {
 
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
@@ -67,7 +67,7 @@ class TimeTableRepositoryImpl  @Inject constructor(
         }
     }
 
-    override fun postDeleteTimeTableData(classData: ClassData,callback: (ServerResponse?) -> Unit) {
+    override fun postDeleteTimeTableData(classData: ClassData,callback: (ServerResponse<Any>?) -> Unit) {
 
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {

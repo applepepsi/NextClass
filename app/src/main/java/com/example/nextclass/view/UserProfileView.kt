@@ -3,12 +3,14 @@ package com.example.nextclass.view
 import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 
 
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,6 +24,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,6 +47,7 @@ import com.example.nextclass.appComponent.DescriptionTextComponent
 import com.example.nextclass.appComponent.FindFieldComponent
 import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.MainTextComponent
+import com.example.nextclass.appComponent.ProgressIndicator
 import com.example.nextclass.appComponent.RePostPasswordCodeComponent
 import com.example.nextclass.appComponent.TextInputHelpFieldComponent
 import com.example.nextclass.appComponent.UserProfileItemComponent
@@ -67,8 +71,11 @@ fun UserProfileView(
 ) {
     val context = LocalContext.current
 
+
+
+
     val scrollState = rememberScrollState()
-    Log.d("이동","프로파일로 이동")
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -76,6 +83,13 @@ fun UserProfileView(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+
+        ProgressIndicator(state = userInfoViewModel.loading.value)
+        LaunchedEffect(Unit) {
+            userInfoViewModel.getUserInfo()
+        }
+
+
 
         Column(
             modifier = Modifier
@@ -96,35 +110,42 @@ fun UserProfileView(
 
 
 
-        UserProfilePreviewComponent()
+            UserProfilePreviewComponent(
+                name = userInfoViewModel.userProfile.value.name,
+                schoolName = userInfoViewModel.userProfile.value.member_school,
+                grade = userInfoViewModel.userProfile.value.member_grade
+            )
 
 
-            Surface(
-                shape = RoundedCornerShape(35.dp),
-                modifier = Modifier
+        Surface(
+            shape = RoundedCornerShape(35.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 30.dp)
 
-                    .fillMaxSize()
-                    .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 30.dp),
-
-            ) {
-
-
+        ) {
                     Column(
                         modifier = Modifier
                             .background(Feldgrau)
-                            .verticalScroll(scrollState),
-                        verticalArrangement = Arrangement.SpaceBetween,
+                            .fillMaxSize()
+                            .verticalScroll(scrollState)
+                            ,
+
+//                        verticalArrangement = Arrangement.SpaceBetween,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-
+                        Spacer(modifier = Modifier.height(30.dp))
                         MainTextComponent(
                             value = "사용자 정보",
                             modifier= Modifier
-                                .padding(top=20.dp),
+                                .padding(bottom=20.dp)
+                            ,
                             color = Color.White
                         )
 
                         WhiteDividerComponent()
+
+                        Spacer(modifier = Modifier.height(40.dp))
 
                         UserProfileItemComponent(
                             image = ImageVector.vectorResource(R.drawable.email_icon),
@@ -132,6 +153,7 @@ fun UserProfileView(
                             address = "passwordConfirmView",
                             navController = navController
                         )
+                        Spacer(modifier = Modifier.height(40.dp))
 
                         UserProfileItemComponent(
                             image = ImageVector.vectorResource(R.drawable.password_icon),
@@ -139,6 +161,7 @@ fun UserProfileView(
                             address = "changePasswordView",
                             navController = navController
                         )
+                        Spacer(modifier = Modifier.height(40.dp))
 
                         UserProfileItemComponent(
                             image = ImageVector.vectorResource(R.drawable.user_profile_icon),
@@ -146,8 +169,18 @@ fun UserProfileView(
                             address = "passwordConfirmView",
                             navController = navController
                         )
+                        Spacer(modifier = Modifier.height(40.dp))
 
                         WhiteDividerComponent()
+                        Spacer(modifier = Modifier.height(40.dp))
+
+                        UserProfileItemComponent(
+                            image = ImageVector.vectorResource(R.drawable.notification_icon),
+                            text = "알림 설정",
+                            address = "passwordConfirmView",
+                            navController = navController
+                        )
+                        Spacer(modifier = Modifier.height(40.dp))
 
                         UserProfileItemComponent(
                             image = ImageVector.vectorResource(R.drawable.notification_icon),
@@ -156,15 +189,11 @@ fun UserProfileView(
                             navController = navController
                         )
 
-                        UserProfileItemComponent(
-                            image = ImageVector.vectorResource(R.drawable.notification_icon),
-                            text = "알림 설정",
-                            address = "passwordConfirmView",
-                            navController = navController
-                        )
-
+                        Spacer(modifier = Modifier.height(40.dp))
 
                         WhiteDividerComponent()
+
+                        Spacer(modifier = Modifier.height(40.dp))
 
                         TextButton(
                             content={
@@ -186,6 +215,7 @@ fun UserProfileView(
                                 }
                             },
                             modifier = Modifier)
+                        Spacer(modifier = Modifier.height(40.dp))
                     }
 
             }
