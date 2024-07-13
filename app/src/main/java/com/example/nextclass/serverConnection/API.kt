@@ -1,13 +1,18 @@
 package com.example.oneplusone.serverConnection
 
 
+import com.example.nextclass.Data.ChangePassword
+import com.example.nextclass.Data.ChangeUserData
 import com.example.nextclass.Data.ClassData
 import com.example.nextclass.Data.DuplicateCheckRequest
 import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.Data.LoginRequest
+import com.example.nextclass.Data.PostUserData
 import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.Data.TokenData
 import com.example.nextclass.Data.UserData
+import com.example.nextclass.utils.CHANGE_INFO
+import com.example.nextclass.utils.CHANGE_PASSWORD
 import com.example.nextclass.utils.DUPLICATED_CHECK_ADDRESS
 import com.example.nextclass.utils.GET_USER_INFO
 import com.example.nextclass.utils.LOGIN_ADDRESS
@@ -54,7 +59,11 @@ interface API {
     @POST(GET_USER_INFO)
     suspend fun getUserInfo():Response<ServerResponse<UserData>>
 
+    @POST(CHANGE_PASSWORD)
+    suspend fun postChangePasswordData(@Body changePassword: ChangePassword):Response<ServerResponse<Any>>
 
+    @POST(CHANGE_INFO)
+    suspend fun postChangeUserInfoData(@Body userData: PostUserData):Response<ServerResponse<Any>>
     @POST("/test")
     suspend fun tokenTest():Response<ServerResponse<Any>?>
 

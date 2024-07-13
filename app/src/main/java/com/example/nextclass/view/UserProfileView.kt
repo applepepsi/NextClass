@@ -1,16 +1,13 @@
 package com.example.nextclass.view
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 
 
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -166,7 +163,7 @@ fun UserProfileView(
                         UserProfileItemComponent(
                             image = ImageVector.vectorResource(R.drawable.user_profile_icon),
                             text = "사용자 정보 변경",
-                            address = "passwordConfirmView",
+                            address = "changeUserInfoView",
                             navController = navController
                         )
                         Spacer(modifier = Modifier.height(40.dp))
@@ -354,8 +351,9 @@ fun ChangeUserInfoView(
 @Composable
 fun ChangePasswordView(
 
-    navController:NavController,
-    userInfoViewModel: UserInfoViewModel
+    navController: NavController,
+    userInfoViewModel: UserInfoViewModel,
+    loginViewModel: LoginViewModel
 ){
     val scrollState = rememberScrollState()
 
@@ -376,7 +374,8 @@ fun ChangePasswordView(
         }
         ChangePasswordComponent(
             userInfoViewModel = userInfoViewModel,
-            navController=navController
+            navController=navController,
+            loginViewModel=loginViewModel
         )
     }
 }
@@ -557,7 +556,8 @@ fun ChangePasswordComponentPreview() {
     val userInfoViewModel=UserInfoViewModel(testRepository)
     ChangePasswordView(
         navController,
-        userInfoViewModel
+        userInfoViewModel,
+        loginViewModel
     )
 }
 

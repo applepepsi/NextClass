@@ -21,6 +21,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +42,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.R
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.Pastel_Red
+import com.example.nextclass.utils.TokenManager
+import com.example.nextclass.utils.UserInfoManager
+import com.example.nextclass.viewmodel.LoginViewModel
 import com.example.nextclass.viewmodel.UserInfoViewModel
 
 @Composable
@@ -212,11 +216,11 @@ fun UserProfileItemComponent(
 @Composable
 fun ChangePasswordComponent(
     userInfoViewModel: UserInfoViewModel,
-    navController: NavController
-
+    navController: NavController,
+    loginViewModel: LoginViewModel
 ){
     val scrollState = rememberScrollState()
-
+    val context = LocalContext.current
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -224,6 +228,7 @@ fun ChangePasswordComponent(
                 .padding(bottom = 20.dp),
             verticalArrangement = Arrangement.Center,
         ) {
+            ProgressIndicator(state = userInfoViewModel.loading.value)
             Surface(
                 shape = RoundedCornerShape(30.dp),
                 modifier = Modifier
@@ -288,13 +293,18 @@ fun ChangePasswordComponent(
                     InputButtonComponent(
                         value = "변경하기",
                         onClick = {
+
                             userInfoViewModel.postPasswordChangeData()
                         },
                         modifier = Modifier.padding(start=15.dp,end=15.dp))
 
                 }
             }
-
+            if(userInfoViewModel.passwordChangeResult.value){
+                loginViewModel.logOut()
+                TokenManager.clearToken(context = context)
+                UserInfoManager.clearUserInfo(context)
+            }
         }
     }
 
@@ -446,14 +456,14 @@ fun ChangeUserInfoComponent(
                         Spacer(modifier = Modifier.height(30.dp))
 
                         TextInputHelpFieldComponent(
-                            errorMessage = "",
-                            isError = false,
+                            errorMessage = userInfoViewModel.userInfoChangeErrorMessage.value.asString(LocalContext.current),
+                            isError = userInfoViewModel.userInfoChangeErrorState.value,
                         )
 
                         InputButtonComponent(
                             value = "변경하기",
                             onClick = {
-
+                                userInfoViewModel.postUserInfoChangeData()
                             },
                             modifier = Modifier.padding(start=15.dp,end=15.dp))
 

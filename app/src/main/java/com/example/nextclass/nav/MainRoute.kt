@@ -9,7 +9,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.example.nextclass.appComponent.ChangePasswordComponent
 import com.example.nextclass.items.BottomNavItem
 import com.example.nextclass.view.ChangeEmailInsertCodeView
 import com.example.nextclass.view.ChangeEmailView
@@ -18,9 +17,7 @@ import com.example.nextclass.view.ChangePasswordView
 import com.example.nextclass.view.ChangeUserInfoView
 import com.example.nextclass.view.CommunityView
 import com.example.nextclass.view.HomeView
-import com.example.nextclass.view.InsertCodeView
 import com.example.nextclass.view.InsertScheduleView
-import com.example.nextclass.view.PasswordConfirm
 import com.example.nextclass.view.ScheduleView
 import com.example.nextclass.view.TimeTableView
 import com.example.nextclass.view.UserProfileView
@@ -63,6 +60,7 @@ private fun NavGraphBuilder.homeRoute(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 private fun NavGraphBuilder.timetableRoute(
     navController: NavHostController,
     loginViewModel: LoginViewModel,
@@ -235,7 +233,7 @@ private fun NavGraphBuilder.changePasswordView(
     userInfoViewModel: UserInfoViewModel
 ) {
     composable("changePasswordView") {
-        ChangePasswordView(navController = navController, userInfoViewModel = userInfoViewModel)
+        ChangePasswordView(navController = navController, userInfoViewModel = userInfoViewModel,loginViewModel)
     }
 }
 

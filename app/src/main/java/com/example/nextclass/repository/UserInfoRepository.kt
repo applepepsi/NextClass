@@ -1,7 +1,10 @@
 package com.example.nextclass.repository
 
+import com.example.nextclass.Data.ChangePassword
+import com.example.nextclass.Data.ChangeUserData
 import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.Data.LoginRequest
+import com.example.nextclass.Data.PostUserData
 import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.Data.TokenData
 import com.example.nextclass.Data.UserData
@@ -23,4 +26,8 @@ interface UserInfoRepository {
 
     fun getUserInfo(callback: (ServerResponse<UserData>?) -> Unit)
 
+    fun postChangePasswordData(changePassword: ChangePassword,callback: (ServerResponse<Any>?) -> Unit)
+
+
+    fun postChangeUserInfoData(changeUserData: PostUserData,callback: (ServerResponse<Any>?) -> Unit)
 }

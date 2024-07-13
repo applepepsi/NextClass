@@ -99,7 +99,7 @@ class TimeTableViewModel @Inject constructor(
     }
 
     fun updateGrade(class_grade: String) {
-        _classData.value = _classData.value.copy(class_grade = CutEntranceYear.cutEntranceYear(class_grade))
+        _classData.value = _classData.value.copy(class_grade = CutEntranceYear.deleteGradeEntranceYear(class_grade))
     }
 
     fun updateTeacherName(teacher_name: String) {

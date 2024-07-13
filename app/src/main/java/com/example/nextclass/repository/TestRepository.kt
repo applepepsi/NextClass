@@ -1,9 +1,12 @@
 package com.example.nextclass.repository
 
 import android.util.Log
+import com.example.nextclass.Data.ChangePassword
+import com.example.nextclass.Data.ChangeUserData
 import com.example.nextclass.Data.DuplicateCheckRequest
 import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.Data.LoginRequest
+import com.example.nextclass.Data.PostUserData
 import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.Data.TokenData
 import com.example.nextclass.Data.UserData
@@ -130,4 +133,47 @@ class TestRepository : UserInfoRepository {
         }
     }
 
+    override fun postChangePasswordData(changePassword: ChangePassword, callback: (ServerResponse<Any>?) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = try {
+                val response = api.postChangePasswordData(changePassword)
+                if (response.isSuccessful){
+                    Log.d("비밀번호 변경 성공", response.body().toString())
+                    response.body()
+                } else{
+                    Log.d("비밀번호 변경 실패 실패","비밀번호 변경 실패 실패")
+                    null
+                }
+            } catch (e: Exception) {
+                Log.d("비밀번호 변경 실패 실패",e.toString())
+                null
+            }
+            withContext(Dispatchers.Main) {
+
+                callback(result)
+            }
+        }
+    }
+
+    override fun postChangeUserInfoData(changeUserData: PostUserData, callback: (ServerResponse<Any>?) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = try {
+                val response = api.postChangeUserInfoData(changeUserData)
+                if (response.isSuccessful){
+                    Log.d("사용자 정보 변경 성공", response.body().toString())
+                    response.body()
+                } else{
+                    Log.d("사용자 정보 변경 성공","사용자 정보 변경 성공")
+                    null
+                }
+            } catch (e: Exception) {
+                Log.d("사용자 정보 변경 성공",e.toString())
+                null
+            }
+            withContext(Dispatchers.Main) {
+
+                callback(result)
+            }
+        }
+    }
 }

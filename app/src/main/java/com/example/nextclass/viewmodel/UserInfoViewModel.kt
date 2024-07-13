@@ -1,17 +1,17 @@
 package com.example.nextclass.viewmodel
 
-import android.graphics.Paint.Join
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.State
 import androidx.lifecycle.ViewModel
 import com.example.nextclass.Data.ChangePassword
 import com.example.nextclass.Data.ChangeUserData
-import com.example.nextclass.Data.JoinRequest
+import com.example.nextclass.Data.PostUserData
 import com.example.nextclass.Data.UserData
 import com.example.nextclass.R
 import com.example.nextclass.repository.UserInfoRepository
 import com.example.nextclass.utils.CutEntranceYear
+import com.example.nextclass.utils.SUCCESS_CODE
 import com.example.nextclass.utils.StringValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -70,6 +70,9 @@ class UserInfoViewModel @Inject constructor(
 
     private val _loading=mutableStateOf(false)
     val loading: State<Boolean> = _loading
+
+    private val _passwordChangeResult=mutableStateOf(false)
+    val passwordChangeResult: State<Boolean> = _passwordChangeResult
 
     fun updateVerifyCode(code: String) {
 
@@ -163,14 +166,45 @@ class UserInfoViewModel @Inject constructor(
     }
 
     fun postPasswordChangeData(){
+
         if(passwordCheck() && !_passwordChangeErrorState.value){
+            _loading.value=true
+            userInfoRepository.postChangePasswordData(_changePasswordData.value){ServerResponse->
+                Log.d("serverResponse", ServerResponse.toString())
+                if (ServerResponse != null) {
+                    if(ServerResponse.code== SUCCESS_CODE){
+                        _passwordChangeResult.value=true
+                        _loading.value=false
+                    }
+                }
+            }
+            _loading.value=false
             //서버로 전송
         }
     }
 
     fun postUserInfoChangeData(){
+        Log.d("userInfoCheck()",userInfoCheck().toString())
         if(userInfoCheck() && !_userInfoChangeErrorState.value){
+            Log.d("문제없음",_changeUserData.value.toString())
             //서버로 전송
+            _loading.value=true
+
+            val postUserData=PostUserData(
+                name=_changeUserData.value.name,
+                member_grade = CutEntranceYear.deleteGradeEntranceYear(_changeUserData.value.member_grade),
+                member_school = _changeUserData.value.member_school
+            )
+
+            userInfoRepository.postChangeUserInfoData(postUserData){ServerResponse->
+                Log.d("serverResponse", ServerResponse.toString())
+                if (ServerResponse != null) {
+                    if(ServerResponse.code== SUCCESS_CODE){
+                        _loading.value=false
+                    }
+                }
+            }
+            _loading.value=false
         }
     }
 
@@ -182,10 +216,19 @@ class UserInfoViewModel @Inject constructor(
             Log.d("serverResponse", serverResponse.toString())
             if (serverResponse != null) {
                 _userProfile.value= serverResponse.data!!
+                setInitUserInfo(_userProfile.value)
             }
 
             _loading.value=false
         }
+    }
+
+    private fun setInitUserInfo(value: UserData) {
+        _changeUserData.value = _changeUserData.value.copy(
+            name = value.name,
+            member_grade = CutEntranceYear.addGradeEntranceYear(value.member_grade),
+            member_school = value.member_school
+        )
     }
 
 

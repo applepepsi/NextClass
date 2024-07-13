@@ -431,7 +431,7 @@ class LoginViewModel @Inject constructor(
                 name=name.value,
                 password=joinPassword.value,
                 email=email.value,
-                member_grade = CutEntranceYear.cutEntranceYear(entranceYear.value),
+                member_grade = CutEntranceYear.deleteGradeEntranceYear(entranceYear.value),
                 member_school=schoolName.value
             )
 
@@ -519,6 +519,8 @@ class LoginViewModel @Inject constructor(
                         _loginResult.value=true
                         _loading.value=false
                         _tokenData.value= loginRequestResult.data!!
+                    }else{
+                        _loading.value=false
                     }
                 }
             }
