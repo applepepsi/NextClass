@@ -17,7 +17,7 @@ object CutEntranceYear {
             1->"1학년"
             2->"2학년"
             3->"3학년"
-            4->"졸업생"
+            0->"졸업생"
             else->throw IllegalArgumentException("유효하지 않은 학년: $entranceYear")
         }
     }

@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -38,6 +39,7 @@ import com.example.nextclass.appComponent.AccreditationCalculationComponent
 import com.example.nextclass.appComponent.ClassDetail
 import com.example.nextclass.appComponent.ClassModify
 import com.example.nextclass.appComponent.InsertClassData
+import com.example.nextclass.appComponent.ProgressIndicator
 import com.example.nextclass.appComponent.TimeTableComponent
 
 import com.example.nextclass.repository.TestRepository
@@ -67,6 +69,11 @@ fun TimeTableView(
         },
         sheetPeekHeight = 200.dp,
     ) {
+        ProgressIndicator(state = timeTableViewModel.loading.value)
+        LaunchedEffect(Unit) {
+            timeTableViewModel.getTimeTable()
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -74,6 +81,8 @@ fun TimeTableView(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+
 
             Row(
                 modifier = Modifier
@@ -112,7 +121,7 @@ fun TimeTableView(
                 InsertClassData (timeTableViewModel=timeTableViewModel)
             }
             TimeTableComponent(
-                classDataList = listOf(ClassData()),
+                classDataList = timeTableViewModel.timeTableDataList.value,
 //                sampleEvents,
                 setShowClassDetailDialog={
                     timeTableViewModel.toggleSetShowClassDetailDialogState()
@@ -148,6 +157,7 @@ fun TimeTableView(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun TimeTablePreview() {
@@ -155,6 +165,7 @@ fun TimeTablePreview() {
     val navController= rememberNavController()
     val testRepository = TestRepository()
     val loginViewModel = LoginViewModel(testRepository)
+
 
     MaterialTheme {
         TimeTableView(mainNavController,loginViewModel,navController)

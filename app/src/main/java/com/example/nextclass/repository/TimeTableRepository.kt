@@ -1,6 +1,7 @@
 package com.example.nextclass.repository
 
 import com.example.nextclass.Data.ClassData
+import com.example.nextclass.Data.ClassUUid
 import com.example.nextclass.Data.ServerResponse
 
 interface TimeTableRepository {
@@ -9,5 +10,8 @@ interface TimeTableRepository {
 
     fun postModifyTimeTableData(classData: ClassData, callback: (ServerResponse<Any>?) -> Unit)
 
-    fun postDeleteTimeTableData(classData: ClassData, callback: (ServerResponse<Any>?) -> Unit)
+    fun postDeleteTimeTableData(classUUid: ClassUUid, callback: (ServerResponse<Any>?) -> Unit)
+
+    fun getCurrentTimeTableData(semester: String, callback: (ServerResponse<List<ClassData>>?) -> Unit)
+
 }

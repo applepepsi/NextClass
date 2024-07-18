@@ -73,8 +73,11 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.SecureFlagPolicy
 import com.example.nextclass.Data.ClassData
+import com.example.nextclass.repository.TestRepository
+import com.example.nextclass.repository.TimeTableRepository
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.Pastel_Red
+import com.example.nextclass.viewmodel.LoginViewModel
 import com.example.nextclass.viewmodel.TimeTableViewModel
 
 import kotlin.math.roundToInt
@@ -229,10 +232,15 @@ fun InsertClassDataPreview() {
     var setShowClassDataModifyDialog by remember { mutableStateOf(false) }
     var setShowInsertClassDataDialog by remember { mutableStateOf(false) }
 
+//    val testRepository = Time()
+//    val loginViewModel = LoginViewModel(testRepository)
+
 //    MaterialTheme {
 //        InsertClassData(
 ////            setShowInsertClassDataDialog = {setShowInsertClassDataDialog=it},
-//            timeTableViewModel = TimeTableViewModel()
+//            timeTableViewModel = TimeTableViewModel(
+//                timeTableRepository = TimeTableRepository()
+//            )
 //        )
 //
 //    }
@@ -445,7 +453,7 @@ fun ClassModify(
 
             Column(modifier = Modifier.padding(5.dp)) {
 
-                MainTextComponent(value = "수업 추가하기", modifier = Modifier)
+                MainTextComponent(value = "수업 수정하기", modifier = Modifier)
 
                 TextInputFieldComponent(
                     value=timeTableViewModel.classData.value.title,
@@ -465,7 +473,7 @@ fun ClassModify(
                 ) {
                     TimeTableDownMenuComponent(
                         onValueChange = {timeTableViewModel.updateCredit(it.toInt())},
-                        value = "${timeTableViewModel.classData.value.class_grade}학년",
+                        value = timeTableViewModel.classData.value.score.toString(),
                         dropDownMenuOption = timeTableViewModel.toggleCreditDropDownMenu.value,
                         menuItems = credit,
                         dropDownMenuName = checkBoxName[0],
@@ -506,7 +514,7 @@ fun ClassModify(
                 GradeDropDownMenuComponent(
                     onValueChange = {timeTableViewModel.updateGrade(it)},
 
-                    labelValue = timeTableViewModel.classData.value.class_grade.toString(),
+                    labelValue = "${timeTableViewModel.classData.value.class_grade}학년",
                     dropDownMenuOption = timeTableViewModel.toggleGradeDropDownMenu.value,
                     placeholderValue = "",
                     toggleDropDownMenuOption = {timeTableViewModel.toggleGradeDropDownMenu()}

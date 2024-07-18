@@ -2,7 +2,8 @@ package com.example.nextclass.repository
 
 import android.util.Log
 import com.example.nextclass.Data.ClassData
-import com.example.nextclass.Data.DuplicateCheckRequest
+import com.example.nextclass.Data.ClassUUid
+import com.example.nextclass.Data.PostSemester
 import com.example.nextclass.Data.ServerResponse
 import com.example.oneplusone.serverConnection.API
 import kotlinx.coroutines.CoroutineScope
@@ -46,18 +47,18 @@ class TimeTableRepositoryImpl  @Inject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
 
-                Log.d("classData", classData.toString())
+                Log.d("수정하려는 클래스 데이터", classData.toString())
                 val response = api.postModifyTimeTableData(classData)
                 Log.d("responseCheck", response.toString())
                 if (response.isSuccessful){
                     Log.d("response.body()", response.body().toString())
                     response.body()
                 } else {
-                    Log.d("id중복체크 실패","id중복체크 실패")
+                    Log.d("시간표 수정 실패","수정 실패")
                     null
                 }
             } catch (e: Exception) {
-                Log.d("id중복체크 실패",e.toString())
+                Log.d("연결 실패",e.toString())
                 null
             }
             withContext(Dispatchers.Main) {
@@ -67,23 +68,23 @@ class TimeTableRepositoryImpl  @Inject constructor(
         }
     }
 
-    override fun postDeleteTimeTableData(classData: ClassData,callback: (ServerResponse<Any>?) -> Unit) {
+    override fun postDeleteTimeTableData(classUUid: ClassUUid, callback: (ServerResponse<Any>?) -> Unit) {
 
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
 
-                Log.d("classData", classData.toString())
-                val response = api.postDeleteTimeTableData(classData)
+                Log.d("classData", classUUid.toString())
+                val response = api.postDeleteTimeTableData(classUUid)
                 Log.d("responseCheck", response.toString())
                 if (response.isSuccessful){
                     Log.d("response.body()", response.body().toString())
                     response.body()
                 } else {
-                    Log.d("id중복체크 실패","id중복체크 실패")
+                    Log.d("시간표 삭제 실패","삭제실패")
                     null
                 }
             } catch (e: Exception) {
-                Log.d("id중복체크 실패",e.toString())
+                Log.d("연결 실패",e.toString())
                 null
             }
             withContext(Dispatchers.Main) {
@@ -93,4 +94,32 @@ class TimeTableRepositoryImpl  @Inject constructor(
         }
     }
 
+
+    override fun getCurrentTimeTableData(
+        semester: String,
+        callback: (ServerResponse<List<ClassData>>?) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = try {
+
+                Log.d("classData", semester.toString())
+                val response = api.getCurrentTimeTable(PostSemester(semester))
+                Log.d("responseCheck", response.toString())
+                if (response.isSuccessful){
+                    Log.d("수업 정보 받아오기 성공", response.body().toString())
+                    response.body()
+                } else {
+                    Log.d("수업 정보 받아오기 실패","id중복체크 실패")
+                    null
+                }
+            } catch (e: Exception) {
+                Log.d("수업 정보 받아오기 실패",e.toString())
+                null
+            }
+            withContext(Dispatchers.Main) {
+
+                callback(result)
+            }
+        }
+    }
 }

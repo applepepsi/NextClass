@@ -6,12 +6,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -31,10 +34,14 @@ import com.example.nextclass.appComponent.ScheduleDateTimePickerView
 import com.example.nextclass.appComponent.ScheduleTextInsertView
 import com.example.nextclass.appComponent.SelectDateBottomSheet
 import com.example.nextclass.appComponent.SelectTimeBottomSheet
+import com.example.nextclass.appComponent.SingleScheduleView
 import com.example.nextclass.appComponent.TextInputHelpFieldComponent
+import com.example.nextclass.appComponent.scheduleDataList
 import com.example.nextclass.repository.ScheduleTestRepository
+import com.example.nextclass.repository.TestRepository
 
 import com.example.nextclass.ui.theme.Background_Color2
+import com.example.nextclass.utils.TimeFormatter
 import com.example.nextclass.utils.TokenManager
 import com.example.nextclass.utils.UserInfoManager
 import com.example.nextclass.viewmodel.LoginViewModel
@@ -52,63 +59,44 @@ fun ScheduleView(
 
 
     val context = LocalContext.current
-    Row(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 20.dp),
+    Column {
 
-    ){
+
+        Row(
+            modifier = Modifier
+
+                .padding(top = 20.dp),
+
+            ) {
 
             AppBarTextAndButtonComponent(
                 value = "스케쥴",
-                navController=navController,
+                navController = navController,
                 showLeftButton = false,
                 showRightButton = true,
                 navRoute = "insertScheduleView"
             )
-
         }
 
+        Spacer(modifier = Modifier.height(40.dp))
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 100.dp),
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Surface(
-            shape = RoundedCornerShape(30.dp),
-            modifier = Modifier
-                .height(350.dp)
-                .padding(start = 20.dp, end = 20.dp)
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Box(
-
-                modifier = Modifier
-                    .background(Background_Color2)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize(),
-
-                    verticalArrangement = Arrangement.SpaceBetween,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
-
-                    MainTextComponent(
-                        value = "스케쥴",
-                        modifier= Modifier
-                            .padding(top=20.dp)
-                    )
-
-                }
+            items(
+                items = scheduleDataList
+            ) { singleSchedule ->
+                SingleScheduleView(
+                    scheduleDetail = singleSchedule.scheduleDetail,
+                    scheduleDate = TimeFormatter.formatTimeAndSplit(singleSchedule.scheduleDate)
+                )
             }
         }
-    }
 
-    if(scheduleViewModel.tokenCheckResult.value){
-        loginViewModel.logOut()
+
+        if (scheduleViewModel.tokenCheckResult.value) {
+            loginViewModel.logOut()
+        }
     }
 }
 
@@ -239,10 +227,10 @@ fun InsertScheduleView(
 fun ScheduleViewPreview() {
     val mainNavController= rememberNavController()
     val navController= rememberNavController()
-//    val testRepository = TestRepository()
+    val testLoginRepository = TestRepository()
     val testRepository = ScheduleTestRepository()
     val scheduleViewModel=ScheduleViewModel(testRepository)
-    val loginViewModel:LoginViewModel= hiltViewModel()
+    val loginViewModel=LoginViewModel(testLoginRepository)
     MaterialTheme {
         ScheduleView(navController, scheduleViewModel,loginViewModel)
     }
@@ -256,8 +244,9 @@ fun InsertScheduleViewPreview() {
     val mainNavController= rememberNavController()
     val navController= rememberNavController()
     val testRepository = ScheduleTestRepository()
+    val testLoginRepository = TestRepository()
     val scheduleViewModel=ScheduleViewModel(testRepository)
-    val loginViewModel:LoginViewModel= hiltViewModel()
+    val loginViewModel=LoginViewModel(testLoginRepository)
 
     MaterialTheme {
         InsertScheduleView(navController, scheduleViewModel,loginViewModel)

@@ -7,9 +7,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.nextclass.Data.ClassData
+import com.example.nextclass.Data.ClassUUid
 import com.example.nextclass.R
 import com.example.nextclass.repository.TimeTableRepository
-import com.example.nextclass.utils.ConvertDayOfWeek
 import com.example.nextclass.utils.CutEntranceYear
 import com.example.nextclass.utils.StringValue
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -61,7 +61,15 @@ class TimeTableViewModel @Inject constructor(
     private val _addClassError= mutableStateOf(false)
     val addClassError: State<Boolean> = _addClassError
 
+    private val _loading=mutableStateOf(false)
+    val loading: State<Boolean> = _loading
+
+    private val _timeTableDataList=mutableStateOf(listOf<ClassData>())
+    val timeTableDataList: State<List<ClassData>> = _timeTableDataList
+
+
     fun toggleInsertClassDataDialogState(){
+        resetClassData()
         _insertClassDataDialogState.value=!_insertClassDataDialogState.value
         if(!_insertClassDataDialogState.value){
             resetClassData()
@@ -75,12 +83,13 @@ class TimeTableViewModel @Inject constructor(
     fun toggleSetShowClassDetailDialogState(){
         _setShowClassDetailDialog.value=!_setShowClassDetailDialog.value
         if(_setShowClassDetailDialog.value){
+
             setModifyClassData()
         }
     }
 
     private fun setModifyClassData(){
-        _classData.value=selectClassData.value!!
+        _classData.value= selectClassData.value
     }
 
     fun toggleSetShowClassDataModifyDialogState(){
@@ -152,13 +161,18 @@ class TimeTableViewModel @Inject constructor(
 
         if(scheduleDataCheck(classData.value)){
 
-            _classData.value = _classData.value.copy(week=ConvertDayOfWeek.convertDayOfWeek(_classData.value.week))
+//            _classData.value = _classData.value.copy(week=_classData.value.week)
             //전송
             _classData.value = _classData.value.copy(semester = getCurrentSemester())
+            Log.d("시간표", _classData.value.toString())
             timeTableRepository.postTimeTableData(_classData.value){serverResponse ->
                 Log.d("시간표 전송 성공", serverResponse.toString())
+
                 _addClassErrorMessage.value = StringValue.Empty
                 _addClassError.value = false
+                getTimeTable()
+                toggleInsertClassDataDialogState()
+
             }
 
         }else{
@@ -174,14 +188,25 @@ class TimeTableViewModel @Inject constructor(
 
         if(scheduleDataCheck(_classData.value)){
 
-            _classData.value = _classData.value.copy(week=ConvertDayOfWeek.convertDayOfWeek(_classData.value.week))
+//            _classData.value = _classData.value.copy(week=_classData.value.week)
             //전송
-            _classData.value = _classData.value.copy(semester = getCurrentSemester())
+//            _classData.value = _classData.value.copy(semester = getCurrentSemester())
+
 
             timeTableRepository.postModifyTimeTableData(_classData.value){serverResponse ->
-                Log.d("시간표 수정 성공", serverResponse.toString())
-                _addClassErrorMessage.value = StringValue.Empty
-                _addClassError.value = false
+
+                if(serverResponse?.code==200){
+                    Log.d("시간표 수정 성공", serverResponse.toString())
+
+                    _addClassErrorMessage.value = StringValue.Empty
+                    _addClassError.value = false
+
+                    _timeTableDataList.value=replaceModifyClassData()
+                    toggleSetShowClassDataModifyDialogState()
+                    Log.d("_timeTableDataList", _timeTableDataList.value.toString())
+                }else{
+                    //서버에서 받은 에러 출력
+                }
             }
 
         }else{
@@ -191,19 +216,39 @@ class TimeTableViewModel @Inject constructor(
         }
     }
 
+    private fun replaceModifyClassData(): List<ClassData> {
+        return _timeTableDataList.value.map {
+            if(it.uuid==_classData.value.uuid){
+                _classData.value
+            }else{
+                it
+            }
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun postDeleteScheduleData(){
 
 
-
-            _selectClassData.value = _selectClassData.value.copy(week=ConvertDayOfWeek.convertDayOfWeek(_selectClassData.value.week))
+//            _selectClassData.value = _selectClassData.value.copy(week=_selectClassData.value.week)
+            val classUUid=ClassUUid(_selectClassData.value.uuid!!)
             //전송
+            timeTableRepository.postDeleteTimeTableData(classUUid){serverResponse ->
+                if(serverResponse?.code==200){
 
-            timeTableRepository.postDeleteTimeTableData(_selectClassData.value){serverResponse ->
-                Log.d("시간표 제거 성공", serverResponse.toString())
-
+                    deleteScheduleDataByList()
+                    toggleSetShowClassDetailDialogState()
+                    Log.d("시간표 제거 성공", serverResponse.toString())
+                }
             }
+    }
 
+    private fun deleteScheduleDataByList(){
+        //서버에서 삭제에 성공했다는 답을 받으면 나도 실제로 데이터리스트에서 값을 제거
+        _timeTableDataList.value=_timeTableDataList.value.filter {
+            it.uuid != _selectClassData.value.uuid
+        }
+        Log.d("시간표 제거 성공", "리스트에서 제거 성공")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -224,9 +269,26 @@ class TimeTableViewModel @Inject constructor(
     private fun scheduleDataCheck(value: ClassData):Boolean{
         val classData=_classData.value
 
+        //중복 체크는 서버쪽에서 할 예정
         return classData.week.isNotEmpty()
                 && classData.teacher_name.isNotEmpty()
                 && classData.title.isNotEmpty()
                 && classData.school.isNotEmpty()
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getTimeTable(){
+        _loading.value=true
+        val currentSemester=getCurrentSemester()
+        timeTableRepository.getCurrentTimeTableData(currentSemester){serverResponse ->
+            if(serverResponse?.data != null){
+                Log.d("시간표 가져오기 성공", serverResponse.toString())
+                _timeTableDataList.value=serverResponse.data
+            }
+
+            _loading.value=false
+        }
+        _loading.value=false
     }
 }

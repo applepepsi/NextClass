@@ -52,6 +52,9 @@ class ScheduleViewModel @Inject constructor(
 
     private val _tokenCheckResult=mutableStateOf(false)
     val tokenCheckResult: State<Boolean> = _tokenCheckResult
+
+
+
     fun updateScheduleDate(selectDate: LocalDate) {
         Log.d("selectDate", selectDate.toString())
         _timeData.value=_timeData.value.copy(selectDate=selectDate)

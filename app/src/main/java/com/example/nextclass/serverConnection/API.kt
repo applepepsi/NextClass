@@ -4,9 +4,11 @@ package com.example.oneplusone.serverConnection
 import com.example.nextclass.Data.ChangePassword
 import com.example.nextclass.Data.ChangeUserData
 import com.example.nextclass.Data.ClassData
+import com.example.nextclass.Data.ClassUUid
 import com.example.nextclass.Data.DuplicateCheckRequest
 import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.Data.LoginRequest
+import com.example.nextclass.Data.PostSemester
 import com.example.nextclass.Data.PostUserData
 import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.Data.TokenData
@@ -14,8 +16,10 @@ import com.example.nextclass.Data.UserData
 import com.example.nextclass.utils.CHANGE_INFO
 import com.example.nextclass.utils.CHANGE_PASSWORD
 import com.example.nextclass.utils.DUPLICATED_CHECK_ADDRESS
+import com.example.nextclass.utils.GET_TIME_TABLE
 import com.example.nextclass.utils.GET_USER_INFO
 import com.example.nextclass.utils.LOGIN_ADDRESS
+import com.example.nextclass.utils.POST_DELETE_TIMETABLE_DATA
 import com.example.nextclass.utils.POST_MODIFY_TIMETABLE_DATA
 import com.example.nextclass.utils.POST_TIMETABLE_DATA
 import com.example.nextclass.utils.REGISTER_ADDRESS
@@ -53,8 +57,8 @@ interface API {
     suspend fun postModifyTimeTableData(@Body classData: ClassData):Response<ServerResponse<Any>>
 
     //주소 미정
-    @POST(POST_MODIFY_TIMETABLE_DATA)
-    suspend fun postDeleteTimeTableData(@Body classData: ClassData):Response<ServerResponse<Any>>
+    @POST(POST_DELETE_TIMETABLE_DATA)
+    suspend fun postDeleteTimeTableData(@Body uuid: ClassUUid):Response<ServerResponse<Any>>
 
     @POST(GET_USER_INFO)
     suspend fun getUserInfo():Response<ServerResponse<UserData>>
@@ -64,6 +68,11 @@ interface API {
 
     @POST(CHANGE_INFO)
     suspend fun postChangeUserInfoData(@Body userData: PostUserData):Response<ServerResponse<Any>>
+
+    @POST(GET_TIME_TABLE)
+    suspend fun getCurrentTimeTable(@Body semester: PostSemester):Response<ServerResponse<List<ClassData>>>
+
+
     @POST("/test")
     suspend fun tokenTest():Response<ServerResponse<Any>?>
 

@@ -60,6 +60,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.nextclass.Data.ScheduleData
+import com.example.nextclass.Data.TimeData
 import com.example.nextclass.R
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.Feldgrau
@@ -388,14 +390,35 @@ fun ScheduleTextInsertView(
     }
 }
 
+val scheduleDataList=listOf(
+    ScheduleData(
+        scheduleDetail = "가나다라",
+        scheduleDate = LocalDateTime.now()
+    ),
+    ScheduleData(
+        scheduleDetail = "가나다2라",
+        scheduleDate = LocalDateTime.now()
+    ),
+    ScheduleData(
+        scheduleDetail = "가나다3라",
+        scheduleDate = LocalDateTime.now()
+    ),
+    ScheduleData(
+        scheduleDetail = "가나다4라",
+        scheduleDate = LocalDateTime.now()
+    ),
+    ScheduleData(
+        scheduleDetail = "가나다5라",
+        scheduleDate = LocalDateTime.now()
+    ),
+)
+
 @Composable
 fun SingleScheduleView(
     scheduleDetail:String="물방울이 떨어지는 소리를 들으며 창밖을 바라보는 시간은 참 평화로워.",
     scheduleDate:Pair<String,String> = TimeFormatter.formatTimeAndSplit( LocalDateTime.now()),
 
 ) {
-
-
         Surface(
             shape = RoundedCornerShape(30.dp),
             modifier = Modifier
