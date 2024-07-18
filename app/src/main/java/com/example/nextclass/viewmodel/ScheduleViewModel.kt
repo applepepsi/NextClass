@@ -53,7 +53,14 @@ class ScheduleViewModel @Inject constructor(
     private val _tokenCheckResult=mutableStateOf(false)
     val tokenCheckResult: State<Boolean> = _tokenCheckResult
 
+    private var _toggleLazyType= mutableStateOf(false)
+    val toggleLazyType: State<Boolean> = _toggleLazyType
 
+    private var _toggleShowSortBottomSheet= mutableStateOf(false)
+    val toggleShowSortBottomSheet: State<Boolean> = _toggleShowSortBottomSheet
+
+    private var _sortType= mutableStateOf("")
+    val sortType: State<String> = _sortType
 
     fun updateScheduleDate(selectDate: LocalDate) {
         Log.d("selectDate", selectDate.toString())
@@ -72,7 +79,7 @@ class ScheduleViewModel @Inject constructor(
 
     fun updateScheduleDetail(scheduleDetail:String){
         Log.d("scheduleDetail",scheduleDetail)
-        _scheduleData.value=_scheduleData.value.copy(scheduleDetail=scheduleDetail)
+        _scheduleData.value=_scheduleData.value.copy(content =scheduleDetail)
         updateTextCount(scheduleDetail)
     }
 
@@ -84,7 +91,7 @@ class ScheduleViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun postScheduleDate(){
-        _scheduleData.value=_scheduleData.value.copy(scheduleDate = combinedDateTime())
+        _scheduleData.value=_scheduleData.value.copy(alarm_time = combinedDateTime())
 
         Log.d("스케쥴 시간", _scheduleData.value.toString())
         if(checkScheduleData()){
@@ -102,13 +109,13 @@ class ScheduleViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun checkScheduleData():Boolean{
-        if(_scheduleData.value.scheduleDate<=LocalDateTime.now()){
+        if(_scheduleData.value.alarm_time<=LocalDateTime.now()){
             //에러 처리
             _scheduleErrorState.value=true
             _scheduleErrorMessage.value=StringValue.StringResource(R.string.WrongDate)
             return false
         }
-        else if(_scheduleData.value.scheduleDetail.isEmpty()){
+        else if(_scheduleData.value.content.isEmpty()){
             //에러 처리
             _scheduleErrorState.value=true
             _scheduleErrorMessage.value=StringValue.StringResource(R.string.WrongScheduleDetail)
@@ -127,6 +134,24 @@ class ScheduleViewModel @Inject constructor(
         _timePickerState.value=!_timePickerState.value
     }
 
+    fun changeLazyViewType(){
+        _toggleLazyType.value=!_toggleLazyType.value
+    }
+
+    fun toggleSortBottomSheet(){
+       _toggleShowSortBottomSheet.value=!_toggleShowSortBottomSheet.value
+    }
+
+
+    //todo 서버 켜지면 값 잘 가져오는지 확인
+    fun setSortType(inputSortType:String){
+        when(inputSortType){
+            "작성 시간 오름 차순"->"정렬1"
+            "작성 시간 내림 차순"->"정렬2"
+            "남은 시간 오름 차순"->"정렬3"
+            "남은 시간 내림 차순"->"정렬4"
+        }
+    }
 
 
 }

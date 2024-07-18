@@ -1,9 +1,12 @@
 package com.example.nextclass.appComponent
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +23,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text2.input.rememberTextFieldState
@@ -39,6 +44,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -61,6 +67,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nextclass.Data.ScheduleData
+import com.example.nextclass.Data.SortOption
 import com.example.nextclass.Data.TimeData
 import com.example.nextclass.R
 import com.example.nextclass.ui.theme.Background_Color2
@@ -392,24 +399,32 @@ fun ScheduleTextInsertView(
 
 val scheduleDataList=listOf(
     ScheduleData(
-        scheduleDetail = "가나다라",
-        scheduleDate = LocalDateTime.now()
+        content = "물방울이 떨어지는 소리를 들으며 창밖을 바라보는 시간은 참 평화로워.",
+        alarm_time = LocalDateTime.now()
     ),
     ScheduleData(
-        scheduleDetail = "가나다2라",
-        scheduleDate = LocalDateTime.now()
+        content = "가나다라",
+        alarm_time = LocalDateTime.now()
     ),
     ScheduleData(
-        scheduleDetail = "가나다3라",
-        scheduleDate = LocalDateTime.now()
+        content = "가나다라",
+        alarm_time = LocalDateTime.now()
     ),
     ScheduleData(
-        scheduleDetail = "가나다4라",
-        scheduleDate = LocalDateTime.now()
+        content = "가나다라",
+        alarm_time = LocalDateTime.now()
     ),
     ScheduleData(
-        scheduleDetail = "가나다5라",
-        scheduleDate = LocalDateTime.now()
+        content = "가나다라",
+        alarm_time = LocalDateTime.now()
+    ),
+    ScheduleData(
+        content = "가나다라",
+        alarm_time = LocalDateTime.now()
+    ),
+    ScheduleData(
+        content = "가나다라",
+        alarm_time = LocalDateTime.now()
     ),
 )
 
@@ -436,7 +451,7 @@ fun SingleScheduleView(
                 ) {
                     Column(
                         modifier = Modifier
-                            .padding(top=20.dp,bottom=20.dp,start=15.dp,end=10.dp)
+                            .padding(top = 20.dp, bottom = 20.dp, start = 15.dp, end = 10.dp)
                             .clip(RoundedCornerShape(20.dp))
                             .background(Feldgrau)
                             .fillMaxHeight(),
@@ -478,6 +493,150 @@ fun SingleScheduleView(
         }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun SingleScheduleGridView(
+    scheduleDetail:String="물방울이 떨어지는 소리를 들으며 창밖을 바라보는 시간은 참 평화로워.",
+    scheduleDate:Pair<String,String> = TimeFormatter.formatTimeAndSplit( LocalDateTime.now()),
+
+    ) {
+    Surface(
+        shape = RoundedCornerShape(30.dp),
+        modifier = Modifier
+            .height(200.dp)
+
+            .padding(start = 10.dp, end = 10.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .background(Background_Color2)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+
+                ) {
+                Column(
+                    modifier = Modifier
+                        .padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 5.dp)
+                        .clip(RoundedCornerShape(15.dp))
+                        .background(Feldgrau)
+                        .height(50.dp)
+                        .fillMaxWidth(),
+
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = scheduleDate.first,
+                        color=Color.White,
+                        fontSize = 13.sp,
+                        modifier = Modifier
+                            .padding(end=5.dp)
+
+                    )
+                    Text(
+                        text = scheduleDate.second,
+                        color=Color.White,
+                        modifier = Modifier,
+                        fontSize = 13.sp,
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = 15.dp, end = 15.dp, top = 5.dp, bottom = 20.dp)
+                ) {
+                    Text(
+                        modifier = Modifier,
+
+
+                        text = scheduleDetail,
+                        color = Color.Black
+                    )
+                }
+            }
+
+        }
+    }
+}
+
+val sortOptions = listOf(
+    SortOption("작성 시간 오름 차순", R.drawable.up_button),
+    SortOption("작성 시간 내림 차순", R.drawable.down_button),
+    SortOption("남은 시간 오름 차순", R.drawable.up_button),
+    SortOption("남은 시간 내림 차순", R.drawable.down_button)
+)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SortBottomSheetComponent(
+    bottomSheetShowState:Boolean=true,
+    setSortType: (String) -> Unit
+) {
+
+    //숨김
+    val state1=rememberModalBottomSheetState()
+    //보여주기 테스트용
+    val state2=rememberStandardBottomSheetState()
+
+    if(bottomSheetShowState){
+        ModalBottomSheet(
+            onDismissRequest = {},
+            sheetState = state2,
+
+            ){
+
+            LazyColumn {
+                items(items= sortOptions){ sortOption->
+                    SortBottomSheetSingleItemComponent(
+                        sortItem=sortOption.label,
+                        icon=ImageVector.vectorResource(sortOption.iconRes),
+                        setSortType = {
+                            setSortType(sortOption.label)
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun SortBottomSheetSingleItemComponent(
+    sortItem:String="",
+    icon: ImageVector,
+    setSortType:()->Unit
+) {
+    Row(
+        modifier= Modifier
+            .fillMaxWidth()
+            .padding(15.dp)
+            .clickable {
+                setSortType()
+            },
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        Spacer(modifier = Modifier.width(10.dp))
+        Text(
+            text=sortItem,
+            style = TextStyle(
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Normal,
+                fontStyle = FontStyle.Normal,
+            ),
+        )
+        Spacer(modifier = Modifier.width(15.dp))
+        Icon(
+            imageVector = icon,
+            contentDescription = "",
+            modifier = Modifier
+                .size(20.dp),
+            tint= Pastel_Red
+        )
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
@@ -500,5 +659,35 @@ fun SelectTimePreview() {
 fun ScheduleTextInsertPreview() {
 //    ScheduleTextInsertView(text = "", onValueChange = {}, textCount = 0)
     SingleScheduleView()
+
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showBackground = true)
+@Composable
+fun GridViewPreview() {
+//    ScheduleTextInsertView(text = "", onValueChange = {}, textCount = 0)
+    SingleScheduleGridView()
+
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BottomSheetPreview() {
+//    ScheduleTextInsertView(text = "", onValueChange = {}, textCount = 0)
+    SortBottomSheetComponent(
+        setSortType = {}
+    )
+
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun BottomSheetSingleItemPreview() {
+//    ScheduleTextInsertView(text = "", onValueChange = {}, textCount = 0)
+    SortBottomSheetSingleItemComponent(
+        sortOptions[0].label,ImageVector.vectorResource(sortOptions[0].iconRes), setSortType = {}
+    )
 
 }
