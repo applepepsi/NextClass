@@ -13,6 +13,7 @@ import com.example.nextclass.R
 import com.example.nextclass.repository.ScheduleRepository
 import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.utils.EXPIRED_REFRESH_TOKEN
+import com.example.nextclass.utils.SortList
 import com.example.nextclass.utils.StringValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
@@ -24,6 +25,9 @@ import javax.inject.Inject
 class ScheduleViewModel @Inject constructor(
     private val scheduleRepository: ScheduleRepository
 ): ViewModel(){
+
+    private var _scheduleDataList=mutableStateOf(listOf<ScheduleData>())
+    val scheduleDataList: State<List<ScheduleData>> = _scheduleDataList
 
     private var _timeData= mutableStateOf(TimeData())
 
@@ -61,6 +65,9 @@ class ScheduleViewModel @Inject constructor(
 
     private var _sortType= mutableStateOf("")
     val sortType: State<String> = _sortType
+//
+//    private var _selectScheduleData= mutableStateOf(ScheduleData())
+//    val selectScheduleData: State<ScheduleData> = _selectScheduleData
 
     fun updateScheduleDate(selectDate: LocalDate) {
         Log.d("selectDate", selectDate.toString())
@@ -90,7 +97,7 @@ class ScheduleViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun postScheduleDate(){
+    fun postScheduleData(){
         _scheduleData.value=_scheduleData.value.copy(alarm_time = combinedDateTime())
 
         Log.d("스케쥴 시간", _scheduleData.value.toString())
@@ -102,9 +109,27 @@ class ScheduleViewModel @Inject constructor(
                         _tokenCheckResult.value=true
                     }
                 }
+                resetScheduleData()
             }
         }
+    }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun postModifyScheduleData(){
+        _scheduleData.value=_scheduleData.value.copy(alarm_time = combinedDateTime())
+
+        Log.d("스케쥴 시간", _scheduleData.value.toString())
+        if(checkScheduleData()){
+            //서버로 전송
+            scheduleRepository.tokenCheck { ServerResponse->
+                if (ServerResponse != null) {
+                    if(ServerResponse.errorCode== EXPIRED_REFRESH_TOKEN){
+                        _tokenCheckResult.value=true
+                    }
+                }
+                resetScheduleData()
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -126,6 +151,12 @@ class ScheduleViewModel @Inject constructor(
         return true
     }
 
+    fun resetScheduleData(){
+        _scheduleData.value=ScheduleData()
+    }
+
+
+
     fun toggleDatePickerState(){
         _datePickerState.value=!_datePickerState.value
     }
@@ -145,12 +176,29 @@ class ScheduleViewModel @Inject constructor(
 
     //todo 서버 켜지면 값 잘 가져오는지 확인
     fun setSortType(inputSortType:String){
-        when(inputSortType){
-            "작성 시간 오름 차순"->"정렬1"
-            "작성 시간 내림 차순"->"정렬2"
-            "남은 시간 오름 차순"->"정렬3"
-            "남은 시간 내림 차순"->"정렬4"
+
+        val beforeSortList=_scheduleDataList.value
+
+        _scheduleDataList.value = when(inputSortType){
+            "작성 시간 오름 차순"->SortList.sortByAscendingCreationTime(beforeSortList)
+            "작성 시간 내림 차순"->SortList.sortByDescendingCreationTime(beforeSortList)
+            "남은 시간 오름 차순"->SortList.sortByAscendingAlarmTime(beforeSortList)
+            "남은 시간 내림 차순"->SortList.sortByDescendingAlarmTime(beforeSortList)
+            else -> { beforeSortList }
         }
+
+        Log.d("inputSortType",inputSortType)
+
+    }
+
+    fun getScheduleData(scheduleDataList:List<ScheduleData>){
+        _scheduleDataList.value=scheduleDataList
+    }
+
+    fun setScheduleData(scheduleData:ScheduleData){
+
+        Log.d("scheduleData", scheduleData.toString())
+        _scheduleData.value=scheduleData
     }
 
 

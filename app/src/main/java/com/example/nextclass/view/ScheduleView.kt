@@ -21,16 +21,13 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
-import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.R
-import com.example.nextclass.appComponent.AccreditationCalculationComponent
 import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
 import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.ScheduleDateTimePickerView
@@ -54,6 +50,7 @@ import com.example.nextclass.appComponent.SingleScheduleView
 import com.example.nextclass.appComponent.SortBottomSheetComponent
 import com.example.nextclass.appComponent.TextInputHelpFieldComponent
 import com.example.nextclass.appComponent.scheduleDataList
+import com.example.nextclass.items.BottomNavItem
 import com.example.nextclass.repository.ScheduleTestRepository
 import com.example.nextclass.repository.TestRepository
 
@@ -77,6 +74,12 @@ fun ScheduleView(
     ) {
 
 
+    LaunchedEffect(Unit) {
+        scheduleViewModel.resetScheduleData()
+        scheduleViewModel.getScheduleData(scheduleDataList)
+    }
+
+
     val context = LocalContext.current
 
     val itemDeploymentIcon=if(!scheduleViewModel.toggleLazyType.value){
@@ -92,6 +95,9 @@ fun ScheduleView(
         bottomSheetShowState = scheduleViewModel.toggleShowSortBottomSheet.value,
         setSortType = {selectSortType->
             scheduleViewModel.setSortType(selectSortType)
+        },
+        toggleBottomSheetState = {
+            scheduleViewModel.toggleSortBottomSheet()
         }
     )
 
@@ -168,25 +174,45 @@ fun ScheduleView(
                     modifier = Modifier.padding(bottom = 70.dp)
                 ) {
                     items(
-                        items = scheduleDataList
+                        items = scheduleViewModel.scheduleDataList.value
                     ) { singleSchedule ->
                         SingleScheduleView(
                             scheduleDetail = singleSchedule.content,
-                            scheduleDate = TimeFormatter.formatTimeAndSplit(singleSchedule.alarm_time)
+                            scheduleDate = TimeFormatter.formatTimeAndSplit(singleSchedule.alarm_time),
+                            modifySchedule={
+                                //수정 버튼을 누르면 수정 페이지로 이동
+                                scheduleViewModel.setScheduleData(singleSchedule)
+                                navController.navigate("modifyScheduleView") {
+                                    popUpTo(BottomNavItem.Schedule.screenRoute) { inclusive = true }
+                                }
+                            },
+                            deleteSchedule={
+                                scheduleViewModel.setScheduleData(singleSchedule)
+                            },
                         )
                     }
                 }
             } else {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
-                    verticalArrangement = Arrangement.spacedBy(18.dp)
+                    verticalArrangement = Arrangement.spacedBy(18.dp),
+                    modifier = Modifier.padding(bottom = 70.dp)
                 ) {
                     items(
-                        items = scheduleDataList
+                        items = scheduleViewModel.scheduleDataList.value
                     ) { singleSchedule ->
                         SingleScheduleGridView(
                             scheduleDetail = singleSchedule.content,
-                            scheduleDate = TimeFormatter.formatTimeAndSplit(singleSchedule.alarm_time)
+                            scheduleDate = TimeFormatter.formatTimeAndSplit(singleSchedule.alarm_time),
+                            modifySchedule={
+                                scheduleViewModel.setScheduleData(it)
+                                navController.navigate("modifyScheduleView") {
+                                    popUpTo(BottomNavItem.Schedule.screenRoute) { inclusive = true }
+                                }
+                            },
+                            deleteSchedule={
+                                scheduleViewModel.setScheduleData(it)
+                            },
                         )
                     }
                 }
@@ -200,10 +226,11 @@ fun ScheduleView(
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun InsertScheduleView(
+fun InsertOrModifyScheduleView(
     navController: NavController,
     scheduleViewModel: ScheduleViewModel,
     loginViewModel: LoginViewModel,
+    postType:()->Unit
 ) {
     val context = LocalContext.current
 
@@ -302,7 +329,7 @@ fun InsertScheduleView(
 
                         InputButtonComponent(
                             value = "추가 하기",
-                            onClick = { scheduleViewModel.postScheduleDate() },
+                            onClick = { postType()},
                             modifier = Modifier
                                 .padding(start = 30.dp, end = 30.dp)
                         )

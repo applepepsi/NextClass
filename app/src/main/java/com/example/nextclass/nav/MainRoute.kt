@@ -17,6 +17,7 @@ import com.example.nextclass.view.ChangePasswordView
 import com.example.nextclass.view.ChangeUserInfoView
 import com.example.nextclass.view.CommunityView
 import com.example.nextclass.view.HomeView
+import com.example.nextclass.view.InsertOrModifyScheduleView
 import com.example.nextclass.view.InsertScheduleView
 import com.example.nextclass.view.ScheduleView
 import com.example.nextclass.view.TimeTableView
@@ -107,6 +108,7 @@ private fun NavGraphBuilder.scheduleRoute(
     ) {
         scheduleView(navController,scheduleViewModel,loginViewModel)
         insertScheduleView(navController,scheduleViewModel,loginViewModel)
+        modifyScheduleView(navController,scheduleViewModel,loginViewModel)
     }
 }
 
@@ -127,7 +129,18 @@ private fun NavGraphBuilder.insertScheduleView(
     loginViewModel: LoginViewModel,
 ) {
     composable("insertScheduleView") {
-        InsertScheduleView(navController,scheduleViewModel,loginViewModel)
+        InsertOrModifyScheduleView(navController,scheduleViewModel,loginViewModel, postType = {scheduleViewModel.postScheduleData()})
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+private fun NavGraphBuilder.modifyScheduleView(
+    navController: NavHostController,
+    scheduleViewModel: ScheduleViewModel,
+    loginViewModel: LoginViewModel,
+) {
+    composable("modifyScheduleView") {
+        InsertOrModifyScheduleView(navController,scheduleViewModel,loginViewModel, postType = {scheduleViewModel.postModifyScheduleData()})
     }
 }
 
