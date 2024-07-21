@@ -375,6 +375,6 @@ fun InsertScheduleViewPreview() {
     val loginViewModel=LoginViewModel(testLoginRepository)
 
     MaterialTheme {
-        InsertScheduleView(navController, scheduleViewModel,loginViewModel)
+        InsertOrModifyScheduleView(navController, scheduleViewModel,loginViewModel, postType = {})
     }
 }

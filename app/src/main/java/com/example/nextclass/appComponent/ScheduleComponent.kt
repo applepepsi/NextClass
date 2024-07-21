@@ -455,7 +455,7 @@ fun SingleScheduleView(
                             iconImage = ImageVector.vectorResource(R.drawable.write_icon)
                         )
 
-                        Spacer(modifier = Modifier.width(5.dp))
+//                        Spacer(modifier = Modifier.width(5.dp))
 
                         SingleScheduleOptionIcon(
                             onClick = {
@@ -529,20 +529,24 @@ fun SingleScheduleOptionIcon(
         modifier = Modifier
             .width(35.dp)
             .height(22.dp)
-            .clip(RoundedCornerShape(25.dp))
-            .background(Pastel_Red),
+            .clip(RoundedCornerShape(25.dp)),
+//            .background(Pastel_Red),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
 
     ){
-        IconButton(onClick = { onClick() }) {
+        IconButton(
+            onClick = { onClick() },
+            modifier = Modifier
+                .size(20.dp)
+        ) {
             Icon(
                 modifier = Modifier
 
-                    .size(15.dp),
+                    .size(17.dp),
                 imageVector = iconImage,
                 contentDescription = "",
-                tint = Color.Black,
+                tint = Color.Gray,
             )
         }
     }
@@ -588,7 +592,7 @@ fun SingleScheduleGridView(
                         iconImage = ImageVector.vectorResource(R.drawable.write_icon)
                     )
 
-                    Spacer(modifier = Modifier.width(5.dp))
+//                    Spacer(modifier = Modifier.width(5.dp))
 
                     SingleScheduleOptionIcon(
                         onClick = {

@@ -7,25 +7,33 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.nextclass.Data.CommunityPostData
+import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
+import com.example.nextclass.appComponent.DividerComponent
 import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.MainTextComponent
+import com.example.nextclass.appComponent.SinglePostComponent
 import com.example.nextclass.repository.ScheduleTestRepository
 import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.viewmodel.LoginViewModel
 import com.example.nextclass.viewmodel.ScheduleViewModel
+import java.time.LocalDateTime
 
 @Composable
 fun CommunityView(
@@ -43,43 +51,42 @@ fun CommunityView(
         horizontalAlignment = Alignment.CenterHorizontally
 
     ){
+        AppBarTextAndButtonComponent(
+            value = "게시판",
+            navController = navController,
+            showLeftButton = false,
+            showRightButton = false,
+        )
 
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 100.dp),
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Surface(
-            shape = RoundedCornerShape(30.dp),
-            modifier = Modifier
-                .height(350.dp)
-                .padding(start = 20.dp, end = 20.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .background(Background_Color2)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize(),
 
-                    verticalArrangement = Arrangement.SpaceBetween,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+        LazyColumn {
 
-                    MainTextComponent(
-                        value = "게시판",
-                        modifier= Modifier
-                            .padding(top=20.dp)
-                    )
 
-                }
+
+            items(items = testCommunityData){singlePostData->
+
+
+                SinglePostComponent(
+                    postTitle=singlePostData.postName,
+                    postDetail = singlePostData.postDetail,
+                    postTime = singlePostData.postTime,
+                    commentCount = singlePostData.commentCount,
+                    likeCount = singlePostData.likeCount,
+                )
+
             }
         }
+
     }
+
 }
+
+val testCommunityData= listOf(
+    CommunityPostData(postName = "가나다", postDetail = "라마바사", postTime = LocalDateTime.now(), commentCount = 2, likeCount = 1),
+    CommunityPostData(postName = "야야", postDetail = "ㅈㅇㅇㅂ", postTime = LocalDateTime.now(), commentCount = 3, likeCount = 2),
+    CommunityPostData(postName = "아아", postDetail = "ㅈㅇㅂ", postTime = LocalDateTime.now(), commentCount = 4, likeCount = 3),
+    CommunityPostData(postName = "바자", postDetail = "ㅈㅂㅈㅇ", postTime = LocalDateTime.now(), commentCount = 5, likeCount = 4),
+)
 
 @Preview(showBackground = true)
 @Composable

@@ -202,4 +202,8 @@ class ScheduleViewModel @Inject constructor(
     }
 
 
+    fun deleteScheduleData(){
+
+    }
+
 }

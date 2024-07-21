@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -30,11 +31,17 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.R
 import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.NextClassTheme
+import com.example.nextclass.utils.TimeFormatter
 import com.example.nextclass.viewmodel.LoginViewModel
+import java.time.LocalDateTime
 
 @Composable
 fun SinglePostComponent(
-
+    postTitle:String="w",
+    postDetail:String="d",
+    postTime:LocalDateTime= LocalDateTime.now(),
+    commentCount:Int=0,
+    likeCount:Int=0,
 ){
 
     Column(
@@ -42,13 +49,18 @@ fun SinglePostComponent(
             .fillMaxWidth(),
 
     ){
+        DividerComponent(modifier = Modifier
+            .height(0.5.dp),
+            dividerColor = Color.LightGray
+        )
+
         Column(
             modifier = Modifier
                 .padding(10.dp)
 
         ) {
             Text(
-                text="제목",
+                text=postTitle,
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
@@ -58,7 +70,7 @@ fun SinglePostComponent(
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text="내용",
+                text=postDetail,
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Normal,
@@ -83,7 +95,7 @@ fun SinglePostComponent(
                 ){
                 Icon(
                     modifier = Modifier
-                        .size(15.dp)
+                        .size(17.dp)
                         .align(Alignment.CenterVertically),
                     imageVector = ImageVector.vectorResource(R.drawable.schedule_icon),
                     contentDescription = "",
@@ -93,7 +105,7 @@ fun SinglePostComponent(
                 Text(
                     modifier = Modifier
                         .padding(start=3.dp),
-                    text="2024-05-08",
+                    text=TimeFormatter.formatDate(postTime),
                     style = TextStyle(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Normal,
@@ -123,7 +135,7 @@ fun SinglePostComponent(
                     Text(
                         modifier = Modifier
                             .padding(start=3.dp),
-                        text = "2",
+                        text = commentCount.toString(),
                         style = TextStyle(
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Normal,
@@ -148,7 +160,7 @@ fun SinglePostComponent(
                     Text(
                         modifier = Modifier
                             .padding(start=3.dp),
-                        text = "3",
+                        text = likeCount.toString(),
                         style = TextStyle(
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Normal,
@@ -158,6 +170,10 @@ fun SinglePostComponent(
                 }
             }
         }
+        DividerComponent(modifier = Modifier
+            .height(0.5.dp),
+            dividerColor = Color.LightGray
+        )
     }
 
 
@@ -470,6 +486,7 @@ fun CommentComponent(
 
 
 }
+
 
 
 

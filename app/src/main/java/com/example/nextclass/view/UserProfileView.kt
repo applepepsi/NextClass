@@ -41,6 +41,7 @@ import com.example.nextclass.appComponent.ChangeEmailComponent
 import com.example.nextclass.appComponent.ChangePasswordComponent
 import com.example.nextclass.appComponent.ChangeUserInfoComponent
 import com.example.nextclass.appComponent.DescriptionTextComponent
+import com.example.nextclass.appComponent.DividerComponent
 import com.example.nextclass.appComponent.FindFieldComponent
 import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.MainTextComponent
@@ -140,7 +141,10 @@ fun UserProfileView(
                             color = Color.White
                         )
 
-                        WhiteDividerComponent()
+                        DividerComponent(modifier = Modifier
+                            .padding(start = 20.dp, end = 20.dp)
+                            .height(1.dp)
+                        )
 
                         Spacer(modifier = Modifier.height(40.dp))
 
@@ -168,14 +172,9 @@ fun UserProfileView(
                         )
                         Spacer(modifier = Modifier.height(40.dp))
 
-                        WhiteDividerComponent()
-                        Spacer(modifier = Modifier.height(40.dp))
-
-                        UserProfileItemComponent(
-                            image = ImageVector.vectorResource(R.drawable.notification_icon),
-                            text = "알림 설정",
-                            address = "passwordConfirmView",
-                            navController = navController
+                        DividerComponent(modifier = Modifier
+                            .padding(start = 20.dp, end = 20.dp)
+                            .height(1.dp)
                         )
                         Spacer(modifier = Modifier.height(40.dp))
 
@@ -185,10 +184,21 @@ fun UserProfileView(
                             address = "passwordConfirmView",
                             navController = navController
                         )
+                        Spacer(modifier = Modifier.height(40.dp))
+
+                        UserProfileItemComponent(
+                            image = ImageVector.vectorResource(R.drawable.notification_icon),
+                            text = "알림 설정",
+                            address = "passwordConfirmView",
+                            navController = navController
+                        )
 
                         Spacer(modifier = Modifier.height(40.dp))
 
-                        WhiteDividerComponent()
+                        DividerComponent(modifier = Modifier
+                            .padding(start = 20.dp, end = 20.dp)
+                            .height(1.dp)
+                        )
 
                         Spacer(modifier = Modifier.height(40.dp))
 
@@ -220,19 +230,6 @@ fun UserProfileView(
     }
 }
 
-@Composable
-fun WhiteDividerComponent(
-
-) {
-    Divider(
-        color = Color.White,
-        modifier = Modifier
-            .padding(start = 20.dp, end = 20.dp)
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(Color.White)
-    )
-}
 
 
 //todo 비밀번호 재설정창 제작해야함
@@ -409,6 +406,8 @@ fun ChangeEmailView(
         )
     }
 }
+
+
 
 @Composable
 fun ChangeEmailInsertCodeView(

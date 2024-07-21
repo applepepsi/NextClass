@@ -18,7 +18,6 @@ import com.example.nextclass.view.ChangeUserInfoView
 import com.example.nextclass.view.CommunityView
 import com.example.nextclass.view.HomeView
 import com.example.nextclass.view.InsertOrModifyScheduleView
-import com.example.nextclass.view.InsertScheduleView
 import com.example.nextclass.view.ScheduleView
 import com.example.nextclass.view.TimeTableView
 import com.example.nextclass.view.UserProfileView
