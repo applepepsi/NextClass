@@ -472,6 +472,7 @@ fun ChangeEmailInsertCodeView(
 
 
                     RePostPasswordCodeComponent(
+                        onClick = {}
                     )
 
                     Spacer(modifier = Modifier.height(15.dp))

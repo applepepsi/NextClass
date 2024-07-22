@@ -49,7 +49,6 @@ import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.ui.theme.Pastel_Red
 import com.example.nextclass.view.ForGotId
-import com.example.nextclass.view.InsertCodeView
 import com.example.nextclass.viewmodel.LoginViewModel
 
 @Composable
@@ -117,73 +116,7 @@ fun FindFieldComponent(
 
 }
 
-@Composable
-fun VerifyCodeInputComponent(
-    onValueChange: (String) -> Unit,) {
-//    FocusRequester로 하나가 입력될때마다 다음으로 이동
-    val focusRequesters = remember { List(4) { FocusRequester() } }
-    val code = remember { mutableStateListOf("", "", "", "") }
 
-
-    Row(
-        //Arrangement.spacedBy(15.dp)로 입력창마다 간격을 줌
-        horizontalArrangement = Arrangement.spacedBy(15.dp),
-        verticalAlignment = Alignment.CenterVertically,
-
-    ) {
-        for (i in 0 until 4) {
-            OutlinedTextField(
-                modifier = Modifier
-                    .height(80.dp)
-                    .width(65.dp)
-                    .focusRequester(focusRequesters[i])
-                ,
-                value = code[i],
-                onValueChange = { newValue ->
-                    if (newValue.length <= 1) {
-                        code[i] = newValue
-                        onValueChange(code.joinToString(""))
-                        if (newValue.isNotEmpty() && i < 3) {
-                            focusRequesters[i + 1].requestFocus()
-                        }
-                    }
-                },
-                placeholder = {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "- - -",
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    disabledContainerColor = Color.White,
-                    errorContainerColor = Color.White,
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent,
-                    disabledBorderColor = Color.Transparent,
-                ),
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Number
-                ),
-                shape = RoundedCornerShape(13.dp),
-                textStyle = TextStyle(
-                    textAlign = TextAlign.Center,
-                    fontSize = 25.sp
-                ),
-                singleLine = true,
-                maxLines = 1,
-
-            )
-        }
-    }
-}
 
 
 @Preview(showBackground = true)

@@ -105,7 +105,7 @@ fun FindIdOrPasswordTextComponent(
 
 @Composable
 fun RePostPasswordCodeComponent(
-
+    onClick:()->Unit
 ) {
     val passwordCode="인증 번호를 받지 못하셨나요?    "
     val repost="다시 보내기"
@@ -125,7 +125,7 @@ fun RePostPasswordCodeComponent(
         annotatedString.getStringAnnotations(offset, offset)
             .firstOrNull()?.also { span ->
                 Log.d("test", span.item.toString())
-
+                onClick()
             }
     })
 }

@@ -297,13 +297,13 @@ fun JoinView(
 
             )
 
-        LaunchedEffect(loginViewModel.joinDataCheckResult.value) {
+
             if (loginViewModel.joinDataCheckResult.value) {
-                navController.navigate("insertVerifyCodeView") {
-                    popUpTo(TopNavItem.Join.screenRoute) { inclusive = true }
-                }
+                loginViewModel.getVerifyCode()
+                navController.navigate("insertCodeView")
+                loginViewModel.toggleJoinDataCheckResult()
+
             }
-        }
 
 
         //LaunchedEffect는 코루틴
@@ -500,7 +500,8 @@ fun TermsAndConditionsView(
         horizontalAlignment = Alignment.CenterHorizontally
 
     ){
-        AppBarTextAndButtonComponent(value = stringResource(id = R.string.TermsAndConditions),
+        AppBarTextAndButtonComponent(
+            value = stringResource(id = R.string.TermsAndConditions),
             navController=navController)
     }
 }
@@ -572,95 +573,7 @@ fun FindIdResult(
     }
 }
 
-//비밀번호 찾기의 코드 입력 뷰
-@Composable
-fun InsertCodeView(
-    loginViewModel: LoginViewModel,
-    navController: NavController)  {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 20.dp),
-
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-
-    ){
-        AppBarTextAndButtonComponent(value = stringResource(id = R.string.InputVerifyCode),
-            navController=navController)
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 100.dp),
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Surface(
-            shape = RoundedCornerShape(30.dp),
-            modifier = Modifier
-                .height(350.dp)
-                .padding(start = 20.dp, end = 20.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .background(Background_Color2)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize(),
-
-                    verticalArrangement = Arrangement.SpaceBetween,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
-
-
-                    MainTextComponent(
-                        value= stringResource(id = R.string.InputVerityCode),
-                        modifier=Modifier
-                            .padding(top=20.dp)
-                    )
-
-                    DescriptionTextComponent(
-                        value= stringResource(id = R.string.InputVerityCodeDetailMassage),
-                        modifier=Modifier.padding(start = 5.dp)
-                    )
-                    Spacer(modifier = Modifier.height(15.dp))
-                    VerifyCodeInputComponent(
-                        onValueChange = {
-                            loginViewModel.updateVerifyCode(it)
-                        }
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
-
-
-                    RePostPasswordCodeComponent(
-                    )
-
-                    Spacer(modifier = Modifier.height(15.dp))
-
-
-                    TextInputHelpFieldComponent(
-                        errorMessage = loginViewModel.verifyCodeInputErrorMessage.value.asString(LocalContext.current),
-                        isError = loginViewModel.verifyCodeInputError.value,
-                    )
-
-
-                    InputButtonComponent(
-                        value = "확인",
-                        onClick = { loginViewModel.submitVerifyCode() },
-                        modifier = Modifier.padding(start=15.dp,end=15.dp),
-                        showImage = true
-                    )
-
-
-                    Spacer(modifier = Modifier.height(10.dp))
-                }
-            }
-        }
-    }
-}
 
 
 //프리뷰는 hilt를 쓰면 의존성주입을 초기화 하지 않는다고 해서 테스트 용으로 하나 더 만듬

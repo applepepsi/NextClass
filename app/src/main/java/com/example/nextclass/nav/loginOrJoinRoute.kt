@@ -6,10 +6,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.example.nextclass.appComponent.InsertCodeView
 import com.example.nextclass.items.TopNavItem
 import com.example.nextclass.view.ForGotId
 import com.example.nextclass.view.ForGotPassword
-import com.example.nextclass.view.InsertCodeView
 import com.example.nextclass.view.JoinView
 import com.example.nextclass.view.LoginView
 import com.example.nextclass.view.TermsAndConditionsView
@@ -52,7 +52,7 @@ private fun NavGraphBuilder.joinRoute(
     ) {
         joinView(navController, loginViewModel)
         termsAndConditionsView(navController, loginViewModel)
-        insertVerifyCodeView(navController,loginViewModel)
+        insertCodeView(navController,loginViewModel)
     }
 }
 
@@ -83,12 +83,12 @@ private fun NavGraphBuilder.termsAndConditionsView(
     }
 }
 
-private fun NavGraphBuilder.insertVerifyCodeView(
+private fun NavGraphBuilder.insertCodeView(
     navController: NavHostController,
     loginViewModel: LoginViewModel,
 
     ) {
-    composable("insertVerifyCodeView") {
+    composable("insertCodeView") {
         InsertCodeView(loginViewModel, navController)
     }
 }

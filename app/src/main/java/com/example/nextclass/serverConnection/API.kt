@@ -13,12 +13,15 @@ import com.example.nextclass.Data.PostUserData
 import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.Data.TokenData
 import com.example.nextclass.Data.UserData
+import com.example.nextclass.Data.VerifyCodeData
 import com.example.nextclass.utils.CHANGE_INFO
 import com.example.nextclass.utils.CHANGE_PASSWORD
 import com.example.nextclass.utils.DUPLICATED_CHECK_ADDRESS
 import com.example.nextclass.utils.GET_TIME_TABLE
 import com.example.nextclass.utils.GET_USER_INFO
+import com.example.nextclass.utils.GET_VERIFY_CODE
 import com.example.nextclass.utils.LOGIN_ADDRESS
+import com.example.nextclass.utils.MAIL_CHECK
 import com.example.nextclass.utils.POST_DELETE_TIMETABLE_DATA
 import com.example.nextclass.utils.POST_MODIFY_TIMETABLE_DATA
 import com.example.nextclass.utils.POST_TIMETABLE_DATA
@@ -72,6 +75,11 @@ interface API {
     @POST(GET_TIME_TABLE)
     suspend fun getCurrentTimeTable(@Body semester: PostSemester):Response<ServerResponse<List<ClassData>>>
 
+    @POST(GET_VERIFY_CODE)
+    suspend fun getVerifyCode(@Body email: VerifyCodeData):Response<ServerResponse<Any>>
+
+    @POST(MAIL_CHECK)
+    suspend fun verifyCodeCheck(@Body mailCheckBody: VerifyCodeData):Response<ServerResponse<Any>>
 
     @POST("/test")
     suspend fun tokenTest():Response<ServerResponse<Any>?>

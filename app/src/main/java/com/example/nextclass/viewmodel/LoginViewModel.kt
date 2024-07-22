@@ -9,11 +9,13 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.Data.LoginRequest
 import com.example.nextclass.Data.ModifyUserData
 import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.Data.TokenData
+import com.example.nextclass.Data.VerifyCodeData
 import com.example.nextclass.R
 import com.example.nextclass.repository.UserInfoRepository
 import com.example.nextclass.utils.CutEntranceYear
@@ -25,6 +27,9 @@ import java.util.regex.Pattern
 import javax.inject.Inject
 
 import com.google.gson.Gson
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -198,6 +203,45 @@ class LoginViewModel @Inject constructor(
     private val _modifyUserInfo= mutableStateOf(ModifyUserData())
     val modifyUserInfo: State<ModifyUserData> = _modifyUserInfo
 
+    private val _countDown=mutableStateOf(TimeUnit.MINUTES.toSeconds(5))
+    val countDown: State<Long> = _countDown
+
+    private val _countDownState=mutableStateOf(false)
+    val countDownState: State<Boolean> = _countDownState
+
+    private val _remainingChance=mutableStateOf(5)
+    val remainingChance: State<Int> = _remainingChance
+
+    fun startCountDown(){
+        if(_countDownState.value) {
+            return
+        }
+        _countDownState.value=true
+            viewModelScope.launch {
+                while (_countDownState.value && _countDown.value>0){
+                    delay(1000L)
+                    _countDown.value-=1
+                }
+                _countDownState.value=false
+            }
+
+    }
+
+    fun stopCountDown(){
+        _countDownState.value=false
+    }
+
+    fun resetCountDown(){
+        _countDown.value=TimeUnit.MINUTES.toSeconds(5)
+        _countDownState.value=false
+    }
+
+    fun resetChance(){
+        _remainingChance.value=5
+    }
+
+
+
     fun updateEmail(newEmail: String) {
         _email.value = newEmail
         _emailDuplicateCheck.value=false
@@ -351,6 +395,11 @@ class LoginViewModel @Inject constructor(
 
         _autoLoginState.value = !_autoLoginState.value
         Log.d("오토로그인 값",_autoLoginState.value.toString())
+    }
+
+    fun toggleJoinDataCheckResult(){
+        _joinDataCheckResult.value=!_joinDataCheckResult.value
+        Log.d("_joinDataCheckResult",_joinDataCheckResult.value.toString())
     }
 
     fun emailDuplicateCheck(){
@@ -593,10 +642,7 @@ class LoginViewModel @Inject constructor(
         _verifyCode.value = value
     }
 
-    fun submitVerifyCode(){
-        _verifyCodeInputError.value=false
-        _verifyCodeInputErrorMessage.value=StringValue.StringResource(R.string.WrongVerityCodeMassage)
-    }
+
 
     fun updateUserInfoModifyPasswordConfirm(value: String){
         _userInfoModifyPasswordConfirm.value=value
@@ -618,6 +664,47 @@ class LoginViewModel @Inject constructor(
     fun getUserInfo(){
         //서버에서 받아온 유저 정보를 삽입해야함
         _modifyUserInfo.value
+    }
+
+    fun getVerifyCode(){
+
+        _loading.value=true
+        userInfoRepository.getVerifyCode(VerifyCodeData(email.value)){ verifyCodeRequestResult->
+            if(verifyCodeRequestResult !=null) {
+                if (verifyCodeRequestResult.code == SUCCESS_CODE) {
+                    Log.d("인증 코드 발급 성공", verifyCodeRequestResult.code.toString())
+
+                }else{
+                    _loading.value=false
+                }
+            }
+        }
+        _loading.value=false
+    }
+
+    fun submitVerifyCode(){
+
+        val verifyCodeCheckBody=VerifyCodeData(
+            email=email.value,
+            code=verifyCode.value
+        )
+
+        _verifyCodeInputError.value=false
+        _verifyCodeInputErrorMessage.value=StringValue.StringResource(R.string.WrongVerityCodeMassage)
+
+        _loading.value=true
+        //결과값 처리는 아직
+        userInfoRepository.getVerifyCode(verifyCodeCheckBody){ verifyCodeCheckResult->
+            if(verifyCodeCheckResult !=null) {
+                if (verifyCodeCheckResult.code == SUCCESS_CODE) {
+                    Log.d("인증 코드 체크 완료", verifyCodeCheckResult.code.toString())
+
+                }else{
+                    _loading.value=false
+                }
+            }
+        }
+        _loading.value=false
     }
 
 }
