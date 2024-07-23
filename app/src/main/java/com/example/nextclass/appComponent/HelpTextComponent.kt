@@ -102,13 +102,11 @@ fun CountDownComponent(
     val minutes = countDown / 60
     val seconds = countDown % 60
 
-
-
         Text(
-            text = String.format("%02d:%02d", minutes, seconds),
+            text = "남은 시간 ${String.format("%02d:%02d", minutes, seconds)}",
             modifier = Modifier,
             style = TextStyle(
-                fontSize = 15.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
 
@@ -128,7 +126,7 @@ fun ChanceCountComponent(
         text = "${remainingChance}번 남았습니다.",
         modifier = Modifier,
         style = TextStyle(
-            fontSize = 14.sp,
+            fontSize = 10.sp,
             fontWeight = FontWeight.Normal,
             fontStyle = FontStyle.Normal,
 

@@ -316,6 +316,11 @@ fun ChangeEmailComponent(
 ){
     val scrollState = rememberScrollState()
 
+    userInfoViewModel.resetChangeEmailData()
+
+
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -335,29 +340,33 @@ fun ChangeEmailComponent(
                     .height(350.dp)
                     .padding(bottom = 20.dp),
                 verticalArrangement = Arrangement.SpaceAround,
-                horizontalAlignment = Alignment.CenterHorizontally,
+                horizontalAlignment = Alignment.Start,
             ) {
 
                 Spacer(modifier = Modifier.height(30.dp))
 
                 EmailInputFieldComponent(
-                    value = "",
-                    onValueChange = { },
+                    value = userInfoViewModel.changeEmail.value.email,
+                    onValueChange = {
+                        userInfoViewModel.updateNewEmail(it)
+                    },
                     labelValue = "새 이메일",
-                    emailCheckValue = false,
-                    emailCheckProcess = { /*TODO*/ },
-                    isError = false,
-                    errorMessage = "",
-                    duplicateCheckButtonState = true
+                    emailCheckValue = userInfoViewModel.emailDuplicateCheck.value,
+                    emailCheckProcess = { userInfoViewModel.emailDuplicateCheck() },
+                    isError = userInfoViewModel.emailInputError.value,
+                    errorMessage = userInfoViewModel.emailInputErrorMessage.value.asString(LocalContext.current),
+                    duplicateCheckButtonState = userInfoViewModel.emailDuplicateButtonState.value
                 )
 
                 PasswordInputFieldComponent(
-                    value = "",
-                    onValueChange = {},
+                    value = userInfoViewModel.changeEmail.value.password!!,
+                    onValueChange = {
+                        userInfoViewModel.updateOldPasswordOfChangeEmail(it)
+                    },
                     labelValue = stringResource(id = R.string.password),
                     placeholderValue = stringResource(id = R.string.input_password),
-                    passwordVisibleOption = false,
-                    togglePassWordVisibility = { /*TODO*/ })
+                    passwordVisibleOption = userInfoViewModel.passwordVisibility.value,
+                    togglePassWordVisibility = { userInfoViewModel.togglePasswordVisibility() })
 
 
 
@@ -366,7 +375,7 @@ fun ChangeEmailComponent(
                 InputButtonComponent(
                     value = "변경하기",
                     onClick = {
-
+                        userInfoViewModel.getChangeEmailVerifyCode()
                     },
                     modifier = Modifier.padding(start=15.dp,end=15.dp))
 

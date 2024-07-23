@@ -1,6 +1,7 @@
 package com.example.nextclass.repository
 
 import android.util.Log
+import com.example.nextclass.Data.ChangeEmail
 import com.example.nextclass.Data.ChangePassword
 import com.example.nextclass.Data.ChangeUserData
 import com.example.nextclass.Data.DuplicateCheckRequest
@@ -10,6 +11,7 @@ import com.example.nextclass.Data.PostUserData
 import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.Data.TokenData
 import com.example.nextclass.Data.UserData
+import com.example.nextclass.Data.VerifyCodeData
 import com.example.oneplusone.serverConnection.API
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -155,6 +157,20 @@ class TestRepository : UserInfoRepository {
         }
     }
 
+    override fun postChangeEmailData(
+        changeEmail: ChangeEmail,
+        callback: (ServerResponse<Any>?) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override fun postChangeEmailRequest(
+        changeEmail: ChangeEmail,
+        callback: (ServerResponse<Any>?) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
     override fun postChangeUserInfoData(changeUserData: PostUserData, callback: (ServerResponse<Any>?) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
@@ -168,6 +184,50 @@ class TestRepository : UserInfoRepository {
                 }
             } catch (e: Exception) {
                 Log.d("사용자 정보 변경 성공",e.toString())
+                null
+            }
+            withContext(Dispatchers.Main) {
+
+                callback(result)
+            }
+        }
+    }
+
+    override fun getVerifyCode(email: VerifyCodeData, callback: (ServerResponse<Any>?) -> Unit){
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = try {
+                val response = api.getVerifyCode(email)
+                if (response.isSuccessful){
+                    Log.d("코드 발급 성공", response.body().toString())
+                    response.body()
+                } else{
+                    Log.d("코드 발급 실패","코드 발급 실패")
+                    null
+                }
+            } catch (e: Exception) {
+                Log.d("코드 발급 실패",e.toString())
+                null
+            }
+            withContext(Dispatchers.Main) {
+
+                callback(result)
+            }
+        }
+    }
+
+    override fun verifyCodeCheck(mailCheckBody: VerifyCodeData, callback: (ServerResponse<Any>?) -> Unit){
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = try {
+                val response = api.verifyCodeCheck(mailCheckBody)
+                if (response.isSuccessful){
+                    Log.d("코드 발급 성공", response.body().toString())
+                    response.body()
+                } else{
+                    Log.d("코드 발급 실패","코드 발급 실패")
+                    null
+                }
+            } catch (e: Exception) {
+                Log.d("코드 발급 실패",e.toString())
                 null
             }
             withContext(Dispatchers.Main) {

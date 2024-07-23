@@ -1,6 +1,7 @@
 package com.example.oneplusone.serverConnection
 
 
+import com.example.nextclass.Data.ChangeEmail
 import com.example.nextclass.Data.ChangePassword
 import com.example.nextclass.Data.ChangeUserData
 import com.example.nextclass.Data.ClassData
@@ -14,6 +15,7 @@ import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.Data.TokenData
 import com.example.nextclass.Data.UserData
 import com.example.nextclass.Data.VerifyCodeData
+import com.example.nextclass.utils.CHANGE_EMAIL
 import com.example.nextclass.utils.CHANGE_INFO
 import com.example.nextclass.utils.CHANGE_PASSWORD
 import com.example.nextclass.utils.DUPLICATED_CHECK_ADDRESS
@@ -26,6 +28,7 @@ import com.example.nextclass.utils.POST_DELETE_TIMETABLE_DATA
 import com.example.nextclass.utils.POST_MODIFY_TIMETABLE_DATA
 import com.example.nextclass.utils.POST_TIMETABLE_DATA
 import com.example.nextclass.utils.REGISTER_ADDRESS
+import com.example.nextclass.utils.SEND_CHANGE_MAIL
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -71,6 +74,12 @@ interface API {
 
     @POST(CHANGE_INFO)
     suspend fun postChangeUserInfoData(@Body userData: PostUserData):Response<ServerResponse<Any>>
+
+    @POST(SEND_CHANGE_MAIL)
+    suspend fun postChangeEmailData(@Body changeEmailData: ChangeEmail):Response<ServerResponse<Any>>
+
+    @POST(CHANGE_EMAIL)
+    suspend fun postChangeEmailRequest(@Body changeEmailData: ChangeEmail):Response<ServerResponse<Any>>
 
     @POST(GET_TIME_TABLE)
     suspend fun getCurrentTimeTable(@Body semester: PostSemester):Response<ServerResponse<List<ClassData>>>

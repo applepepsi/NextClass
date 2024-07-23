@@ -1,19 +1,30 @@
 package com.example.nextclass.viewmodel
 
 import android.util.Log
+import android.util.Patterns
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.State
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.nextclass.Data.ChangeEmail
 import com.example.nextclass.Data.ChangePassword
 import com.example.nextclass.Data.ChangeUserData
 import com.example.nextclass.Data.PostUserData
 import com.example.nextclass.Data.UserData
+import com.example.nextclass.Data.VerifyCodeData
 import com.example.nextclass.R
 import com.example.nextclass.repository.UserInfoRepository
 import com.example.nextclass.utils.CutEntranceYear
+import com.example.nextclass.utils.DUPLICATE_PARAMETER
+import com.example.nextclass.utils.INVALID_VERIFICATION_CODE
+import com.example.nextclass.utils.NO_EMAIL_FOR_VERIFICATION
 import com.example.nextclass.utils.SUCCESS_CODE
 import com.example.nextclass.utils.StringValue
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
+import java.util.regex.Pattern
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,6 +36,8 @@ class UserInfoViewModel @Inject constructor(
     private val _userProfile= mutableStateOf(UserData())
     val userProfile: State<UserData> = _userProfile
 
+    private val _changeEmail= mutableStateOf(ChangeEmail())
+    val changeEmail: State<ChangeEmail> = _changeEmail
 
     private val _emailChangeState= mutableStateOf(false)
     val emailChangeState: State<Boolean> = _emailChangeState
@@ -44,11 +57,7 @@ class UserInfoViewModel @Inject constructor(
     private val _userInfoChangeState= mutableStateOf(false)
     val userInfoChangeState: State<Boolean> = _userInfoChangeState
 
-    private val _verifyCodeInputError=mutableStateOf(false)
-    val verifyCodeInputError: State<Boolean> = _verifyCodeInputError
 
-    private val _verifyCodeInputErrorMessage=mutableStateOf<StringValue>(StringValue.Empty)
-    val verifyCodeInputErrorMessage: State<StringValue> = _verifyCodeInputErrorMessage
 
     private val _changePasswordData=mutableStateOf(ChangePassword())
     val changePasswordData: State<ChangePassword> = _changePasswordData
@@ -74,8 +83,124 @@ class UserInfoViewModel @Inject constructor(
     private val _passwordChangeResult=mutableStateOf(false)
     val passwordChangeResult: State<Boolean> = _passwordChangeResult
 
-    fun updateVerifyCode(code: String) {
+    private val _emailInputError= mutableStateOf(false)
+    val emailInputError: State<Boolean> = _emailInputError
 
+    private val _emailInputErrorMessage = mutableStateOf<StringValue>(StringValue.Empty)
+    val emailInputErrorMessage: State<StringValue> = _emailInputErrorMessage
+
+    private val _emailDuplicateCheck= mutableStateOf(false)
+    val emailDuplicateCheck: State<Boolean> = _emailDuplicateCheck
+
+    private val _emailDuplicateButtonState=mutableStateOf(false)
+    val emailDuplicateButtonState: State<Boolean> = _emailDuplicateButtonState
+
+    private val _passwordVisibility = mutableStateOf(false)
+    val passwordVisibility: State<Boolean> = _passwordVisibility
+
+    private val _verifyCodeIssueState = mutableStateOf(false)
+    val verifyCodeIssueState: State<Boolean> = _verifyCodeIssueState
+
+    private val _verifyCode = mutableStateOf("")
+    val verifyCode: State<String> = _verifyCode
+
+    private val _verifyCodeInputError=mutableStateOf(false)
+    val verifyCodeInputError: State<Boolean> = _verifyCodeInputError
+
+    private val _verifyCodeInputErrorMessage=mutableStateOf<StringValue>(StringValue.Empty)
+    val verifyCodeInputErrorMessage: State<StringValue> = _verifyCodeInputErrorMessage
+
+    private val _countDown=mutableStateOf(TimeUnit.MINUTES.toSeconds(1))
+    val countDown: State<Long> = _countDown
+
+    private val _countDownState=mutableStateOf(false)
+    val countDownState: State<Boolean> = _countDownState
+
+    private val _remainingChance=mutableStateOf(5)
+    val remainingChance: State<Int> = _remainingChance
+
+    private val _verifyCodeCheckResult=mutableStateOf(false)
+    val verifyCodeCheckResult: State<Boolean> = _verifyCodeCheckResult
+
+    private val _changeEmailState=mutableStateOf(false)
+    val changeEmailState: State<Boolean> = _changeEmailState
+
+    fun updateVerifyCode(code: String) {
+        _verifyCode.value = code
+    }
+
+
+
+    fun submitVerifyCode(){
+
+        val verifyCodeCheckBody= VerifyCodeData(
+            email=changeEmail.value.email,
+            code=verifyCode.value
+        )
+
+        if(countDown.value>0){
+            _loading.value=true
+            userInfoRepository.verifyCodeCheck(verifyCodeCheckBody){ verifyCodeCheckResult->
+                if(verifyCodeCheckResult !=null) {
+                    if (verifyCodeCheckResult.code == SUCCESS_CODE) {
+                        Log.d("인증 코드 체크 완료", verifyCodeCheckResult.code.toString())
+
+                        _verifyCodeCheckResult.value=true
+                        _verifyCodeInputError.value=true
+                        _verifyCodeInputErrorMessage.value=StringValue.Empty
+
+                    }else if(verifyCodeCheckResult.errorCode== INVALID_VERIFICATION_CODE){
+                        //인증 코드가 올바르지 않을때
+                        _verifyCodeInputError.value=false
+                        _verifyCodeInputErrorMessage.value=StringValue.StringResource(R.string.WrongVerityCodeMessage)
+                        reductionChance()
+                    }else if(verifyCodeCheckResult.errorCode== NO_EMAIL_FOR_VERIFICATION){
+                        _verifyCodeInputError.value=false
+                        _verifyCodeInputErrorMessage.value=StringValue.StringResource(R.string.ExpirationCodeMessage)
+                        reductionChance()
+                    }
+                    _loading.value=false
+                }
+            }
+        }else{
+            _verifyCodeInputError.value=false
+            _verifyCodeInputErrorMessage.value=StringValue.StringResource(R.string.ExpirationCodeMessage)
+        }
+
+        _loading.value=false
+    }
+
+
+    fun startCountDown(){
+
+        if(_countDownState.value){
+            viewModelScope.launch {
+                while (_countDownState.value && _countDown.value>0){
+                    delay(1000L)
+                    _countDown.value-=1
+                }
+                _countDownState.value=false
+            }
+        }
+    }
+
+    fun stopCountDown(){
+        _countDownState.value=false
+    }
+
+    fun resetCountDown(){
+        _countDownState.value=true
+        _countDown.value=TimeUnit.MINUTES.toSeconds(5)
+    }
+
+    fun resetChance(){
+        _remainingChance.value=5
+    }
+
+
+
+    private fun reductionChance(){
+        _remainingChance.value -= 1
     }
 
     fun updateOldPassword(password:String){
@@ -102,6 +227,110 @@ class UserInfoViewModel @Inject constructor(
 
     fun updateNewSchool(memberSchool:String){
         _changeUserData.value=_changeUserData.value.copy(member_school = memberSchool)
+    }
+
+    fun updateNewEmail(newEmail:String){
+        _changeEmail.value=_changeEmail.value.copy(email = newEmail)
+        _emailDuplicateCheck.value=false
+        emailCheck(newEmail)
+    }
+
+    fun updateOldPasswordOfChangeEmail(oldPassword:String){
+        _changeEmail.value=_changeEmail.value.copy(password = oldPassword)
+    }
+
+    fun resetChangeEmailData(){
+        _changeEmail.value= ChangeEmail()
+    }
+
+    private fun emailCheck(newEmail: String){
+
+        val pattern: Pattern = Patterns.EMAIL_ADDRESS
+
+        val errorMessage: StringValue = when {
+            !pattern.matcher(newEmail).matches() -> {
+                _emailDuplicateButtonState.value = false
+                StringValue.StringResource(R.string.wrongEmailType)
+            }
+            !_emailDuplicateCheck.value -> {
+                _emailDuplicateButtonState.value = true
+                StringValue.StringResource(R.string.needEmailDuplicateCheck)
+            }
+            else -> {
+                _emailDuplicateButtonState.value = true
+                StringValue.Empty
+            }
+        }
+        _emailInputErrorMessage.value = errorMessage
+        _emailInputError.value = errorMessage != StringValue.Empty
+    }
+
+    fun emailDuplicateCheck(){
+
+        userInfoRepository.emailDuplicateCheck(changeEmail.value.email){serverResponse ->
+            if(serverResponse!=null){
+                if(serverResponse.code ==SUCCESS_CODE){
+                    _emailDuplicateCheck.value=true
+                    _emailInputErrorMessage.value = StringValue.Empty
+                    _emailInputError.value = false
+                }else if(serverResponse.errorCode== DUPLICATE_PARAMETER){
+                    _emailInputErrorMessage.value = StringValue.StringResource(R.string.emailDuplicate)
+                    _emailInputError.value = true
+                }
+                else{
+                    _emailInputErrorMessage.value = StringValue.StringResource(R.string.emailDuplicate)
+                    _emailInputError.value = true
+                }
+            }else{
+                _emailInputErrorMessage.value = StringValue.StringResource(R.string.duplicateFail)
+                _emailInputError.value = true
+            }
+        }
+    }
+
+    fun getChangeEmailVerifyCode(){
+
+        if(!emailChangeState.value && emailDuplicateCheck.value){
+            _loading.value=true
+            userInfoRepository.postChangeEmailData(changeEmail.value){ServerResponse->
+
+                if (ServerResponse?.code==200) {
+                    Log.d("이메일 변경 코드 발급 성공", ServerResponse.toString())
+                    resetChance()
+                    resetCountDown()
+                    _verifyCodeIssueState.value=true
+                }
+            }
+            _loading.value=false
+            //서버로 전송
+        }
+    }
+
+    fun changeEmailComplete(){
+        _loading.value=true
+        userInfoRepository.postChangeEmailRequest(changeEmail.value){ServerResponse->
+            if (ServerResponse?.code==200) {
+                Log.d("이메일 변경 성공", ServerResponse.toString())
+                _changeEmailState.value=true
+            }
+            _loading.value=false
+        }
+        _loading.value=false
+    }
+
+    fun toggleVerifyCodeIssueState(){
+        _verifyCodeIssueState.value=false
+    }
+
+    fun toggleVerifyCodeCheckResult(){
+        _verifyCodeCheckResult.value=false
+    }
+
+    fun toggleChangeEmailState(){
+        _changeEmailState.value=false
+    }
+    fun togglePasswordVisibility() {
+        _passwordVisibility.value = !_passwordVisibility.value
     }
 
     fun toggleGradeDropBox(){
@@ -231,9 +460,5 @@ class UserInfoViewModel @Inject constructor(
         )
     }
 
-
-    fun submitVerifyCode() {
-        TODO("Not yet implemented")
-    }
 
 }

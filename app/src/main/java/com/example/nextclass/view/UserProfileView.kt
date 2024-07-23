@@ -151,7 +151,7 @@ fun UserProfileView(
                         UserProfileItemComponent(
                             image = ImageVector.vectorResource(R.drawable.email_icon),
                             text = "이메일 변경",
-                            address = "passwordConfirmView",
+                            address = "changeEmailView",
                             navController = navController
                         )
                         Spacer(modifier = Modifier.height(40.dp))
@@ -385,6 +385,13 @@ fun ChangeEmailView(
 ){
     val scrollState = rememberScrollState()
 
+
+    if(userInfoViewModel.verifyCodeIssueState.value){
+        navController.navigate("changeEmailInsertCodeView")
+        userInfoViewModel.toggleVerifyCodeIssueState()
+    }
+
+
     Column() {
 
         Column(
@@ -413,6 +420,26 @@ fun ChangeEmailView(
 fun ChangeEmailInsertCodeView(
     userInfoViewModel: UserInfoViewModel,
     navController: NavController)  {
+
+    LaunchedEffect(Unit) {
+        userInfoViewModel.startCountDown()
+    }
+
+    //테스트 해야함
+    if(userInfoViewModel.verifyCodeCheckResult.value){
+        userInfoViewModel.changeEmailComplete()
+        userInfoViewModel.toggleVerifyCodeCheckResult()
+    }
+
+    if(userInfoViewModel.changeEmailState.value){
+
+        navController.navigate("userProfileRoute"){
+            popUpTo("changeEmailInsertCodeView") { inclusive = true }
+        }
+        userInfoViewModel.toggleChangeEmailState()
+    }
+
+
 
     Column(
         modifier = Modifier
@@ -459,7 +486,7 @@ fun ChangeEmailInsertCodeView(
                     )
 
                     DescriptionTextComponent(
-                        value= stringResource(id = R.string.InputVerityCodeDetailMassage),
+                        value= stringResource(id = R.string.InputVerityCodeDetailMessage),
                         modifier=Modifier.padding(start = 5.dp)
                     )
                     Spacer(modifier = Modifier.height(15.dp))
@@ -472,7 +499,9 @@ fun ChangeEmailInsertCodeView(
 
 
                     RePostPasswordCodeComponent(
-                        onClick = {}
+                        onClick = {
+                            userInfoViewModel.getChangeEmailVerifyCode()
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(15.dp))

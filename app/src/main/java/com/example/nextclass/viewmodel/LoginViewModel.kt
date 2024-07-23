@@ -20,6 +20,8 @@ import com.example.nextclass.R
 import com.example.nextclass.repository.UserInfoRepository
 import com.example.nextclass.utils.CutEntranceYear
 import com.example.nextclass.utils.DUPLICATE_PARAMETER
+import com.example.nextclass.utils.INVALID_VERIFICATION_CODE
+import com.example.nextclass.utils.NO_EMAIL_FOR_VERIFICATION
 import com.example.nextclass.utils.SUCCESS_CODE
 import com.example.nextclass.utils.StringValue
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -161,6 +163,8 @@ class LoginViewModel @Inject constructor(
     private val _verifyCode = mutableStateOf("")
     val verifyCode: State<String> = _verifyCode
 
+
+
     private val _verifyCodeInputError=mutableStateOf(false)
     val verifyCodeInputError: State<Boolean> = _verifyCodeInputError
 
@@ -203,7 +207,7 @@ class LoginViewModel @Inject constructor(
     private val _modifyUserInfo= mutableStateOf(ModifyUserData())
     val modifyUserInfo: State<ModifyUserData> = _modifyUserInfo
 
-    private val _countDown=mutableStateOf(TimeUnit.MINUTES.toSeconds(5))
+    private val _countDown=mutableStateOf(TimeUnit.MINUTES.toSeconds(1))
     val countDown: State<Long> = _countDown
 
     private val _countDownState=mutableStateOf(false)
@@ -212,34 +216,8 @@ class LoginViewModel @Inject constructor(
     private val _remainingChance=mutableStateOf(5)
     val remainingChance: State<Int> = _remainingChance
 
-    fun startCountDown(){
-        if(_countDownState.value) {
-            return
-        }
-        _countDownState.value=true
-            viewModelScope.launch {
-                while (_countDownState.value && _countDown.value>0){
-                    delay(1000L)
-                    _countDown.value-=1
-                }
-                _countDownState.value=false
-            }
-
-    }
-
-    fun stopCountDown(){
-        _countDownState.value=false
-    }
-
-    fun resetCountDown(){
-        _countDown.value=TimeUnit.MINUTES.toSeconds(5)
-        _countDownState.value=false
-    }
-
-    fun resetChance(){
-        _remainingChance.value=5
-    }
-
+    private val _verifyCodeCheckResult=mutableStateOf(false)
+    val verifyCodeCheckResult: State<Boolean> = _verifyCodeCheckResult
 
 
     fun updateEmail(newEmail: String) {
@@ -650,7 +628,7 @@ class LoginViewModel @Inject constructor(
 
     fun submitUserInfoModifyPasswordConfirm(){
         _userInfoModifyPasswordConfirmError.value=false
-        _userInfoModifyPasswordConfirmErrorMessage.value=StringValue.StringResource(R.string.WrongVerityCodeMassage)
+        _userInfoModifyPasswordConfirmErrorMessage.value=StringValue.StringResource(R.string.WrongVerityCodeMessage)
 
         //여기서 비밀번호가 맞다면 회원정보 변경창으로
     }
@@ -673,7 +651,8 @@ class LoginViewModel @Inject constructor(
             if(verifyCodeRequestResult !=null) {
                 if (verifyCodeRequestResult.code == SUCCESS_CODE) {
                     Log.d("인증 코드 발급 성공", verifyCodeRequestResult.code.toString())
-
+                    resetChance()
+                    resetCountDown()
                 }else{
                     _loading.value=false
                 }
@@ -689,22 +668,73 @@ class LoginViewModel @Inject constructor(
             code=verifyCode.value
         )
 
-        _verifyCodeInputError.value=false
-        _verifyCodeInputErrorMessage.value=StringValue.StringResource(R.string.WrongVerityCodeMassage)
+        if(countDown.value>0){
+            _loading.value=true
+            userInfoRepository.verifyCodeCheck(verifyCodeCheckBody){ verifyCodeCheckResult->
+                if(verifyCodeCheckResult !=null) {
+                    if (verifyCodeCheckResult.code == SUCCESS_CODE) {
+                        Log.d("인증 코드 체크 완료", verifyCodeCheckResult.code.toString())
 
-        _loading.value=true
-        //결과값 처리는 아직
-        userInfoRepository.getVerifyCode(verifyCodeCheckBody){ verifyCodeCheckResult->
-            if(verifyCodeCheckResult !=null) {
-                if (verifyCodeCheckResult.code == SUCCESS_CODE) {
-                    Log.d("인증 코드 체크 완료", verifyCodeCheckResult.code.toString())
+                        _verifyCodeCheckResult.value=true
+                        _verifyCodeInputError.value=true
+                        _verifyCodeInputErrorMessage.value=StringValue.Empty
 
-                }else{
+                    }else if(verifyCodeCheckResult.errorCode==INVALID_VERIFICATION_CODE){
+                        //인증 코드가 올바르지 않을때
+                        _verifyCodeInputError.value=false
+                        _verifyCodeInputErrorMessage.value=StringValue.StringResource(R.string.WrongVerityCodeMessage)
+                        reductionChance()
+                    }else if(verifyCodeCheckResult.errorCode==NO_EMAIL_FOR_VERIFICATION){
+                        _verifyCodeInputError.value=false
+                        _verifyCodeInputErrorMessage.value=StringValue.StringResource(R.string.ExpirationCodeMessage)
+                        reductionChance()
+                    }
                     _loading.value=false
                 }
             }
+        }else{
+            _verifyCodeInputError.value=false
+            _verifyCodeInputErrorMessage.value=StringValue.StringResource(R.string.ExpirationCodeMessage)
         }
+
         _loading.value=false
+    }
+
+    fun startCountDown(){
+
+        if(_countDownState.value){
+            viewModelScope.launch {
+                while (_countDownState.value && _countDown.value>0){
+                    delay(1000L)
+                    _countDown.value-=1
+                }
+                _countDownState.value=false
+            }
+        }
+    }
+
+    fun stopCountDown(){
+        _countDownState.value=false
+    }
+
+    fun resetCountDown(){
+        _countDownState.value=true
+        _countDown.value=TimeUnit.MINUTES.toSeconds(5)
+    }
+
+    fun resetChance(){
+        _remainingChance.value=5
+    }
+
+    private fun reductionChance(){
+        _remainingChance.value -= 1
+    }
+
+    fun toggleVerifyCodeCheckResult(){
+        _verifyCodeCheckResult.value=false
+    }
+    fun toggleJoinResult(){
+        _joinResult.value=false
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.nextclass.repository
 
+import com.example.nextclass.Data.ChangeEmail
 import com.example.nextclass.Data.ChangePassword
 import com.example.nextclass.Data.ChangeUserData
 import com.example.nextclass.Data.JoinRequest
@@ -29,6 +30,9 @@ interface UserInfoRepository {
 
     fun postChangePasswordData(changePassword: ChangePassword,callback: (ServerResponse<Any>?) -> Unit)
 
+    fun postChangeEmailData(changeEmail: ChangeEmail,callback: (ServerResponse<Any>?) -> Unit)
+
+    fun postChangeEmailRequest(changeEmail: ChangeEmail,callback: (ServerResponse<Any>?) -> Unit)
 
     fun postChangeUserInfoData(changeUserData: PostUserData,callback: (ServerResponse<Any>?) -> Unit)
 

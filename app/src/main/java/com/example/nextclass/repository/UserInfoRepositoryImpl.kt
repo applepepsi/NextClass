@@ -1,6 +1,7 @@
 package com.example.nextclass.repository
 
 import android.util.Log
+import com.example.nextclass.Data.ChangeEmail
 import com.example.nextclass.Data.ChangePassword
 import com.example.nextclass.Data.ChangeUserData
 import com.example.nextclass.Data.DuplicateCheckRequest
@@ -163,6 +164,57 @@ class UserInfoRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    override fun postChangeEmailData(
+        changeEmail: ChangeEmail,
+        callback: (ServerResponse<Any>?) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = try {
+                val response = api.postChangeEmailData(changeEmail)
+                if (response.isSuccessful){
+                    Log.d("이메일 변경 인증코드 발급 성공", response.body().toString())
+                    response.body()
+                } else{
+                    Log.d("이메일 변경 인증코드 발급 실패","이메일 변경 인증코드 발급 실패")
+                    null
+                }
+            } catch (e: Exception) {
+                Log.d("이메일 변경 인증코드 발급 실패",e.toString())
+                null
+            }
+            withContext(Dispatchers.Main) {
+
+                callback(result)
+            }
+        }
+    }
+
+    override fun postChangeEmailRequest(
+        changeEmail: ChangeEmail,
+        callback: (ServerResponse<Any>?) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = try {
+                val response = api.postChangeEmailRequest(changeEmail)
+                if (response.isSuccessful){
+                    Log.d("이메일 변경 성공", response.body().toString())
+                    response.body()
+                } else{
+                    Log.d("이메일 변경 실패","이메일 변경 실패")
+                    null
+                }
+            } catch (e: Exception) {
+                Log.d("이메일 변경 실패",e.toString())
+                null
+            }
+            withContext(Dispatchers.Main) {
+
+                callback(result)
+            }
+        }
+    }
+
 
     override fun postChangeUserInfoData(changeUserData: PostUserData,callback: (ServerResponse<Any>?) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {

@@ -70,8 +70,9 @@
     <string name="FindIdComplete">아이디 찾기 완료</string>
     <string name="FindPassword">비밀번호 찾기</string>
     <string name="InputVerityCode">인증 코드 확인</string>
-    <string name="InputVerityCodeDetailMassage">입력하신 메일로 인증 코드를 전송 했습니다.</string>
-    <string name="WrongVerityCodeMassage">인증 코드가 올바르지 않습니다.</string>
+    <string name="InputVerityCodeDetailMessage">입력하신 메일로 인증 코드를 전송 했습니다.</string>
+    <string name="WrongVerityCodeMessage">인증 코드가 올바르지 않습니다.</string>
+    <string name="ExpirationCodeMessage">만료된 인증 코드 입니다.</string>
 
     //이용 약관
     <string name="TermsAndConditions">이용 약관</string>

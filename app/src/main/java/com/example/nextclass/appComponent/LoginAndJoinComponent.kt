@@ -134,7 +134,7 @@ fun TextInputFieldComponent(
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Normal,
             ),
-            modifier = Modifier.padding(start = 16.dp, top = 5.dp)
+            modifier = Modifier.padding(start = 22.dp, top = 5.dp)
         )
     }
 
@@ -260,7 +260,7 @@ fun EmailInputFieldComponent(
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Normal,
             ),
-            modifier = Modifier.padding(start = 16.dp, top = 5.dp)
+            modifier = Modifier.padding(start = 22.dp, top = 5.dp)
         )
     }
 }
@@ -350,7 +350,7 @@ fun IdInputFieldComponent(
                     fontWeight = FontWeight.Bold,
                     fontStyle = FontStyle.Normal,
                 ),
-                modifier = Modifier.padding(start = 16.dp, top = 5.dp)
+                modifier = Modifier.padding(start = 22.dp, top = 5.dp)
             )
         }
 
@@ -436,7 +436,7 @@ fun PasswordInputFieldComponent(
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Normal,
             ),
-            modifier = Modifier.padding(start = 16.dp, top = 5.dp)
+            modifier = Modifier.padding(start = 22.dp, top = 5.dp)
         )
     }
 

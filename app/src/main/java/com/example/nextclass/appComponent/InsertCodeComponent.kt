@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.R
+import com.example.nextclass.items.TopNavItem
 import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.viewmodel.LoginViewModel
@@ -55,11 +56,22 @@ fun InsertCodeView(
 
 )  {
 
-    loginViewModel.startCountDown()
-//    LaunchedEffect(Unit) {
-//        loginViewModel.toggleJoinDataCheckResult()
-//    }
 
+    LaunchedEffect(Unit) {
+        loginViewModel.startCountDown()
+    }
+
+    if(loginViewModel.verifyCodeCheckResult.value){
+        loginViewModel.joinComplete()
+        loginViewModel.toggleVerifyCodeCheckResult()
+    }
+
+    if(loginViewModel.joinResult.value){
+        navController.navigate(TopNavItem.Login.screenRoute) {
+//            popUpTo(TopNavItem.Join.screenRoute) { inclusive = true }
+        }
+        loginViewModel.toggleJoinResult()
+    }
 
     Column(
         modifier = Modifier
@@ -108,7 +120,7 @@ fun InsertCodeView(
                     )
 
                     DescriptionTextComponent(
-                        value= stringResource(id = R.string.InputVerityCodeDetailMassage),
+                        value= stringResource(id = R.string.InputVerityCodeDetailMessage),
                         modifier= Modifier.padding(start = 5.dp)
                     )
                     Spacer(modifier = Modifier.height(15.dp))
@@ -117,27 +129,47 @@ fun InsertCodeView(
                             loginViewModel.updateVerifyCode(it)
                         }
                     )
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(2.dp))
 
 
-                    RePostPasswordCodeComponent { loginViewModel.getVerifyCode() }
+                    RePostPasswordCodeComponent {
+                        loginViewModel.getVerifyCode()
+                    }
+
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+
+                    ){
+                        CountDownComponent(
+                            countDown = loginViewModel.countDown.value,
+                            countDownState = loginViewModel.countDownState.value
+                        )
+
+                        Spacer(modifier = Modifier.width(10.dp))
+
+                        ChanceCountComponent(
+                            remainingChance = loginViewModel.remainingChance.value
+                        )
+                    }
 
 
 
 
-                    CountDownComponent(
-                        countDown = loginViewModel.countDown.value,
-                        countDownState = loginViewModel.countDownState.value
-                    )
-                    ChanceCountComponent(
-                        remainingChance = loginViewModel.remainingChance.value
-                    )
+
                     TextInputHelpFieldComponent(
                         errorMessage = loginViewModel.verifyCodeInputErrorMessage.value.asString(
                             LocalContext.current),
                         isError = loginViewModel.verifyCodeInputError.value,
                     )
 
+                    TextInputHelpFieldComponent(
+                        errorMessage = loginViewModel.joinFailMessage.value.asString(LocalContext.current),
+                        isError = loginViewModel.joinFail.value,
+                    )
 
                     InputButtonComponent(
                         value = "확인",
