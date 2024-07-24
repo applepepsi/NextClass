@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -42,6 +43,7 @@ import com.example.nextclass.appComponent.IdInputFieldComponent
 import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.MainTextComponent
 import com.example.nextclass.appComponent.PasswordInputFieldComponent
+import com.example.nextclass.appComponent.ProgressBarComponent
 import com.example.nextclass.appComponent.RePostPasswordCodeComponent
 import com.example.nextclass.appComponent.RememberUserComponent
 import com.example.nextclass.appComponent.TermsAndConditionsTextComponent
@@ -173,12 +175,17 @@ fun JoinView(
     loginViewModel: LoginViewModel,
     navController: NavController) {
 
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState()) ,
 
         ) {
+
+        if(loginViewModel.loading.value){
+            ProgressBarComponent(state = loginViewModel.loading.value)
+        }
 
         Spacer(modifier = Modifier.height(15.dp))
 
@@ -326,83 +333,108 @@ fun ForGotPassword(
     loginViewModel: LoginViewModel,
     navController: NavController) {
 
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 20.dp),
-
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-
+            .background(Color.White)
     ) {
-        AppBarTextAndButtonComponent(
-            value = stringResource(id = R.string.FindPassword),
-            navController = navController)
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 100.dp),
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Surface(
-            shape = RoundedCornerShape(30.dp),
+        ProgressBarComponent(state = loginViewModel.loading.value)
+
+
+        Column(
             modifier = Modifier
-                .height(350.dp)
-                .padding(start = 20.dp, end = 20.dp)
+                .fillMaxWidth()
+                .padding(top = 20.dp),
+
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+
         ) {
-            Box(
+            AppBarTextAndButtonComponent(
+                value = stringResource(id = R.string.FindPassword),
+                navController = navController
+            )
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 100.dp),
+            verticalArrangement = Arrangement.Center,
+        ) {
+            Surface(
+                shape = RoundedCornerShape(30.dp),
                 modifier = Modifier
-                    .background(Background_Color2)
+                    .height(380.dp)
+                    .padding(start = 20.dp, end = 20.dp)
             ) {
-                Column(
+                Box(
                     modifier = Modifier
-                        .fillMaxSize(),
-
-                    verticalArrangement = Arrangement.SpaceBetween,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .background(Background_Color2)
                 ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize(),
 
-                    MainTextComponent(
-                        value = stringResource(id = R.string.FindPassword),
-                        modifier=Modifier
-                            .padding(top=20.dp)
-                    )
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
 
-                    DescriptionTextComponent(
-                        value= stringResource(id = R.string.inputJoinId),
-                        modifier=Modifier.padding(start = 5.dp,top=5.dp)
-                    )
+                        MainTextComponent(
+                            value = stringResource(id = R.string.FindPassword),
+                            modifier = Modifier
+                                .padding(top = 20.dp)
+                        )
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                        DescriptionTextComponent(
+                            value = stringResource(id = R.string.inputJoinId),
+                            modifier = Modifier
+                                .padding(start = 20.dp, top = 5.dp)
+                                .align(Alignment.Start)
+                        )
 
-                    FindFieldComponent(
-                        value = loginViewModel.findPasswordId.value,
-                        onValueChange = { loginViewModel.updateForGotPasswordInput(it) },
-                        labelValue = stringResource(id = R.string.input_Id),
-                        isError = loginViewModel.findFailPassword.value,
-                        errorMessage=loginViewModel.findFailPasswordMessage.value.asString(LocalContext.current),
-                        placeholderValue = stringResource(id = R.string.id),
-                    )
+                        Spacer(modifier = Modifier.height(20.dp))
 
-                    Spacer(modifier = Modifier.height(30.dp))
+                        FindFieldComponent(
+                            value = loginViewModel.findIDOrPassword.value.id!!,
+                            onValueChange = { loginViewModel.updateFindPassword(it) },
+                            labelValue = stringResource(id = R.string.input_Id),
+                            isError = loginViewModel.findFailPassword.value,
+                            errorMessage = loginViewModel.findFailPasswordMessage.value.asString(
+                                LocalContext.current
+                            ),
+                            placeholderValue = stringResource(id = R.string.id),
+                        )
 
-                    TextInputHelpFieldComponent(
-                        errorMessage = loginViewModel.findFailIdMessage.value.asString(LocalContext.current),
-                        isError = loginViewModel.findFailId.value,
-                    )
+                        Spacer(modifier = Modifier.height(30.dp))
 
-                    InputButtonComponent(
-                        value = stringResource(id = R.string.FindPassword),
-                        onClick = { loginViewModel.findPassword() },
-                        modifier = Modifier.padding(start=15.dp,end=15.dp))
+                        TextInputHelpFieldComponent(
+                            errorMessage = loginViewModel.findFailIdMessage.value.asString(
+                                LocalContext.current
+                            ),
+                            isError = loginViewModel.findFailId.value,
+                        )
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                        TextInputHelpFieldComponent(
+                            errorMessage = loginViewModel.findPasswordSuccessMessage.value.asString(
+                                LocalContext.current
+                            ),
+                            isError = loginViewModel.findPasswordSuccessState.value,
+                        )
+
+                        InputButtonComponent(
+                            value = stringResource(id = R.string.FindPassword),
+                            onClick = { loginViewModel.findPassword() },
+                            modifier = Modifier.padding(start = 15.dp, end = 15.dp)
+                        )
+
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
                 }
             }
         }
     }
-
 
 }
 //아이디 찾기 뷰
@@ -415,75 +447,92 @@ fun ForGotId(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 20.dp),
+            .background(Color.White)
 
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-
-    ){
-        AppBarTextAndButtonComponent(value = stringResource(id = R.string.FindId),
-            navController=navController)
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 100.dp),
-        verticalArrangement = Arrangement.Center,
     ) {
-        Surface(
-            shape = RoundedCornerShape(30.dp),
+        ProgressBarComponent(state = loginViewModel.loading.value)
+
+        Column(
             modifier = Modifier
-                .height(350.dp)
-                .padding(start = 20.dp, end = 20.dp)
+                .fillMaxWidth()
+                .padding(top = 20.dp),
+
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+
+        ){
+            AppBarTextAndButtonComponent(value = stringResource(id = R.string.FindId),
+                navController=navController)
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 100.dp),
+            verticalArrangement = Arrangement.Center,
         ) {
-            Box(
+            Surface(
+                shape = RoundedCornerShape(30.dp),
                 modifier = Modifier
-                    .background(Background_Color2)
+                    .height(380.dp)
+                    .padding(start = 20.dp, end = 20.dp)
             ) {
-                Column(
+                Box(
                     modifier = Modifier
-                        .fillMaxSize(),
-
-                    verticalArrangement = Arrangement.SpaceBetween,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .background(Background_Color2)
                 ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize(),
 
-                    MainTextComponent(
-                        value = stringResource(id = R.string.FindId),
-                        modifier=Modifier
-                            .padding(top=20.dp)
-                    )
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
 
-                    DescriptionTextComponent(
-                        value= stringResource(id = R.string.inputJoinEmail),
-                        modifier=Modifier.padding(start = 5.dp,top=5.dp)
-                    )
+                        MainTextComponent(
+                            value = stringResource(id = R.string.FindId),
+                            modifier=Modifier
+                                .padding(top=20.dp)
+                        )
 
-                    Spacer(modifier = Modifier.height(20.dp))
-                    FindFieldComponent(
-                        value = loginViewModel.findIdEmail.value,
-                        onValueChange = { loginViewModel.updateForGotIdInput(it) },
-                        labelValue = stringResource(id = R.string.input_email),
-                        placeholderValue = stringResource(id = R.string.email),
-                    )
+                        DescriptionTextComponent(
+                            value= stringResource(id = R.string.inputJoinEmail),
+                            modifier= Modifier
+                                .padding(start = 20.dp, top = 5.dp)
+                                .align(Alignment.Start)
+                        )
 
-                    Spacer(modifier = Modifier.height(30.dp))
+                        Spacer(modifier = Modifier.height(20.dp))
+                        FindFieldComponent(
+                            value = loginViewModel.findIDOrPassword.value.email!!,
+                            onValueChange = { loginViewModel.updateFindId(it) },
+                            labelValue = stringResource(id = R.string.input_email),
+                            placeholderValue = stringResource(id = R.string.email),
+                        )
 
-                    TextInputHelpFieldComponent(
-                        errorMessage = loginViewModel.findFailIdMessage.value.asString(LocalContext.current),
-                        isError = loginViewModel.findFailId.value,
-                    )
+                        Spacer(modifier = Modifier.height(30.dp))
 
-                    InputButtonComponent(
-                        value = "아이디 찾기",
-                        onClick = { loginViewModel.findId() },
-                        modifier = Modifier.padding(start=15.dp,end=15.dp))
+                        TextInputHelpFieldComponent(
+                            errorMessage = loginViewModel.findFailIdMessage.value.asString(LocalContext.current),
+                            isError = loginViewModel.findFailId.value,
+                        )
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                        TextInputHelpFieldComponent(
+                            errorMessage = loginViewModel.findIdSuccessMessage.value.asString(LocalContext.current),
+                            isError = loginViewModel.findIdSuccessState.value,
+                        )
+
+                        InputButtonComponent(
+                            value = "아이디 찾기",
+                            onClick = { loginViewModel.findId() },
+                            modifier = Modifier.padding(start=15.dp,end=15.dp))
+
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
                 }
             }
         }
     }
+
 }
 //이용약관 뷰(제작중)
 @Composable
@@ -506,72 +555,72 @@ fun TermsAndConditionsView(
     }
 }
 
-//아이디 찾기의 결과 (쓰지 않기로)
-@Composable
-fun FindIdResult(
-    loginViewModel: LoginViewModel,
-    navController: NavController)  {
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 20.dp),
-
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-
-    ){
-        AppBarTextAndButtonComponent(value = stringResource(id = R.string.FindId),
-            navController=navController)
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 100.dp),
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Surface(
-            shape = RoundedCornerShape(30.dp),
-            modifier = Modifier
-                .height(350.dp)
-                .padding(start = 20.dp, end = 20.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .background(Background_Color2)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize(),
-
-                    verticalArrangement = Arrangement.SpaceBetween,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
-                    MainTextComponent(
-                        value= stringResource(id = R.string.FindIdComplete),
-                        modifier=Modifier
-                            .padding(top=20.dp)
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
-                    TextInputFieldComponent(
-                        value = loginViewModel.findId.value,
-                        onValueChange = { loginViewModel.updateName(it) },
-                        labelValue = "아이디를 확인해 주세요",
-                        readOnly = true
-                    )
-
-                    InputButtonComponent(
-                        value = "로그인 화면으로 돌아가기",
-                        onClick = { loginViewModel.findId() },
-                        modifier = Modifier.padding(start=15.dp,end=15.dp))
-
-                    Spacer(modifier = Modifier.height(20.dp))
-                }
-            }
-        }
-    }
-}
+////아이디 찾기의 결과 (쓰지 않기로)
+//@Composable
+//fun FindIdResult(
+//    loginViewModel: LoginViewModel,
+//    navController: NavController)  {
+//
+//    Column(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .padding(top = 20.dp),
+//
+//        verticalArrangement = Arrangement.Top,
+//        horizontalAlignment = Alignment.CenterHorizontally
+//
+//    ){
+//        AppBarTextAndButtonComponent(value = stringResource(id = R.string.FindId),
+//            navController=navController)
+//    }
+//    Column(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .padding(bottom = 100.dp),
+//        verticalArrangement = Arrangement.Center,
+//    ) {
+//        Surface(
+//            shape = RoundedCornerShape(30.dp),
+//            modifier = Modifier
+//                .height(350.dp)
+//                .padding(start = 20.dp, end = 20.dp)
+//        ) {
+//            Box(
+//                modifier = Modifier
+//                    .background(Background_Color2)
+//            ) {
+//                Column(
+//                    modifier = Modifier
+//                        .fillMaxSize(),
+//
+//                    verticalArrangement = Arrangement.SpaceBetween,
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
+//
+//                    MainTextComponent(
+//                        value= stringResource(id = R.string.FindIdComplete),
+//                        modifier=Modifier
+//                            .padding(top=20.dp)
+//                    )
+//                    Spacer(modifier = Modifier.height(10.dp))
+//                    TextInputFieldComponent(
+//                        value = loginViewModel.findId.value,
+//                        onValueChange = { loginViewModel.updateName(it) },
+//                        labelValue = "아이디를 확인해 주세요",
+//                        readOnly = true
+//                    )
+//
+//                    InputButtonComponent(
+//                        value = "로그인 화면으로 돌아가기",
+//                        onClick = { loginViewModel.findId() },
+//                        modifier = Modifier.padding(start=15.dp,end=15.dp))
+//
+//                    Spacer(modifier = Modifier.height(20.dp))
+//                }
+//            }
+//        }
+//    }
+//}
 
 
 

@@ -3,6 +3,7 @@ package com.example.nextclass.repository
 import com.example.nextclass.Data.ChangeEmail
 import com.example.nextclass.Data.ChangePassword
 import com.example.nextclass.Data.ChangeUserData
+import com.example.nextclass.Data.FindIDOrPasswordData
 import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.Data.LoginRequest
 import com.example.nextclass.Data.PostUserData
@@ -36,9 +37,11 @@ interface UserInfoRepository {
 
     fun postChangeUserInfoData(changeUserData: PostUserData,callback: (ServerResponse<Any>?) -> Unit)
 
-
-    //서버 응답 아직 모름 수정해야함
     fun getVerifyCode(email: VerifyCodeData, callback: (ServerResponse<Any>?) -> Unit)
 
     fun verifyCodeCheck(mailCheckBody: VerifyCodeData, callback: (ServerResponse<Any>?) -> Unit)
+
+    fun postFindId(email: FindIDOrPasswordData, callback: (ServerResponse<Any>?) -> Unit)
+
+    fun postFindPassword(id: FindIDOrPasswordData, callback: (ServerResponse<Any>?) -> Unit)
 }

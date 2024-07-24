@@ -5,13 +5,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -37,15 +40,17 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.R
 import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
+import com.example.nextclass.appComponent.ChanceCountComponent
 import com.example.nextclass.appComponent.ChangeEmailComponent
 import com.example.nextclass.appComponent.ChangePasswordComponent
 import com.example.nextclass.appComponent.ChangeUserInfoComponent
+import com.example.nextclass.appComponent.CountDownComponent
 import com.example.nextclass.appComponent.DescriptionTextComponent
 import com.example.nextclass.appComponent.DividerComponent
 import com.example.nextclass.appComponent.FindFieldComponent
 import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.MainTextComponent
-import com.example.nextclass.appComponent.ProgressIndicator
+import com.example.nextclass.appComponent.ProgressBarComponent
 import com.example.nextclass.appComponent.RePostPasswordCodeComponent
 import com.example.nextclass.appComponent.TextInputHelpFieldComponent
 import com.example.nextclass.appComponent.UserProfileItemComponent
@@ -82,7 +87,7 @@ fun UserProfileView(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
-        ProgressIndicator(state = userInfoViewModel.loading.value)
+        ProgressBarComponent(state = userInfoViewModel.loading.value)
         LaunchedEffect(Unit) {
             userInfoViewModel.getUserInfo()
         }
@@ -119,7 +124,7 @@ fun UserProfileView(
             shape = RoundedCornerShape(35.dp),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 30.dp)
+                .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 60.dp)
 
         ) {
                     Column(
@@ -393,7 +398,9 @@ fun ChangeEmailView(
 
 
     Column() {
-
+        if(userInfoViewModel.loading.value){
+            ProgressBarComponent(state = userInfoViewModel.loading.value)
+        }
         Column(
             modifier = Modifier
                 .padding(top = 20.dp),
@@ -434,98 +441,124 @@ fun ChangeEmailInsertCodeView(
     if(userInfoViewModel.changeEmailState.value){
 
         navController.navigate("userProfileRoute"){
-            popUpTo("changeEmailInsertCodeView") { inclusive = true }
+//            popUpTo("changeEmailInsertCodeView") { inclusive = true }
         }
         userInfoViewModel.toggleChangeEmailState()
     }
 
+    Column {
 
+        if(userInfoViewModel.loading.value){
+            ProgressBarComponent(state = userInfoViewModel.loading.value)
+        }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 20.dp),
-
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-
-    ){
-        AppBarTextAndButtonComponent(value = stringResource(id = R.string.InputVerifyCode),
-            navController=navController)
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 100.dp),
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Surface(
-            shape = RoundedCornerShape(30.dp),
+        Column(
             modifier = Modifier
-                .height(350.dp)
-                .padding(start = 20.dp, end = 20.dp)
+                .fillMaxWidth()
+                .padding(top = 20.dp),
+
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+
+        ){
+            AppBarTextAndButtonComponent(value = stringResource(id = R.string.InputVerifyCode),
+                navController=navController)
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 100.dp),
+            verticalArrangement = Arrangement.Center,
         ) {
-            Box(
+            Surface(
+                shape = RoundedCornerShape(30.dp),
                 modifier = Modifier
-                    .background(Background_Color2)
+                    .height(380.dp)
+                    .padding(start = 20.dp, end = 20.dp)
             ) {
-                Column(
+                Box(
                     modifier = Modifier
-                        .fillMaxSize(),
-
-                    verticalArrangement = Arrangement.SpaceBetween,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .background(Background_Color2)
                 ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize(),
+
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
 
 
 
-                    MainTextComponent(
-                        value= stringResource(id = R.string.InputVerityCode),
-                        modifier=Modifier
-                            .padding(top=20.dp)
-                    )
+                        MainTextComponent(
+                            value= stringResource(id = R.string.InputVerityCode),
+                            modifier=Modifier
+                                .padding(top=20.dp)
+                        )
 
-                    DescriptionTextComponent(
-                        value= stringResource(id = R.string.InputVerityCodeDetailMessage),
-                        modifier=Modifier.padding(start = 5.dp)
-                    )
-                    Spacer(modifier = Modifier.height(15.dp))
-                    VerifyCodeInputComponent(
-                        onValueChange = {
-                            userInfoViewModel.updateVerifyCode(it)
+                        Spacer(modifier = Modifier.height(15.dp))
+                        DescriptionTextComponent(
+                            value= stringResource(id = R.string.InputVerityCodeDetailMessage),
+                            modifier= Modifier.padding(start = 5.dp)
+                        )
+                        Spacer(modifier = Modifier.height(5.dp))
+                        VerifyCodeInputComponent(
+                            onValueChange = {
+                                userInfoViewModel.updateVerifyCode(it)
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+
+
+                        RePostPasswordCodeComponent(
+                            onClick = {
+                                userInfoViewModel.getChangeEmailVerifyCode()
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(5.dp))
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+
+                        ){
+                            CountDownComponent(
+                                countDown = userInfoViewModel.countDown.value,
+                                countDownState = userInfoViewModel.countDownState.value
+                            )
+
+                            Spacer(modifier = Modifier.width(10.dp))
+
+                            ChanceCountComponent(
+                                remainingChance = userInfoViewModel.remainingChance.value
+                            )
                         }
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(20.dp))
+
+                        TextInputHelpFieldComponent(
+                            errorMessage = userInfoViewModel.verifyCodeInputErrorMessage.value.asString(LocalContext.current),
+                            isError = userInfoViewModel.verifyCodeInputError.value,
+                        )
 
 
-                    RePostPasswordCodeComponent(
-                        onClick = {
-                            userInfoViewModel.getChangeEmailVerifyCode()
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.height(15.dp))
-
-
-                    TextInputHelpFieldComponent(
-                        errorMessage = userInfoViewModel.verifyCodeInputErrorMessage.value.asString(LocalContext.current),
-                        isError = userInfoViewModel.verifyCodeInputError.value,
-                    )
+                        InputButtonComponent(
+                            value = "확인",
+                            onClick = { userInfoViewModel.submitVerifyCode() },
+                            modifier = Modifier.padding(start=15.dp,end=15.dp),
+                            showImage = true
+                        )
 
 
-                    InputButtonComponent(
-                        value = "확인",
-                        onClick = { userInfoViewModel.submitVerifyCode() },
-                        modifier = Modifier.padding(start=15.dp,end=15.dp),
-                        showImage = true
-                    )
-
-
-                    Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
+                    }
                 }
             }
         }
     }
+
 }
 
 fun deleteUserInfo(context: Context) {

@@ -73,117 +73,124 @@ fun InsertCodeView(
         loginViewModel.toggleJoinResult()
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 20.dp),
-
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-
-    ){
-        AppBarTextAndButtonComponent(
-            value = stringResource(id = R.string.InputVerifyCode),
-            navController=navController)
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 100.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Surface(
-            shape = RoundedCornerShape(30.dp),
+    Column {
+        if(loginViewModel.loading.value){
+            ProgressBarComponent(state = loginViewModel.loading.value)
+        }
+        Column(
             modifier = Modifier
-                .height(350.dp)
-                .padding(start = 20.dp, end = 20.dp)
+                .fillMaxWidth()
+                .padding(top = 20.dp),
+
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+
+        ){
+            AppBarTextAndButtonComponent(
+                value = stringResource(id = R.string.InputVerifyCode),
+                navController=navController)
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 100.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
+            Surface(
+                shape = RoundedCornerShape(30.dp),
                 modifier = Modifier
-                    .background(Background_Color2)
+                    .height(380.dp)
+                    .padding(start = 20.dp, end = 20.dp)
             ) {
-                Column(
+                Box(
                     modifier = Modifier
-                        .fillMaxSize(),
-
-                    verticalArrangement = Arrangement.SpaceBetween,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .background(Background_Color2)
                 ) {
-
-
-
-                    MainTextComponent(
-                        value= stringResource(id = R.string.InputVerityCode),
-                        modifier= Modifier
-                            .padding(top=20.dp)
-                    )
-
-                    DescriptionTextComponent(
-                        value= stringResource(id = R.string.InputVerityCodeDetailMessage),
-                        modifier= Modifier.padding(start = 5.dp)
-                    )
-                    Spacer(modifier = Modifier.height(15.dp))
-                    VerifyCodeInputComponent(
-                        onValueChange = {
-                            loginViewModel.updateVerifyCode(it)
-                        }
-                    )
-                    Spacer(modifier = Modifier.height(2.dp))
-
-
-                    RePostPasswordCodeComponent {
-                        loginViewModel.getVerifyCode()
-                    }
-
-
-                    Row(
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
+                            .fillMaxSize(),
 
-                    ){
-                        CountDownComponent(
-                            countDown = loginViewModel.countDown.value,
-                            countDownState = loginViewModel.countDownState.value
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+
+
+
+                        MainTextComponent(
+                            value= stringResource(id = R.string.InputVerityCode),
+                            modifier= Modifier
+                                .padding(top=20.dp)
+                        )
+                        Spacer(modifier = Modifier.height(15.dp))
+                        DescriptionTextComponent(
+                            value= stringResource(id = R.string.InputVerityCodeDetailMessage),
+                            modifier= Modifier.padding(start = 5.dp)
+                        )
+                        Spacer(modifier = Modifier.height(5.dp))
+                        VerifyCodeInputComponent(
+                            onValueChange = {
+                                loginViewModel.updateVerifyCode(it)
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+
+
+                        RePostPasswordCodeComponent {
+                            loginViewModel.getVerifyCode()
+                        }
+
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+
+                        ){
+                            CountDownComponent(
+                                countDown = loginViewModel.countDown.value,
+                                countDownState = loginViewModel.countDownState.value
+                            )
+
+                            Spacer(modifier = Modifier.width(10.dp))
+
+                            ChanceCountComponent(
+                                remainingChance = loginViewModel.remainingChance.value
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(5.dp))
+
+
+
+                        TextInputHelpFieldComponent(
+                            errorMessage = loginViewModel.verifyCodeInputErrorMessage.value.asString(
+                                LocalContext.current),
+                            isError = loginViewModel.verifyCodeInputError.value,
                         )
 
-                        Spacer(modifier = Modifier.width(10.dp))
-
-                        ChanceCountComponent(
-                            remainingChance = loginViewModel.remainingChance.value
+                        TextInputHelpFieldComponent(
+                            errorMessage = loginViewModel.joinFailMessage.value.asString(LocalContext.current),
+                            isError = loginViewModel.joinFail.value,
                         )
+
+                        InputButtonComponent(
+                            value = "확인",
+                            onClick = { loginViewModel.submitVerifyCode() },
+                            modifier = Modifier.padding(start=15.dp,end=15.dp),
+                            showImage = true
+                        )
+
+
+                        Spacer(modifier = Modifier.height(10.dp))
                     }
-
-
-
-
-
-                    TextInputHelpFieldComponent(
-                        errorMessage = loginViewModel.verifyCodeInputErrorMessage.value.asString(
-                            LocalContext.current),
-                        isError = loginViewModel.verifyCodeInputError.value,
-                    )
-
-                    TextInputHelpFieldComponent(
-                        errorMessage = loginViewModel.joinFailMessage.value.asString(LocalContext.current),
-                        isError = loginViewModel.joinFail.value,
-                    )
-
-                    InputButtonComponent(
-                        value = "확인",
-                        onClick = { loginViewModel.submitVerifyCode() },
-                        modifier = Modifier.padding(start=15.dp,end=15.dp),
-                        showImage = true
-                    )
-
-
-                    Spacer(modifier = Modifier.height(10.dp))
                 }
             }
         }
     }
+
+
 }
 
 @Composable

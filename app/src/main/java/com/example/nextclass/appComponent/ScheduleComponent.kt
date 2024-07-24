@@ -427,7 +427,6 @@ fun SingleScheduleView(
     deleteSchedule: () -> Unit
     ) {
 
-
             Surface(
                 shape = RoundedCornerShape(30.dp),
                 modifier = Modifier

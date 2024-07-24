@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.nextclass.Data.FindIDOrPasswordData
 import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.Data.LoginRequest
 import com.example.nextclass.Data.ModifyUserData
@@ -24,6 +25,7 @@ import com.example.nextclass.utils.INVALID_VERIFICATION_CODE
 import com.example.nextclass.utils.NO_EMAIL_FOR_VERIFICATION
 import com.example.nextclass.utils.SUCCESS_CODE
 import com.example.nextclass.utils.StringValue
+import com.example.nextclass.utils.USER_NOT_EXIST
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.regex.Pattern
 import javax.inject.Inject
@@ -148,14 +150,7 @@ class LoginViewModel @Inject constructor(
     private val _findFailPasswordMessage=mutableStateOf<StringValue>(StringValue.Empty)
     val findFailPasswordMessage: State<StringValue> = _findFailPasswordMessage
 
-    private val _findIdEmail=mutableStateOf("")
-    val findIdEmail: State<String> = _findIdEmail
 
-    private val _findPasswordId=mutableStateOf("")
-    val findPasswordId: State<String> = _findPasswordId
-
-    private val _findId=mutableStateOf("")
-    val findId: State<String> = _findId
 
     private val _newPassword=mutableStateOf("")
     val newPassword: State<String> = _newPassword
@@ -210,7 +205,7 @@ class LoginViewModel @Inject constructor(
     private val _countDown=mutableStateOf(TimeUnit.MINUTES.toSeconds(1))
     val countDown: State<Long> = _countDown
 
-    private val _countDownState=mutableStateOf(false)
+    private val _countDownState=mutableStateOf(true)
     val countDownState: State<Boolean> = _countDownState
 
     private val _remainingChance=mutableStateOf(5)
@@ -219,6 +214,20 @@ class LoginViewModel @Inject constructor(
     private val _verifyCodeCheckResult=mutableStateOf(false)
     val verifyCodeCheckResult: State<Boolean> = _verifyCodeCheckResult
 
+    private val _findIDOrPassword=mutableStateOf(FindIDOrPasswordData())
+    val findIDOrPassword: State<FindIDOrPasswordData> = _findIDOrPassword
+
+    private val _findIdSuccessMessage=mutableStateOf<StringValue>(StringValue.Empty)
+    val findIdSuccessMessage: State<StringValue> = _findIdSuccessMessage
+
+    private val _findPasswordSuccessMessage=mutableStateOf<StringValue>(StringValue.Empty)
+    val findPasswordSuccessMessage: State<StringValue> = _findPasswordSuccessMessage
+
+    private val _findIdSuccessState=mutableStateOf(false)
+    val findIdSuccessState: State<Boolean> = _findIdSuccessState
+
+    private val _findPasswordSuccessState=mutableStateOf(false)
+    val findPasswordSuccessState: State<Boolean> = _findPasswordSuccessState
 
     fun updateEmail(newEmail: String) {
         _email.value = newEmail
@@ -582,38 +591,9 @@ class LoginViewModel @Inject constructor(
         return _termsCheckBoxState.value
     }
 
-    fun updateForGotIdInput(userInputEmail:String){
-        _findIdEmail.value=userInputEmail
-    }
 
 
-    fun updateForGotPasswordInput(userInputId:String){
-        _findPasswordId.value=userInputId
-    }
 
-
-    fun findIdResult(){
-        _findFailId.value=true
-        _findFailIdMessage.value=StringValue.StringResource(R.string.wrongEmail)
-        //서버에서 아이디 받아오는거 성공하면
-        _findId.value=""
-    }
-
-
-    fun findPasswordResult(){
-        _findFailPassword.value=true
-        _findFailPasswordMessage.value=StringValue.StringResource(R.string.wrongId)
-        //비번재설정 코드 입력하는게 성공했다면
-        _newPassword.value=""
-    }
-
-    fun findId(){
-        _findIdEmail.value
-    }
-
-    fun findPassword(){
-        _findPasswordId.value
-    }
 
     fun updateVerifyCode(value: String) {
         Log.d("value",value)
@@ -657,8 +637,8 @@ class LoginViewModel @Inject constructor(
                     _loading.value=false
                 }
             }
+            _loading.value=false
         }
-        _loading.value=false
     }
 
     fun submitVerifyCode(){
@@ -669,31 +649,38 @@ class LoginViewModel @Inject constructor(
         )
 
         if(countDown.value>0){
-            _loading.value=true
-            userInfoRepository.verifyCodeCheck(verifyCodeCheckBody){ verifyCodeCheckResult->
-                if(verifyCodeCheckResult !=null) {
-                    if (verifyCodeCheckResult.code == SUCCESS_CODE) {
-                        Log.d("인증 코드 체크 완료", verifyCodeCheckResult.code.toString())
+            if(_remainingChance.value>0) {
+                _loading.value = true
+                userInfoRepository.verifyCodeCheck(verifyCodeCheckBody) { verifyCodeCheckResult ->
+                    if (verifyCodeCheckResult != null) {
+                        if (verifyCodeCheckResult.code == SUCCESS_CODE) {
+                            Log.d("인증 코드 체크 완료", verifyCodeCheckResult.code.toString())
 
-                        _verifyCodeCheckResult.value=true
-                        _verifyCodeInputError.value=true
-                        _verifyCodeInputErrorMessage.value=StringValue.Empty
+                            _verifyCodeCheckResult.value = true
+                            _verifyCodeInputError.value = false
+                            _verifyCodeInputErrorMessage.value = StringValue.Empty
 
-                    }else if(verifyCodeCheckResult.errorCode==INVALID_VERIFICATION_CODE){
-                        //인증 코드가 올바르지 않을때
-                        _verifyCodeInputError.value=false
-                        _verifyCodeInputErrorMessage.value=StringValue.StringResource(R.string.WrongVerityCodeMessage)
-                        reductionChance()
-                    }else if(verifyCodeCheckResult.errorCode==NO_EMAIL_FOR_VERIFICATION){
-                        _verifyCodeInputError.value=false
-                        _verifyCodeInputErrorMessage.value=StringValue.StringResource(R.string.ExpirationCodeMessage)
-                        reductionChance()
+                        } else if (verifyCodeCheckResult.errorCode == INVALID_VERIFICATION_CODE) {
+                            //인증 코드가 올바르지 않을때
+                            _verifyCodeInputError.value = true
+                            _verifyCodeInputErrorMessage.value =
+                                StringValue.StringResource(R.string.WrongVerityCodeMessage)
+                            reductionChance()
+                        } else if (verifyCodeCheckResult.errorCode == NO_EMAIL_FOR_VERIFICATION) {
+                            _verifyCodeInputError.value = true
+                            _verifyCodeInputErrorMessage.value =
+                                StringValue.StringResource(R.string.ExpirationCodeMessage)
+                            reductionChance()
+                        }
+                        _loading.value = false
                     }
-                    _loading.value=false
                 }
+            }else{
+                _verifyCodeInputError.value=true
+                _verifyCodeInputErrorMessage.value=StringValue.StringResource(R.string.noChance)
             }
         }else{
-            _verifyCodeInputError.value=false
+            _verifyCodeInputError.value=true
             _verifyCodeInputErrorMessage.value=StringValue.StringResource(R.string.ExpirationCodeMessage)
         }
 
@@ -735,6 +722,91 @@ class LoginViewModel @Inject constructor(
     }
     fun toggleJoinResult(){
         _joinResult.value=false
+    }
+
+
+
+
+    fun findId(){
+        _loading.value = true
+
+        val findIdData = FindIDOrPasswordData(findIDOrPassword.value.email, null)
+
+        userInfoRepository.postFindId(findIdData) { findIdResult ->
+            if (findIdResult != null) {
+                if (findIdResult.code == SUCCESS_CODE) {
+                    Log.d("아이디 찾기 완료", findIdResult.code.toString())
+                    _findFailId.value = false
+                    _findFailIdMessage.value = StringValue.Empty
+
+                    _findIdSuccessState.value = true
+                    _findIdSuccessMessage.value = StringValue.StringResource(R.string.FindIDSuccessMessage)
+                } else if (findIdResult.errorCode == USER_NOT_EXIST) {
+                    // 아이디 또는 비밀번호가 올바르지 않을 때
+                    _findFailId.value = true
+                    _findFailIdMessage.value = StringValue.StringResource(R.string.FindFailMessage)
+
+                    _findIdSuccessState.value = false
+                    _findIdSuccessMessage.value = StringValue.Empty
+                }
+            } else {
+
+                _findFailId.value = true
+                _findFailIdMessage.value = StringValue.StringResource(R.string.FindFailMessage)
+
+                _findIdSuccessState.value = false
+                _findIdSuccessMessage.value = StringValue.Empty
+            }
+
+            _loading.value = false
+
+            resetFindInputData()
+        }
+    }
+
+
+    fun findPassword(){
+
+        val findPasswordData=FindIDOrPasswordData(null,findIDOrPassword.value.id)
+
+        userInfoRepository.postFindPassword(findPasswordData){ findPasswordResult->
+            _loading.value=true
+
+            if(findPasswordResult !=null) {
+                if (findPasswordResult.code == SUCCESS_CODE) {
+                    Log.d("아이디 찾기 완료", findPasswordResult.code.toString())
+                    _findFailId.value=false
+                    _findFailIdMessage.value=StringValue.Empty
+
+                    _findPasswordSuccessState.value=true
+                    _findPasswordSuccessMessage.value=StringValue.StringResource(R.string.FindPasswordSuccessMessage)
+
+                }else if(findPasswordResult.errorCode==USER_NOT_EXIST){
+                    //아이디 또는 비밀번호가 올바르지 않을때
+                    _findFailId.value=true
+                    _findFailIdMessage.value=StringValue.StringResource(R.string.FindFailMessage)
+
+                    _findPasswordSuccessState.value=false
+                    _findPasswordSuccessMessage.value=StringValue.Empty
+
+                }
+                _loading.value=false
+            }
+            resetFindInputData()
+        }
+        Log.d("로딩", _loading.value.toString())
+    }
+
+    fun updateFindId(email:String){
+        _findIDOrPassword.value=_findIDOrPassword.value.copy(email=email)
+    }
+
+    fun updateFindPassword(id:String){
+        _findIDOrPassword.value=_findIDOrPassword.value.copy(id=id)
+    }
+
+    fun resetFindInputData(){
+        _findIDOrPassword.value= FindIDOrPasswordData()
     }
 
 }

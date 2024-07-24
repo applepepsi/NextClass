@@ -22,7 +22,7 @@ import com.example.nextclass.ui.theme.Pastel_Red
 import com.example.nextclass.viewmodel.LoginViewModel
 
 @Composable
-fun ProgressIndicator(
+fun ProgressBarComponent(
     state:Boolean=false
 ) {
     Log.d("State", state.toString())
@@ -31,7 +31,7 @@ fun ProgressIndicator(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.5f))
+                .background(Color.Gray.copy(alpha = 0.1f))
                 .clickable(enabled = false) {},
             contentAlignment = Alignment.Center
         ) {
@@ -55,6 +55,6 @@ fun ProgressBarPreview() {
 
 
     NextClassTheme {
-        ProgressIndicator()
+        ProgressBarComponent()
     }
 }

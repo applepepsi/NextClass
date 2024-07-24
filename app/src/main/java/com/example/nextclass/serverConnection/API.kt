@@ -7,6 +7,7 @@ import com.example.nextclass.Data.ChangeUserData
 import com.example.nextclass.Data.ClassData
 import com.example.nextclass.Data.ClassUUid
 import com.example.nextclass.Data.DuplicateCheckRequest
+import com.example.nextclass.Data.FindIDOrPasswordData
 import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.Data.LoginRequest
 import com.example.nextclass.Data.PostSemester
@@ -19,6 +20,8 @@ import com.example.nextclass.utils.CHANGE_EMAIL
 import com.example.nextclass.utils.CHANGE_INFO
 import com.example.nextclass.utils.CHANGE_PASSWORD
 import com.example.nextclass.utils.DUPLICATED_CHECK_ADDRESS
+import com.example.nextclass.utils.FIND_ID
+import com.example.nextclass.utils.FIND_PASSWORD
 import com.example.nextclass.utils.GET_TIME_TABLE
 import com.example.nextclass.utils.GET_USER_INFO
 import com.example.nextclass.utils.GET_VERIFY_CODE
@@ -89,6 +92,12 @@ interface API {
 
     @POST(MAIL_CHECK)
     suspend fun verifyCodeCheck(@Body mailCheckBody: VerifyCodeData):Response<ServerResponse<Any>>
+
+    @POST(FIND_ID)
+    suspend fun findId(@Body email: FindIDOrPasswordData):Response<ServerResponse<Any>>
+
+    @POST(FIND_PASSWORD)
+    suspend fun findPassword(@Body id: FindIDOrPasswordData):Response<ServerResponse<Any>>
 
     @POST("/test")
     suspend fun tokenTest():Response<ServerResponse<Any>?>

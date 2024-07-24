@@ -1,5 +1,7 @@
 package com.example.nextclass.appComponent
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -92,6 +94,7 @@ fun DescriptionTextComponent(
     )
 }
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun CountDownComponent(
     countDown: Long=5,
@@ -101,6 +104,8 @@ fun CountDownComponent(
 
     val minutes = countDown / 60
     val seconds = countDown % 60
+
+        Log.d("카운트다운", countDown.toString())
 
         Text(
             text = "남은 시간 ${String.format("%02d:%02d", minutes, seconds)}",

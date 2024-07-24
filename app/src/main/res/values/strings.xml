@@ -73,6 +73,12 @@
     <string name="InputVerityCodeDetailMessage">입력하신 메일로 인증 코드를 전송 했습니다.</string>
     <string name="WrongVerityCodeMessage">인증 코드가 올바르지 않습니다.</string>
     <string name="ExpirationCodeMessage">만료된 인증 코드 입니다.</string>
+    <string name="noChance">인증코드 입력을 5회 실패하였습니다.</string>
+
+
+    <string name="FindIDSuccessMessage">입력하신 메일로 아이디를 전송 했습니다.</string>
+    <string name="FindPasswordSuccessMessage">가입하신 메일로 임시 비밀번호를 전송 했습니다.</string>
+    <string name="FindFailMessage">존재하지 않는 회원입니다.</string>
 
     //이용 약관
     <string name="TermsAndConditions">이용 약관</string>
@@ -83,6 +89,7 @@
     <string name="InputUserInfoModifyPassword">회원 정보를 수정하기 위해서는 비밀번호 확인이 필요합니다.</string>
     <string name="changePassword">비밀번호 변경</string>
     <string name="changeEmail">이메일 변경</string>
+    <string name="passwordNotMatch">현재 비밀번호와 일치하지 않습니다.</string>
 
     //스케쥴 에러
     <string name="WrongDate">올바르지 않은 날짜입니다.</string>

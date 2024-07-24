@@ -14,6 +14,7 @@ import com.example.nextclass.Data.UserData
 import com.example.nextclass.Data.VerifyCodeData
 import com.example.nextclass.R
 import com.example.nextclass.repository.UserInfoRepository
+import com.example.nextclass.utils.CURRENT_PASSWORD_NOT_MATCH
 import com.example.nextclass.utils.CutEntranceYear
 import com.example.nextclass.utils.DUPLICATE_PARAMETER
 import com.example.nextclass.utils.INVALID_VERIFICATION_CODE
@@ -125,6 +126,12 @@ class UserInfoViewModel @Inject constructor(
     private val _changeEmailState=mutableStateOf(false)
     val changeEmailState: State<Boolean> = _changeEmailState
 
+    private val _changeEmailErrorState=mutableStateOf(false)
+    val changeEmailErrorState: State<Boolean> = _changeEmailErrorState
+
+    private val _changeEmailErrorMessage=mutableStateOf<StringValue>(StringValue.Empty)
+    val changeEmailErrorMessage: State<StringValue> = _changeEmailErrorMessage
+
     fun updateVerifyCode(code: String) {
         _verifyCode.value = code
     }
@@ -133,40 +140,47 @@ class UserInfoViewModel @Inject constructor(
 
     fun submitVerifyCode(){
 
-        val verifyCodeCheckBody= VerifyCodeData(
+        val verifyCodeCheckBody=VerifyCodeData(
             email=changeEmail.value.email,
             code=verifyCode.value
         )
 
         if(countDown.value>0){
-            _loading.value=true
-            userInfoRepository.verifyCodeCheck(verifyCodeCheckBody){ verifyCodeCheckResult->
-                if(verifyCodeCheckResult !=null) {
-                    if (verifyCodeCheckResult.code == SUCCESS_CODE) {
-                        Log.d("인증 코드 체크 완료", verifyCodeCheckResult.code.toString())
+            if(_remainingChance.value>0) {
+                _loading.value = true
+                userInfoRepository.verifyCodeCheck(verifyCodeCheckBody) { verifyCodeCheckResult ->
+                    if (verifyCodeCheckResult != null) {
+                        if (verifyCodeCheckResult.code == SUCCESS_CODE) {
+                            Log.d("인증 코드 체크 완료", verifyCodeCheckResult.code.toString())
 
-                        _verifyCodeCheckResult.value=true
-                        _verifyCodeInputError.value=true
-                        _verifyCodeInputErrorMessage.value=StringValue.Empty
+                            _verifyCodeCheckResult.value = true
+                            _verifyCodeInputError.value = false
+                            _verifyCodeInputErrorMessage.value = StringValue.Empty
 
-                    }else if(verifyCodeCheckResult.errorCode== INVALID_VERIFICATION_CODE){
-                        //인증 코드가 올바르지 않을때
-                        _verifyCodeInputError.value=false
-                        _verifyCodeInputErrorMessage.value=StringValue.StringResource(R.string.WrongVerityCodeMessage)
-                        reductionChance()
-                    }else if(verifyCodeCheckResult.errorCode== NO_EMAIL_FOR_VERIFICATION){
-                        _verifyCodeInputError.value=false
-                        _verifyCodeInputErrorMessage.value=StringValue.StringResource(R.string.ExpirationCodeMessage)
-                        reductionChance()
+                        } else if (verifyCodeCheckResult.errorCode == INVALID_VERIFICATION_CODE) {
+                            //인증 코드가 올바르지 않을때
+                            _verifyCodeInputError.value = true
+                            _verifyCodeInputErrorMessage.value =
+                                StringValue.StringResource(R.string.WrongVerityCodeMessage)
+                            reductionChance()
+                        } else if (verifyCodeCheckResult.errorCode == NO_EMAIL_FOR_VERIFICATION) {
+                            _verifyCodeInputError.value = true
+                            _verifyCodeInputErrorMessage.value =
+                                StringValue.StringResource(R.string.ExpirationCodeMessage)
+                            reductionChance()
+                        }
+                        _loading.value = false
                     }
-                    _loading.value=false
                 }
+            }else{
+                _verifyCodeInputError.value=true
+                _verifyCodeInputErrorMessage.value=StringValue.StringResource(R.string.noChance)
             }
         }else{
-            _verifyCodeInputError.value=false
+            _verifyCodeInputError.value=true
             _verifyCodeInputErrorMessage.value=StringValue.StringResource(R.string.ExpirationCodeMessage)
         }
-
+        Log.d( "_verifyCodeInputError.value", _verifyCodeInputError.value.toString())
         _loading.value=false
     }
 
@@ -231,6 +245,7 @@ class UserInfoViewModel @Inject constructor(
 
     fun updateNewEmail(newEmail:String){
         _changeEmail.value=_changeEmail.value.copy(email = newEmail)
+        Log.d("업데이트 이메일", _changeEmail.value.toString())
         _emailDuplicateCheck.value=false
         emailCheck(newEmail)
     }
@@ -290,8 +305,11 @@ class UserInfoViewModel @Inject constructor(
 
     fun getChangeEmailVerifyCode(){
 
+
         if(!emailChangeState.value && emailDuplicateCheck.value){
+
             _loading.value=true
+
             userInfoRepository.postChangeEmailData(changeEmail.value){ServerResponse->
 
                 if (ServerResponse?.code==200) {
@@ -299,15 +317,27 @@ class UserInfoViewModel @Inject constructor(
                     resetChance()
                     resetCountDown()
                     _verifyCodeIssueState.value=true
+                }else if(ServerResponse?.errorCode==CURRENT_PASSWORD_NOT_MATCH){
+
+                    _changeEmailErrorMessage.value = StringValue.StringResource(R.string.passwordNotMatch)
+                    _changeEmailErrorState.value = true
+
+                    _verifyCodeIssueState.value=false
                 }
+                _loading.value=false
             }
-            _loading.value=false
+
             //서버로 전송
+        }else{
+            _changeEmailErrorMessage.value = StringValue.StringResource(R.string.joinFailError)
+            _changeEmailErrorState.value = true
         }
     }
 
     fun changeEmailComplete(){
         _loading.value=true
+
+
         userInfoRepository.postChangeEmailRequest(changeEmail.value){ServerResponse->
             if (ServerResponse?.code==200) {
                 Log.d("이메일 변경 성공", ServerResponse.toString())

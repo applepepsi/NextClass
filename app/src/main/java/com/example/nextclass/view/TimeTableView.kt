@@ -39,7 +39,7 @@ import com.example.nextclass.appComponent.AccreditationCalculationComponent
 import com.example.nextclass.appComponent.ClassDetail
 import com.example.nextclass.appComponent.ClassModify
 import com.example.nextclass.appComponent.InsertClassData
-import com.example.nextclass.appComponent.ProgressIndicator
+import com.example.nextclass.appComponent.ProgressBarComponent
 import com.example.nextclass.appComponent.TimeTableComponent
 
 import com.example.nextclass.repository.TestRepository
@@ -69,7 +69,7 @@ fun TimeTableView(
         },
         sheetPeekHeight = 200.dp,
     ) {
-        ProgressIndicator(state = timeTableViewModel.loading.value)
+        ProgressBarComponent(state = timeTableViewModel.loading.value)
         LaunchedEffect(Unit) {
             timeTableViewModel.getTimeTable()
         }

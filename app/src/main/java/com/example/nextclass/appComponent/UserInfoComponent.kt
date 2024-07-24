@@ -228,7 +228,7 @@ fun ChangePasswordComponent(
                 .padding(bottom = 20.dp),
             verticalArrangement = Arrangement.Center,
         ) {
-            ProgressIndicator(state = userInfoViewModel.loading.value)
+            ProgressBarComponent(state = userInfoViewModel.loading.value)
             Surface(
                 shape = RoundedCornerShape(30.dp),
                 modifier = Modifier
@@ -316,11 +316,10 @@ fun ChangeEmailComponent(
 ){
     val scrollState = rememberScrollState()
 
-    userInfoViewModel.resetChangeEmailData()
 
-
-
-
+    LaunchedEffect(Unit) {
+        userInfoViewModel.resetChangeEmailData()
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -337,7 +336,7 @@ fun ChangeEmailComponent(
             Column(
                 modifier = Modifier
                     .background(Background_Color2)
-                    .height(350.dp)
+                    .height(420.dp)
                     .padding(bottom = 20.dp),
                 verticalArrangement = Arrangement.SpaceAround,
                 horizontalAlignment = Alignment.Start,
@@ -370,7 +369,13 @@ fun ChangeEmailComponent(
 
 
 
-                Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(10.dp))
+
+                TextInputHelpFieldComponent(
+
+                    errorMessage = userInfoViewModel.changeEmailErrorMessage.value.asString(LocalContext.current),
+                    isError = userInfoViewModel.changeEmailErrorState.value,
+                    )
 
                 InputButtonComponent(
                     value = "변경하기",

@@ -5,6 +5,7 @@ import com.example.nextclass.Data.ChangeEmail
 import com.example.nextclass.Data.ChangePassword
 import com.example.nextclass.Data.ChangeUserData
 import com.example.nextclass.Data.DuplicateCheckRequest
+import com.example.nextclass.Data.FindIDOrPasswordData
 import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.Data.LoginRequest
 import com.example.nextclass.Data.PostUserData
@@ -169,6 +170,7 @@ class UserInfoRepositoryImpl @Inject constructor(
         changeEmail: ChangeEmail,
         callback: (ServerResponse<Any>?) -> Unit
     ) {
+        Log.d("changeEmail2", changeEmail.toString())
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
                 val response = api.postChangeEmailData(changeEmail)
@@ -265,14 +267,61 @@ class UserInfoRepositoryImpl @Inject constructor(
             val result = try {
                 val response = api.verifyCodeCheck(mailCheckBody)
                 if (response.isSuccessful){
-                    Log.d("코드 발급 성공", response.body().toString())
+                    Log.d("코드 인증 성공", response.body().toString())
                     response.body()
                 } else{
-                    Log.d("코드 발급 실패","코드 발급 실패")
+                    Log.d("코드 인증 실패","코드 인증 실패")
                     null
                 }
             } catch (e: Exception) {
-                Log.d("코드 발급 실패",e.toString())
+                Log.d("코드 인증 실패",e.toString())
+                null
+            }
+            withContext(Dispatchers.Main) {
+
+                callback(result)
+            }
+        }
+    }
+
+    override fun postFindId(email: FindIDOrPasswordData, callback: (ServerResponse<Any>?) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = try {
+                val response = api.findId(email)
+                if (response.isSuccessful){
+                    Log.d("아이디 찾기 성공", response.body().toString())
+                    response.body()
+                } else{
+                    Log.d("아이디 찾기실패","아이디 찾기 실패")
+                    null
+                }
+            } catch (e: Exception) {
+                Log.d("아이디 찾기 실패",e.toString())
+                null
+            }
+            withContext(Dispatchers.Main) {
+
+                callback(result)
+            }
+        }
+    }
+
+    override fun postFindPassword(
+        id: FindIDOrPasswordData,
+        callback: (ServerResponse<Any>?) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = try {
+                val response = api.findPassword(id)
+                if (response.isSuccessful){
+                    Log.d("비밀번호 찾기 성공", response.body().toString())
+                    response.body()
+                } else{
+                    Log.d("비밀번호 찾기 실패","비밀번호 찾기 실패")
+                    null
+                }
+            } catch (e: Exception) {
+                Log.d("비밀번호 찾기 실패",e.toString())
                 null
             }
             withContext(Dispatchers.Main) {

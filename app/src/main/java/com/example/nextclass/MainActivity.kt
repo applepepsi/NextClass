@@ -12,6 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.nextclass.appComponent.ProgressBarComponent
 import com.example.nextclass.nav.AppNav
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.utils.TokenManager
@@ -73,13 +74,16 @@ fun Greeting() {
         TokenManager.saveToken(context,loginViewModel.tokenData.value)
     }
 
-    if (!loginViewModel.loading.value) {
-        AppNav(loginViewModel)
-    } else {
-        // 로딩 중일때 로딩 화면 표시
-        CircularProgressIndicator()
-    }
 
+
+    //스플래시화면으로 변경예정
+//    if (!loginViewModel.loading.value) {
+//
+//    } else {
+//        // 로딩 중일때 로딩 화면 표시
+//        ProgressBarComponent()
+//    }
+    AppNav(loginViewModel)
 
 //    AppNav(loginViewModel)
 }

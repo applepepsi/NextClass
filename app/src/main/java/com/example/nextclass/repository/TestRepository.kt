@@ -5,6 +5,7 @@ import com.example.nextclass.Data.ChangeEmail
 import com.example.nextclass.Data.ChangePassword
 import com.example.nextclass.Data.ChangeUserData
 import com.example.nextclass.Data.DuplicateCheckRequest
+import com.example.nextclass.Data.FindIDOrPasswordData
 import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.Data.LoginRequest
 import com.example.nextclass.Data.PostUserData
@@ -235,5 +236,16 @@ class TestRepository : UserInfoRepository {
                 callback(result)
             }
         }
+    }
+
+    override fun postFindId(email: FindIDOrPasswordData, callback: (ServerResponse<Any>?) -> Unit) {
+        TODO("Not yet implemented")
+    }
+
+    override fun postFindPassword(
+        id: FindIDOrPasswordData,
+        callback: (ServerResponse<Any>?) -> Unit
+    ) {
+        TODO("Not yet implemented")
     }
 }
