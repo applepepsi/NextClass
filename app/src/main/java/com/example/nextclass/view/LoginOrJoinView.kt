@@ -309,7 +309,6 @@ fun JoinView(
                 loginViewModel.getVerifyCode()
                 navController.navigate("insertCodeView")
                 loginViewModel.toggleJoinDataCheckResult()
-
             }
 
 

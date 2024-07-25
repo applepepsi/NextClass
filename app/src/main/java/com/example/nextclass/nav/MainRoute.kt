@@ -18,9 +18,11 @@ import com.example.nextclass.view.ChangeUserInfoView
 import com.example.nextclass.view.CommunityView
 import com.example.nextclass.view.HomeView
 import com.example.nextclass.view.InsertOrModifyScheduleView
+import com.example.nextclass.view.PostDetailView
 import com.example.nextclass.view.ScheduleView
 import com.example.nextclass.view.TimeTableView
 import com.example.nextclass.view.UserProfileView
+import com.example.nextclass.viewmodel.CommunityViewModel
 import com.example.nextclass.viewmodel.LoginViewModel
 import com.example.nextclass.viewmodel.ScheduleViewModel
 import com.example.nextclass.viewmodel.UserInfoViewModel
@@ -34,11 +36,12 @@ fun MainNavGraph(
 ) {
     val scheduleViewModel:ScheduleViewModel = hiltViewModel()
     val userInfoViewModel:UserInfoViewModel= hiltViewModel()
+    val communityViewModel:CommunityViewModel= hiltViewModel()
 
     NavHost(navController = navController, startDestination = "homeRoute") {
         homeRoute(navController, loginViewModel, mainNavHostController)
         timetableRoute(navController, loginViewModel, mainNavHostController)
-        communityRoute(navController, loginViewModel, mainNavHostController)
+        communityRoute(navController, loginViewModel, mainNavHostController,communityViewModel)
         scheduleRoute(navController, loginViewModel, mainNavHostController,scheduleViewModel)
         userProfileRoute(navController, loginViewModel, mainNavHostController,userInfoViewModel)
     }
@@ -80,17 +83,44 @@ private fun NavGraphBuilder.timetableRoute(
 private fun NavGraphBuilder.communityRoute(
     navController: NavHostController,
     loginViewModel: LoginViewModel,
-    mainNavHostController: NavHostController
+    mainNavHostController: NavHostController,
+    communityViewModel: CommunityViewModel
 ) {
+
+
     navigation(
         route = "communityRoute",
         startDestination = BottomNavItem.Community.screenRoute
     ) {
-        composable(BottomNavItem.Community.screenRoute) {
-            CommunityView(navController, loginViewModel, mainNavHostController)
-        }
+        communityView(navController,loginViewModel,mainNavHostController,communityViewModel)
+        postDetailView(navController,loginViewModel,mainNavHostController,communityViewModel)
     }
 }
+
+private fun NavGraphBuilder.communityView(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController,
+    communityViewModel: CommunityViewModel
+) {
+
+    composable(BottomNavItem.Community.screenRoute) {
+        CommunityView(navController, loginViewModel, mainNavHostController,communityViewModel)
+    }
+
+}
+
+private fun NavGraphBuilder.postDetailView(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController,
+    communityViewModel: CommunityViewModel
+) {
+    composable("postDetailView") {
+        PostDetailView(navController, loginViewModel, mainNavHostController,communityViewModel)
+    }
+}
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 private fun NavGraphBuilder.scheduleRoute(

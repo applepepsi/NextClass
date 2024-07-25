@@ -9,3 +9,9 @@ data class CommunityPostData(
     val commentCount:Int=0,
     val likeCount:Int=0,
 )
+
+data class CommunityCommentData(
+    val commentDetail:String="",
+    val commentTime:LocalDateTime= LocalDateTime.now(),
+    val commentLikeCount:Int=0,
+)

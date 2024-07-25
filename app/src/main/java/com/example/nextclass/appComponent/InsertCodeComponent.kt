@@ -263,7 +263,7 @@ fun VerifyCodeInputComponent(
 
 @Preview(showBackground = true)
 @Composable
-fun InserCodeViewPreview() {
+fun InsertCodeViewPreview() {
     val navController= rememberNavController()
     val testRepository = TestRepository()
     val loginViewModel = LoginViewModel(testRepository)

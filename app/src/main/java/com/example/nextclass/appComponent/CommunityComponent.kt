@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -28,6 +30,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
+import com.example.nextclass.Data.CommunityCommentData
+import com.example.nextclass.Data.CommunityPostData
 import com.example.nextclass.R
 import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.NextClassTheme
@@ -37,22 +41,22 @@ import java.time.LocalDateTime
 
 @Composable
 fun SinglePostComponent(
-    postTitle:String="w",
-    postDetail:String="d",
-    postTime:LocalDateTime= LocalDateTime.now(),
-    commentCount:Int=0,
-    likeCount:Int=0,
+    singlePostData:CommunityPostData=CommunityPostData(),
+    postClick:()->Unit
 ){
 
     Column(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable {
+                postClick()
+            },
 
     ){
-        DividerComponent(modifier = Modifier
-            .height(0.5.dp),
-            dividerColor = Color.LightGray
-        )
+//        DividerComponent(modifier = Modifier
+//            .height(0.5.dp),
+//            dividerColor = Color.LightGray
+//        )
 
         Column(
             modifier = Modifier
@@ -60,7 +64,7 @@ fun SinglePostComponent(
 
         ) {
             Text(
-                text=postTitle,
+                text=singlePostData.postName,
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
@@ -70,7 +74,7 @@ fun SinglePostComponent(
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text=postDetail,
+                text=singlePostData.postDetail,
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Normal,
@@ -90,7 +94,7 @@ fun SinglePostComponent(
             Row(
                 modifier = Modifier
                     .padding(5.dp)
-                    .padding(start=2.dp),
+                    .padding(start = 2.dp),
 
                 ){
                 Icon(
@@ -105,7 +109,7 @@ fun SinglePostComponent(
                 Text(
                     modifier = Modifier
                         .padding(start=3.dp),
-                    text=TimeFormatter.formatDate(postTime),
+                    text=TimeFormatter.formatDate(singlePostData.postTime),
                     style = TextStyle(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Normal,
@@ -135,7 +139,7 @@ fun SinglePostComponent(
                     Text(
                         modifier = Modifier
                             .padding(start=3.dp),
-                        text = commentCount.toString(),
+                        text = singlePostData.commentCount.toString(),
                         style = TextStyle(
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Normal,
@@ -160,7 +164,7 @@ fun SinglePostComponent(
                     Text(
                         modifier = Modifier
                             .padding(start=3.dp),
-                        text = likeCount.toString(),
+                        text = singlePostData.likeCount.toString(),
                         style = TextStyle(
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Normal,
@@ -181,7 +185,10 @@ fun SinglePostComponent(
 
 @Composable
 fun PostDetailComponent(
-
+    selectPost:CommunityPostData=CommunityPostData(),
+    deletePost:()->Unit,
+    likePost:()->Unit,
+    modifyPost:()->Unit,
 ){
 
     Column(
@@ -189,6 +196,46 @@ fun PostDetailComponent(
             .fillMaxWidth(),
 
         ){
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End
+        ){
+            Text(
+                modifier = Modifier
+                    .clickable {
+                        modifyPost()
+                    }
+                    .padding(5.dp),
+                text = "수정",
+                style = TextStyle(
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Normal,
+                    fontStyle = FontStyle.Normal
+                ),
+                color=Color.Gray
+            )
+            Text(
+                modifier = Modifier
+                    .clickable {
+                        deletePost()
+                    }
+                    .padding(5.dp),
+                text = "제거",
+                style = TextStyle(
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Normal,
+                    fontStyle = FontStyle.Normal
+                ),
+                color=Color.Gray
+            )
+        }
+
+        DividerComponent(modifier = Modifier
+            .height(0.5.dp),
+            dividerColor = Color.LightGray
+        )
         Column(
             modifier = Modifier
                 .padding(10.dp)
@@ -199,7 +246,7 @@ fun PostDetailComponent(
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = "제목",
+                    text = selectPost.postName,
                     style = TextStyle(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
@@ -208,13 +255,16 @@ fun PostDetailComponent(
 
                 )
             }
+
+            Spacer(Modifier.height(10.dp))
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(min=200.dp)
+                    .heightIn(min = 200.dp)
             ){
                 Text(
-                    text="내용",
+                    text=selectPost.postDetail,
                     style = TextStyle(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Normal,
@@ -233,12 +283,12 @@ fun PostDetailComponent(
             Row(
                 modifier = Modifier
                     .padding(5.dp)
-                    .padding(start=2.dp),
+                    .padding(start = 2.dp),
 
                 ){
                 Icon(
                     modifier = Modifier
-                        .size(15.dp)
+                        .size(18.dp)
                         .align(Alignment.CenterVertically),
                     imageVector = ImageVector.vectorResource(R.drawable.schedule_icon),
                     contentDescription = "",
@@ -248,7 +298,7 @@ fun PostDetailComponent(
                 Text(
                     modifier = Modifier
                         .padding(start=3.dp),
-                    text="2024-05-08",
+                    text=TimeFormatter.formatDate(selectPost.postTime),
                     style = TextStyle(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Normal,
@@ -268,7 +318,7 @@ fun PostDetailComponent(
                 ) {
                     Icon(
                         modifier = Modifier
-                            .size(16.dp)
+                            .size(20.dp)
                             .align(Alignment.CenterVertically),
                         imageVector = ImageVector.vectorResource(R.drawable.chat_icon),
                         contentDescription = "",
@@ -278,9 +328,9 @@ fun PostDetailComponent(
                     Text(
                         modifier = Modifier
                             .padding(start=3.dp),
-                        text = "2",
+                        text = selectPost.commentCount.toString(),
                         style = TextStyle(
-                            fontSize = 12.sp,
+                            fontSize = 17.sp,
                             fontWeight = FontWeight.Normal,
                             fontStyle = FontStyle.Normal,
                         ),
@@ -291,21 +341,28 @@ fun PostDetailComponent(
                         .padding(5.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        modifier = Modifier
-                            .size(12.dp)
-                            .align(Alignment.CenterVertically),
-                        imageVector = ImageVector.vectorResource(R.drawable.heart_icon),
-                        contentDescription = "",
-                        tint = Color.Unspecified
+                    IconButton(
+                        onClick = {
+                            likePost()
+                        },
+                        modifier = Modifier.size(20.dp)
                     )
-
+                    {
+                        Icon(
+                            modifier = Modifier
+                                .size(17.dp)
+                                .align(Alignment.CenterVertically),
+                            imageVector = ImageVector.vectorResource(R.drawable.heart_icon),
+                            contentDescription = "",
+                            tint = Color.Unspecified
+                        )
+                    }
                     Text(
                         modifier = Modifier
                             .padding(start=3.dp),
-                        text = "3",
+                        text = selectPost.likeCount.toString(),
                         style = TextStyle(
-                            fontSize = 12.sp,
+                            fontSize = 17.sp,
                             fontWeight = FontWeight.Normal,
                             fontStyle = FontStyle.Normal,
                         ),
@@ -313,6 +370,10 @@ fun PostDetailComponent(
                 }
             }
         }
+        DividerComponent(modifier = Modifier
+            .height(0.5.dp),
+            dividerColor = Color.LightGray
+        )
     }
 
 
@@ -320,7 +381,10 @@ fun PostDetailComponent(
 
 @Composable
 fun CommentComponent(
-
+    singleCommentData: CommunityCommentData=CommunityCommentData(),
+    modifyComment:()->Unit,
+    deleteComment:()->Unit,
+    likeComment:()->Unit
 ){
 
     Column(
@@ -328,15 +392,20 @@ fun CommentComponent(
             .fillMaxWidth(),
 
         ){
+        DividerComponent(modifier = Modifier
+            .height(0.5.dp),
+            dividerColor = Color.LightGray
+        )
+
         Row(
             modifier = Modifier
-                .padding(start=10.dp)
+                .padding(start = 10.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ){
             Text(
-                text = "익명1",
+                text = "익명",
                 style = TextStyle(
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Normal,
@@ -350,6 +419,7 @@ fun CommentComponent(
                 Text(
                     modifier = Modifier
                         .clickable {
+                            likeComment()
                         }
                         .padding(5.dp),
                     text = "추천",
@@ -364,6 +434,21 @@ fun CommentComponent(
                 Text(
                     modifier = Modifier
                         .clickable {
+                            modifyComment()
+                        }
+                        .padding(5.dp),
+                    text = "수정",
+                    style = TextStyle(
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Normal,
+                        fontStyle = FontStyle.Normal
+                    ),
+                    color=Color.Gray
+                )
+                Text(
+                    modifier = Modifier
+                        .clickable {
+                            deleteComment()
                         }
                         .padding(5.dp),
                     text = "제거",
@@ -384,7 +469,7 @@ fun CommentComponent(
                 .fillMaxWidth()
         ) {
             Text(
-                text = "댓글 내용",
+                text = singleCommentData.commentDetail,
                 style = TextStyle(
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Normal,
@@ -402,7 +487,7 @@ fun CommentComponent(
             Row(
                 modifier = Modifier
                     .padding(5.dp)
-                    .padding(start=2.dp),
+                    .padding(start = 2.dp),
 
                 ){
                 Icon(
@@ -417,7 +502,7 @@ fun CommentComponent(
                 Text(
                     modifier = Modifier
                         .padding(start=3.dp),
-                    text="2024-05-08",
+                    text=TimeFormatter.formatDate(singleCommentData.commentTime),
                     style = TextStyle(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Normal,
@@ -430,31 +515,7 @@ fun CommentComponent(
                 modifier = Modifier,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Row(
-                    modifier = Modifier
-                        .padding(5.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        modifier = Modifier
-                            .size(16.dp)
-                            .align(Alignment.CenterVertically),
-                        imageVector = ImageVector.vectorResource(R.drawable.chat_icon),
-                        contentDescription = "",
-                        tint = Color.Unspecified
-                    )
 
-                    Text(
-                        modifier = Modifier
-                            .padding(start=3.dp),
-                        text = "2",
-                        style = TextStyle(
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal,
-                        ),
-                    )
-                }
                 Row(
                     modifier = Modifier
                         .padding(5.dp),
@@ -472,7 +533,7 @@ fun CommentComponent(
                     Text(
                         modifier = Modifier
                             .padding(start=3.dp),
-                        text = "3",
+                        text = singleCommentData.commentLikeCount.toString(),
                         style = TextStyle(
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Normal,
@@ -482,6 +543,11 @@ fun CommentComponent(
                 }
             }
         }
+
+        DividerComponent(modifier = Modifier
+            .height(0.5.dp),
+            dividerColor = Color.LightGray
+        )
     }
 
 
@@ -500,7 +566,7 @@ fun PostPreview() {
 
 
     NextClassTheme {
-        SinglePostComponent()
+        SinglePostComponent(postClick = {})
     }
 }
 
@@ -514,7 +580,11 @@ fun PostDetailPreview() {
 
 
     NextClassTheme {
-        PostDetailComponent()
+        PostDetailComponent(
+            deletePost = {},
+            modifyPost = {},
+            likePost = {}
+        )
     }
 }
 
@@ -529,6 +599,10 @@ fun CommentComponentPreview() {
 
 
     NextClassTheme {
-        CommentComponent()
+        CommentComponent(
+            deleteComment = {},
+            modifyComment = {},
+            likeComment = {}
+        )
     }
 }
