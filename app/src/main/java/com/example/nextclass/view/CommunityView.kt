@@ -10,23 +10,36 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.Data.CommunityCommentData
 import com.example.nextclass.Data.CommunityPostData
+import com.example.nextclass.Data.PostSchoolType
+import com.example.nextclass.R
 import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
 import com.example.nextclass.appComponent.CommentComponent
+import com.example.nextclass.appComponent.CommunityPostSchoolTypeComponent
+import com.example.nextclass.appComponent.CommunityPostSortComponent
+import com.example.nextclass.appComponent.DividerComponent
 import com.example.nextclass.appComponent.PostDetailComponent
 import com.example.nextclass.appComponent.SinglePostComponent
+import com.example.nextclass.appComponent.SortBottomSheetComponent
 import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.viewmodel.CommunityViewModel
@@ -56,10 +69,31 @@ fun CommunityView(
             value = "게시판",
             navController = navController,
             showLeftButton = false,
-            showRightButton = false,
+            showRightButton = true,
+            buttonText = "작성하기",
+            navRoute = "insertPostView"
         )
 
+        Spacer(modifier = Modifier.height(10.dp))
 
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 20.dp, end = 20.dp),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            CommunityPostSchoolTypeComponent(
+                togglePostSchoolType = { communityViewModel.togglePostSchoolType() },
+                postSchoolTypeState = communityViewModel.postSchoolTypeState.value
+            )
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+        DividerComponent(modifier = Modifier
+            .height(0.5.dp),
+            dividerColor = Color.LightGray
+        )
         LazyColumn {
 
             items(items = testCommunityData){singlePostData->
@@ -71,7 +105,6 @@ fun CommunityView(
                         navController.navigate("postDetailView")
                     }
                 )
-
             }
         }
 
@@ -134,23 +167,22 @@ fun PostDetailView(
         ) {
             PostDetailComponent(
                 selectPost=communityViewModel.selectCommunityData.value,
-                deletePost = {},
-                modifyPost = {},
-                likePost = {},
+                deletePost = { communityViewModel.deletePost() },
+                modifyPost = {
+                    navController.navigate("modifyPostView")
+                },
+                likePost = { communityViewModel.likePost() },
             )
 
             LazyColumn {
 
                 items(items = testCommentList){singleCommentData->
-
                     CommentComponent(
                         singleCommentData,
-                        modifyComment = { /*TODO*/ },
-                        deleteComment = { /*TODO*/ },
-                        likeComment = {})
-                        
-
-
+                        modifyComment = { communityViewModel.modifyComment(singleCommentData) },
+                        deleteComment = { communityViewModel.deleteComment(singleCommentData) },
+                        likeComment = { communityViewModel.likeComment(singleCommentData) }
+                    )
                 }
             }
         }

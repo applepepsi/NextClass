@@ -13,7 +13,7 @@ import com.example.nextclass.R
 import com.example.nextclass.repository.ScheduleRepository
 import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.utils.EXPIRED_REFRESH_TOKEN
-import com.example.nextclass.utils.SortList
+import com.example.nextclass.utils.SortScheduleList
 import com.example.nextclass.utils.StringValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
@@ -180,10 +180,10 @@ class ScheduleViewModel @Inject constructor(
         val beforeSortList=_scheduleDataList.value
 
         _scheduleDataList.value = when(inputSortType){
-            "작성 시간 오름 차순"->SortList.sortByAscendingCreationTime(beforeSortList)
-            "작성 시간 내림 차순"->SortList.sortByDescendingCreationTime(beforeSortList)
-            "남은 시간 오름 차순"->SortList.sortByAscendingAlarmTime(beforeSortList)
-            "남은 시간 내림 차순"->SortList.sortByDescendingAlarmTime(beforeSortList)
+            "작성 시간 오름 차순"->SortScheduleList.sortByAscendingCreationTime(beforeSortList)
+            "작성 시간 내림 차순"-> SortScheduleList.sortByDescendingCreationTime(beforeSortList)
+            "남은 시간 오름 차순"->SortScheduleList.sortByAscendingAlarmTime(beforeSortList)
+            "남은 시간 내림 차순"->SortScheduleList.sortByDescendingAlarmTime(beforeSortList)
             else -> { beforeSortList }
         }
 

@@ -116,7 +116,8 @@ fun ScheduleView(
                     navController = navController,
                     showLeftButton = false,
                     showRightButton = true,
-                    navRoute = "insertScheduleView"
+                    navRoute = "insertScheduleView",
+                    buttonText = "추가하기"
                 )
             }
 

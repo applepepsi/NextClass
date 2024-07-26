@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.example.nextclass.appComponent.InsertOrModifyPostComponent
 import com.example.nextclass.items.BottomNavItem
 import com.example.nextclass.view.ChangeEmailInsertCodeView
 import com.example.nextclass.view.ChangeEmailView
@@ -94,6 +95,8 @@ private fun NavGraphBuilder.communityRoute(
     ) {
         communityView(navController,loginViewModel,mainNavHostController,communityViewModel)
         postDetailView(navController,loginViewModel,mainNavHostController,communityViewModel)
+        insertPostView(navController,loginViewModel,mainNavHostController,communityViewModel)
+        modifyPostView(navController,loginViewModel,mainNavHostController,communityViewModel)
     }
 }
 
@@ -121,6 +124,27 @@ private fun NavGraphBuilder.postDetailView(
     }
 }
 
+private fun NavGraphBuilder.insertPostView(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController,
+    communityViewModel: CommunityViewModel
+) {
+    composable("insertPostView") {
+        InsertOrModifyPostComponent(navController, communityViewModel,loginViewModel, postType = {communityViewModel.insertPostData()})
+    }
+}
+
+private fun NavGraphBuilder.modifyPostView(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController,
+    communityViewModel: CommunityViewModel
+) {
+    composable("modifyPostView") {
+        InsertOrModifyPostComponent(navController, communityViewModel,loginViewModel, postType = {communityViewModel.modifyPostData()})
+    }
+}
 
 @RequiresApi(Build.VERSION_CODES.O)
 private fun NavGraphBuilder.scheduleRoute(

@@ -2,7 +2,7 @@ package com.example.nextclass.utils
 
 import com.example.nextclass.Data.ScheduleData
 
-object SortList {
+object SortScheduleList {
 
     fun sortByAscendingCreationTime(scheduleDataList: List<ScheduleData>): List<ScheduleData> {
         return scheduleDataList.sortedBy {
@@ -29,3 +29,5 @@ object SortList {
         }
     }
 }
+
+

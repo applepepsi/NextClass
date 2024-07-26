@@ -220,9 +220,9 @@ fun AppBarTextAndButtonComponent(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = value,
+                                text = buttonText,
                                 style = TextStyle(
-                                    fontSize = 14.sp,
+                                    fontSize = 12.sp,
                                     fontWeight = FontWeight.Normal,
                                     fontStyle = FontStyle.Normal,
                                 ),

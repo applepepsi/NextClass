@@ -1,26 +1,37 @@
 package com.example.nextclass.appComponent
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -29,16 +40,110 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.Data.CommunityCommentData
 import com.example.nextclass.Data.CommunityPostData
+import com.example.nextclass.Data.PostSchoolType
 import com.example.nextclass.R
 import com.example.nextclass.repository.TestRepository
+import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.utils.TimeFormatter
+import com.example.nextclass.utils.TokenManager
+import com.example.nextclass.utils.UserInfoManager
+import com.example.nextclass.viewmodel.CommunityViewModel
 import com.example.nextclass.viewmodel.LoginViewModel
+import com.example.nextclass.viewmodel.ScheduleViewModel
 import java.time.LocalDateTime
 
+
+@Composable
+fun InsertOrModifyPostComponent(
+    navController: NavController,
+    communityViewModel: CommunityViewModel,
+    loginViewModel: LoginViewModel,
+    postType:()->Unit
+) {
+    val context = LocalContext.current
+
+
+
+    Column(
+        modifier = Modifier
+
+            .fillMaxSize(),
+
+        ) {
+
+        Row(
+            modifier = Modifier
+                .padding(top = 20.dp),
+
+            ) {
+            AppBarTextAndButtonComponent(
+                value = "작성 하기",
+                navController = navController,
+                showLeftButton = true,
+                showRightButton = false,
+
+                )
+        }
+
+        Column(
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 70.dp)
+        ) {
+
+
+            Spacer(modifier = Modifier.padding(top = 15.dp))
+
+            Surface(
+                shape = RoundedCornerShape(30.dp),
+                modifier = Modifier
+                    .padding(start = 10.dp, end = 10.dp)
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .background(Background_Color2),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+
+
+                    TextInputHelpFieldComponent(
+                        errorMessage = communityViewModel.postErrorMessage.value.asString(
+                            LocalContext.current
+                        ),
+                        isError = communityViewModel.postErrorState.value,
+                    )
+
+                    Spacer(modifier = Modifier.padding(top = 5.dp))
+
+                    Box(
+                        modifier = Modifier,
+                        contentAlignment = Alignment.Center
+                    ) {
+
+
+                        InputButtonComponent(
+                            value = "작성 하기",
+                            onClick = { postType() },
+                            modifier = Modifier
+                                .padding(start = 30.dp, end = 30.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.padding(top = 40.dp))
+                }
+            }
+        }
+    }
+}
 @Composable
 fun SinglePostComponent(
     singlePostData:CommunityPostData=CommunityPostData(),
@@ -375,8 +480,6 @@ fun PostDetailComponent(
             dividerColor = Color.LightGray
         )
     }
-
-
 }
 
 @Composable
@@ -553,7 +656,107 @@ fun CommentComponent(
 
 }
 
+@Composable
+fun CommunityPostSchoolTypeComponent(
+    togglePostSchoolType:()->Unit,
+    postSchoolTypeState: Boolean
 
+){
+    val postSchoolType = if (postSchoolTypeState) {
+        PostSchoolType(
+            icon = ImageVector.vectorResource(R.drawable.all_school_icon),
+            text = "모든 학교"
+        )
+    } else {
+        PostSchoolType(
+            icon = ImageVector.vectorResource(R.drawable.single_school_icon),
+            text = "내 학교만"
+        )
+    }
+
+
+
+
+        Column(modifier = Modifier
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                togglePostSchoolType()
+            }
+                .padding(5.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+
+            Icon(
+                modifier = Modifier
+                    .size(25.dp),
+                imageVector = postSchoolType.icon, 
+                contentDescription = "",
+                tint = Color.Black,
+                )
+
+            Spacer(modifier = Modifier.height(5.dp))
+
+            Text(
+                text=postSchoolType.text,
+                style = TextStyle(
+                    fontSize = 9.sp,
+                    fontWeight = FontWeight.Normal,
+                    fontStyle = FontStyle.Normal,
+                ),
+            )
+        }
+}
+
+@Composable
+fun CommunityPostSortComponent(
+    togglePostSortType:()->Unit,
+
+){
+    val postSchoolType = PostSchoolType(
+            icon = ImageVector.vectorResource(R.drawable.sorting_icon),
+            text = "게시물 정렬"
+        )
+
+
+
+
+    Column(modifier = Modifier
+        .clickable(
+            interactionSource = remember { MutableInteractionSource() },
+            indication = null
+        ) {
+            togglePostSortType()
+        }
+        .padding(5.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+
+        Icon(
+            modifier = Modifier
+                .size(25.dp),
+            imageVector = postSchoolType.icon,
+            contentDescription = "",
+            tint = Color.Black,
+        )
+
+        Spacer(modifier = Modifier.height(5.dp))
+
+        Text(
+            text=postSchoolType.text,
+            style = TextStyle(
+                fontSize = 9.sp,
+                fontWeight = FontWeight.Normal,
+                fontStyle = FontStyle.Normal,
+            ),
+        )
+    }
+
+
+}
 
 
 @Preview(showBackground = true)
