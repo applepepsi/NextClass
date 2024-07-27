@@ -29,6 +29,9 @@ class ScheduleViewModel @Inject constructor(
     private var _scheduleDataList=mutableStateOf(listOf<ScheduleData>())
     val scheduleDataList: State<List<ScheduleData>> = _scheduleDataList
 
+    private var _groupByDateScheduleData = mutableStateOf<Map<LocalDate, List<ScheduleData>>>(emptyMap())
+    val groupByDateScheduleData: State<Map<LocalDate, List<ScheduleData>>> = _groupByDateScheduleData
+
     private var _timeData= mutableStateOf(TimeData())
 
     val timeData: State<TimeData> = _timeData
@@ -68,6 +71,8 @@ class ScheduleViewModel @Inject constructor(
 //
 //    private var _selectScheduleData= mutableStateOf(ScheduleData())
 //    val selectScheduleData: State<ScheduleData> = _selectScheduleData
+
+
 
     fun updateScheduleDate(selectDate: LocalDate) {
         Log.d("selectDate", selectDate.toString())
@@ -193,6 +198,7 @@ class ScheduleViewModel @Inject constructor(
 
     fun getScheduleData(scheduleDataList:List<ScheduleData>){
         _scheduleDataList.value=scheduleDataList
+        groupedScheduleData(_scheduleDataList.value)
     }
 
     fun setScheduleData(scheduleData:ScheduleData){
@@ -201,6 +207,12 @@ class ScheduleViewModel @Inject constructor(
         _scheduleData.value=scheduleData
     }
 
+    //날짜별로 그룹화
+    fun groupedScheduleData(groupScheduleData: List<ScheduleData>) {
+
+        _groupByDateScheduleData.value=groupScheduleData.groupBy { it.alarm_time.toLocalDate() }.toSortedMap(compareByDescending { it })
+
+    }
 
     fun deleteScheduleData(){
 

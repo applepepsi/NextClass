@@ -42,4 +42,12 @@ object TimeFormatter {
 
         return Pair(dateString, timeString)
     }
+
+    fun formatDayAndYearMonthSplit(time:String): Pair<String, String> {
+        val date = LocalDate.parse(time, DateTimeFormatter.ISO_DATE)
+        val day = date.dayOfMonth.toString()
+        val yearMonth = date.format(DateTimeFormatter.ofPattern("yyyy/MM"))
+
+        return Pair(day,yearMonth)
+    }
 }

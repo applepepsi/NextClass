@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.Column
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -26,6 +28,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -36,11 +39,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.R
 import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
 import com.example.nextclass.appComponent.InputButtonComponent
+import com.example.nextclass.appComponent.LazyScheduleItem
 import com.example.nextclass.appComponent.ScheduleDateTimePickerView
 import com.example.nextclass.appComponent.ScheduleTextInsertView
 import com.example.nextclass.appComponent.SelectDateBottomSheet
@@ -166,58 +171,75 @@ fun ScheduleView(
             }
 
             Spacer(modifier = Modifier.height(20.dp))
+//
+//
+//            //버튼을 누를때마다 그리드뷰, 레이지컬럼으로 바뀜
+//            if (!scheduleViewModel.toggleLazyType.value) {
+//                LazyColumn(
+//                    verticalArrangement = Arrangement.spacedBy(18.dp),
+//                    modifier = Modifier.padding(bottom = 70.dp)
+//                ) {
+//                    items(
+//                        items = scheduleViewModel.scheduleDataList.value
+//                    ) { singleSchedule ->
+//                        SingleScheduleView(
+//                            scheduleDetail = singleSchedule.content,
+//                            scheduleDate = TimeFormatter.formatTimeAndSplit(singleSchedule.alarm_time),
+//                            modifySchedule={
+//                                //수정 버튼을 누르면 수정 페이지로 이동
+//                                scheduleViewModel.setScheduleData(singleSchedule)
+//                                navController.navigate("modifyScheduleView") {
+//                                    popUpTo(BottomNavItem.Schedule.screenRoute) { inclusive = true }
+//                                }
+//                            },
+//                            deleteSchedule={
+//                                scheduleViewModel.setScheduleData(singleSchedule)
+//                            },
+//                        )
+//                    }
+//                }
+//            } else {
+//                LazyVerticalGrid(
+//                    columns = GridCells.Fixed(2),
+//                    verticalArrangement = Arrangement.spacedBy(18.dp),
+//                    modifier = Modifier.padding(bottom = 70.dp)
+//                ) {
+//                    items(
+//                        items = scheduleViewModel.scheduleDataList.value
+//                    ) { singleSchedule ->
+//                        SingleScheduleGridView(
+//                            scheduleDetail = singleSchedule.content,
+//                            scheduleDate = TimeFormatter.formatTimeAndSplit(singleSchedule.alarm_time),
+//                            modifySchedule={
+//                                scheduleViewModel.setScheduleData(it)
+//                                navController.navigate("modifyScheduleView") {
+//                                    popUpTo(BottomNavItem.Schedule.screenRoute) { inclusive = true }
+//                                }
+//                            },
+//                            deleteSchedule={
+//                                scheduleViewModel.setScheduleData(it)
+//                            },
+//                        )
+//                    }
+//                }
+//            }
 
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(18.dp),
+        ) {
+            scheduleViewModel.groupByDateScheduleData.value.forEach { (date, schedules) ->
+                item {
 
-            //버튼을 누를때마다 그리드뷰, 레이지컬럼으로 바뀜
-            if (!scheduleViewModel.toggleLazyType.value) {
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(18.dp),
-                    modifier = Modifier.padding(bottom = 70.dp)
-                ) {
-                    items(
-                        items = scheduleViewModel.scheduleDataList.value
-                    ) { singleSchedule ->
-                        SingleScheduleView(
-                            scheduleDetail = singleSchedule.content,
-                            scheduleDate = TimeFormatter.formatTimeAndSplit(singleSchedule.alarm_time),
-                            modifySchedule={
-                                //수정 버튼을 누르면 수정 페이지로 이동
-                                scheduleViewModel.setScheduleData(singleSchedule)
-                                navController.navigate("modifyScheduleView") {
-                                    popUpTo(BottomNavItem.Schedule.screenRoute) { inclusive = true }
-                                }
-                            },
-                            deleteSchedule={
-                                scheduleViewModel.setScheduleData(singleSchedule)
-                            },
-                        )
-                    }
-                }
-            } else {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    verticalArrangement = Arrangement.spacedBy(18.dp),
-                    modifier = Modifier.padding(bottom = 70.dp)
-                ) {
-                    items(
-                        items = scheduleViewModel.scheduleDataList.value
-                    ) { singleSchedule ->
-                        SingleScheduleGridView(
-                            scheduleDetail = singleSchedule.content,
-                            scheduleDate = TimeFormatter.formatTimeAndSplit(singleSchedule.alarm_time),
-                            modifySchedule={
-                                scheduleViewModel.setScheduleData(it)
-                                navController.navigate("modifyScheduleView") {
-                                    popUpTo(BottomNavItem.Schedule.screenRoute) { inclusive = true }
-                                }
-                            },
-                            deleteSchedule={
-                                scheduleViewModel.setScheduleData(it)
-                            },
-                        )
-                    }
+                    LazyScheduleItem(
+                        date = date.toString(),
+                        schedules = schedules,
+                        scheduleViewModel = scheduleViewModel,
+                        navController = navController
+                    )
                 }
             }
+        }
+
             if (scheduleViewModel.tokenCheckResult.value) {
                 loginViewModel.logOut()
             }
