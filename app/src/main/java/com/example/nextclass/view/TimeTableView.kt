@@ -1,6 +1,7 @@
 package com.example.nextclass.view
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -59,6 +60,16 @@ fun TimeTableView(
     val context = LocalContext.current
 
     val button= ImageVector.vectorResource(R.drawable.plus_icon)
+
+
+    //todo 작동하는지 테스트 해봐야함
+    LaunchedEffect(timeTableViewModel.timeTableToastMessage.value) {
+        Toast.makeText(
+            context,
+            timeTableViewModel.timeTableToastMessage.value,
+            Toast.LENGTH_SHORT,
+        ).show()
+    }
 
     BottomSheetScaffold(
         scaffoldState = rememberBottomSheetScaffoldState(),

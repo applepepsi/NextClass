@@ -95,4 +95,8 @@
     <string name="WrongDate">올바르지 않은 날짜입니다.</string>
     <string name="WrongScheduleDetail">스케쥴 내용을 입력해 주세요.</string>
 
+    //시간표 에러
+    <string name="DuplicatedClassTime">해당 시간에 이미 수업이 존재합니다.</string>
+
+
 </resources>

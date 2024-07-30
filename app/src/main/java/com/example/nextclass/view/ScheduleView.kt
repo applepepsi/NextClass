@@ -1,6 +1,7 @@
 package com.example.nextclass.view
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -44,6 +45,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.R
 import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
+import com.example.nextclass.appComponent.GridScheduleItem
 import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.LazyScheduleItem
 import com.example.nextclass.appComponent.ScheduleDateTimePickerView
@@ -99,7 +101,7 @@ fun ScheduleView(
     SortBottomSheetComponent(
         bottomSheetShowState = scheduleViewModel.toggleShowSortBottomSheet.value,
         setSortType = {selectSortType->
-            scheduleViewModel.setSortType(selectSortType)
+            scheduleViewModel.setSortTypeScheduleDataList(selectSortType)
         },
         toggleBottomSheetState = {
             scheduleViewModel.toggleSortBottomSheet()
@@ -150,100 +152,73 @@ fun ScheduleView(
                         tint = Color.Black,
                     )
                 }
-                Spacer(modifier = Modifier.width(10.dp))
-                IconButton(
-                    onClick = {
-                        //배치 제어 버튼
-                        scheduleViewModel.changeLazyViewType()
-                    },
-                    modifier = Modifier
-                        .size(30.dp)
-                ) {
-                    Icon(
-                        modifier = Modifier
-
-                            .size(30.dp),
-                        imageVector = itemDeploymentIcon,
-                        contentDescription = "",
-                        tint = Color.Black,
-                    )
-                }
+//                Spacer(modifier = Modifier.width(10.dp))
+//                IconButton(
+//                    onClick = {
+//                        //배치 제어 버튼
+//                        scheduleViewModel.changeLazyViewType()
+//                    },
+//                    modifier = Modifier
+//                        .size(30.dp)
+//                ) {
+//                    Icon(
+//                        modifier = Modifier
+//
+//                            .size(30.dp),
+//                        imageVector = itemDeploymentIcon,
+//                        contentDescription = "",
+//                        tint = Color.Black,
+//                    )
+//                }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
-//
-//
-//            //버튼을 누를때마다 그리드뷰, 레이지컬럼으로 바뀜
-//            if (!scheduleViewModel.toggleLazyType.value) {
-//                LazyColumn(
-//                    verticalArrangement = Arrangement.spacedBy(18.dp),
-//                    modifier = Modifier.padding(bottom = 70.dp)
-//                ) {
-//                    items(
-//                        items = scheduleViewModel.scheduleDataList.value
-//                    ) { singleSchedule ->
-//                        SingleScheduleView(
-//                            scheduleDetail = singleSchedule.content,
-//                            scheduleDate = TimeFormatter.formatTimeAndSplit(singleSchedule.alarm_time),
-//                            modifySchedule={
-//                                //수정 버튼을 누르면 수정 페이지로 이동
-//                                scheduleViewModel.setScheduleData(singleSchedule)
-//                                navController.navigate("modifyScheduleView") {
-//                                    popUpTo(BottomNavItem.Schedule.screenRoute) { inclusive = true }
-//                                }
-//                            },
-//                            deleteSchedule={
-//                                scheduleViewModel.setScheduleData(singleSchedule)
-//                            },
-//                        )
-//                    }
-//                }
-//            } else {
-//                LazyVerticalGrid(
-//                    columns = GridCells.Fixed(2),
-//                    verticalArrangement = Arrangement.spacedBy(18.dp),
-//                    modifier = Modifier.padding(bottom = 70.dp)
-//                ) {
-//                    items(
-//                        items = scheduleViewModel.scheduleDataList.value
-//                    ) { singleSchedule ->
-//                        SingleScheduleGridView(
-//                            scheduleDetail = singleSchedule.content,
-//                            scheduleDate = TimeFormatter.formatTimeAndSplit(singleSchedule.alarm_time),
-//                            modifySchedule={
-//                                scheduleViewModel.setScheduleData(it)
-//                                navController.navigate("modifyScheduleView") {
-//                                    popUpTo(BottomNavItem.Schedule.screenRoute) { inclusive = true }
-//                                }
-//                            },
-//                            deleteSchedule={
-//                                scheduleViewModel.setScheduleData(it)
-//                            },
-//                        )
-//                    }
-//                }
-//            }
+
 
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(18.dp),
         ) {
             scheduleViewModel.groupByDateScheduleData.value.forEach { (date, schedules) ->
-                item {
 
-                    LazyScheduleItem(
-                        date = date.toString(),
-                        schedules = schedules,
-                        scheduleViewModel = scheduleViewModel,
-                        navController = navController
-                    )
+
+                //그리드뷰의 존재 이유가 딱히 없는것 같아 보류
+                if(scheduleViewModel.toggleLazyType.value){
+                    item {
+                        Log.d("date", date.toString())
+                        GridScheduleItem(
+                            date = date.toString(),
+                            schedules = schedules,
+                            scheduleViewModel = scheduleViewModel,
+                            navController = navController
+                        )
+                    }
+                }else{
+                    item {
+                        Log.d("date", date.toString())
+                        LazyScheduleItem(
+                            date = date.toString(),
+                            schedules = schedules,
+                            scheduleViewModel = scheduleViewModel,
+                            navController = navController
+                        )
+                    }
                 }
+
+            }
+
+            item{
+                Spacer(modifier = Modifier.height(50.dp))
             }
         }
+
+
 
             if (scheduleViewModel.tokenCheckResult.value) {
                 loginViewModel.logOut()
             }
         }
+
+
 
 }
 

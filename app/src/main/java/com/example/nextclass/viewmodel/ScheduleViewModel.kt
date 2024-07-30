@@ -185,14 +185,29 @@ class ScheduleViewModel @Inject constructor(
         val beforeSortList=_scheduleDataList.value
 
         _scheduleDataList.value = when(inputSortType){
-            "작성 시간 오름 차순"->SortScheduleList.sortByAscendingCreationTime(beforeSortList)
-            "작성 시간 내림 차순"-> SortScheduleList.sortByDescendingCreationTime(beforeSortList)
+//            "작성 시간 오름 차순"->SortScheduleList.sortByAscendingCreationTime(beforeSortList)
+//            "작성 시간 내림 차순"-> SortScheduleList.sortByDescendingCreationTime(beforeSortList)
             "남은 시간 오름 차순"->SortScheduleList.sortByAscendingAlarmTime(beforeSortList)
             "남은 시간 내림 차순"->SortScheduleList.sortByDescendingAlarmTime(beforeSortList)
             else -> { beforeSortList }
         }
 
         Log.d("inputSortType",inputSortType)
+
+    }
+
+    fun setSortTypeScheduleDataList(inputSortType:String){
+
+//        val beforeSortList=_scheduleDataList.value
+
+        val sortedScheduleDataList = when (inputSortType) {
+            "남은 시간 오름 차순"->_groupByDateScheduleData.value.toSortedMap(compareByDescending { it })
+            "남은 시간 내림 차순"->_groupByDateScheduleData.value.toSortedMap()
+            else -> {_groupByDateScheduleData.value.toSortedMap(compareByDescending { it })}
+        }
+
+        _groupByDateScheduleData.value= emptyMap()
+        _groupByDateScheduleData.value = sortedScheduleDataList
 
     }
 
@@ -211,7 +226,6 @@ class ScheduleViewModel @Inject constructor(
     fun groupedScheduleData(groupScheduleData: List<ScheduleData>) {
 
         _groupByDateScheduleData.value=groupScheduleData.groupBy { it.alarm_time.toLocalDate() }.toSortedMap(compareByDescending { it })
-
     }
 
     fun deleteScheduleData(){

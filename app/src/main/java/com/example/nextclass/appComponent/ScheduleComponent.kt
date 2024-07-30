@@ -20,7 +20,11 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -56,10 +60,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.Data.ScheduleData
 import com.example.nextclass.Data.SortOption
 import com.example.nextclass.R
 import com.example.nextclass.items.BottomNavItem
+import com.example.nextclass.repository.ScheduleTestRepository
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.Feldgrau
 import com.example.nextclass.ui.theme.Pastel_Red
@@ -392,8 +398,28 @@ fun ScheduleTextInsertView(
 @RequiresApi(Build.VERSION_CODES.O)
 val scheduleDataList=listOf(
     ScheduleData(
-        content = "물방울이 떨어지는 소리를 들으며 창밖을 바라보는 시간은 참 평화로워.",
+        content = "물방울이 떨어지는 소리를 들으며 창밖을 바라보는 시간은 참 평화로워awfafafafaffqqfqwfwfawfawfqwfqwfqwfqfwqfqf.",
         alarm_time = LocalDateTime.now().plusDays(1)
+    ),
+    ScheduleData(
+        content = "가나다라",
+        alarm_time = LocalDateTime.now().plusDays(1)
+    ),
+    ScheduleData(
+        content = "가나다라",
+        alarm_time = LocalDateTime.now().minusDays(1)
+    ),
+    ScheduleData(
+        content = "가나다라",
+        alarm_time = LocalDateTime.now().plusDays(1)
+    ),
+    ScheduleData(
+        content = "가나다라",
+        alarm_time = LocalDateTime.now().minusDays(1)
+    ),
+    ScheduleData(
+        content = "가나다라",
+        alarm_time = LocalDateTime.now().plusDays(2)
     ),
     ScheduleData(
         content = "가나다라",
@@ -418,6 +444,30 @@ val scheduleDataList=listOf(
     ScheduleData(
         content = "가나다라",
         alarm_time = LocalDateTime.now().minusDays(3)
+    ),
+    ScheduleData(
+        content = "가나다라",
+        alarm_time = LocalDateTime.now().minusDays(3)
+    ),
+    ScheduleData(
+        content = "가나다라",
+        alarm_time = LocalDateTime.now().minusDays(3)
+    ),
+)
+
+@RequiresApi(Build.VERSION_CODES.O)
+val scheduleDataList2=listOf(
+    ScheduleData(
+        content = "물방울이 떨어지는 소리를 들으며 창밖을 바라보는 시간은 참 평화로워.",
+        alarm_time = LocalDateTime.now().plusDays(1)
+    ),
+    ScheduleData(
+        content = "가나다라",
+        alarm_time = LocalDateTime.now().plusDays(1)
+    ),
+    ScheduleData(
+        content = "가나다라",
+        alarm_time = LocalDateTime.now().plusDays(1)
     ),
 )
 
@@ -470,7 +520,7 @@ fun SingleScheduleView(
 
                         Row(
                             modifier = Modifier
-                                .padding(start = 10.dp, end = 5.dp,bottom=5.dp)
+                                .padding(start = 10.dp, end = 5.dp, bottom = 10.dp)
 //                                .clip(RoundedCornerShape(10.dp))
 //                                .background(Feldgrau)
                                 .fillMaxWidth(),
@@ -479,23 +529,23 @@ fun SingleScheduleView(
                             Icon(
                                 modifier = Modifier
 
-                                    .size(15.dp),
+                                    .size(17.dp),
                                 imageVector = ImageVector.vectorResource(R.drawable.schedule_icon),
                                 contentDescription = "",
                                 tint = Color.Black,
                             )
-
-                            Text(
-                                text = scheduleDate.first,
-                                color = Color.Black,
-                                style = TextStyle(
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    fontStyle = FontStyle.Normal,
-                                ),
-                                modifier = Modifier
-                                    .padding(start = 2.dp)
-                            )
+//
+//                            Text(
+//                                text = scheduleDate.first,
+//                                color = Color.Black,
+//                                style = TextStyle(
+//                                    fontSize = 12.sp,
+//                                    fontWeight = FontWeight.Bold,
+//                                    fontStyle = FontStyle.Normal,
+//                                ),
+//                                modifier = Modifier
+//                                    .padding(start = 4.dp)
+//                            )
                             Text(
                                 text = scheduleDate.second,
                                 color = Color.Black,
@@ -514,13 +564,13 @@ fun SingleScheduleView(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom=17.dp),
+                            .padding(bottom = 17.dp),
 
                         ) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(end = 10.dp,start=10.dp)
+                                .padding(end = 10.dp, start = 10.dp)
 
                         ) {
                             Text(
@@ -587,7 +637,7 @@ fun SingleScheduleGridView(
     Surface(
         shape = RoundedCornerShape(30.dp),
         modifier = Modifier
-            .heightIn(min = 200.dp)
+            .heightIn(min = 200.dp, max = 240.dp)
 
             .padding(start = 10.dp, end = 10.dp)
     ) {
@@ -673,8 +723,8 @@ fun SingleScheduleGridView(
 }
 
 val sortOptions = listOf(
-    SortOption("작성 시간 오름 차순", R.drawable.up_button),
-    SortOption("작성 시간 내림 차순", R.drawable.down_button),
+//    SortOption("작성 시간 오름 차순", R.drawable.up_button),
+//    SortOption("작성 시간 내림 차순", R.drawable.down_button),
     SortOption("남은 시간 오름 차순", R.drawable.up_button),
     SortOption("남은 시간 내림 차순", R.drawable.down_button)
 )
@@ -767,7 +817,7 @@ fun LazyScheduleItem(
     Surface(
         modifier = Modifier
             .padding(start = 10.dp, end = 10.dp),
-        shape = RoundedCornerShape(25.dp),
+        shape = RoundedCornerShape(20.dp),
     ) {
         Row(
             modifier = Modifier
@@ -779,7 +829,7 @@ fun LazyScheduleItem(
                 modifier = Modifier
                     .fillMaxHeight()
 
-                    .padding(top=20.dp,start=20.dp),
+                    .padding(top = 20.dp, start = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(5.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -807,10 +857,90 @@ fun LazyScheduleItem(
                 modifier = Modifier
                     .padding(15.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(10.dp),
+                verticalArrangement = Arrangement.spacedBy(15.dp),
             ) {
                 schedules.forEach { singleSchedule ->
                     SingleScheduleView(
+                        scheduleDetail = singleSchedule.content,
+                        scheduleDate = TimeFormatter.formatTimeAndSplit(singleSchedule.alarm_time),
+                        modifySchedule = {
+                            // 수정 버튼을 누르면 수정 페이지로 이동
+                            scheduleViewModel.setScheduleData(singleSchedule)
+                            navController.navigate("modifyScheduleView") {
+                                popUpTo(BottomNavItem.Schedule.screenRoute) {
+                                    inclusive = true
+                                }
+                            }
+                        },
+                        deleteSchedule = {
+                            scheduleViewModel.setScheduleData(singleSchedule)
+                        },
+                    )
+                }
+            }
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun GridScheduleItem(
+    date: String,
+    schedules: List<ScheduleData>,
+    scheduleViewModel: ScheduleViewModel,
+    navController: NavController
+) {
+
+    val (day, yearMonth) = TimeFormatter.formatDayAndYearMonthSplit(date)
+
+    Surface(
+        modifier = Modifier
+            .padding(start = 10.dp, end = 10.dp),
+        shape = RoundedCornerShape(20.dp),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Background_Color2),
+
+            ) {
+            Column(
+                modifier = Modifier
+
+                    .padding(top = 20.dp, start = 20.dp),
+                verticalArrangement = Arrangement.spacedBy(5.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = day,
+                    style = TextStyle(
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontStyle = FontStyle.Normal,
+                    ),
+
+                    )
+                Text(
+                    text = yearMonth,
+                    style = TextStyle(
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontStyle = FontStyle.Normal,
+                    ),
+//                    modifier = Modifier.padding(16.dp)
+                )
+            }
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier.padding(15.dp)
+                    .wrapContentHeight()
+                    .heightIn(max =500.dp)	,
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                userScrollEnabled = false
+            ) {
+                items(schedules) { singleSchedule ->
+                    SingleScheduleGridView(
                         scheduleDetail = singleSchedule.content,
                         scheduleDate = TimeFormatter.formatTimeAndSplit(singleSchedule.alarm_time),
                         modifySchedule = {
@@ -867,10 +997,10 @@ fun ScheduleTextInsertPreview() {
 @Composable
 fun GridViewPreview() {
 //    ScheduleTextInsertView(text = "", onValueChange = {}, textCount = 0)
-    SingleScheduleGridView(
-        deleteSchedule = {},
-        modifySchedule = {},
-    )
+    val testRepository=ScheduleTestRepository()
+    val scheduleViewModel=ScheduleViewModel(testRepository)
+    val navController= rememberNavController()
+    GridScheduleItem(date = "2024-08-01", schedules = scheduleDataList2, scheduleViewModel =scheduleViewModel, navController = navController)
 
 }
 

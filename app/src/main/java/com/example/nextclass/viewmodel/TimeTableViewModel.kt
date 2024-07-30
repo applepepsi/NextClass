@@ -10,6 +10,7 @@ import com.example.nextclass.Data.ClassData
 import com.example.nextclass.Data.ClassUUid
 import com.example.nextclass.R
 import com.example.nextclass.repository.TimeTableRepository
+import com.example.nextclass.utils.CLASS_ALREADY_EXISTS_IN_TIMETABLE
 import com.example.nextclass.utils.CutEntranceYear
 import com.example.nextclass.utils.StringValue
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -67,6 +68,8 @@ class TimeTableViewModel @Inject constructor(
     private val _timeTableDataList=mutableStateOf(listOf<ClassData>())
     val timeTableDataList: State<List<ClassData>> = _timeTableDataList
 
+    private val _timeTableToastMessage = mutableStateOf("")
+    val timeTableToastMessage: State<String> = _timeTableToastMessage
 
     fun toggleInsertClassDataDialogState(){
         resetClassData()
@@ -168,13 +171,23 @@ class TimeTableViewModel @Inject constructor(
             timeTableRepository.postTimeTableData(_classData.value){serverResponse ->
                 Log.d("시간표 전송 성공", serverResponse.toString())
 
-                _addClassErrorMessage.value = StringValue.Empty
-                _addClassError.value = false
-                getTimeTable()
-                toggleInsertClassDataDialogState()
+                when(serverResponse?.errorCode){
+                    CLASS_ALREADY_EXISTS_IN_TIMETABLE->{
+                        _addClassErrorMessage.value = StringValue.StringResource(R.string.DuplicatedClassTime)
+                        _addClassError.value = true
+                    }
+                    else->{
+                        _addClassErrorMessage.value = StringValue.Empty
+                        _addClassError.value = false
+                        getTimeTable()
+                        toggleInsertClassDataDialogState()
+                    }
+                }
+//                _addClassErrorMessage.value = StringValue.Empty
+//                _addClassError.value = false
+
 
             }
-
         }else{
             //에러 출력
             _addClassErrorMessage.value = StringValue.StringResource(R.string.joinFailError)
@@ -195,18 +208,32 @@ class TimeTableViewModel @Inject constructor(
 
             timeTableRepository.postModifyTimeTableData(_classData.value){serverResponse ->
 
-                if(serverResponse?.code==200){
-                    Log.d("시간표 수정 성공", serverResponse.toString())
+//                if(serverResponse?.code==200){
+//                    Log.d("시간표 수정 성공", serverResponse.toString())
+//
+//                    _addClassErrorMessage.value = StringValue.Empty
+//                    _addClassError.value = false
+//
+//                    _timeTableDataList.value=replaceModifyClassData()
+//                    toggleSetShowClassDataModifyDialogState()
+//                    Log.d("_timeTableDataList", _timeTableDataList.value.toString())
+//                }else{
+//                    //서버에서 받은 에러 출력
+//                }
+                when(serverResponse?.errorCode){
+                    CLASS_ALREADY_EXISTS_IN_TIMETABLE->{
+                        _addClassErrorMessage.value = StringValue.StringResource(R.string.DuplicatedClassTime)
+                        _addClassError.value = true
+                    }
+                    else->{
+                        _addClassErrorMessage.value = StringValue.Empty
+                        _addClassError.value = false
 
-                    _addClassErrorMessage.value = StringValue.Empty
-                    _addClassError.value = false
-
-                    _timeTableDataList.value=replaceModifyClassData()
-                    toggleSetShowClassDataModifyDialogState()
-                    Log.d("_timeTableDataList", _timeTableDataList.value.toString())
-                }else{
-                    //서버에서 받은 에러 출력
+                        _timeTableDataList.value=replaceModifyClassData()
+                        toggleSetShowClassDataModifyDialogState()
+                    }
                 }
+
             }
 
         }else{
@@ -239,6 +266,8 @@ class TimeTableViewModel @Inject constructor(
                     deleteScheduleDataByList()
                     toggleSetShowClassDetailDialogState()
                     Log.d("시간표 제거 성공", serverResponse.toString())
+                }else{
+                    _timeTableToastMessage.value= serverResponse!!.errorDescription.toString()
                 }
             }
     }
