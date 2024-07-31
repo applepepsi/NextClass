@@ -76,7 +76,6 @@ fun TimeTableView(
         sheetContent = {
 
             AccreditationCalculationComponent()
-
         },
         sheetPeekHeight = 200.dp,
     ) {
