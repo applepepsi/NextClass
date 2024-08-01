@@ -1,7 +1,9 @@
 package com.example.nextclass.view
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,10 +13,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,11 +43,14 @@ import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
 import com.example.nextclass.appComponent.CommentComponent
 import com.example.nextclass.appComponent.CommunityPostSchoolTypeComponent
 import com.example.nextclass.appComponent.CommunityPostSortComponent
+import com.example.nextclass.appComponent.CommunityUserSettingComponent
 import com.example.nextclass.appComponent.DividerComponent
+import com.example.nextclass.appComponent.FloatingActionButtonComponent
 import com.example.nextclass.appComponent.PostDetailComponent
 import com.example.nextclass.appComponent.SinglePostComponent
 import com.example.nextclass.appComponent.SortBottomSheetComponent
 import com.example.nextclass.repository.TestRepository
+import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.viewmodel.CommunityViewModel
 import com.example.nextclass.viewmodel.LoginViewModel
@@ -56,60 +66,78 @@ fun CommunityView(
     val context = LocalContext.current
 
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 20.dp),
-
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-
-    ){
-        AppBarTextAndButtonComponent(
-            value = "게시판",
-            navController = navController,
-            showLeftButton = false,
-            showRightButton = true,
-            buttonText = "작성하기",
-            navRoute = "insertPostView"
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Row(
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 20.dp, end = 20.dp),
-            horizontalArrangement = Arrangement.End,
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxSize()
+
+                .padding(top = 20.dp),
+
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+
         ) {
-            CommunityPostSchoolTypeComponent(
-                togglePostSchoolType = { communityViewModel.togglePostSchoolType() },
-                postSchoolTypeState = communityViewModel.postSchoolTypeState.value
+            AppBarTextAndButtonComponent(
+                value = "게시판",
+                navController = navController,
+                showLeftButton = false,
+                showRightButton = false,
+                buttonText = "작성하기",
+                navRoute = ""
             )
-        }
 
-        Spacer(modifier = Modifier.height(10.dp))
-        DividerComponent(modifier = Modifier
-            .height(0.5.dp),
-            dividerColor = Color.LightGray
-        )
-        LazyColumn {
+            Spacer(modifier = Modifier.height(10.dp))
 
-            items(items = testCommunityData){singlePostData->
+            Column(
+                modifier = Modifier
+                    .background(Background_Color2)
+            ) {
 
-                SinglePostComponent(
-                    singlePostData,
-                    postClick = {
-                        communityViewModel.setSelectedCommunityData(singlePostData)
-                        navController.navigate("postDetailView")
+                Spacer(modifier = Modifier.height(5.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 20.dp, end = 20.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    CommunityUserSettingComponent()
+
+                    Spacer(modifier=Modifier.width(5.dp))
+
+                    CommunityPostSchoolTypeComponent(
+                        togglePostSchoolType = { communityViewModel.togglePostSchoolType() },
+                        postSchoolTypeState = communityViewModel.postSchoolTypeState.value
+                    )
+                }
+
+//            Spacer(modifier = Modifier.height(5.dp))
+
+                LazyColumn(
+                    modifier = Modifier
+                ) {
+
+                    items(items = testCommunityData) { singlePostData ->
+
+                        SinglePostComponent(
+                            singlePostData,
+                            postClick = {
+                                communityViewModel.setSelectedCommunityData(singlePostData)
+                                navController.navigate("postDetailView")
+                            }
+                        )
                     }
-                )
+                }
             }
         }
-
+        FloatingActionButtonComponent(
+            navController=navController,
+            navRoute = "insertPostView"
+        )
     }
-
 }
 
 val testCommunityData= listOf(
@@ -117,7 +145,18 @@ val testCommunityData= listOf(
     CommunityPostData(postName = "야야", postDetail = "ㅈㅇㅇㅂ", postTime = LocalDateTime.now(), commentCount = 3, likeCount = 2),
     CommunityPostData(postName = "아아", postDetail = "ㅈㅇㅂ", postTime = LocalDateTime.now(), commentCount = 4, likeCount = 3),
     CommunityPostData(postName = "바자", postDetail = "ㅈㅂㅈㅇ", postTime = LocalDateTime.now(), commentCount = 5, likeCount = 4),
-)
+    CommunityPostData(postName = "야야", postDetail = "ㅈㅇㅇㅂ", postTime = LocalDateTime.now(), commentCount = 3, likeCount = 2),
+    CommunityPostData(postName = "아아", postDetail = "ㅈㅇㅂ", postTime = LocalDateTime.now(), commentCount = 4, likeCount = 3),
+    CommunityPostData(postName = "바자", postDetail = "ㅈㅂㅈㅇ", postTime = LocalDateTime.now(), commentCount = 5, likeCount = 4),
+
+    CommunityPostData(postName = "야야", postDetail = "ㅈㅇㅇㅂ", postTime = LocalDateTime.now(), commentCount = 3, likeCount = 2),
+    CommunityPostData(postName = "아아", postDetail = "ㅈㅇㅂ", postTime = LocalDateTime.now(), commentCount = 4, likeCount = 3),
+    CommunityPostData(postName = "바자", postDetail = "ㅈㅂㅈㅇ", postTime = LocalDateTime.now(), commentCount = 5, likeCount = 4),
+
+    CommunityPostData(postName = "야야", postDetail = "ㅈㅇㅇㅂ", postTime = LocalDateTime.now(), commentCount = 3, likeCount = 2),
+    CommunityPostData(postName = "아아", postDetail = "ㅈㅇㅂ", postTime = LocalDateTime.now(), commentCount = 4, likeCount = 3),
+    CommunityPostData(postName = "바자", postDetail = "ㅈㅂㅈㅇ", postTime = LocalDateTime.now(), commentCount = 5, likeCount = 4),
+    )
 
 
 val testCommentList= listOf(

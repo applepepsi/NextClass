@@ -18,9 +18,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -49,6 +54,7 @@ import com.example.nextclass.R
 import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.NextClassTheme
+import com.example.nextclass.ui.theme.Pastel_Red
 import com.example.nextclass.utils.TimeFormatter
 import com.example.nextclass.utils.TokenManager
 import com.example.nextclass.utils.UserInfoManager
@@ -146,17 +152,21 @@ fun InsertOrModifyPostComponent(
 }
 @Composable
 fun SinglePostComponent(
-    singlePostData:CommunityPostData=CommunityPostData(),
+    singlePostData:CommunityPostData=CommunityPostData(postName = "NameTest", postDetail = "DetailTest"),
     postClick:()->Unit
 ){
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
+
+            .padding(start = 10.dp, end = 10.dp, bottom = 10.dp,)
+            .clip(RoundedCornerShape(10.dp))
+            .background(Color.White)
             .clickable {
                 postClick()
             },
-
+        verticalArrangement = Arrangement.SpaceEvenly
     ){
 //        DividerComponent(modifier = Modifier
 //            .height(0.5.dp),
@@ -165,28 +175,36 @@ fun SinglePostComponent(
 
         Column(
             modifier = Modifier
-                .padding(10.dp)
-
+                .padding(start = 10.dp, top = 10.dp)
+                .fillMaxWidth(),
+//            verticalArrangement = Arrangement.spacedBy(5.dp),
+            verticalArrangement = Arrangement.SpaceAround
         ) {
             Text(
                 text=singlePostData.postName,
                 style = TextStyle(
-                    fontSize = 20.sp,
+                    fontSize = 17.sp,
                     fontWeight = FontWeight.Bold,
                     fontStyle = FontStyle.Normal,
                 ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
+
+
+
             Text(
                 text=singlePostData.postDetail,
                 style = TextStyle(
-                    fontSize = 20.sp,
+                    fontSize = 13.sp,
                     fontWeight = FontWeight.Normal,
                     fontStyle = FontStyle.Normal,
                 ),
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .padding(top=3.dp)
+
             )
         }
 
@@ -224,8 +242,10 @@ fun SinglePostComponent(
             }
 
             Row(
-                modifier = Modifier,
+                modifier = Modifier
+                    .padding(end=5.dp),
                 verticalAlignment = Alignment.CenterVertically,
+//                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(
                     modifier = Modifier
@@ -252,6 +272,9 @@ fun SinglePostComponent(
                         ),
                     )
                 }
+
+                Spacer(modifier = Modifier.width(3.dp))
+
                 Row(
                     modifier = Modifier
                         .padding(5.dp),
@@ -279,10 +302,10 @@ fun SinglePostComponent(
                 }
             }
         }
-        DividerComponent(modifier = Modifier
-            .height(0.5.dp),
-            dividerColor = Color.LightGray
-        )
+//        DividerComponent(modifier = Modifier
+//            .height(0.5.dp),
+//            dividerColor = Color.LightGray
+//        )
     }
 
 
@@ -684,7 +707,7 @@ fun CommunityPostSchoolTypeComponent(
             ) {
                 togglePostSchoolType()
             }
-                .padding(5.dp),
+            .padding(5.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -708,6 +731,53 @@ fun CommunityPostSchoolTypeComponent(
                 ),
             )
         }
+}
+
+@Composable
+fun CommunityUserSettingComponent(
+
+){
+    val postSchoolType =
+        PostSchoolType(
+            icon = ImageVector.vectorResource(R.drawable.user_profile_icon),
+            text = "작성글 보기"
+        )
+
+
+
+
+
+    Column(modifier = Modifier
+        .clickable(
+            interactionSource = remember { MutableInteractionSource() },
+            indication = null
+        ) {
+
+        }
+        .padding(5.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+
+        Icon(
+            modifier = Modifier
+                .size(28.dp),
+            imageVector = postSchoolType.icon,
+            contentDescription = "",
+            tint = Color.Black,
+        )
+
+        Spacer(modifier = Modifier.height(3.dp))
+
+        Text(
+            text=postSchoolType.text,
+            style = TextStyle(
+                fontSize = 9.sp,
+                fontWeight = FontWeight.Normal,
+                fontStyle = FontStyle.Normal,
+            ),
+        )
+    }
 }
 
 @Composable
@@ -758,6 +828,37 @@ fun CommunityPostSortComponent(
 
 }
 
+@Composable
+fun FloatingActionButtonComponent(
+    navRoute:String="",
+    navController: NavController,
+) {
+    Box(
+        contentAlignment = Alignment.BottomEnd,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(end=10.dp,bottom=20.dp)
+
+    ) {
+        LargeFloatingActionButton(
+            onClick = {
+                navController.navigate(navRoute)
+            },
+            containerColor = Pastel_Red,
+            shape = CircleShape,
+            modifier = Modifier
+                .size(35.dp)
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.plus_icon),
+                contentDescription = "",
+                tint = Color.Black,
+                modifier = Modifier
+                    .size(20.dp)
+            )
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable

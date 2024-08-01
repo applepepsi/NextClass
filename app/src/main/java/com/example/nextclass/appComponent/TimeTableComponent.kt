@@ -531,7 +531,7 @@ fun ClassModify(
                 ) {
                     TextButton(
                         onClick = {
-                                  timeTableViewModel.postModifyScheduleData()
+                                  timeTableViewModel.postModifyClassData()
 //                            timeTableViewModel.toggleSetShowClassDataModifyDialogState()
                         },
                         modifier = Modifier
@@ -654,7 +654,7 @@ fun InsertClassData(
                     TextButton(
                         onClick = {
 //                            timeTableViewModel.toggleInsertClassDataDialogState()
-                            timeTableViewModel.postScheduleData()
+                            timeTableViewModel.postClassData()
                         },
                         modifier = Modifier
                     ) {
@@ -663,7 +663,7 @@ fun InsertClassData(
                     TextButton(
                         onClick = {
                             timeTableViewModel.toggleInsertClassDataDialogState()
-                            timeTableViewModel.postScheduleData()
+                            timeTableViewModel.postClassData()
                         },
                         modifier = Modifier
                     ) {

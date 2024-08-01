@@ -149,6 +149,7 @@ fun AppBarTextAndButtonComponent(
     value: String,
     buttonText:String="",
     navRoute:String="",
+
     navController: NavController,
     showLeftButton:Boolean=true,
     showRightButton:Boolean=false,

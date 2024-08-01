@@ -68,8 +68,8 @@ class TimeTableViewModel @Inject constructor(
     private val _timeTableDataList=mutableStateOf(listOf<ClassData>())
     val timeTableDataList: State<List<ClassData>> = _timeTableDataList
 
-    private val _timeTableToastMessage = mutableStateOf("")
-    val timeTableToastMessage: State<String> = _timeTableToastMessage
+    private val _timeTableToastMessage = mutableStateOf<String?>(null)
+    val timeTableToastMessage: State<String?> = _timeTableToastMessage
 
     fun toggleInsertClassDataDialogState(){
         resetClassData()
@@ -160,9 +160,9 @@ class TimeTableViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun postScheduleData(){
+    fun postClassData(){
 
-        if(scheduleDataCheck(classData.value)){
+        if(scheduleDataCheck()){
 
 //            _classData.value = _classData.value.copy(week=_classData.value.week)
             //전송
@@ -197,9 +197,9 @@ class TimeTableViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun postModifyScheduleData(){
+    fun postModifyClassData(){
 
-        if(scheduleDataCheck(_classData.value)){
+        if(scheduleDataCheck()){
 
 //            _classData.value = _classData.value.copy(week=_classData.value.week)
             //전송
@@ -267,9 +267,12 @@ class TimeTableViewModel @Inject constructor(
                     toggleSetShowClassDetailDialogState()
                     Log.d("시간표 제거 성공", serverResponse.toString())
                 }else{
-                    _timeTableToastMessage.value= serverResponse!!.errorDescription.toString()
+                    _timeTableToastMessage.value = serverResponse!!.errorDescription
                 }
             }
+    }
+    fun clearToastMessage() {
+        _timeTableToastMessage.value = null
     }
 
     private fun deleteScheduleDataByList(){
@@ -295,16 +298,31 @@ class TimeTableViewModel @Inject constructor(
     }
 
 
-    private fun scheduleDataCheck(value: ClassData):Boolean{
+    private fun scheduleDataCheck():Boolean{
         val classData=_classData.value
 
-        //중복 체크는 서버쪽에서 할 예정
-        return classData.week.isNotEmpty()
-                && classData.teacher_name.isNotEmpty()
-                && classData.title.isNotEmpty()
-                && classData.school.isNotEmpty()
+        return when {
+            startTimeAfterEndTimeCheck(classData) -> {
+                _timeTableToastMessage.value = "수업 시작 시간은 수업 종료 시간 보다 클 수 없습니다."
+                false
+            }
+            fieldEmptyCheck(classData) -> {
+                _timeTableToastMessage.value = "모든 항목을 기입해 주세요."
+                false
+            }
+            else -> true
+        }
+    }
+    private fun startTimeAfterEndTimeCheck(classData: ClassData): Boolean {
+        return classData.class_start_time > classData.class_end_time
     }
 
+    private fun fieldEmptyCheck(classData: ClassData): Boolean {
+        return classData.week.isEmpty()
+                || classData.teacher_name.isEmpty()
+                || classData.title.isEmpty()
+                || classData.school.isEmpty()
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getTimeTable(){
