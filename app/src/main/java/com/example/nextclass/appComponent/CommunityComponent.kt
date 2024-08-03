@@ -160,7 +160,7 @@ fun SinglePostComponent(
         modifier = Modifier
             .fillMaxWidth()
 
-            .padding(start = 10.dp, end = 10.dp, bottom = 10.dp,)
+            .padding(start = 10.dp, end = 10.dp, bottom = 7.dp,)
             .clip(RoundedCornerShape(10.dp))
             .background(Color.White)
             .clickable {

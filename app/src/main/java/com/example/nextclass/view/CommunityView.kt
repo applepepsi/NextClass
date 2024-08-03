@@ -34,6 +34,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.Data.CommunityCommentData
 import com.example.nextclass.Data.CommunityPostData
@@ -43,12 +44,14 @@ import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
 import com.example.nextclass.appComponent.CommentComponent
 import com.example.nextclass.appComponent.CommunityPostSchoolTypeComponent
 import com.example.nextclass.appComponent.CommunityPostSortComponent
+import com.example.nextclass.appComponent.CommunityTopNavComponent
 import com.example.nextclass.appComponent.CommunityUserSettingComponent
 import com.example.nextclass.appComponent.DividerComponent
 import com.example.nextclass.appComponent.FloatingActionButtonComponent
 import com.example.nextclass.appComponent.PostDetailComponent
 import com.example.nextclass.appComponent.SinglePostComponent
 import com.example.nextclass.appComponent.SortBottomSheetComponent
+import com.example.nextclass.nav.CommunityGraph
 import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.NextClassTheme
@@ -58,12 +61,14 @@ import java.time.LocalDateTime
 
 @Composable
 fun CommunityView(
-    navController: NavController,
+    navController: NavHostController,
     loginViewModel: LoginViewModel,
     mainNavController: NavController,
     communityViewModel: CommunityViewModel
 ) {
     val context = LocalContext.current
+    val communityNavController= rememberNavController()
+
 
 
     Box(
@@ -90,47 +95,21 @@ fun CommunityView(
 
             Spacer(modifier = Modifier.height(10.dp))
 
+
+            CommunityTopNavComponent(
+                communityNavController
+            )
+
+
+
             Column(
                 modifier = Modifier
                     .background(Background_Color2)
             ) {
+            Spacer(modifier = Modifier.height(10.dp))
 
-                Spacer(modifier = Modifier.height(5.dp))
+            CommunityGraph(navController = navController, communityViewModel = communityViewModel, communityNavController = communityNavController)
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 20.dp, end = 20.dp),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    CommunityUserSettingComponent()
-
-                    Spacer(modifier=Modifier.width(5.dp))
-
-                    CommunityPostSchoolTypeComponent(
-                        togglePostSchoolType = { communityViewModel.togglePostSchoolType() },
-                        postSchoolTypeState = communityViewModel.postSchoolTypeState.value
-                    )
-                }
-
-//            Spacer(modifier = Modifier.height(5.dp))
-
-                LazyColumn(
-                    modifier = Modifier
-                ) {
-
-                    items(items = testCommunityData) { singlePostData ->
-
-                        SinglePostComponent(
-                            singlePostData,
-                            postClick = {
-                                communityViewModel.setSelectedCommunityData(singlePostData)
-                                navController.navigate("postDetailView")
-                            }
-                        )
-                    }
-                }
             }
         }
         FloatingActionButtonComponent(
@@ -188,7 +167,7 @@ fun PostDetailView(
                 .padding(top = 20.dp),
 
 
-        ){
+            ){
             AppBarTextAndButtonComponent(
                 value = "",
                 navController = navController,
@@ -230,6 +209,94 @@ fun PostDetailView(
 
 }
 
+
+@Composable
+fun AllSchoolPostView(
+    communityViewModel: CommunityViewModel,
+    navController: NavController,
+    communityNavController: NavController
+) {
+
+    LazyColumn(
+        modifier = Modifier
+    ) {
+
+        item{
+            Text(
+                text="모든학교"
+            )
+        }
+
+        items(items = testCommunityData) { singlePostData ->
+
+            SinglePostComponent(
+                singlePostData,
+                postClick = {
+                    communityViewModel.setSelectedCommunityData(singlePostData)
+                    navController.navigate("postDetailView")
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun MySchoolPostView(
+    communityViewModel: CommunityViewModel,
+    navController: NavController,
+    communityNavController: NavController
+) {
+
+
+    LazyColumn(
+        modifier = Modifier
+    ) {
+
+        item{
+            Text(
+                text="내학교"
+            )
+        }
+        items(items = testCommunityData) { singlePostData ->
+
+            SinglePostComponent(
+                singlePostData,
+                postClick = {
+                    communityViewModel.setSelectedCommunityData(singlePostData)
+                    navController.navigate("postDetailView")
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun MyPostView(
+    communityViewModel: CommunityViewModel,
+    navController: NavController,
+    communityNavController: NavController
+) {
+
+    LazyColumn(
+        modifier = Modifier
+    ) {
+        item{
+            Text(
+                text="내 게시물"
+            )
+        }
+        items(items = testCommunityData) { singlePostData ->
+
+            SinglePostComponent(
+                singlePostData,
+                postClick = {
+                    communityViewModel.setSelectedCommunityData(singlePostData)
+                    navController.navigate("postDetailView")
+                }
+            )
+        }
+    }
+}
 
 
 @Preview(showBackground = true)
