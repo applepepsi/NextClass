@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.appComponent.InsertOrModifyPostComponent
 import com.example.nextclass.items.BottomNavItem
 import com.example.nextclass.view.ChangeEmailInsertCodeView
@@ -38,6 +39,8 @@ fun MainNavGraph(
     val scheduleViewModel:ScheduleViewModel = hiltViewModel()
     val userInfoViewModel:UserInfoViewModel= hiltViewModel()
     val communityViewModel:CommunityViewModel= hiltViewModel()
+
+
 
     NavHost(navController = navController, startDestination = "homeRoute") {
         homeRoute(navController, loginViewModel, mainNavHostController)
@@ -85,7 +88,8 @@ private fun NavGraphBuilder.communityRoute(
     navController: NavHostController,
     loginViewModel: LoginViewModel,
     mainNavHostController: NavHostController,
-    communityViewModel: CommunityViewModel
+    communityViewModel: CommunityViewModel,
+
 ) {
 
 
@@ -104,7 +108,8 @@ private fun NavGraphBuilder.communityView(
     navController: NavHostController,
     loginViewModel: LoginViewModel,
     mainNavHostController: NavHostController,
-    communityViewModel: CommunityViewModel
+    communityViewModel: CommunityViewModel,
+
 ) {
 
     composable(BottomNavItem.Community.screenRoute) {

@@ -1,6 +1,5 @@
 package com.example.nextclass.view
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,27 +9,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -38,19 +24,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.Data.CommunityCommentData
 import com.example.nextclass.Data.CommunityPostData
-import com.example.nextclass.Data.PostSchoolType
-import com.example.nextclass.R
 import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
 import com.example.nextclass.appComponent.CommentComponent
-import com.example.nextclass.appComponent.CommunityPostSchoolTypeComponent
-import com.example.nextclass.appComponent.CommunityPostSortComponent
 import com.example.nextclass.appComponent.CommunityTopNavComponent
-import com.example.nextclass.appComponent.CommunityUserSettingComponent
-import com.example.nextclass.appComponent.DividerComponent
 import com.example.nextclass.appComponent.FloatingActionButtonComponent
 import com.example.nextclass.appComponent.PostDetailComponent
 import com.example.nextclass.appComponent.SinglePostComponent
-import com.example.nextclass.appComponent.SortBottomSheetComponent
 import com.example.nextclass.nav.CommunityGraph
 import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
@@ -64,12 +43,13 @@ fun CommunityView(
     navController: NavHostController,
     loginViewModel: LoginViewModel,
     mainNavController: NavController,
-    communityViewModel: CommunityViewModel
+    communityViewModel: CommunityViewModel,
+
 ) {
     val context = LocalContext.current
     val communityNavController= rememberNavController()
 
-
+//todo 테스트 해야함
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -95,22 +75,12 @@ fun CommunityView(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-
             CommunityTopNavComponent(
-                communityNavController
+                navController=navController,
+                communityViewModel=communityViewModel,
+                communityNavController=communityNavController
             )
 
-
-
-            Column(
-                modifier = Modifier
-                    .background(Background_Color2)
-            ) {
-            Spacer(modifier = Modifier.height(10.dp))
-
-            CommunityGraph(navController = navController, communityViewModel = communityViewModel, communityNavController = communityNavController)
-
-            }
         }
         FloatingActionButtonComponent(
             navController=navController,
@@ -213,7 +183,7 @@ fun PostDetailView(
 @Composable
 fun AllSchoolPostView(
     communityViewModel: CommunityViewModel,
-    navController: NavController,
+
     communityNavController: NavController
 ) {
 
@@ -233,7 +203,7 @@ fun AllSchoolPostView(
                 singlePostData,
                 postClick = {
                     communityViewModel.setSelectedCommunityData(singlePostData)
-                    navController.navigate("postDetailView")
+
                 }
             )
         }
@@ -243,7 +213,7 @@ fun AllSchoolPostView(
 @Composable
 fun MySchoolPostView(
     communityViewModel: CommunityViewModel,
-    navController: NavController,
+
     communityNavController: NavController
 ) {
 
@@ -263,7 +233,7 @@ fun MySchoolPostView(
                 singlePostData,
                 postClick = {
                     communityViewModel.setSelectedCommunityData(singlePostData)
-                    navController.navigate("postDetailView")
+
                 }
             )
         }
@@ -273,7 +243,7 @@ fun MySchoolPostView(
 @Composable
 fun MyPostView(
     communityViewModel: CommunityViewModel,
-    navController: NavController,
+
     communityNavController: NavController
 ) {
 
@@ -291,7 +261,7 @@ fun MyPostView(
                 singlePostData,
                 postClick = {
                     communityViewModel.setSelectedCommunityData(singlePostData)
-                    navController.navigate("postDetailView")
+//                    navController.navigate("postDetailView")
                 }
             )
         }
@@ -306,7 +276,7 @@ fun CommunityViewPreview() {
     val navController= rememberNavController()
     val testRepository = TestRepository()
 
-
+    val communityNavController= rememberNavController()
     val loginViewModel=LoginViewModel(testRepository)
     val communityViewModel=CommunityViewModel()
 
@@ -315,7 +285,8 @@ fun CommunityViewPreview() {
             navController = navController,
             loginViewModel = loginViewModel,
             mainNavController = mainNavController,
-            communityViewModel = communityViewModel
+            communityViewModel = communityViewModel,
+
         )
     }
 }

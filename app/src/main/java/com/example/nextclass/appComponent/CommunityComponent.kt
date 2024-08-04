@@ -73,8 +73,6 @@ fun InsertOrModifyPostComponent(
 ) {
     val context = LocalContext.current
 
-
-
     Column(
         modifier = Modifier
 
@@ -160,7 +158,7 @@ fun SinglePostComponent(
         modifier = Modifier
             .fillMaxWidth()
 
-            .padding(start = 10.dp, end = 10.dp, bottom = 7.dp,)
+            .padding(start = 5.dp, end = 5.dp, bottom = 7.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(Color.White)
             .clickable {
@@ -175,7 +173,7 @@ fun SinglePostComponent(
 
         Column(
             modifier = Modifier
-                .padding(start = 10.dp, top = 10.dp)
+                .padding(start = 10.dp, top = 20.dp)
                 .fillMaxWidth(),
 //            verticalArrangement = Arrangement.spacedBy(5.dp),
             verticalArrangement = Arrangement.SpaceAround
@@ -183,7 +181,7 @@ fun SinglePostComponent(
             Text(
                 text=singlePostData.postName,
                 style = TextStyle(
-                    fontSize = 17.sp,
+                    fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     fontStyle = FontStyle.Normal,
                 ),
@@ -191,12 +189,12 @@ fun SinglePostComponent(
                 overflow = TextOverflow.Ellipsis
             )
 
-
+            Spacer(Modifier.height(5.dp))
 
             Text(
                 text=singlePostData.postDetail,
                 style = TextStyle(
-                    fontSize = 13.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Normal,
                     fontStyle = FontStyle.Normal,
                 ),
@@ -207,7 +205,7 @@ fun SinglePostComponent(
 
             )
         }
-
+        Spacer(Modifier.height(10.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -837,7 +835,7 @@ fun FloatingActionButtonComponent(
         contentAlignment = Alignment.BottomEnd,
         modifier = Modifier
             .fillMaxSize()
-            .padding(end=10.dp,bottom=20.dp)
+            .padding(end=20.dp,bottom=80.dp)
 
     ) {
         LargeFloatingActionButton(
@@ -871,6 +869,21 @@ fun PostPreview() {
 
     NextClassTheme {
         SinglePostComponent(postClick = {})
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun InsertPostPreview() {
+    val testRepository = TestRepository()
+    val loginViewModel = LoginViewModel(testRepository)
+
+    val navController = rememberNavController()
+    val communityViewModel=CommunityViewModel()
+
+    NextClassTheme {
+        InsertOrModifyPostComponent(communityViewModel = communityViewModel, navController = navController, loginViewModel = loginViewModel, postType = {})
     }
 }
 

@@ -27,23 +27,23 @@ import com.example.nextclass.viewmodel.UserInfoViewModel
 @Composable
 fun CommunityGraph(
     navController: NavHostController,
+    communityNavController: NavHostController,
     communityViewModel: CommunityViewModel,
-    communityNavController: NavController
 ) {
 
 
     NavHost(
-        navController = navController,
-        startDestination = CommunityTopNavItem.ALL_SCHOOL
+        navController = communityNavController,
+        startDestination = CommunityTopNavItem.AllSchool.screenRoute
     ) {
-        composable(CommunityTopNavItem.ALL_SCHOOL) {
-            AllSchoolPostView(communityViewModel = communityViewModel, navController = navController, communityNavController = communityNavController)
+        composable(CommunityTopNavItem.AllSchool.screenRoute) {
+            AllSchoolPostView(communityViewModel = communityViewModel, communityNavController = communityNavController)
         }
-        composable(CommunityTopNavItem.MY_SCHOOL) {
-            MySchoolPostView(communityViewModel = communityViewModel, navController = navController, communityNavController = communityNavController)
+        composable(CommunityTopNavItem.MySchool.screenRoute) {
+            MySchoolPostView(communityViewModel = communityViewModel,communityNavController = communityNavController)
         }
-        composable(CommunityTopNavItem.MY_POST) {
-            MyPostView(communityViewModel = communityViewModel, navController = navController, communityNavController = communityNavController)
+        composable(CommunityTopNavItem.MyPost.screenRoute) {
+            MyPostView(communityViewModel = communityViewModel, communityNavController = communityNavController)
         }
     }
 }

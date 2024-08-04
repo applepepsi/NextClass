@@ -1,6 +1,7 @@
 package com.example.nextclass.appComponent
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -71,14 +72,11 @@ fun MainBottomNav(loginViewModel: LoginViewModel, mainNavController: NavHostCont
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.White)
-                .padding(10.dp),
+                .background(Color.White),
 //            color = Background_Color,
             shape = RoundedCornerShape(16.dp)
         ) {
             Column {
-
-
 
                 MainNavGraph(
                     loginViewModel = loginViewModel,
@@ -166,6 +164,7 @@ fun RowScope.AddBottomNavItem(
                 .background(background)
                 .clickable(
                     onClick = {
+                        Log.d("선택된 루트2", screen.screenRoute)
                         navController.navigate(screen.screenRoute) {
                             popUpTo(navController.graph.findStartDestination().id)
                             launchSingleTop = true
@@ -186,6 +185,7 @@ fun RowScope.AddBottomNavItem(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun BottomNavPreview() {
