@@ -1,14 +1,11 @@
 package com.example.nextclass.appComponent
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,14 +18,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -51,17 +45,13 @@ import com.example.nextclass.Data.CommunityCommentData
 import com.example.nextclass.Data.CommunityPostData
 import com.example.nextclass.Data.PostSchoolType
 import com.example.nextclass.R
-import com.example.nextclass.repository.TestRepository
+import com.example.nextclass.repository.testRepo.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.ui.theme.Pastel_Red
 import com.example.nextclass.utils.TimeFormatter
-import com.example.nextclass.utils.TokenManager
-import com.example.nextclass.utils.UserInfoManager
 import com.example.nextclass.viewmodel.CommunityViewModel
 import com.example.nextclass.viewmodel.LoginViewModel
-import com.example.nextclass.viewmodel.ScheduleViewModel
-import java.time.LocalDateTime
 
 
 @Composable

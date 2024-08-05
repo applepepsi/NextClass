@@ -65,7 +65,7 @@ import com.example.nextclass.Data.ScheduleData
 import com.example.nextclass.Data.SortOption
 import com.example.nextclass.R
 import com.example.nextclass.items.BottomNavItem
-import com.example.nextclass.repository.ScheduleTestRepository
+import com.example.nextclass.repository.testRepo.ScheduleTestRepository
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.Feldgrau
 import com.example.nextclass.ui.theme.Pastel_Red
@@ -997,7 +997,7 @@ fun ScheduleTextInsertPreview() {
 @Composable
 fun GridViewPreview() {
 //    ScheduleTextInsertView(text = "", onValueChange = {}, textCount = 0)
-    val testRepository=ScheduleTestRepository()
+    val testRepository= ScheduleTestRepository()
     val scheduleViewModel=ScheduleViewModel(testRepository)
     val navController= rememberNavController()
     GridScheduleItem(date = "2024-08-01", schedules = scheduleDataList2, scheduleViewModel =scheduleViewModel, navController = navController)

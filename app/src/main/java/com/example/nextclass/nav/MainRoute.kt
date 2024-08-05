@@ -9,7 +9,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.appComponent.InsertOrModifyPostComponent
 import com.example.nextclass.items.BottomNavItem
 import com.example.nextclass.view.ChangeEmailInsertCodeView
@@ -27,6 +26,7 @@ import com.example.nextclass.view.UserProfileView
 import com.example.nextclass.viewmodel.CommunityViewModel
 import com.example.nextclass.viewmodel.LoginViewModel
 import com.example.nextclass.viewmodel.ScheduleViewModel
+import com.example.nextclass.viewmodel.TimeTableViewModel
 import com.example.nextclass.viewmodel.UserInfoViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -39,12 +39,12 @@ fun MainNavGraph(
     val scheduleViewModel:ScheduleViewModel = hiltViewModel()
     val userInfoViewModel:UserInfoViewModel= hiltViewModel()
     val communityViewModel:CommunityViewModel= hiltViewModel()
-
+    val timeTableViewModel: TimeTableViewModel = hiltViewModel()
 
 
     NavHost(navController = navController, startDestination = "homeRoute") {
         homeRoute(navController, loginViewModel, mainNavHostController)
-        timetableRoute(navController, loginViewModel, mainNavHostController)
+        timetableRoute(navController, loginViewModel, mainNavHostController,timeTableViewModel)
         communityRoute(navController, loginViewModel, mainNavHostController,communityViewModel)
         scheduleRoute(navController, loginViewModel, mainNavHostController,scheduleViewModel)
         userProfileRoute(navController, loginViewModel, mainNavHostController,userInfoViewModel)
@@ -71,7 +71,8 @@ private fun NavGraphBuilder.homeRoute(
 private fun NavGraphBuilder.timetableRoute(
     navController: NavHostController,
     loginViewModel: LoginViewModel,
-    mainNavHostController: NavHostController
+    mainNavHostController: NavHostController,
+    timeTableViewModel: TimeTableViewModel
 ) {
 
     navigation(
@@ -79,7 +80,7 @@ private fun NavGraphBuilder.timetableRoute(
         startDestination = BottomNavItem.Timetable.screenRoute
     ) {
         composable(BottomNavItem.Timetable.screenRoute) {
-            TimeTableView(navController, loginViewModel, mainNavHostController)
+            TimeTableView(navController, loginViewModel, mainNavHostController,timeTableViewModel)
         }
     }
 }

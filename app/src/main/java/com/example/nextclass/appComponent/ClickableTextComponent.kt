@@ -11,12 +11,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import com.example.nextclass.items.TopNavItem
-import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.ui.theme.NextClassTheme
-import com.example.nextclass.view.LoginView
-import com.example.nextclass.viewmodel.LoginViewModel
 
 @Composable
 fun TermsAndConditionsTextComponent(

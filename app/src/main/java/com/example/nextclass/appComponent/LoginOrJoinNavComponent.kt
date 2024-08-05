@@ -32,7 +32,7 @@ import com.example.nextclass.items.TopNavItem
 import com.example.nextclass.nav.LoginOrJoinNavGraph
 
 
-import com.example.nextclass.repository.TestRepository
+import com.example.nextclass.repository.testRepo.TestRepository
 import com.example.nextclass.ui.theme.Background_Color
 import com.example.nextclass.ui.theme.Navi_Green
 import com.example.nextclass.ui.theme.NextClassTheme

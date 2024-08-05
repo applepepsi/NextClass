@@ -1,9 +1,8 @@
-package com.example.nextclass.repository
+package com.example.nextclass.repository.testRepo
 
 import android.util.Log
 import com.example.nextclass.Data.ChangeEmail
 import com.example.nextclass.Data.ChangePassword
-import com.example.nextclass.Data.ChangeUserData
 import com.example.nextclass.Data.DuplicateCheckRequest
 import com.example.nextclass.Data.FindIDOrPasswordData
 import com.example.nextclass.Data.JoinRequest
@@ -13,6 +12,7 @@ import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.Data.TokenData
 import com.example.nextclass.Data.UserData
 import com.example.nextclass.Data.VerifyCodeData
+import com.example.nextclass.repository.UserInfoRepository
 import com.example.oneplusone.serverConnection.API
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

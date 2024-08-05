@@ -1,6 +1,5 @@
 package com.example.nextclass.view
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.nextclass.Data.TokenData
 import com.example.nextclass.R
 import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
 import com.example.nextclass.appComponent.CheckboxComponent
@@ -44,14 +42,11 @@ import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.MainTextComponent
 import com.example.nextclass.appComponent.PasswordInputFieldComponent
 import com.example.nextclass.appComponent.ProgressBarComponent
-import com.example.nextclass.appComponent.RePostPasswordCodeComponent
 import com.example.nextclass.appComponent.RememberUserComponent
 import com.example.nextclass.appComponent.TermsAndConditionsTextComponent
 import com.example.nextclass.appComponent.TextInputFieldComponent
 import com.example.nextclass.appComponent.TextInputHelpFieldComponent
-import com.example.nextclass.appComponent.VerifyCodeInputComponent
-import com.example.nextclass.items.TopNavItem
-import com.example.nextclass.repository.TestRepository
+import com.example.nextclass.repository.testRepo.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.utils.TokenManager
@@ -85,8 +80,11 @@ fun LoginView(
     mainNavHostController: NavController) {
     val context = LocalContext.current
 
+    val scrollState = rememberScrollState()
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

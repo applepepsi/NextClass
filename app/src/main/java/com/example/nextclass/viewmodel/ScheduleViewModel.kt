@@ -7,11 +7,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.nextclass.Data.ScheduleData
-import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.Data.TimeData
 import com.example.nextclass.R
 import com.example.nextclass.repository.ScheduleRepository
-import com.example.nextclass.repository.TestRepository
 import com.example.nextclass.utils.EXPIRED_REFRESH_TOKEN
 import com.example.nextclass.utils.SortScheduleList
 import com.example.nextclass.utils.StringValue

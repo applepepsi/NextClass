@@ -6,12 +6,16 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.nextclass.Data.AllScore
 import com.example.nextclass.Data.ClassData
+import com.example.nextclass.Data.ClassScore
 import com.example.nextclass.Data.ClassUUid
+import com.example.nextclass.Data.SingleSemesterScore
 import com.example.nextclass.R
 import com.example.nextclass.repository.TimeTableRepository
 import com.example.nextclass.utils.CLASS_ALREADY_EXISTS_IN_TIMETABLE
 import com.example.nextclass.utils.CutEntranceYear
+import com.example.nextclass.utils.GetSemester.getCurrentSemester
 import com.example.nextclass.utils.StringValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
@@ -70,6 +74,206 @@ class TimeTableViewModel @Inject constructor(
 
     private val _timeTableToastMessage = mutableStateOf<String?>(null)
     val timeTableToastMessage: State<String?> = _timeTableToastMessage
+
+    private val _timeTableScore = mutableStateOf<AllScore>(AllScore(
+        average_grade = "1.60",
+        credit_sum = 10,
+        require_credit = 174,
+        semesterList = listOf(
+            SingleSemesterScore(
+                semester="2024-1",
+                score="1.60",
+                dataList = listOf(
+                    ClassScore(
+                        title="과목1",
+                        credit = 1,
+                        grade = 2,
+                        category = "공통",
+                        achievement = "A",
+                        semester="2024-1",
+                    ),
+                    ClassScore(
+                        title="과목1",
+                        credit = 1,
+                        grade = 2,
+                        category = "선택",
+                        achievement = "A",
+                        student_score = 92.0,
+                        average_socre = 50.0,
+                        standard_deviation = 25.0,
+                        semester="2024-1",
+                    ),
+                    ClassScore(
+                        title="과목1",
+                        credit = 1,
+                        grade = 2,
+                        category = "선택",
+                        achievement = "A",
+                        student_score = 92.0,
+                        average_socre = 50.0,
+                        standard_deviation = 25.0,
+                        semester="2024-1",
+                    ),
+                    ClassScore(
+                        title="과목1",
+                        credit = 1,
+                        grade = 2,
+                        category = "선택",
+                        achievement = "A",
+                        student_score = 92.0,
+                        average_socre = 50.0,
+                        standard_deviation = 25.0,
+                        semester="2024-1",
+                    )
+                )
+            ),
+            SingleSemesterScore(
+                semester="2024-1",
+                score="1.70",
+                dataList = listOf(
+                    ClassScore(
+                        title="과목2",
+                        credit = 1,
+                        grade = 2,
+                        category = "공통",
+                        achievement = "A",
+                        semester="2024-1",
+                    ),
+                    ClassScore(
+                        title="과목3",
+                        credit = 1,
+                        grade = 2,
+                        category = "선택",
+                        achievement = "A",
+                        student_score = 92.0,
+                        average_socre = 50.0,
+                        standard_deviation = 25.0,
+                        semester="2024-1",
+                    ),
+                    ClassScore(
+                        title="과목1",
+                        credit = 1,
+                        grade = 2,
+                        category = "선택",
+                        achievement = "A",
+                        student_score = 92.0,
+                        average_socre = 50.0,
+                        standard_deviation = 25.0,
+                        semester="2024-1",
+                    ),
+                    ClassScore(
+                        title="과목5",
+                        credit = 1,
+                        grade = 2,
+                        category = "선택",
+                        achievement = "A",
+                        student_score = 92.0,
+                        average_socre = 50.0,
+                        standard_deviation = 25.0,
+                        semester="2024-1",
+                    )
+                )
+            ),
+            SingleSemesterScore(
+                semester="2024-1",
+                score="1.70",
+                dataList = listOf(
+                    ClassScore(
+                        title="과목2",
+                        credit = 1,
+                        grade = 2,
+                        category = "공통",
+                        achievement = "A",
+                        semester="2024-1",
+                    ),
+                    ClassScore(
+                        title="과목3",
+                        credit = 1,
+                        grade = 2,
+                        category = "선택",
+                        achievement = "A",
+                        student_score = 92.0,
+                        average_socre = 50.0,
+                        standard_deviation = 25.0,
+                        semester="2024-1",
+                    ),
+                    ClassScore(
+                        title="과목1",
+                        credit = 1,
+                        grade = 2,
+                        category = "선택",
+                        achievement = "A",
+                        student_score = 92.0,
+                        average_socre = 50.0,
+                        standard_deviation = 25.0,
+                        semester="2024-1",
+                    ),
+                    ClassScore(
+                        title="과목5",
+                        credit = 1,
+                        grade = 2,
+                        category = "선택",
+                        achievement = "A",
+                        student_score = 92.0,
+                        average_socre = 50.0,
+                        standard_deviation = 25.0,
+                        semester="2024-1",
+                    )
+                )
+            ),
+        )
+    ))
+    val timeTableScore: State<AllScore> = _timeTableScore
+
+    private val _singleSemesterScore = mutableStateOf<SingleSemesterScore>(SingleSemesterScore(
+        semester="2024-1",
+        score="1.70",
+        dataList = listOf(
+            ClassScore(
+                title="과목2",
+                credit = 1,
+                grade = 2,
+                category = "공통",
+                achievement = "A",
+                semester="2024-1",
+            ),
+            ClassScore(
+                title="과목3",
+                credit = 1,
+                grade = 2,
+                category = "선택",
+                achievement = "A",
+                student_score = 92.0,
+                average_socre = 50.0,
+                standard_deviation = 25.0,
+                semester="2024-1",
+            ),
+            ClassScore(
+                title="과목1",
+                credit = 1,
+                grade = 2,
+                category = "선택",
+                achievement = "A",
+                student_score = 92.0,
+                average_socre = 50.0,
+                standard_deviation = 25.0,
+                semester="2024-1",
+            ),
+            ClassScore(
+                title="과목5",
+                credit = 1,
+                grade = 2,
+                category = "선택",
+                achievement = "A",
+                student_score = 92.0,
+                average_socre = 50.0,
+                standard_deviation = 25.0,
+                semester="2024-1",
+            )
+        )
+    ),)
+    val singleSemesterScore: State<SingleSemesterScore> = _singleSemesterScore
+
 
     fun toggleInsertClassDataDialogState(){
         resetClassData()
@@ -283,19 +487,7 @@ class TimeTableViewModel @Inject constructor(
         Log.d("시간표 제거 성공", "리스트에서 제거 성공")
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun getCurrentSemester(): String {
-        val currentDate = LocalDate.now()
-        val year = currentDate.year
-        val month = currentDate.monthValue
 
-        val (adjustedYear, semester) = when (month) {
-            in 3..7 -> year to 1
-            in 8..12 -> year to 2
-            else -> (year - 1) to 2
-        }
-        return "$adjustedYear-$semester"
-    }
 
 
     private fun scheduleDataCheck():Boolean{
@@ -337,5 +529,63 @@ class TimeTableViewModel @Inject constructor(
             _loading.value=false
         }
         _loading.value=false
+    }
+
+    fun getTimeTableScore(){
+        _timeTableScore.value= AllScore(
+            average_grade = "1.60",
+            credit_sum = 10,
+            require_credit = 174,
+            semesterList = listOf(
+                SingleSemesterScore(
+                    semester="2024-05-01",
+                    score="1.60",
+                    dataList = listOf(
+                        ClassScore(
+                            title="과목1",
+                            credit = 1,
+                            grade = 2,
+                            category = "공통",
+                            achievement = "A",
+                            semester = "2025-04-05"
+                        ),
+                        ClassScore(
+                            title="과목1",
+                            credit = 1,
+                            grade = 2,
+                            category = "선택",
+                            achievement = "A",
+                            student_score = 92.0,
+                            average_socre = 50.0,
+                            standard_deviation = 25.0,
+                            semester = "2025-04-05"
+                        ),
+                        ClassScore(
+                            title="과목1",
+                            credit = 1,
+                            grade = 2,
+                            category = "선택",
+                            achievement = "A",
+                            student_score = 92.0,
+                            average_socre = 50.0,
+                            standard_deviation = 25.0,
+                            semester = "2025-04-05"
+                        ),
+                        ClassScore(
+                            title="과목1",
+                            credit = 1,
+                            grade = 2,
+                            category = "선택",
+                            achievement = "A",
+                            student_score = 92.0,
+                            average_socre = 50.0,
+                            standard_deviation = 25.0,
+                            semester = "2025-04-05"
+                        )
+                    )
+                ),
+
+            )
+        )
     }
 }

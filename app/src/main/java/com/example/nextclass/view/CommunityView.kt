@@ -1,6 +1,5 @@
 package com.example.nextclass.view
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,9 +29,7 @@ import com.example.nextclass.appComponent.CommunityTopNavComponent
 import com.example.nextclass.appComponent.FloatingActionButtonComponent
 import com.example.nextclass.appComponent.PostDetailComponent
 import com.example.nextclass.appComponent.SinglePostComponent
-import com.example.nextclass.nav.CommunityGraph
-import com.example.nextclass.repository.TestRepository
-import com.example.nextclass.ui.theme.Background_Color2
+import com.example.nextclass.repository.testRepo.TestRepository
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.viewmodel.CommunityViewModel
 import com.example.nextclass.viewmodel.LoginViewModel
