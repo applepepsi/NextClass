@@ -4,7 +4,9 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import com.example.nextclass.Data.AllScore
 import com.example.nextclass.Data.ClassData
@@ -18,7 +20,6 @@ import com.example.nextclass.utils.CutEntranceYear
 import com.example.nextclass.utils.GetSemester.getCurrentSemester
 import com.example.nextclass.utils.StringValue
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.time.LocalDate
 import javax.inject.Inject
 @HiltViewModel
 class TimeTableViewModel @Inject constructor(
@@ -128,7 +129,7 @@ class TimeTableViewModel @Inject constructor(
                 )
             ),
             SingleSemesterScore(
-                semester="2024-1",
+                semester="2024-2",
                 score="1.70",
                 dataList = listOf(
                     ClassScore(
@@ -175,7 +176,7 @@ class TimeTableViewModel @Inject constructor(
                 )
             ),
             SingleSemesterScore(
-                semester="2024-1",
+                semester="2025-1",
                 score="1.70",
                 dataList = listOf(
                     ClassScore(
@@ -225,55 +226,20 @@ class TimeTableViewModel @Inject constructor(
     ))
     val timeTableScore: State<AllScore> = _timeTableScore
 
-    private val _singleSemesterScore = mutableStateOf<SingleSemesterScore>(SingleSemesterScore(
-        semester="2024-1",
-        score="1.70",
-        dataList = listOf(
-            ClassScore(
-                title="과목2",
-                credit = 1,
-                grade = 2,
-                category = "공통",
-                achievement = "A",
-                semester="2024-1",
-            ),
-            ClassScore(
-                title="과목3",
-                credit = 1,
-                grade = 2,
-                category = "선택",
-                achievement = "A",
-                student_score = 92.0,
-                average_socre = 50.0,
-                standard_deviation = 25.0,
-                semester="2024-1",
-            ),
-            ClassScore(
-                title="과목1",
-                credit = 1,
-                grade = 2,
-                category = "선택",
-                achievement = "A",
-                student_score = 92.0,
-                average_socre = 50.0,
-                standard_deviation = 25.0,
-                semester="2024-1",
-            ),
-            ClassScore(
-                title="과목5",
-                credit = 1,
-                grade = 2,
-                category = "선택",
-                achievement = "A",
-                student_score = 92.0,
-                average_socre = 50.0,
-                standard_deviation = 25.0,
-                semester="2024-1",
-            )
-        )
-    ),)
+    private val _singleSemesterScore = mutableStateOf(SingleSemesterScore())
     val singleSemesterScore: State<SingleSemesterScore> = _singleSemesterScore
 
+    private val _scoreCreditDropDownMenuState = mutableStateListOf(false)
+    val scoreCreditDropDownMenuState: SnapshotStateList<Boolean> = _scoreCreditDropDownMenuState
+
+    private val _scoreGradeDropDownMenuState = mutableStateListOf(false)
+    val scoreGradeDropDownMenuState: SnapshotStateList<Boolean> = _scoreGradeDropDownMenuState
+
+    private val _scoreCategoryDropDownMenuState = mutableStateListOf(false)
+    val scoreCategoryDropDownMenuState: SnapshotStateList<Boolean> = _scoreCategoryDropDownMenuState
+
+    private val _scoreAchievementDropDownMenuState = mutableStateListOf(false)
+    val scoreAchievementDropDownMenuState: SnapshotStateList<Boolean> = _scoreAchievementDropDownMenuState
 
     fun toggleInsertClassDataDialogState(){
         resetClassData()
@@ -587,5 +553,53 @@ class TimeTableViewModel @Inject constructor(
 
             )
         )
+    }
+
+    fun setSelectScoreList(semester: SingleSemesterScore) {
+        initializeScoreDropDownStates(semester.dataList.size)
+        _singleSemesterScore.value=semester
+    }
+
+    fun resetSelectScoreList(){
+        _singleSemesterScore.value= SingleSemesterScore()
+    }
+
+    fun addScoreLine(){
+        val emptyScoreList = ClassScore()
+        _singleSemesterScore.value = _singleSemesterScore.value.copy(
+            dataList = _singleSemesterScore.value.dataList + emptyScoreList
+        )
+    }
+
+    fun toggleScoreCreditDropDownMenuState(index: Int) {
+        _scoreCreditDropDownMenuState[index] = !_scoreCreditDropDownMenuState[index]
+    }
+    fun toggleScoreGradeDownMenuState(index: Int) {
+        _scoreGradeDropDownMenuState[index]=!_scoreGradeDropDownMenuState[index]
+    }
+
+    fun toggleScoreCategoryDropDownState(index: Int) {
+        _scoreCategoryDropDownMenuState[index]=!_scoreCategoryDropDownMenuState[index]
+    }
+
+    fun toggleScoreAchievementDropDownState(index: Int) {
+        _scoreAchievementDropDownMenuState[index]=!_scoreAchievementDropDownMenuState[index]
+    }
+
+
+
+
+    fun initializeScoreDropDownStates(count: Int) {
+        _scoreCreditDropDownMenuState.clear()
+        _scoreGradeDropDownMenuState.clear()
+        _scoreCategoryDropDownMenuState.clear()
+        _scoreAchievementDropDownMenuState.clear()
+
+        repeat(count) {
+            _scoreCreditDropDownMenuState.add(false)
+            _scoreGradeDropDownMenuState.add(false)
+            _scoreCategoryDropDownMenuState.add(false)
+            _scoreAchievementDropDownMenuState.add(false)
+        }
     }
 }

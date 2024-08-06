@@ -20,7 +20,7 @@ data class ClassScore(
     val title:String="",
     val credit:Int=1,
     val grade:Int=1,
-    val category: String="",
+    val category: String="공통",
     val achievement:String="",
     val student_score: Double? =null,
     val average_socre:Double?=null,

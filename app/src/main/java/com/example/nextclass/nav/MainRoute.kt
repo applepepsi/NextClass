@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.nextclass.appComponent.InsertOrModifyPostComponent
+import com.example.nextclass.appComponent.ModifyScoreComponent
 import com.example.nextclass.items.BottomNavItem
 import com.example.nextclass.view.ChangeEmailInsertCodeView
 import com.example.nextclass.view.ChangeEmailView
@@ -19,6 +20,7 @@ import com.example.nextclass.view.ChangeUserInfoView
 import com.example.nextclass.view.CommunityView
 import com.example.nextclass.view.HomeView
 import com.example.nextclass.view.InsertOrModifyScheduleView
+import com.example.nextclass.view.ModifyScoreView
 import com.example.nextclass.view.PostDetailView
 import com.example.nextclass.view.ScheduleView
 import com.example.nextclass.view.TimeTableView
@@ -81,6 +83,9 @@ private fun NavGraphBuilder.timetableRoute(
     ) {
         composable(BottomNavItem.Timetable.screenRoute) {
             TimeTableView(navController, loginViewModel, mainNavHostController,timeTableViewModel)
+        }
+        composable("modifyScoreView") {
+            ModifyScoreView(navController,timeTableViewModel = timeTableViewModel)
         }
     }
 }

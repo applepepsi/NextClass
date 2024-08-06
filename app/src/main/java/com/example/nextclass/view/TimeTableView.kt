@@ -6,8 +6,10 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -35,10 +37,14 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.R
 import com.example.nextclass.appComponent.AccreditationCalculationComponent
+import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
 import com.example.nextclass.appComponent.ClassDetail
 import com.example.nextclass.appComponent.ClassModify
+import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.InsertClassData
+import com.example.nextclass.appComponent.ModifyScoreComponent
 import com.example.nextclass.appComponent.ProgressBarComponent
+import com.example.nextclass.appComponent.TextInputHelpFieldComponent
 import com.example.nextclass.appComponent.TimeTableComponent
 
 import com.example.nextclass.repository.testRepo.TestRepository
@@ -78,7 +84,8 @@ fun TimeTableView(
         sheetContent = {
 
             AccreditationCalculationComponent(
-                timeTableViewModel=timeTableViewModel
+                timeTableViewModel=timeTableViewModel,
+                navController=navController
             )
         },
         sheetPeekHeight = 200.dp,
@@ -172,6 +179,41 @@ fun TimeTableView(
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ModifyScoreView(
+    navController: NavController,
+    timeTableViewModel: TimeTableViewModel
+) {
+
+    val context = LocalContext.current
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(top = 20.dp),
+
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+
+        ) {
+            AppBarTextAndButtonComponent(
+                value = "성적 수정하기",
+                navController = navController,
+                showLeftButton = true,
+            )
+        }
+
+        ModifyScoreComponent(timeTableViewModel = timeTableViewModel)
+
+
+    }
+}
+
+
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun TimeTablePreview() {
@@ -184,5 +226,21 @@ fun TimeTablePreview() {
 
     MaterialTheme {
         TimeTableView(mainNavController, loginViewModel, navController, timeTableViewModel)
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showBackground = true)
+@Composable
+fun ModifyScorePreview() {
+    val mainNavController= rememberNavController()
+    val navController= rememberNavController()
+    val testRepository = TestRepository()
+    val timeTableTestRepo=TimeTableTestRepo()
+    val loginViewModel = LoginViewModel(testRepository)
+    val timeTableViewModel=TimeTableViewModel(timeTableTestRepo)
+
+    MaterialTheme {
+        ModifyScoreView(mainNavController,timeTableViewModel)
     }
 }
