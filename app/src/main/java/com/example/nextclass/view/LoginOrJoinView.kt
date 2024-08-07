@@ -137,10 +137,11 @@ fun LoginView(
         InputButtonComponent(
             value="로그인",
             onClick = {
-                loginViewModel.tryLogin()
-//            mainNavHostController.navigate("mainNav") {
-//                popUpTo("loginOrJoinGraph") { inclusive = true }
-//            }
+
+                val fcmToken=TokenManager.getFcmToken(context)
+
+                loginViewModel.tryLogin(fcmToken)
+
             },
             modifier = Modifier)
     }

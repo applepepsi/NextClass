@@ -6,18 +6,17 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.nextclass.appComponent.ProgressBarComponent
 import com.example.nextclass.nav.AppNav
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.utils.TokenManager
 import com.example.nextclass.utils.UserInfoManager
 import com.example.nextclass.viewmodel.LoginViewModel
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
@@ -34,6 +33,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             NextClassTheme {
+
                 Greeting()
 
             }
@@ -60,19 +60,38 @@ fun Greeting() {
 
     val (autoLoginId, autoLoginPassword) = UserInfoManager.getUserInfo(context)
 
+
+
+    FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+        if (task.isSuccessful) {
+
+            TokenManager.saveFcmToken(context,task.result)
+            Log.d("FCM Token", task.result)
+
+        } else {
+            Log.w("FCM Token", "FCM 토큰 발급 실패")
+        }
+    }
+
+    val fcmToken=TokenManager.getFcmToken(context)
+
+
+
     if (autoLoginId != null) {
         Log.d("자동로그인 id", autoLoginId)
     }
     if (autoLoginPassword != null) {
         Log.d("자동로그인 password", autoLoginPassword)
     }
+
     LaunchedEffect(autoLoginId, autoLoginPassword) {
-        loginViewModel.tryAutoLogin(autoLoginId, autoLoginPassword)
+        loginViewModel.tryAutoLogin(autoLoginId, autoLoginPassword,fcmToken)
     }
 
     if(loginViewModel.loginResult.value){
         TokenManager.saveToken(context,loginViewModel.tokenData.value)
     }
+
 
 
 

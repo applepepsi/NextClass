@@ -271,7 +271,7 @@ fun TableHeader() {
                 fontStyle = FontStyle.Normal,
             ),
         )
-        TableHeaderCell(text = "종류", weight = column3Weight,
+        TableHeaderCell(text = "교과구분", weight = column3Weight,
             style = TextStyle(
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
@@ -504,7 +504,7 @@ fun RowScope.ScoreDropDownMenu(
 //                            }
 //                            .size(12.dp)
 //                    )
-                    CustomTrailingIcon(expanded=dropDownMenuOption,size=12.dp)
+                    CustomTrailingIcon(expanded=dropDownMenuOption,size=14.dp)
                 }
             }
 

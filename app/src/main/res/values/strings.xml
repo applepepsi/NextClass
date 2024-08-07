@@ -55,6 +55,9 @@
     //로그인 에러메세지
     <string name="emptyIdOrPassword">아이디와 비밀번호를 모두 작성해 주세요.</string>
     <string name="wrongIdOrPassword">아이디 또는 비밀번호가 올바르지 않습니다.</string>
+    <string name="fcmTokenError">앱 토큰 발급에 실패했습니다..</string>
+    <string name="autoLoginFail">자동 로그인에 실패했습니다.</string>
+
 
     //아이디 비번찾기 메세지
     <string name="inputJoinEmail">가입했던 이메일을 입력해 주세요.</string>
