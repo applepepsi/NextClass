@@ -101,6 +101,7 @@ class UserInfoRepositoryImpl @Inject constructor(
     }
 
     override fun postUserLoginInfo(userLoginInfo: LoginRequest,callback: (ServerResponse<TokenData>?) -> Unit){
+        Log.d("userLoginInfo", userLoginInfo.toString())
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
                 val response = api.postUserLoginForm(userLoginInfo)

@@ -50,4 +50,8 @@ object TimeFormatter {
 
         return Pair(day,yearMonth)
     }
+
+    fun addYearSemester(year:String,semester:String):String{
+        return "$year-$semester"
+    }
 }

@@ -515,6 +515,8 @@ class LoginViewModel @Inject constructor(
                             _tokenData.value= loginRequestResult.data!!
 //                        saveUserInfo()
                             //todo 로그인 성공후 기능 구현해야함
+                            _loginFailMessage.value=StringValue.Empty
+                            _loginFail.value=true
                         }
 //                    else if(loginRequestResult.errorCode=="E00202"){
 //
@@ -541,29 +543,31 @@ class LoginViewModel @Inject constructor(
     //자동 로그인이 켜져있다면 사용자의 아이디와 비밀번호를 저장하여 어플을 시작할때 자동로그인이 되도록함
     //todo 로그아웃을 구현하고 로그아웃시 SharedPreferences에 저장된 아이디와 비밀번호 제거
     fun tryAutoLogin(autoLoginId: String?, autoLoginPassword: String?, fcmToken: String?){
-        if(autoLoginId!=null && autoLoginPassword !=null && fcmToken!=null){
-            Log.d("자동 로그인시도","자동")
-            _loading.value=true
-            val loginRequest=LoginRequest(
-                id=autoLoginId,
-                password=autoLoginPassword,
-                app_token = fcmToken
-            )
-            userInfoRepository.postUserLoginInfo(loginRequest){ loginRequestResult->
-                if(loginRequestResult !=null) {
-                    if (loginRequestResult.code == SUCCESS_CODE) {
-                        Log.d("자동 로그인성공", loginRequestResult.code.toString())
-                        _loginResult.value=true
-                        _loading.value=false
-                        _tokenData.value= loginRequestResult.data!!
-                    }else{
-                        _loading.value=false
+        if(autoLoginId!=null && autoLoginPassword !=null){
+            if(fcmToken!=null){
+                Log.d("자동 로그인시도","자동")
+                _loading.value=true
+                val loginRequest=LoginRequest(
+                    id=autoLoginId,
+                    password=autoLoginPassword,
+                    app_token = fcmToken
+                )
+                userInfoRepository.postUserLoginInfo(loginRequest){ loginRequestResult->
+                    if(loginRequestResult !=null) {
+                        if (loginRequestResult.code == SUCCESS_CODE) {
+                            Log.d("자동 로그인성공", loginRequestResult.code.toString())
+                            _loginResult.value=true
+                            _loading.value=false
+                            _tokenData.value= loginRequestResult.data!!
+                        }else{
+                            _loading.value=false
+                        }
                     }
                 }
+            }else{
+                _loginFailMessage.value=StringValue.StringResource(R.string.autoLoginFail)
+                _loginFail.value=true
             }
-        }else{
-            _loginFailMessage.value=StringValue.StringResource(R.string.autoLoginFail)
-            _loginFail.value=true
         }
     }
 

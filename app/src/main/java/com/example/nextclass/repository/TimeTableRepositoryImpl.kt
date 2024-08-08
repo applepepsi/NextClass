@@ -1,6 +1,7 @@
 package com.example.nextclass.repository
 
 import android.util.Log
+import com.example.nextclass.Data.AllScore
 import com.example.nextclass.Data.ClassData
 import com.example.nextclass.Data.ClassUUid
 import com.example.nextclass.Data.PostSemester
@@ -104,6 +105,55 @@ class TimeTableRepositoryImpl  @Inject constructor(
 
                 Log.d("classData", semester.toString())
                 val response = api.getCurrentTimeTable(PostSemester(semester))
+                Log.d("responseCheck", response.toString())
+                if (response.isSuccessful){
+                    Log.d("수업 정보 받아오기 성공", response.body().toString())
+                    response.body()
+                } else {
+                    Log.d("수업 정보 받아오기 실패","id중복체크 실패")
+                    null
+                }
+            } catch (e: Exception) {
+                Log.d("수업 정보 받아오기 실패",e.toString())
+                null
+            }
+            withContext(Dispatchers.Main) {
+
+                callback(result)
+            }
+        }
+    }
+
+    override fun getScore(callback: (ServerResponse<AllScore>?) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = try {
+
+                val response = api.getScore()
+                Log.d("responseCheck", response.toString())
+                if (response.isSuccessful){
+                    Log.d("성적 받아오기 성공", response.body().toString())
+                    response.body()
+                } else {
+                    Log.d("성적 받아오기 실패","성적 실패")
+                    null
+                }
+            } catch (e: Exception) {
+                Log.d("성적 실패",e.toString())
+                null
+            }
+            withContext(Dispatchers.Main) {
+
+                callback(result)
+            }
+        }
+    }
+
+    override fun postUpdateScoreData(allScore: AllScore, callback: (ServerResponse<Any>?) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = try {
+
+                Log.d("allScore", allScore.toString())
+                val response = api.scoreUpdate(allScore)
                 Log.d("responseCheck", response.toString())
                 if (response.isSuccessful){
                     Log.d("수업 정보 받아오기 성공", response.body().toString())

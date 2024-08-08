@@ -100,6 +100,6 @@
 
     //시간표 에러
     <string name="DuplicatedClassTime">해당 시간에 이미 수업이 존재합니다.</string>
-
+    <string name="DuplicatedSemester">해당 학기가 이미 존재합니다.</string>
 
 </resources>

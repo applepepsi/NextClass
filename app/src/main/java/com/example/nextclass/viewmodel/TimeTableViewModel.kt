@@ -19,6 +19,7 @@ import com.example.nextclass.utils.CLASS_ALREADY_EXISTS_IN_TIMETABLE
 import com.example.nextclass.utils.CutEntranceYear
 import com.example.nextclass.utils.GetSemester.getCurrentSemester
 import com.example.nextclass.utils.StringValue
+import com.example.nextclass.utils.TimeFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 @HiltViewModel
@@ -226,7 +227,53 @@ class TimeTableViewModel @Inject constructor(
     ))
     val timeTableScore: State<AllScore> = _timeTableScore
 
-    private val _singleSemesterScore = mutableStateOf(SingleSemesterScore())
+    private val _singleSemesterScore = mutableStateOf(SingleSemesterScore(
+        semester="2025-1",
+        score="1.70",
+        dataList = listOf(
+            ClassScore(
+                title="과목2",
+                credit = 1,
+                grade = 2,
+                category = "공통",
+                achievement = "A",
+                semester="2024-1",
+            ),
+            ClassScore(
+                title="과목3",
+                credit = 1,
+                grade = 2,
+                category = "선택",
+                achievement = "A",
+                student_score = 92.0,
+                average_socre = 50.0,
+                standard_deviation = 25.0,
+                semester="2024-1",
+            ),
+            ClassScore(
+                title="과목1",
+                credit = 1,
+                grade = 2,
+                category = "선택",
+                achievement = "A",
+                student_score = 92.0,
+                average_socre = 50.0,
+                standard_deviation = 25.0,
+                semester="2024-1",
+            ),
+            ClassScore(
+                title="과목5",
+                credit = 1,
+                grade = 2,
+                category = "선택",
+                achievement = "A",
+                student_score = 92.0,
+                average_socre = 50.0,
+                standard_deviation = 25.0,
+                semester="2024-1",
+            )
+        )
+    ))
     val singleSemesterScore: State<SingleSemesterScore> = _singleSemesterScore
 
     private val _scoreCreditDropDownMenuState = mutableStateListOf(false)
@@ -240,6 +287,19 @@ class TimeTableViewModel @Inject constructor(
 
     private val _scoreAchievementDropDownMenuState = mutableStateListOf(false)
     val scoreAchievementDropDownMenuState: SnapshotStateList<Boolean> = _scoreAchievementDropDownMenuState
+
+
+    private val _selectSemester=mutableStateOf("")
+    val selectSemester: State<String> = _selectSemester
+
+    private val _addSemesterErrorMessage = mutableStateOf<StringValue>(StringValue.Empty)
+    val addSemesterErrorMessage: State<StringValue> = _addSemesterErrorMessage
+
+    private val _addSemesterErrorState = mutableStateOf(false)
+    val addSemesterErrorState: State<Boolean> = _addSemesterErrorState
+
+    private val _addScorePopupState = mutableStateOf(false)
+    val addScorePopupState: State<Boolean> = _addScorePopupState
 
     fun toggleInsertClassDataDialogState(){
         resetClassData()
@@ -553,6 +613,10 @@ class TimeTableViewModel @Inject constructor(
 
             )
         )
+
+        timeTableRepository.getScore {serverResponse ->
+            Log.d("성적 가져오기 성공", serverResponse.toString())
+        }
     }
 
     fun setSelectScoreList(semester: SingleSemesterScore) {
@@ -564,11 +628,32 @@ class TimeTableViewModel @Inject constructor(
         _singleSemesterScore.value= SingleSemesterScore()
     }
 
-    fun addScoreLine(){
-        val emptyScoreList = ClassScore()
+    fun addScoreRow(){
+        val emptyScoreList = ClassScore(student_score = 0.0, average_socre = 0.0, standard_deviation = 0.0, semester = _singleSemesterScore.value.semester, achievement = "A")
         _singleSemesterScore.value = _singleSemesterScore.value.copy(
             dataList = _singleSemesterScore.value.dataList + emptyScoreList
         )
+    }
+
+    fun deleteScoreRow(rowIndex:Int){
+
+        val currentSemesterScore=_singleSemesterScore.value.dataList.toMutableList()
+
+        if (rowIndex in currentSemesterScore.indices) {
+            currentSemesterScore.removeAt(rowIndex)
+
+            _singleSemesterScore.value = _singleSemesterScore.value.copy(dataList = currentSemesterScore)
+        }
+    }
+
+    fun deleteSemesterScore(semesterIndex:Int){
+        val currentAllSemesterScore=_timeTableScore.value.semesterList.toMutableList()
+
+        if (semesterIndex in currentAllSemesterScore.indices) {
+            currentAllSemesterScore.removeAt(semesterIndex)
+
+            _timeTableScore.value = _timeTableScore.value.copy(semesterList = currentAllSemesterScore)
+        }
     }
 
     fun toggleScoreCreditDropDownMenuState(index: Int) {
@@ -586,6 +671,87 @@ class TimeTableViewModel @Inject constructor(
         _scoreAchievementDropDownMenuState[index]=!_scoreAchievementDropDownMenuState[index]
     }
 
+    fun updateScoreTitle(index:Int,title:String){
+        val updatedDataList = _singleSemesterScore.value.dataList.mapIndexed { scoreIndex, classScore ->
+            if (index == scoreIndex) classScore.copy(title = title) else classScore
+        }
+        _singleSemesterScore.value = _singleSemesterScore.value.copy(dataList = updatedDataList)
+    }
+
+    fun updateScoreCredit(index:Int,credit:Int){
+        val updatedDataList = _singleSemesterScore.value.dataList.mapIndexed { scoreIndex, classScore ->
+            if (index == scoreIndex) classScore.copy(credit = credit) else classScore
+        }
+        _singleSemesterScore.value = _singleSemesterScore.value.copy(dataList = updatedDataList)
+    }
+
+    fun updateScoreGrade(index:Int,grade:Int){
+        val updatedDataList = _singleSemesterScore.value.dataList.mapIndexed { scoreIndex, classScore ->
+            if (index == scoreIndex) classScore.copy(grade = grade) else classScore
+        }
+        _singleSemesterScore.value = _singleSemesterScore.value.copy(dataList = updatedDataList)
+    }
+
+    fun updateScoreCategory(index:Int,category:String){
+        val updatedDataList = _singleSemesterScore.value.dataList.mapIndexed { scoreIndex, classScore ->
+            if (index == scoreIndex) classScore.copy(category = category) else classScore
+        }
+        _singleSemesterScore.value = _singleSemesterScore.value.copy(dataList = updatedDataList)
+    }
+
+    fun updateScoreAchievement(index:Int,achievement:String){
+        val updatedDataList = _singleSemesterScore.value.dataList.mapIndexed { scoreIndex, classScore ->
+            if (index == scoreIndex) classScore.copy(achievement = achievement) else classScore
+        }
+        _singleSemesterScore.value = _singleSemesterScore.value.copy(dataList = updatedDataList)
+    }
+
+    fun updateStudentScore(index:Int,studentScore:Double){
+        val updatedDataList = _singleSemesterScore.value.dataList.mapIndexed { scoreIndex, classScore ->
+            if (index == scoreIndex) classScore.copy(student_score = studentScore) else classScore
+        }
+        _singleSemesterScore.value = _singleSemesterScore.value.copy(dataList = updatedDataList)
+    }
+
+    fun updateStudentAverageScore(index:Int,averageScore:Double){
+        val updatedDataList = _singleSemesterScore.value.dataList.mapIndexed { scoreIndex, classScore ->
+            if (index == scoreIndex) classScore.copy(average_socre = averageScore) else classScore
+        }
+        _singleSemesterScore.value = _singleSemesterScore.value.copy(dataList = updatedDataList)
+    }
+
+    fun updateStandardDeviation(index:Int,standardDeviation:Double){
+        val updatedDataList = _singleSemesterScore.value.dataList.mapIndexed { scoreIndex, classScore ->
+            if (index == scoreIndex) classScore.copy(standard_deviation = standardDeviation) else classScore
+        }
+        _singleSemesterScore.value = _singleSemesterScore.value.copy(dataList = updatedDataList)
+    }
+
+    fun modifyScore(){
+
+
+        //여기서 임시 변경 데이터를 만들어 서버로 전송하여 결과값에 따라 실제로 값을 바꿀지 말지 결정해야함
+        val currentScore = _timeTableScore.value
+        val updatedSemesterScore = currentScore.semesterList.map { semesterScore ->
+            if (semesterScore.semester == _singleSemesterScore.value.semester) {
+                semesterScore.copy(dataList = _singleSemesterScore.value.dataList)
+            } else {
+                semesterScore
+            }
+        }
+
+        Log.d("updatedSemesterScore", updatedSemesterScore.toString())
+        if (updatedSemesterScore != currentScore.semesterList) {
+            postModifyScore(currentScore.copy(semesterList = updatedSemesterScore))
+        }
+    }
+
+    private fun postModifyScore(newTimeTableSCore:AllScore) {
+        //서버로 전송
+        timeTableRepository.postUpdateScoreData(newTimeTableSCore){serverResponse ->  
+
+        }
+    }
 
 
 
@@ -602,4 +768,47 @@ class TimeTableViewModel @Inject constructor(
             _scoreAchievementDropDownMenuState.add(false)
         }
     }
+
+
+    fun toggleAddSemesterPopupState(){
+        _addScorePopupState.value=!_addScorePopupState.value
+    }
+
+    fun postNewScoreTable(year: String, semester: String) {
+
+        val selectSemesterData=TimeFormatter.addYearSemester(year, semester)
+        inputSemesterCheck(selectSemesterData)
+
+        if(!inputSemesterCheck(selectSemesterData)){
+
+            //에러 출력
+            _addSemesterErrorMessage.value=StringValue.StringResource(R.string.DuplicatedSemester)
+            _addSemesterErrorState.value=true
+        }else{
+            _addSemesterErrorMessage.value=StringValue.Empty
+            _addSemesterErrorState.value=false
+            _selectSemester.value=selectSemesterData
+            addNewSemester()
+//            toggleAddSemesterPopupState()
+
+        }
+
+    }
+
+    private fun inputSemesterCheck(selectSemesterData:String):Boolean{
+        return !_timeTableScore.value.semesterList.any { singleSemesterScore ->
+            singleSemesterScore.semester == selectSemesterData
+        }
+    }
+
+    private fun addNewSemester() {
+        val emptyScore=listOf(ClassScore(student_score = 0.0, average_socre = 0.0, standard_deviation = 0.0, semester = _selectSemester.value, achievement = "A"))
+        val newSemester = SingleSemesterScore(semester = _selectSemester.value, dataList = emptyScore)
+
+        val newSemesterList = _timeTableScore.value.semesterList + newSemester
+        val newTimeTableSCore=_timeTableScore.value.copy(semesterList = newSemesterList)
+
+        postModifyScore(newTimeTableSCore)
+    }
+
 }

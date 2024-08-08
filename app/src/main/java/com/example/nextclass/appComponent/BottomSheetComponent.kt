@@ -31,10 +31,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,6 +47,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.LaunchedEffect
@@ -55,6 +59,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -66,10 +73,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.Data.ClassScore
+import com.example.nextclass.Data.SingleSemesterScore
+import com.example.nextclass.R
 import com.example.nextclass.repository.testRepo.TestRepository
 import com.example.nextclass.repository.testRepo.TimeTableTestRepo
 import com.example.nextclass.ui.theme.Background_Color2
@@ -92,22 +102,28 @@ fun AccreditationCalculationComponent(
         modifier = Modifier.fillMaxHeight(fraction = 0.8f)
     ) {
 
+
+
         Row(
             modifier=Modifier
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = buildAnnotatedString {
+            Text(
+                text = buildAnnotatedString {
                 append("평균 학점: ")
                 withStyle(style = SpanStyle(
                     color = Pastel_Red,
                     fontWeight = FontWeight.Bold)) {
                     append(timeTableViewModel.timeTableScore.value.average_grade)
                 }
+            },
+                fontSize = 15.sp
+            )
 
-            })
-
-            Text(text = buildAnnotatedString {
+            Text(
+                text = buildAnnotatedString {
                 append("취득 학점: ")
                 withStyle(style = SpanStyle(
                     color = Pastel_Red,
@@ -116,16 +132,51 @@ fun AccreditationCalculationComponent(
                 }
                 append("/${timeTableViewModel.timeTableScore.value.require_credit}")
 
-            })
+            },
+                fontSize = 15.sp
+            )
+
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(15.dp))
+                    .background(Pastel_Red)
+                    .padding(start = 10.dp, end = 10.dp, top = 7.dp, bottom = 7.dp)
+                    .clickable {
+
+                    },
+                contentAlignment = Alignment.Center
+            ){
+                Text(
+                    text="학기 추가하기",
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Normal,
+                        fontStyle = FontStyle.Normal,
+                        color = Color.White
+                    ),
+                    modifier = Modifier
+
+
+                )
+            }
         }
+
+
 
         LazyColumn(
             Modifier
                 .fillMaxSize()
                 .padding(start = 10.dp, end = 10.dp, bottom = 80.dp),
 
+
+
         ) {
-            timeTableViewModel.timeTableScore.value.semesterList.forEach { semester ->
+
+            item{
+                Spacer(modifier = Modifier.height(15.dp))
+            }
+
+            timeTableViewModel.timeTableScore.value.semesterList.forEachIndexed  { semesterIndex, semester ->
 
                 item {
                     Text(
@@ -135,7 +186,7 @@ fun AccreditationCalculationComponent(
                     Log.d("semester", semester.toString())
                 }
                 item {
-                    TableHeader()
+                    TableHeader(modifier = Modifier)
                 }
                 items(semester.dataList) { singleClassData ->
 
@@ -150,37 +201,77 @@ fun AccreditationCalculationComponent(
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp))
                             .background(Pastel_Red),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ){
                         SemesterScore(
                             score=semester.score
                         )
-
-                        Text(
-                            modifier = Modifier
-                                .clickable {
-                                    timeTableViewModel.setSelectScoreList(semester)
-
-                                    navController.navigate("modifyScoreView") {
-                                        popUpTo(navController.graph.findStartDestination().id)
-                                        launchSingleTop = true
-                                    }
-                                }
-                                .align(Alignment.CenterVertically)
-                                .padding(end = 10.dp),
-                            text="성적 수정하기",
-                            style = TextStyle(
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal,
-                                color = Color.Black
-                            ),
+                        DeleteOrModifyScoreBoard(
+                            index = semesterIndex,
+                            semester = semester,
+                            timeTableViewModel = timeTableViewModel,
+                            navController = navController
                         )
                     }
 
                 }
+                item{
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
             }
+
         }
+    }
+}
+
+@Composable
+fun DeleteOrModifyScoreBoard(
+    index:Int,
+    semester:SingleSemesterScore,
+    timeTableViewModel:TimeTableViewModel,
+    navController:NavController
+) {
+    Row(
+
+    ){
+
+        Text(
+            modifier = Modifier
+                .clickable {
+                    timeTableViewModel.deleteSemesterScore(index)
+                }
+                .align(Alignment.CenterVertically)
+                .padding(end = 10.dp),
+            text="성적 제거하기",
+            style = TextStyle(
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Normal,
+                fontStyle = FontStyle.Normal,
+                color = Color.Black
+            ),
+        )
+
+        Text(
+            modifier = Modifier
+                .clickable {
+                    timeTableViewModel.setSelectScoreList(semester)
+
+                    navController.navigate("modifyScoreView") {
+                        popUpTo(navController.graph.findStartDestination().id)
+                        launchSingleTop = true
+                    }
+                }
+                .align(Alignment.CenterVertically)
+                .padding(end = 10.dp),
+            text="성적 수정하기",
+            style = TextStyle(
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Normal,
+                fontStyle = FontStyle.Normal,
+                color = Color.Black
+            ),
+        )
     }
 }
 
@@ -231,16 +322,19 @@ fun SemesterScore(
 }
 
 @Composable
-fun TableHeader() {
+fun TableHeader(
+    modifier: Modifier
+) {
 
     val column1Weight = .2f
     val column2Weight = .1f
     val column3Weight = .2f
 
     Row(
-        Modifier
+        modifier
 
             .fillMaxWidth()
+
             .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
             .background(Pastel_Red),
         horizontalArrangement = Arrangement.Center,
@@ -324,20 +418,29 @@ fun TableRow(
     val column2Weight = .1f
     val column3Weight = .2f
     Log.d("보낸 인덱스", index.toString())
+
+
+
     Row(
         Modifier
             .fillMaxWidth()
             .background(Background_Color2),
-        
+
         horizontalArrangement = Arrangement.Center,
 
     ) {
 
-        TableCell(text = data.title, weight = column1Weight)
+
+
+        TableCell(
+            text = data.title,
+            weight = column1Weight,
+            onValueChange = { timeTableViewModel.updateScoreTitle(index,it) },
+        )
 
         ScoreDropDownMenu(
             value = data.credit.toString(),
-            onValueChange = {},
+            onValueChange = {timeTableViewModel.updateScoreCredit(index,it.toInt())},
             dropDownMenuOption = timeTableViewModel.scoreCreditDropDownMenuState[index],
             toggleDropDownMenuOption = { timeTableViewModel.toggleScoreCreditDropDownMenuState(index) },
             menuItems = scoreCredit,
@@ -347,7 +450,7 @@ fun TableRow(
 
         ScoreDropDownMenu(
             value =  data.grade.toString(),
-            onValueChange = {},
+            onValueChange = {timeTableViewModel.updateScoreGrade(index,it.toInt())},
             dropDownMenuOption = timeTableViewModel.scoreGradeDropDownMenuState[index],
             toggleDropDownMenuOption = { timeTableViewModel.toggleScoreGradeDownMenuState(index) },
             menuItems = grade,
@@ -357,7 +460,7 @@ fun TableRow(
 
         ScoreDropDownMenu(
             value = data.category,
-            onValueChange = {},
+            onValueChange = {timeTableViewModel.updateScoreCategory(index,it)},
             dropDownMenuOption = timeTableViewModel.scoreCategoryDropDownMenuState[index],
             toggleDropDownMenuOption = { timeTableViewModel.toggleScoreCategoryDropDownState(index) },
             menuItems = category,
@@ -367,7 +470,7 @@ fun TableRow(
 
         ScoreDropDownMenu(
             value = data.achievement,
-            onValueChange = {},
+            onValueChange = {timeTableViewModel.updateScoreAchievement(index,it)},
             dropDownMenuOption = timeTableViewModel.scoreAchievementDropDownMenuState[index],
             toggleDropDownMenuOption = { timeTableViewModel.toggleScoreAchievementDropDownState(index) },
             menuItems = achievement,
@@ -375,14 +478,15 @@ fun TableRow(
             dropDownIconVisible = dropDownIconVisible,
         )
         if(data.category=="공통"){
-            TableCell(text = "", weight = column3Weight,readOnly = true)
-            TableCell(text = "", weight = column3Weight,readOnly = true)
-            TableCell(text = "", weight = column3Weight,readOnly = true)
+            TableCell(text = "", weight = column3Weight,readOnly = true,)
+            TableCell(text = "", weight = column3Weight,readOnly = true,)
+            TableCell(text = "", weight = column3Weight,readOnly = true,)
         }else{
-            TableCell(text = data.student_score.toString(), weight = column3Weight,readOnly = false)
-            TableCell(text = data.average_socre.toString(), weight = column3Weight,readOnly = false)
-            TableCell(text = data.standard_deviation.toString(), weight = column3Weight,readOnly = false)
+            TableCell(text = data.student_score.toString(), weight = column3Weight,readOnly = false, onValueChange = {timeTableViewModel.updateStudentScore(index,it.toDouble())},)
+            TableCell(text = data.average_socre.toString(), weight = column3Weight,readOnly = false, onValueChange = {timeTableViewModel.updateStudentAverageScore(index,it.toDouble())},)
+            TableCell(text = data.standard_deviation.toString(), weight = column3Weight,readOnly = false, onValueChange = {timeTableViewModel.updateStandardDeviation(index,it.toDouble())},)
         }
+
 
     }
 }
@@ -413,9 +517,10 @@ fun RowScope.TableHeaderCell(
 fun RowScope.TableCell(
     text: String,
     weight: Float,
-    readOnly:Boolean=false
+    readOnly:Boolean=false,
+    onValueChange:(String)->Unit={},
 ) {
-    var currentText by remember { mutableStateOf(text) }
+
     Box(
         modifier = Modifier
             .border(0.6.dp, Color.LightGray)
@@ -425,8 +530,8 @@ fun RowScope.TableCell(
         contentAlignment = Alignment.Center
     ) {
         BasicTextField(
-            value = currentText,
-            onValueChange = { currentText = it },
+            value = text,
+            onValueChange = { onValueChange(it) },
             singleLine = true,
             textStyle = TextStyle(
                 fontSize = 13.sp
@@ -437,6 +542,8 @@ fun RowScope.TableCell(
         )
     }
 }
+
+
 
 
 val scoreCredit=listOf("1", "2", "3")
@@ -537,7 +644,7 @@ fun CustomTrailingIcon(expanded: Boolean,size: Dp) {
     Icon(
         Icons.Filled.ArrowDropDown,
         null,
-        modifier=Modifier
+        modifier= Modifier
             .rotate(if (expanded) 180f else 0f)
             .size(size)
             .padding(0.dp)
@@ -553,11 +660,10 @@ fun ModifyScoreComponent(
 
     ) {
 
-
         LazyColumn(
             Modifier
                 .fillMaxSize()
-                .padding(start = 10.dp, end = 10.dp, bottom = 80.dp),
+                .padding(bottom = 80.dp, end = 10.dp, start = 5.dp),
             verticalArrangement = Arrangement.Center
             ) {
 
@@ -565,27 +671,47 @@ fun ModifyScoreComponent(
                 item {
                     Text(
                         text = GetSemester.convertSemester(timeTableViewModel.singleSemesterScore.value.semester),
-                        modifier = Modifier.padding()
+                        modifier = Modifier.padding(start=14.dp)
                     )
 
                 }
                 item {
-                    TableHeader()
+                    TableHeader(modifier = Modifier.padding(start=14.dp))
                 }
 
                 itemsIndexed(timeTableViewModel.singleSemesterScore.value.dataList) { index,singleClassData ->
                     Log.d("인덱스", index.toString())
-                    TableRow(
-                        singleClassData,
-                        dropDownIconVisible = true,
-                        timeTableViewModel=timeTableViewModel,
-                        index=index
-                    )
+
+                    Row(){
+                        Icon(
+                            modifier = Modifier
+                                .size(12.dp)
+                                .align(Alignment.CenterVertically)
+                                .clickable {
+                                    timeTableViewModel.deleteScoreRow(index)
+                                },
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "",
+                            tint = Color.Black,
+                        )
+
+                        Spacer(Modifier.width(2.dp))
+
+                        TableRow(
+                            singleClassData,
+                            dropDownIconVisible = true,
+                            timeTableViewModel=timeTableViewModel,
+                            index=index
+                        )
+
+                    }
+
                 }
                 item {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .padding(start = 14.dp)
                             .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp))
                             .background(Pastel_Red),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -598,7 +724,7 @@ fun ModifyScoreComponent(
                         Text(
                             modifier = Modifier
                                 .clickable {
-                                    timeTableViewModel.addScoreLine()
+                                    timeTableViewModel.addScoreRow()
                                     timeTableViewModel.initializeScoreDropDownStates(
                                         timeTableViewModel.singleSemesterScore.value.dataList.size
                                     )
@@ -623,7 +749,7 @@ fun ModifyScoreComponent(
                 InputButtonComponent(
                     value = "수정 완료",
                     onClick = {
-
+                        timeTableViewModel.modifyScore()
                     },
                     modifier = Modifier.padding(start=15.dp,end=15.dp))
             }
@@ -631,6 +757,81 @@ fun ModifyScoreComponent(
     }
 
 }
+
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AddSemesterPopupComponent(
+    timeTableViewModel: TimeTableViewModel,
+
+) {
+    val year = remember { (2010..2030).map { it.toString() } }
+    val semester=remember { (1..2).map { it.toString() } }
+    val yearPickerState = rememberPickerState()
+    val semesterPickerState = rememberPickerState()
+
+    Dialog(
+        onDismissRequest = { timeTableViewModel.toggleAddSemesterPopupState() }) {
+        Surface(
+            modifier = Modifier.height(400.dp),
+            shape = RoundedCornerShape(16.dp),
+            color = Background_Color2,
+
+            ) {
+            Column(
+                verticalArrangement = Arrangement.Center
+            )
+            {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+
+                    ) {
+                    Picker(
+                        state = yearPickerState,
+                        items = year,
+                        visibleItemsCount = 3,
+                        modifier = Modifier.weight(0.5f),
+                        textModifier = Modifier.padding(8.dp),
+                        textStyle = TextStyle(fontSize = 32.sp),
+                        startIndex = 2024,
+                        separateWord = " 년"
+                    )
+                    Picker(
+                        state = semesterPickerState,
+                        items = semester,
+                        visibleItemsCount = 3,
+                        modifier = Modifier.weight(0.5f),
+                        textModifier = Modifier.padding(8.dp),
+                        textStyle = TextStyle(fontSize = 32.sp),
+
+                        separateWord = " 학기"
+                    )
+                }
+
+                Spacer(Modifier.height(15.dp))
+
+                TextInputHelpFieldComponent(
+
+                    errorMessage = timeTableViewModel.addSemesterErrorMessage.value.asString(LocalContext.current),
+                    isError = timeTableViewModel.addSemesterErrorState.value,
+
+                    )
+
+                InputButtonComponent(
+                    value = "수정 완료",
+                    onClick = {
+                        timeTableViewModel.postNewScoreTable(year=yearPickerState.selectedItem,semester=semesterPickerState.selectedItem)
+                    },
+                    modifier = Modifier.padding(start=15.dp,end=15.dp,top=15.dp))
+
+            }
+        }
+    }
+}
+
 
 
 @Preview(showBackground = true)
@@ -665,3 +866,17 @@ fun ModifyScorePreview() {
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun AddSemesterPreview() {
+
+    val mainNavController= rememberNavController()
+    val testRepository = TestRepository()
+    val loginViewModel = LoginViewModel(testRepository)
+    val timeTableTestRepository=TimeTableTestRepo()
+    val timeTableViewModel = TimeTableViewModel(timeTableTestRepository)
+    NextClassTheme {
+
+        AddSemesterPopupComponent(timeTableViewModel)
+    }
+}

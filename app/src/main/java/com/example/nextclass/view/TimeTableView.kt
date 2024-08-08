@@ -37,6 +37,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.R
 import com.example.nextclass.appComponent.AccreditationCalculationComponent
+import com.example.nextclass.appComponent.AddSemesterPopupComponent
 import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
 import com.example.nextclass.appComponent.ClassDetail
 import com.example.nextclass.appComponent.ClassModify
@@ -77,6 +78,10 @@ fun TimeTableView(
                 .show()
             timeTableViewModel.clearToastMessage()
         }
+    }
+
+    if(timeTableViewModel.addScorePopupState.value){
+        AddSemesterPopupComponent(timeTableViewModel = timeTableViewModel)
     }
 
     BottomSheetScaffold(

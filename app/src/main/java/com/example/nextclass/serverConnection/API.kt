@@ -1,6 +1,7 @@
 package com.example.oneplusone.serverConnection
 
 
+import com.example.nextclass.Data.AllScore
 import com.example.nextclass.Data.ChangeEmail
 import com.example.nextclass.Data.ChangePassword
 import com.example.nextclass.Data.ChangeUserData
@@ -22,6 +23,7 @@ import com.example.nextclass.utils.CHANGE_PASSWORD
 import com.example.nextclass.utils.DUPLICATED_CHECK_ADDRESS
 import com.example.nextclass.utils.FIND_ID
 import com.example.nextclass.utils.FIND_PASSWORD
+import com.example.nextclass.utils.GET_SCORE
 import com.example.nextclass.utils.GET_TIME_TABLE
 import com.example.nextclass.utils.GET_USER_INFO
 import com.example.nextclass.utils.GET_VERIFY_CODE
@@ -31,6 +33,7 @@ import com.example.nextclass.utils.POST_DELETE_TIMETABLE_DATA
 import com.example.nextclass.utils.POST_MODIFY_TIMETABLE_DATA
 import com.example.nextclass.utils.POST_TIMETABLE_DATA
 import com.example.nextclass.utils.REGISTER_ADDRESS
+import com.example.nextclass.utils.SCORE_UPDATE
 import com.example.nextclass.utils.SEND_CHANGE_MAIL
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -98,6 +101,12 @@ interface API {
 
     @POST(FIND_PASSWORD)
     suspend fun findPassword(@Body id: FindIDOrPasswordData):Response<ServerResponse<Any>>
+
+    @POST(GET_SCORE)
+    suspend fun getScore():Response<ServerResponse<AllScore>>
+
+    @POST(SCORE_UPDATE)
+    suspend fun scoreUpdate(@Body allScore: AllScore):Response<ServerResponse<Any>>
 
     @POST("/test")
     suspend fun tokenTest():Response<ServerResponse<Any>?>
