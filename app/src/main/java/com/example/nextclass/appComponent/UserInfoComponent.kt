@@ -463,7 +463,7 @@ fun ChangeUserInfoComponent(
                             dropDownMenuOption=userInfoViewModel.gradeDropDownMenuState.value,
                             toggleDropDownMenuOption={
                                 userInfoViewModel.toggleGradeDropBox()
-                            }
+                            },
                         )
 
 

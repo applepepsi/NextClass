@@ -47,6 +47,7 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -58,8 +59,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.nextclass.Data.ClassData
+import com.example.nextclass.R
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.Pastel_Red
+import com.example.nextclass.utils.ConvertDayOfWeek
+import com.example.nextclass.utils.CutEntranceYear
 import com.example.nextclass.viewmodel.TimeTableViewModel
 
 import kotlin.math.roundToInt
@@ -104,7 +108,7 @@ fun OneClassCellDetailComponent(
 
 
         Text(
-            text = classData.week,
+            text = ConvertDayOfWeek.convertDayOfWeekKorea(classData.week),
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
         )
@@ -329,7 +333,7 @@ fun ClassDetail(
                         )
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = classData.week,
+                            text = ConvertDayOfWeek.convertDayOfWeekKorea(classData.week),
                             style = TextStyle(
                                 fontSize = 15.sp,
                                 fontFamily = FontFamily.Default,
@@ -463,7 +467,7 @@ fun ClassModify(
                     )
                     TimeTableDownMenuComponent(
                         onValueChange = {timeTableViewModel.updateDayOfWeek(it)},
-                        value = timeTableViewModel.classData.value.week,
+                        value = ConvertDayOfWeek.convertDayOfWeekKorea(timeTableViewModel.classData.value.week),
                         dropDownMenuOption = timeTableViewModel.toggleDayOfWeekDropDownMenu.value,
                         menuItems = daysOfWeek,
                         dropDownMenuName = checkBoxName[1],
@@ -493,14 +497,28 @@ fun ClassModify(
                     )
                 }
 
-                GradeDropDownMenuComponent(
-                    onValueChange = {timeTableViewModel.updateGrade(it)},
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    TimeTableDownMenuComponent(
+                        onValueChange = { timeTableViewModel.updateCategory(it) },
+                        value = timeTableViewModel.classData.value.category.toString(),
+                        dropDownMenuOption = timeTableViewModel.toggleCategoryDropDownMenu.value,
+                        menuItems = classCategory,
+                        dropDownMenuName = checkBoxName[5],
+                        toggleDropDownMenuOption = { timeTableViewModel.toggleCategoryDropDownMenu() }
+                    )
 
-                    labelValue = "${timeTableViewModel.classData.value.class_grade}학년",
-                    dropDownMenuOption = timeTableViewModel.toggleGradeDropDownMenu.value,
-                    placeholderValue = "",
-                    toggleDropDownMenuOption = {timeTableViewModel.toggleGradeDropDownMenu()}
-                )
+                    TimeTableDownMenuComponent(
+                        onValueChange = { timeTableViewModel.updateGrade(it) },
+                        value = CutEntranceYear.addGradeEntranceYear(timeTableViewModel.classData.value.class_grade),
+                        dropDownMenuOption = timeTableViewModel.toggleGradeDropDownMenu.value,
+                        menuItems = classGrade,
+                        dropDownMenuName = checkBoxName[6],
+                        toggleDropDownMenuOption = { timeTableViewModel.toggleGradeDropDownMenu() }
+                    )
+                }
 
                 TextInputFieldComponent(
                     value=timeTableViewModel.classData.value.school,
@@ -538,7 +556,9 @@ fun ClassModify(
 val daysOfWeek = listOf("월", "화", "수", "목", "금")
 val classTime=listOf("1", "2", "3", "4", "5", "6", "7")
 val credit=listOf("1", "2", "3")
-val checkBoxName= listOf("학점","요일","시작 교시","종료 교시","학년")
+val classGrade=listOf("1학년","2학년","3학년")
+val checkBoxName= listOf("학점","요일","시작 교시","종료 교시","학년","교과 구분","학년")
+val classCategory= listOf("공통","선택","창체")
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -614,15 +634,28 @@ fun InsertClassData(
                         toggleDropDownMenuOption = {timeTableViewModel.toggleEndClassTimeDropDownMenu()}
                     )
                 }
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    TimeTableDownMenuComponent(
+                        onValueChange = { timeTableViewModel.updateCategory(it) },
+                        value = timeTableViewModel.classData.value.category.toString(),
+                        dropDownMenuOption = timeTableViewModel.toggleCategoryDropDownMenu.value,
+                        menuItems = classCategory,
+                        dropDownMenuName = checkBoxName[5],
+                        toggleDropDownMenuOption = { timeTableViewModel.toggleCategoryDropDownMenu() }
+                    )
 
-                GradeDropDownMenuComponent(
-                    onValueChange = {timeTableViewModel.updateGrade(it)},
-
-                    labelValue = "${timeTableViewModel.classData.value.class_grade}학년",
-                    dropDownMenuOption = timeTableViewModel.toggleGradeDropDownMenu.value,
-                    placeholderValue = "",
-                    toggleDropDownMenuOption = {timeTableViewModel.toggleGradeDropDownMenu()}
-                )
+                    TimeTableDownMenuComponent(
+                        onValueChange = { timeTableViewModel.updateGrade(it) },
+                        value = CutEntranceYear.addGradeEntranceYear(timeTableViewModel.classData.value.class_grade),
+                        dropDownMenuOption = timeTableViewModel.toggleGradeDropDownMenu.value,
+                        menuItems = classGrade,
+                        dropDownMenuName = checkBoxName[6],
+                        toggleDropDownMenuOption = { timeTableViewModel.toggleGradeDropDownMenu() }
+                    )
+                }
 
                 TextInputFieldComponent(
                     value=timeTableViewModel.classData.value.school,
@@ -659,16 +692,7 @@ fun InsertClassData(
 }
 
 
-fun convertDayOfWeek(day:String):Int{
-    return when(day){
-        "월"->1
-        "화"->2
-        "수"->3
-        "목"->4
-        "금"->5
-        else -> 1
-    }
-}
+
 
 @Composable
 fun BasicClass(
@@ -689,11 +713,6 @@ fun BasicClass(
     hourHeight: Dp,
 ) {
 
-//    val minClassTime: Int = if (classDataList.isNotEmpty()) {
-//        classDataList.minByOrNull(ClassData::startClassTime)?.startClassTime ?: 0
-//    } else {
-//        0
-//    }
     val minClassTime=1
     val maxClassTime: Int = classDataList.maxByOrNull(ClassData::class_end_time)?.class_end_time ?: 7
 
@@ -767,7 +786,7 @@ fun BasicClass(
             placeablesWithEvents.forEach { (placeable, classData) ->
                 Log.d("ClassMinTime", classData.class_start_time.toString())
                 val eventOffsetPeriods = classData.class_start_time - minClassTime
-                Log.d("eventOffsetPeriods", eventOffsetPeriods.toString())
+                Log.d("시간표classData.week", classData.week)
                 val eventY = (eventOffsetPeriods * hourHeight.toPx()).roundToInt()
                 val eventX = (convertDayOfWeek(classData.week) - 1) * width
                 placeable.place(eventX, eventY)
@@ -776,7 +795,16 @@ fun BasicClass(
     }
 }
 
-
+fun convertDayOfWeek(day:String):Int{
+    return when(day){
+        "mon"->1
+        "tue"->2
+        "wen"->3
+        "thu"->4
+        "fri"->5
+        else -> 1
+    }
+}
 
 @Composable
 fun DayHeader(

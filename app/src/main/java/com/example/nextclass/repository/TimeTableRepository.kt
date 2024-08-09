@@ -2,7 +2,9 @@ package com.example.nextclass.repository
 
 import com.example.nextclass.Data.AllScore
 import com.example.nextclass.Data.ClassData
+import com.example.nextclass.Data.ClassScore
 import com.example.nextclass.Data.ClassUUid
+import com.example.nextclass.Data.PostClassScoreList
 import com.example.nextclass.Data.ServerResponse
 
 interface TimeTableRepository {
@@ -17,6 +19,6 @@ interface TimeTableRepository {
 
     fun getScore(callback: (ServerResponse<AllScore>?) -> Unit)
 
-    fun postUpdateScoreData(allScore: AllScore, callback: (ServerResponse<Any>?) -> Unit)
+    fun postUpdateScoreData(allScore: PostClassScoreList, callback: (ServerResponse<Any>?) -> Unit)
 
 }

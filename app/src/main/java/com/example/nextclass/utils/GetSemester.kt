@@ -34,12 +34,17 @@ object GetSemester {
     }
 
     fun convertSemester(semester:String):String{
-        val parts = semester.split("-")
+        return if(semester!=""){
+            val parts = semester.split("-")
 
-        val year = parts[0]
-        val term = parts[1]
+            val year = parts[0]
+            val term = parts[1]
 
-        return "${year}년 ${term}학기"
+            "${year}년 ${term}학기"
+        }else{
+            semester
+        }
+
     }
 
 }

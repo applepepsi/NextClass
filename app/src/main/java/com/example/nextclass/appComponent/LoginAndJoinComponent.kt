@@ -1,6 +1,7 @@
 package com.example.nextclass.appComponent
 
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -449,7 +450,8 @@ fun GradeDropDownMenuComponent(
     labelValue: String,
     dropDownMenuOption: Boolean,
     toggleDropDownMenuOption: () -> Unit,
-    placeholderValue: String=stringResource(id = R.string.input_entranceYear)
+    placeholderValue: String=stringResource(id = R.string.input_entranceYear),
+
 ) {
 
     Text(

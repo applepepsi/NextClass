@@ -69,7 +69,7 @@ fun TimeTableView(
     val button= ImageVector.vectorResource(R.drawable.plus_icon)
 
     LaunchedEffect(Unit) {
-//        timeTableViewModel.getTimeTableScore()
+        timeTableViewModel.getTimeTableScore()
     }
 
     LaunchedEffect(timeTableViewModel.timeTableToastMessage.value) {

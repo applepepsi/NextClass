@@ -12,16 +12,22 @@ import com.example.nextclass.Data.AllScore
 import com.example.nextclass.Data.ClassData
 import com.example.nextclass.Data.ClassScore
 import com.example.nextclass.Data.ClassUUid
+import com.example.nextclass.Data.PostClassScoreList
 import com.example.nextclass.Data.SingleSemesterScore
 import com.example.nextclass.R
 import com.example.nextclass.repository.TimeTableRepository
 import com.example.nextclass.utils.CLASS_ALREADY_EXISTS_IN_TIMETABLE
+import com.example.nextclass.utils.ConvertDayOfWeek
 import com.example.nextclass.utils.CutEntranceYear
 import com.example.nextclass.utils.GetSemester.getCurrentSemester
+import com.example.nextclass.utils.SUCCESS_CODE
 import com.example.nextclass.utils.StringValue
 import com.example.nextclass.utils.TimeFormatter
+import com.google.gson.GsonBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import com.google.gson.Gson
+
 @HiltViewModel
 class TimeTableViewModel @Inject constructor(
     private val timeTableRepository: TimeTableRepository
@@ -59,6 +65,9 @@ class TimeTableViewModel @Inject constructor(
     private var _toggleEndClassTimeDropDownMenu= mutableStateOf(false)
     val toggleEndClassTimeDropDownMenu: State<Boolean> = _toggleEndClassTimeDropDownMenu
 
+    private var _toggleCategoryDropDownMenu= mutableStateOf(false)
+    val toggleCategoryDropDownMenu: State<Boolean> = _toggleCategoryDropDownMenu
+
     private var _toggleCreditDropDownMenu= mutableStateOf(false)
     val toggleCreditDropDownMenu: State<Boolean> = _toggleCreditDropDownMenu
 
@@ -77,203 +86,11 @@ class TimeTableViewModel @Inject constructor(
     private val _timeTableToastMessage = mutableStateOf<String?>(null)
     val timeTableToastMessage: State<String?> = _timeTableToastMessage
 
-    private val _timeTableScore = mutableStateOf<AllScore>(AllScore(
-        average_grade = "1.60",
-        credit_sum = 10,
-        require_credit = 174,
-        semesterList = listOf(
-            SingleSemesterScore(
-                semester="2024-1",
-                score="1.60",
-                dataList = listOf(
-                    ClassScore(
-                        title="과목1",
-                        credit = 1,
-                        grade = 2,
-                        category = "공통",
-                        achievement = "A",
-                        semester="2024-1",
-                    ),
-                    ClassScore(
-                        title="과목1",
-                        credit = 1,
-                        grade = 2,
-                        category = "선택",
-                        achievement = "A",
-                        student_score = 92.0,
-                        average_socre = 50.0,
-                        standard_deviation = 25.0,
-                        semester="2024-1",
-                    ),
-                    ClassScore(
-                        title="과목1",
-                        credit = 1,
-                        grade = 2,
-                        category = "선택",
-                        achievement = "A",
-                        student_score = 92.0,
-                        average_socre = 50.0,
-                        standard_deviation = 25.0,
-                        semester="2024-1",
-                    ),
-                    ClassScore(
-                        title="과목1",
-                        credit = 1,
-                        grade = 2,
-                        category = "선택",
-                        achievement = "A",
-                        student_score = 92.0,
-                        average_socre = 50.0,
-                        standard_deviation = 25.0,
-                        semester="2024-1",
-                    )
-                )
-            ),
-            SingleSemesterScore(
-                semester="2024-2",
-                score="1.70",
-                dataList = listOf(
-                    ClassScore(
-                        title="과목2",
-                        credit = 1,
-                        grade = 2,
-                        category = "공통",
-                        achievement = "A",
-                        semester="2024-1",
-                    ),
-                    ClassScore(
-                        title="과목3",
-                        credit = 1,
-                        grade = 2,
-                        category = "선택",
-                        achievement = "A",
-                        student_score = 92.0,
-                        average_socre = 50.0,
-                        standard_deviation = 25.0,
-                        semester="2024-1",
-                    ),
-                    ClassScore(
-                        title="과목1",
-                        credit = 1,
-                        grade = 2,
-                        category = "선택",
-                        achievement = "A",
-                        student_score = 92.0,
-                        average_socre = 50.0,
-                        standard_deviation = 25.0,
-                        semester="2024-1",
-                    ),
-                    ClassScore(
-                        title="과목5",
-                        credit = 1,
-                        grade = 2,
-                        category = "선택",
-                        achievement = "A",
-                        student_score = 92.0,
-                        average_socre = 50.0,
-                        standard_deviation = 25.0,
-                        semester="2024-1",
-                    )
-                )
-            ),
-            SingleSemesterScore(
-                semester="2025-1",
-                score="1.70",
-                dataList = listOf(
-                    ClassScore(
-                        title="과목2",
-                        credit = 1,
-                        grade = 2,
-                        category = "공통",
-                        achievement = "A",
-                        semester="2024-1",
-                    ),
-                    ClassScore(
-                        title="과목3",
-                        credit = 1,
-                        grade = 2,
-                        category = "선택",
-                        achievement = "A",
-                        student_score = 92.0,
-                        average_socre = 50.0,
-                        standard_deviation = 25.0,
-                        semester="2024-1",
-                    ),
-                    ClassScore(
-                        title="과목1",
-                        credit = 1,
-                        grade = 2,
-                        category = "선택",
-                        achievement = "A",
-                        student_score = 92.0,
-                        average_socre = 50.0,
-                        standard_deviation = 25.0,
-                        semester="2024-1",
-                    ),
-                    ClassScore(
-                        title="과목5",
-                        credit = 1,
-                        grade = 2,
-                        category = "선택",
-                        achievement = "A",
-                        student_score = 92.0,
-                        average_socre = 50.0,
-                        standard_deviation = 25.0,
-                        semester="2024-1",
-                    )
-                )
-            ),
-        )
-    ))
+    private val _timeTableScore = mutableStateOf<AllScore>(AllScore())
     val timeTableScore: State<AllScore> = _timeTableScore
 
-    private val _singleSemesterScore = mutableStateOf(SingleSemesterScore(
-        semester="2025-1",
-        score="1.70",
-        dataList = listOf(
-            ClassScore(
-                title="과목2",
-                credit = 1,
-                grade = 2,
-                category = "공통",
-                achievement = "A",
-                semester="2024-1",
-            ),
-            ClassScore(
-                title="과목3",
-                credit = 1,
-                grade = 2,
-                category = "선택",
-                achievement = "A",
-                student_score = 92.0,
-                average_socre = 50.0,
-                standard_deviation = 25.0,
-                semester="2024-1",
-            ),
-            ClassScore(
-                title="과목1",
-                credit = 1,
-                grade = 2,
-                category = "선택",
-                achievement = "A",
-                student_score = 92.0,
-                average_socre = 50.0,
-                standard_deviation = 25.0,
-                semester="2024-1",
-            ),
-            ClassScore(
-                title="과목5",
-                credit = 1,
-                grade = 2,
-                category = "선택",
-                achievement = "A",
-                student_score = 92.0,
-                average_socre = 50.0,
-                standard_deviation = 25.0,
-                semester="2024-1",
-            )
-        )
-    ))
+    private val _singleSemesterScore = mutableStateOf(SingleSemesterScore())
+
     val singleSemesterScore: State<SingleSemesterScore> = _singleSemesterScore
 
     private val _scoreCreditDropDownMenuState = mutableStateListOf(false)
@@ -368,6 +185,10 @@ class TimeTableViewModel @Inject constructor(
         _classData.value = _classData.value.copy(school = school)
     }
 
+    fun updateCategory(category: String){
+        _classData.value=_classData.value.copy(category=category)
+    }
+
 
     fun toggleGradeDropDownMenu() {
         _toggleGradeDropDownMenu.value = !_toggleGradeDropDownMenu.value
@@ -385,6 +206,10 @@ class TimeTableViewModel @Inject constructor(
         _toggleEndClassTimeDropDownMenu.value = !_toggleEndClassTimeDropDownMenu.value
     }
 
+    fun toggleCategoryDropDownMenu() {
+        _toggleCategoryDropDownMenu.value = !_toggleCategoryDropDownMenu.value
+    }
+
     fun toggleCreditDropDownMenu() {
         _toggleCreditDropDownMenu.value = !_toggleCreditDropDownMenu.value
     }
@@ -396,9 +221,10 @@ class TimeTableViewModel @Inject constructor(
 
 //            _classData.value = _classData.value.copy(week=_classData.value.week)
             //전송
-            _classData.value = _classData.value.copy(semester = getCurrentSemester())
-            Log.d("시간표", _classData.value.toString())
-            timeTableRepository.postTimeTableData(_classData.value){serverResponse ->
+            val postClassData = _classData.value.copy(semester = getCurrentSemester(), week = ConvertDayOfWeek.convertDayOfWeek(_classData.value.week))
+
+            Log.d("시간표", postClassData.toString())
+            timeTableRepository.postTimeTableData(postClassData){serverResponse ->
                 Log.d("시간표 전송 성공", serverResponse.toString())
 
                 when(serverResponse?.errorCode){
@@ -434,22 +260,11 @@ class TimeTableViewModel @Inject constructor(
 //            _classData.value = _classData.value.copy(week=_classData.value.week)
             //전송
 //            _classData.value = _classData.value.copy(semester = getCurrentSemester())
+            val postClassData = _classData.value.copy(week = ConvertDayOfWeek.convertDayOfWeek(_classData.value.week))
 
 
-            timeTableRepository.postModifyTimeTableData(_classData.value){serverResponse ->
+            timeTableRepository.postModifyTimeTableData(postClassData){serverResponse ->
 
-//                if(serverResponse?.code==200){
-//                    Log.d("시간표 수정 성공", serverResponse.toString())
-//
-//                    _addClassErrorMessage.value = StringValue.Empty
-//                    _addClassError.value = false
-//
-//                    _timeTableDataList.value=replaceModifyClassData()
-//                    toggleSetShowClassDataModifyDialogState()
-//                    Log.d("_timeTableDataList", _timeTableDataList.value.toString())
-//                }else{
-//                    //서버에서 받은 에러 출력
-//                }
                 when(serverResponse?.errorCode){
                     CLASS_ALREADY_EXISTS_IN_TIMETABLE->{
                         _addClassErrorMessage.value = StringValue.StringResource(R.string.DuplicatedClassTime)
@@ -558,69 +373,19 @@ class TimeTableViewModel @Inject constructor(
     }
 
     fun getTimeTableScore(){
-        _timeTableScore.value= AllScore(
-            average_grade = "1.60",
-            credit_sum = 10,
-            require_credit = 174,
-            semesterList = listOf(
-                SingleSemesterScore(
-                    semester="2024-05-01",
-                    score="1.60",
-                    dataList = listOf(
-                        ClassScore(
-                            title="과목1",
-                            credit = 1,
-                            grade = 2,
-                            category = "공통",
-                            achievement = "A",
-                            semester = "2025-04-05"
-                        ),
-                        ClassScore(
-                            title="과목1",
-                            credit = 1,
-                            grade = 2,
-                            category = "선택",
-                            achievement = "A",
-                            student_score = 92.0,
-                            average_socre = 50.0,
-                            standard_deviation = 25.0,
-                            semester = "2025-04-05"
-                        ),
-                        ClassScore(
-                            title="과목1",
-                            credit = 1,
-                            grade = 2,
-                            category = "선택",
-                            achievement = "A",
-                            student_score = 92.0,
-                            average_socre = 50.0,
-                            standard_deviation = 25.0,
-                            semester = "2025-04-05"
-                        ),
-                        ClassScore(
-                            title="과목1",
-                            credit = 1,
-                            grade = 2,
-                            category = "선택",
-                            achievement = "A",
-                            student_score = 92.0,
-                            average_socre = 50.0,
-                            standard_deviation = 25.0,
-                            semester = "2025-04-05"
-                        )
-                    )
-                ),
-
-            )
-        )
 
         timeTableRepository.getScore {serverResponse ->
-            Log.d("성적 가져오기 성공", serverResponse.toString())
+            if(serverResponse?.code== SUCCESS_CODE){
+                //서버에서 하나의 수업에 대한 학기를 보내주지 않고있음
+                Log.d("가져온 성적",serverResponse.toString())
+                _timeTableScore.value= serverResponse.data!!
+            }
         }
     }
 
     fun setSelectScoreList(semester: SingleSemesterScore) {
-        initializeScoreDropDownStates(semester.dataList.size)
+        Log.d("선택된 학기", semester.toString())
+        initializeScoreDropDownStates(semester.data_list.size)
         _singleSemesterScore.value=semester
     }
 
@@ -629,30 +394,33 @@ class TimeTableViewModel @Inject constructor(
     }
 
     fun addScoreRow(){
-        val emptyScoreList = ClassScore(student_score = 0.0, average_socre = 0.0, standard_deviation = 0.0, semester = _singleSemesterScore.value.semester, achievement = "A")
+        val emptyScoreList = ClassScore(student_score = null, average_score = null, standard_deviation = null, semester = _singleSemesterScore.value.semester, achievement = "A")
+        Log.d("행추가", emptyScoreList.toString())
+        Log.d("행추가", _singleSemesterScore.value.toString())
         _singleSemesterScore.value = _singleSemesterScore.value.copy(
-            dataList = _singleSemesterScore.value.dataList + emptyScoreList
+            data_list = _singleSemesterScore.value.data_list + emptyScoreList
         )
+        Log.d("행추가 결과", _singleSemesterScore.value.toString())
     }
 
     fun deleteScoreRow(rowIndex:Int){
 
-        val currentSemesterScore=_singleSemesterScore.value.dataList.toMutableList()
+        val currentSemesterScore=_singleSemesterScore.value.data_list.toMutableList()
 
         if (rowIndex in currentSemesterScore.indices) {
             currentSemesterScore.removeAt(rowIndex)
-
-            _singleSemesterScore.value = _singleSemesterScore.value.copy(dataList = currentSemesterScore)
         }
+        _singleSemesterScore.value = _singleSemesterScore.value.copy(data_list = currentSemesterScore)
     }
 
     fun deleteSemesterScore(semesterIndex:Int){
-        val currentAllSemesterScore=_timeTableScore.value.semesterList.toMutableList()
+        val currentAllSemesterScore=_timeTableScore.value.semester_list.toMutableList()
 
         if (semesterIndex in currentAllSemesterScore.indices) {
             currentAllSemesterScore.removeAt(semesterIndex)
 
-            _timeTableScore.value = _timeTableScore.value.copy(semesterList = currentAllSemesterScore)
+            val newTimeTableSCore= _timeTableScore.value.copy(semester_list = currentAllSemesterScore)
+            postModifyScore(newTimeTableSCore)
         }
     }
 
@@ -672,84 +440,95 @@ class TimeTableViewModel @Inject constructor(
     }
 
     fun updateScoreTitle(index:Int,title:String){
-        val updatedDataList = _singleSemesterScore.value.dataList.mapIndexed { scoreIndex, classScore ->
+        val updatedDataList = _singleSemesterScore.value.data_list.mapIndexed { scoreIndex, classScore ->
             if (index == scoreIndex) classScore.copy(title = title) else classScore
         }
-        _singleSemesterScore.value = _singleSemesterScore.value.copy(dataList = updatedDataList)
+        _singleSemesterScore.value = _singleSemesterScore.value.copy(data_list = updatedDataList)
     }
 
     fun updateScoreCredit(index:Int,credit:Int){
-        val updatedDataList = _singleSemesterScore.value.dataList.mapIndexed { scoreIndex, classScore ->
+        val updatedDataList = _singleSemesterScore.value.data_list.mapIndexed { scoreIndex, classScore ->
             if (index == scoreIndex) classScore.copy(credit = credit) else classScore
         }
-        _singleSemesterScore.value = _singleSemesterScore.value.copy(dataList = updatedDataList)
+        _singleSemesterScore.value = _singleSemesterScore.value.copy(data_list = updatedDataList)
     }
 
     fun updateScoreGrade(index:Int,grade:Int){
-        val updatedDataList = _singleSemesterScore.value.dataList.mapIndexed { scoreIndex, classScore ->
+        val updatedDataList = _singleSemesterScore.value.data_list.mapIndexed { scoreIndex, classScore ->
             if (index == scoreIndex) classScore.copy(grade = grade) else classScore
         }
-        _singleSemesterScore.value = _singleSemesterScore.value.copy(dataList = updatedDataList)
+        _singleSemesterScore.value = _singleSemesterScore.value.copy(data_list = updatedDataList)
     }
 
     fun updateScoreCategory(index:Int,category:String){
-        val updatedDataList = _singleSemesterScore.value.dataList.mapIndexed { scoreIndex, classScore ->
-            if (index == scoreIndex) classScore.copy(category = category) else classScore
+        val updatedDataList = _singleSemesterScore.value.data_list.mapIndexed { scoreIndex, classScore ->
+            if (index == scoreIndex && category=="공통") {
+                classScore.copy(category = category, student_score = null, average_score = null, standard_deviation = null)
+            }else if(index==scoreIndex && category=="선택"){
+                classScore.copy(category = category, student_score = 0.0, average_score = 0.0, standard_deviation = 0.0)
+            } else classScore
         }
-        _singleSemesterScore.value = _singleSemesterScore.value.copy(dataList = updatedDataList)
+
+        _singleSemesterScore.value = _singleSemesterScore.value.copy(data_list = updatedDataList)
     }
 
     fun updateScoreAchievement(index:Int,achievement:String){
-        val updatedDataList = _singleSemesterScore.value.dataList.mapIndexed { scoreIndex, classScore ->
+        val updatedDataList = _singleSemesterScore.value.data_list.mapIndexed { scoreIndex, classScore ->
             if (index == scoreIndex) classScore.copy(achievement = achievement) else classScore
         }
-        _singleSemesterScore.value = _singleSemesterScore.value.copy(dataList = updatedDataList)
+        _singleSemesterScore.value = _singleSemesterScore.value.copy(data_list = updatedDataList)
     }
 
     fun updateStudentScore(index:Int,studentScore:Double){
-        val updatedDataList = _singleSemesterScore.value.dataList.mapIndexed { scoreIndex, classScore ->
+        val updatedDataList = _singleSemesterScore.value.data_list.mapIndexed { scoreIndex, classScore ->
             if (index == scoreIndex) classScore.copy(student_score = studentScore) else classScore
         }
-        _singleSemesterScore.value = _singleSemesterScore.value.copy(dataList = updatedDataList)
+        _singleSemesterScore.value = _singleSemesterScore.value.copy(data_list = updatedDataList)
     }
 
     fun updateStudentAverageScore(index:Int,averageScore:Double){
-        val updatedDataList = _singleSemesterScore.value.dataList.mapIndexed { scoreIndex, classScore ->
-            if (index == scoreIndex) classScore.copy(average_socre = averageScore) else classScore
+        val updatedDataList = _singleSemesterScore.value.data_list.mapIndexed { scoreIndex, classScore ->
+            if (index == scoreIndex) classScore.copy(average_score = averageScore) else classScore
         }
-        _singleSemesterScore.value = _singleSemesterScore.value.copy(dataList = updatedDataList)
+        _singleSemesterScore.value = _singleSemesterScore.value.copy(data_list = updatedDataList)
     }
 
     fun updateStandardDeviation(index:Int,standardDeviation:Double){
-        val updatedDataList = _singleSemesterScore.value.dataList.mapIndexed { scoreIndex, classScore ->
+        val updatedDataList = _singleSemesterScore.value.data_list.mapIndexed { scoreIndex, classScore ->
             if (index == scoreIndex) classScore.copy(standard_deviation = standardDeviation) else classScore
         }
-        _singleSemesterScore.value = _singleSemesterScore.value.copy(dataList = updatedDataList)
+        _singleSemesterScore.value = _singleSemesterScore.value.copy(data_list = updatedDataList)
     }
 
     fun modifyScore(){
 
-
         //여기서 임시 변경 데이터를 만들어 서버로 전송하여 결과값에 따라 실제로 값을 바꿀지 말지 결정해야함
         val currentScore = _timeTableScore.value
-        val updatedSemesterScore = currentScore.semesterList.map { semesterScore ->
+        val updatedSemesterScore = currentScore.semester_list.map { semesterScore ->
             if (semesterScore.semester == _singleSemesterScore.value.semester) {
-                semesterScore.copy(dataList = _singleSemesterScore.value.dataList)
+                semesterScore.copy(data_list = _singleSemesterScore.value.data_list)
             } else {
                 semesterScore
             }
         }
 
         Log.d("updatedSemesterScore", updatedSemesterScore.toString())
-        if (updatedSemesterScore != currentScore.semesterList) {
-            postModifyScore(currentScore.copy(semesterList = updatedSemesterScore))
+        if (updatedSemesterScore != currentScore.semester_list) {
+            postModifyScore(currentScore.copy(semester_list = updatedSemesterScore))
         }
     }
 
     private fun postModifyScore(newTimeTableSCore:AllScore) {
-        //서버로 전송
-        timeTableRepository.postUpdateScoreData(newTimeTableSCore){serverResponse ->  
+        val scoreList = newTimeTableSCore.semester_list.flatMap { singleSemesterScore ->
+            singleSemesterScore.data_list
+        }
 
+        Log.d("scoreList", scoreList.toString())
+        //서버로 전송
+        timeTableRepository.postUpdateScoreData(PostClassScoreList(scoreList)){serverResponse ->
+            if(serverResponse?.code== SUCCESS_CODE){
+                getTimeTableScore()
+            }
         }
     }
 
@@ -796,18 +575,19 @@ class TimeTableViewModel @Inject constructor(
     }
 
     private fun inputSemesterCheck(selectSemesterData:String):Boolean{
-        return !_timeTableScore.value.semesterList.any { singleSemesterScore ->
+        return !_timeTableScore.value.semester_list.any { singleSemesterScore ->
             singleSemesterScore.semester == selectSemesterData
         }
     }
 
     private fun addNewSemester() {
-        val emptyScore=listOf(ClassScore(student_score = 0.0, average_socre = 0.0, standard_deviation = 0.0, semester = _selectSemester.value, achievement = "A"))
-        val newSemester = SingleSemesterScore(semester = _selectSemester.value, dataList = emptyScore)
+        val emptyScore=listOf(ClassScore(student_score = null, average_score = null, standard_deviation = null, semester = _selectSemester.value, achievement = "A"))
+        val newSemester = SingleSemesterScore(semester = _selectSemester.value, data_list = emptyScore)
 
-        val newSemesterList = _timeTableScore.value.semesterList + newSemester
-        val newTimeTableSCore=_timeTableScore.value.copy(semesterList = newSemesterList)
+        val newSemesterList = _timeTableScore.value.semester_list + newSemester
+        val newTimeTableSCore=_timeTableScore.value.copy(semester_list = newSemesterList)
 
+        Log.d("newTimeTableSCore", newTimeTableSCore.toString())
         postModifyScore(newTimeTableSCore)
     }
 

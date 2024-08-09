@@ -142,7 +142,7 @@ fun AccreditationCalculationComponent(
                     .background(Pastel_Red)
                     .padding(start = 10.dp, end = 10.dp, top = 7.dp, bottom = 7.dp)
                     .clickable {
-
+                        timeTableViewModel.toggleAddSemesterPopupState()
                     },
                 contentAlignment = Alignment.Center
             ){
@@ -176,7 +176,7 @@ fun AccreditationCalculationComponent(
                 Spacer(modifier = Modifier.height(15.dp))
             }
 
-            timeTableViewModel.timeTableScore.value.semesterList.forEachIndexed  { semesterIndex, semester ->
+            timeTableViewModel.timeTableScore.value.semester_list.forEachIndexed  { semesterIndex, semester ->
 
                 item {
                     Text(
@@ -188,7 +188,7 @@ fun AccreditationCalculationComponent(
                 item {
                     TableHeader(modifier = Modifier)
                 }
-                items(semester.dataList) { singleClassData ->
+                items(semester.data_list) { singleClassData ->
 
                     TableRow(
                         singleClassData,
@@ -483,7 +483,7 @@ fun TableRow(
             TableCell(text = "", weight = column3Weight,readOnly = true,)
         }else{
             TableCell(text = data.student_score.toString(), weight = column3Weight,readOnly = false, onValueChange = {timeTableViewModel.updateStudentScore(index,it.toDouble())},)
-            TableCell(text = data.average_socre.toString(), weight = column3Weight,readOnly = false, onValueChange = {timeTableViewModel.updateStudentAverageScore(index,it.toDouble())},)
+            TableCell(text = data.average_score.toString(), weight = column3Weight,readOnly = false, onValueChange = {timeTableViewModel.updateStudentAverageScore(index,it.toDouble())},)
             TableCell(text = data.standard_deviation.toString(), weight = column3Weight,readOnly = false, onValueChange = {timeTableViewModel.updateStandardDeviation(index,it.toDouble())},)
         }
 
@@ -679,7 +679,7 @@ fun ModifyScoreComponent(
                     TableHeader(modifier = Modifier.padding(start=14.dp))
                 }
 
-                itemsIndexed(timeTableViewModel.singleSemesterScore.value.dataList) { index,singleClassData ->
+                itemsIndexed(timeTableViewModel.singleSemesterScore.value.data_list) { index,singleClassData ->
                     Log.d("인덱스", index.toString())
 
                     Row(){
@@ -726,7 +726,7 @@ fun ModifyScoreComponent(
                                 .clickable {
                                     timeTableViewModel.addScoreRow()
                                     timeTableViewModel.initializeScoreDropDownStates(
-                                        timeTableViewModel.singleSemesterScore.value.dataList.size
+                                        timeTableViewModel.singleSemesterScore.value.data_list.size
                                     )
                                 }
                                 .align(Alignment.CenterVertically)

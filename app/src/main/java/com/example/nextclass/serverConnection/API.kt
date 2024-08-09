@@ -6,11 +6,13 @@ import com.example.nextclass.Data.ChangeEmail
 import com.example.nextclass.Data.ChangePassword
 import com.example.nextclass.Data.ChangeUserData
 import com.example.nextclass.Data.ClassData
+import com.example.nextclass.Data.ClassScore
 import com.example.nextclass.Data.ClassUUid
 import com.example.nextclass.Data.DuplicateCheckRequest
 import com.example.nextclass.Data.FindIDOrPasswordData
 import com.example.nextclass.Data.JoinRequest
 import com.example.nextclass.Data.LoginRequest
+import com.example.nextclass.Data.PostClassScoreList
 import com.example.nextclass.Data.PostSemester
 import com.example.nextclass.Data.PostUserData
 import com.example.nextclass.Data.ServerResponse
@@ -106,7 +108,7 @@ interface API {
     suspend fun getScore():Response<ServerResponse<AllScore>>
 
     @POST(SCORE_UPDATE)
-    suspend fun scoreUpdate(@Body allScore: AllScore):Response<ServerResponse<Any>>
+    suspend fun scoreUpdate(@Body scoreList: PostClassScoreList):Response<ServerResponse<Any>>
 
     @POST("/test")
     suspend fun tokenTest():Response<ServerResponse<Any>?>

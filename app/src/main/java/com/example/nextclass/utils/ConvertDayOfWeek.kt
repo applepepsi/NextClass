@@ -6,10 +6,21 @@ object ConvertDayOfWeek {
         return when(week){
             "월"->"mon"
             "화"->"tue"
-            "수"->"wed"
+            "수"->"wen"
             "목"->"thu"
             "금"->"fri"
-            else->throw IllegalArgumentException("유효하지 않은 요일: $week")
+            else->week
+        }
+    }
+
+    fun convertDayOfWeekKorea(week:String):String{
+        return when(week){
+            "mon" ->"월"
+            "tue"->"화"
+            "wen" ->"수"
+            "thu"->"목"
+            "fri"->"금"
+            else->week
         }
     }
 }

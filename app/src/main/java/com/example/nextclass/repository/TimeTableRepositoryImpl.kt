@@ -3,10 +3,13 @@ package com.example.nextclass.repository
 import android.util.Log
 import com.example.nextclass.Data.AllScore
 import com.example.nextclass.Data.ClassData
+import com.example.nextclass.Data.ClassScore
 import com.example.nextclass.Data.ClassUUid
+import com.example.nextclass.Data.PostClassScoreList
 import com.example.nextclass.Data.PostSemester
 import com.example.nextclass.Data.ServerResponse
 import com.example.oneplusone.serverConnection.API
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,7 +24,7 @@ class TimeTableRepositoryImpl  @Inject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
 
-                Log.d("classData", classData.toString())
+                Log.d("전송", classData.toString())
                 val response = api.postTimeTableData(classData)
                 Log.d("responseCheck", response.toString())
                 if (response.isSuccessful){
@@ -148,22 +151,23 @@ class TimeTableRepositoryImpl  @Inject constructor(
         }
     }
 
-    override fun postUpdateScoreData(allScore: AllScore, callback: (ServerResponse<Any>?) -> Unit) {
+    override fun postUpdateScoreData(allScore: PostClassScoreList, callback: (ServerResponse<Any>?) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
-
-                Log.d("allScore", allScore.toString())
+                val gson = Gson()
+                val json = gson.toJson(allScore)
+                Log.d("json", json.toString())
                 val response = api.scoreUpdate(allScore)
                 Log.d("responseCheck", response.toString())
                 if (response.isSuccessful){
-                    Log.d("수업 정보 받아오기 성공", response.body().toString())
+                    Log.d("수업 업데이트 성공", response.body().toString())
                     response.body()
                 } else {
-                    Log.d("수업 정보 받아오기 실패","id중복체크 실패")
+                    Log.d("수업 업데이트 실패","업데이트 실패")
                     null
                 }
             } catch (e: Exception) {
-                Log.d("수업 정보 받아오기 실패",e.toString())
+                Log.d("수업 업데이트 실패",e.toString())
                 null
             }
             withContext(Dispatchers.Main) {
