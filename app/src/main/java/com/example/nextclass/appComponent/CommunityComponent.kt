@@ -1,6 +1,7 @@
 package com.example.nextclass.appComponent
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +19,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFloatingActionButton
@@ -825,7 +830,7 @@ fun FloatingActionButtonComponent(
         contentAlignment = Alignment.BottomEnd,
         modifier = Modifier
             .fillMaxSize()
-            .padding(end=20.dp,bottom=80.dp)
+            .padding(end = 20.dp, bottom = 80.dp)
 
     ) {
         LargeFloatingActionButton(
@@ -844,6 +849,83 @@ fun FloatingActionButtonComponent(
                 modifier = Modifier
                     .size(20.dp)
             )
+        }
+    }
+}
+
+val selectPostType= listOf("내 게시물","내가 쓴 댓글")
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PostOptionDropDownMenu(
+    value: String="",
+    onValueChange: (String) -> Unit,
+    dropDownMenuOption: Boolean,
+    toggleDropDownMenuOption: () -> Unit,
+    dropDownIconVisible:Boolean=true,
+    menuItems: List<String>,
+
+){
+    Row(
+        modifier = Modifier
+            .clip(RoundedCornerShape(5.dp))
+            .background(Color.White)
+
+
+            .heightIn(min = 30.dp)
+            .padding(2.dp),
+
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        ExposedDropdownMenuBox(
+            expanded = dropDownMenuOption,
+            onExpandedChange = { toggleDropDownMenuOption() },
+
+            ) {
+
+            Row(
+                modifier = Modifier,
+//                    .width(100.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Text(
+                    text = value,
+                    modifier = Modifier
+
+                        .padding(start=3.dp,top=3.dp,bottom=3.dp,end=1.dp),
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Normal,
+                        fontStyle = FontStyle.Normal,
+                    ),
+                )
+
+
+                CustomTrailingIcon(expanded=dropDownMenuOption,size=20.dp)
+
+            }
+
+            ExposedDropdownMenu(
+                expanded = dropDownMenuOption,
+                onDismissRequest = { toggleDropDownMenuOption() },
+
+            ) {
+                menuItems.forEach { item ->
+                    DropdownMenuItem(
+                        text = { Text( text = item,) },
+                        onClick = {
+                            onValueChange(item)
+                            toggleDropDownMenuOption()
+                        },
+                        modifier = Modifier
+
+                    )
+                }
+            }
         }
     }
 }
@@ -910,6 +992,26 @@ fun CommentComponentPreview() {
             deleteComment = {},
             modifyComment = {},
             likeComment = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PostOptionDropDownPreview() {
+    val testRepository = TestRepository()
+    val loginViewModel = LoginViewModel(testRepository)
+
+    val navController = rememberNavController()
+
+
+    NextClassTheme {
+        PostOptionDropDownMenu(
+            value = "내가 쓴 글",
+            onValueChange = {},
+            dropDownMenuOption = false,
+            toggleDropDownMenuOption = { /*TODO*/ },
+            menuItems = selectPostType
         )
     }
 }

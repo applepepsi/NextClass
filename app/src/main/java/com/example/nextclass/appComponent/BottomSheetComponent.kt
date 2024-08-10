@@ -3,6 +3,7 @@ package com.example.nextclass.appComponent
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -602,15 +603,7 @@ fun RowScope.ScoreDropDownMenu(
                 )
 
                 if(dropDownIconVisible){
-//                    Icon(
-//                        imageVector = Icons.Default.ArrowDropDown,
-//                        contentDescription = null,
-//                        modifier = Modifier
-//                            .clickable {
-//                                toggleDropDownMenuOption()
-//                            }
-//                            .size(12.dp)
-//                    )
+
                     CustomTrailingIcon(expanded=dropDownMenuOption,size=14.dp)
                 }
             }
@@ -652,7 +645,8 @@ fun CustomTrailingIcon(expanded: Boolean,size: Dp) {
 }
 @Composable
 fun ModifyScoreComponent(
-    timeTableViewModel:TimeTableViewModel
+    timeTableViewModel:TimeTableViewModel,
+    navController: NavController
 ) {
     Column(
         modifier = Modifier
@@ -750,6 +744,11 @@ fun ModifyScoreComponent(
                     value = "수정 완료",
                     onClick = {
                         timeTableViewModel.modifyScore()
+
+                        //todo 뒤로가기 테스트 해봐야함
+
+                        navController.popBackStack()
+
                     },
                     modifier = Modifier.padding(start=15.dp,end=15.dp))
             }
@@ -824,6 +823,7 @@ fun AddSemesterPopupComponent(
                     value = "수정 완료",
                     onClick = {
                         timeTableViewModel.postNewScoreTable(year=yearPickerState.selectedItem,semester=semesterPickerState.selectedItem)
+                        timeTableViewModel.toggleAddSemesterPopupState()
                     },
                     modifier = Modifier.padding(start=15.dp,end=15.dp,top=15.dp))
 
@@ -860,9 +860,10 @@ fun ModifyScorePreview() {
     val loginViewModel = LoginViewModel(testRepository)
     val timeTableTestRepository=TimeTableTestRepo()
     val timeTableViewModel = TimeTableViewModel(timeTableTestRepository)
+    val navController= rememberNavController()
     NextClassTheme {
 
-        ModifyScoreComponent(timeTableViewModel)
+        ModifyScoreComponent(timeTableViewModel,navController)
     }
 }
 

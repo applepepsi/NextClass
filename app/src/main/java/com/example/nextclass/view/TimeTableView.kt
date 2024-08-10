@@ -211,7 +211,7 @@ fun ModifyScoreView(
             )
         }
 
-        ModifyScoreComponent(timeTableViewModel = timeTableViewModel)
+        ModifyScoreComponent(timeTableViewModel = timeTableViewModel,navController=navController)
 
 
     }

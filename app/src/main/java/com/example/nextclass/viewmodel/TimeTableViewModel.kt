@@ -118,6 +118,9 @@ class TimeTableViewModel @Inject constructor(
     private val _addScorePopupState = mutableStateOf(false)
     val addScorePopupState: State<Boolean> = _addScorePopupState
 
+    private val _scoreModifyResultToastMessage = mutableStateOf<String?>(null)
+    val scoreModifyResultToastMessage: State<String?> = _scoreModifyResultToastMessage
+
     fun toggleInsertClassDataDialogState(){
         resetClassData()
         _insertClassDataDialogState.value=!_insertClassDataDialogState.value
@@ -373,13 +376,14 @@ class TimeTableViewModel @Inject constructor(
     }
 
     fun getTimeTableScore(){
-
+        _loading.value=true
         timeTableRepository.getScore {serverResponse ->
             if(serverResponse?.code== SUCCESS_CODE){
                 //서버에서 하나의 수업에 대한 학기를 보내주지 않고있음
                 Log.d("가져온 성적",serverResponse.toString())
                 _timeTableScore.value= serverResponse.data!!
             }
+            _loading.value=false
         }
     }
 
@@ -519,6 +523,7 @@ class TimeTableViewModel @Inject constructor(
     }
 
     private fun postModifyScore(newTimeTableSCore:AllScore) {
+        _loading.value=true
         val scoreList = newTimeTableSCore.semester_list.flatMap { singleSemesterScore ->
             singleSemesterScore.data_list
         }
@@ -526,12 +531,24 @@ class TimeTableViewModel @Inject constructor(
         Log.d("scoreList", scoreList.toString())
         //서버로 전송
         timeTableRepository.postUpdateScoreData(PostClassScoreList(scoreList)){serverResponse ->
-            if(serverResponse?.code== SUCCESS_CODE){
-                getTimeTableScore()
+            if(serverResponse!=null){
+
+                if(serverResponse.code == SUCCESS_CODE){
+                    resetScoreModifyToastMessage()
+                    getTimeTableScore()
+
+                }else{
+                    _scoreModifyResultToastMessage.value=serverResponse.errorDescription
+                }
             }
+            _loading.value=false
         }
+
     }
 
+    fun resetScoreModifyToastMessage(){
+        _scoreModifyResultToastMessage.value=null
+    }
 
 
     fun initializeScoreDropDownStates(count: Int) {

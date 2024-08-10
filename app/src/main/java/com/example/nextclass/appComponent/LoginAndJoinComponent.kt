@@ -543,7 +543,7 @@ fun GradeDropDownMenuComponent(
 @Composable
 fun InputButtonComponent(
     value: String,
-    onClick:  () -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier,
     showImage:Boolean=false,
 

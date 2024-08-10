@@ -42,6 +42,11 @@ class CommunityViewModel @Inject constructor(
     private val _postErrorMessage= mutableStateOf<StringValue>(StringValue.Empty)
     val postErrorMessage: State<StringValue> = _postErrorMessage
 
+    private val _toggleMyPostTypeState = mutableStateOf(false)
+    val toggleMyPostTypeState: State<Boolean> = _toggleMyPostTypeState
+
+    private val _myPostFilter = mutableStateOf("내가 쓴 글")
+    val myPostFilter: State<String> = _myPostFilter
     fun setSelectedCommunityData(communityPostData: CommunityPostData){
         _selectCommunityData.value=communityPostData
         Log.d("선택된 게시물", _selectCommunityData.value.toString())
@@ -91,5 +96,14 @@ class CommunityViewModel @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    fun toggleMyPostTypeType(){
+
+        _toggleMyPostTypeState.value=!_toggleMyPostTypeState.value
+        Log.d("_toggleMyPostTypeState", _toggleMyPostTypeState.value.toString())
+    }
+
+    fun updateMyPostTypeDropDownText(text:String){
+        _myPostFilter.value=text
+    }
 
 }
