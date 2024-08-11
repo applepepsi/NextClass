@@ -22,9 +22,9 @@ data class ClassScore(
     val grade:Int=1,
     val category: String="공통",
     val achievement:String="",
-    val student_score: Double? =null,
-    val average_score:Double?=null,
-    val standard_deviation:Double?=null,
+    val student_score : Double? = null,
+    val average_score : Double? = null,
+    val standard_deviation : Double? = null,
     val semester:String=""
 )
 

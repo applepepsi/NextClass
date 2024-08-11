@@ -80,6 +80,14 @@ fun TimeTableView(
         }
     }
 
+    LaunchedEffect(timeTableViewModel.scoreModifyResultToastMessage.value) {
+        timeTableViewModel.scoreModifyResultToastMessage.value?.let{
+            Toast.makeText(context, timeTableViewModel.scoreModifyResultToastMessage.value, Toast.LENGTH_SHORT,)
+                .show()
+            timeTableViewModel.resetScoreModifyToastMessage()
+        }
+    }
+
     if(timeTableViewModel.addScorePopupState.value){
         AddSemesterPopupComponent(timeTableViewModel = timeTableViewModel)
     }
@@ -95,7 +103,9 @@ fun TimeTableView(
         },
         sheetPeekHeight = 200.dp,
     ) {
+
         ProgressBarComponent(state = timeTableViewModel.loading.value)
+
         LaunchedEffect(Unit) {
             timeTableViewModel.getTimeTable()
         }
@@ -196,6 +206,8 @@ fun ModifyScoreView(
         modifier = Modifier
             .fillMaxSize()
     ) {
+        ProgressBarComponent(state = timeTableViewModel.loading.value)
+
         Column(
             modifier = Modifier
                 .padding(top = 20.dp),

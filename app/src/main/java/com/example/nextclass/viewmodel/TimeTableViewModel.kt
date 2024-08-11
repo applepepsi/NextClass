@@ -121,6 +121,12 @@ class TimeTableViewModel @Inject constructor(
     private val _scoreModifyResultToastMessage = mutableStateOf<String?>(null)
     val scoreModifyResultToastMessage: State<String?> = _scoreModifyResultToastMessage
 
+    private val _modifyScoreErrorMessage = mutableStateOf<StringValue>(StringValue.Empty)
+    val modifyScoreErrorMessage: State<StringValue> = _modifyScoreErrorMessage
+
+    private val _modifyScoreErrorState = mutableStateOf(false)
+    val modifyScoreErrorState: State<Boolean> = _modifyScoreErrorState
+
     fun toggleInsertClassDataDialogState(){
         resetClassData()
         _insertClassDataDialogState.value=!_insertClassDataDialogState.value
@@ -376,14 +382,20 @@ class TimeTableViewModel @Inject constructor(
     }
 
     fun getTimeTableScore(){
-        _loading.value=true
-        timeTableRepository.getScore {serverResponse ->
-            if(serverResponse?.code== SUCCESS_CODE){
-                //서버에서 하나의 수업에 대한 학기를 보내주지 않고있음
-                Log.d("가져온 성적",serverResponse.toString())
-                _timeTableScore.value= serverResponse.data!!
+        _loading.value = true
+
+        timeTableRepository.getScore { serverResponse ->
+            // 로딩 상태를 종료하는 부분을 마지막에 한 번만 호출
+            _loading.value = false
+
+            // 서버 응답이 null이 아닌 경우 처리
+            serverResponse?.let {
+                if (it.code == SUCCESS_CODE) {
+                    Log.d("가져온 성적", it.toString())
+
+                    _timeTableScore.value = it.data?.copy(average_grade = if (it.data.average_grade == "NaN") "0" else it.data.average_grade)!!
+                }
             }
-            _loading.value=false
         }
     }
 
@@ -483,23 +495,60 @@ class TimeTableViewModel @Inject constructor(
         _singleSemesterScore.value = _singleSemesterScore.value.copy(data_list = updatedDataList)
     }
 
-    fun updateStudentScore(index:Int,studentScore:Double){
+    fun updateStudentScore(index:Int,studentScore:String){
         val updatedDataList = _singleSemesterScore.value.data_list.mapIndexed { scoreIndex, classScore ->
-            if (index == scoreIndex) classScore.copy(student_score = studentScore) else classScore
+            if (index == scoreIndex) {
+                val score = studentScore.toDoubleOrNull()
+                if (score != null) {
+
+                    _modifyScoreErrorState.value = false
+                    _modifyScoreErrorMessage.value = StringValue.Empty
+                    classScore.copy(student_score = score)
+                } else {
+
+                    _modifyScoreErrorState.value = true
+                    _modifyScoreErrorMessage.value = StringValue.StringResource(R.string.InvalidDoubleNumber)
+                    classScore
+                }
+            } else classScore
         }
         _singleSemesterScore.value = _singleSemesterScore.value.copy(data_list = updatedDataList)
     }
 
-    fun updateStudentAverageScore(index:Int,averageScore:Double){
+
+    fun updateStudentAverageScore(index:Int,averageScore:String){
         val updatedDataList = _singleSemesterScore.value.data_list.mapIndexed { scoreIndex, classScore ->
-            if (index == scoreIndex) classScore.copy(average_score = averageScore) else classScore
+            if (index == scoreIndex) {
+                val score=averageScore.toDoubleOrNull()
+                if(score!=null){
+                    _modifyScoreErrorState.value = false
+                    _modifyScoreErrorMessage.value = StringValue.Empty
+                    classScore.copy(average_score = averageScore.toDouble())
+                }else{
+                    _modifyScoreErrorState.value = true
+                    _modifyScoreErrorMessage.value=StringValue.StringResource(R.string.InvalidDoubleNumber)
+                    classScore
+                }
+            } else classScore
         }
         _singleSemesterScore.value = _singleSemesterScore.value.copy(data_list = updatedDataList)
     }
 
-    fun updateStandardDeviation(index:Int,standardDeviation:Double){
+    fun updateStandardDeviation(index:Int,standardDeviation:String){
         val updatedDataList = _singleSemesterScore.value.data_list.mapIndexed { scoreIndex, classScore ->
-            if (index == scoreIndex) classScore.copy(standard_deviation = standardDeviation) else classScore
+
+            if (index == scoreIndex) {
+                val score=standardDeviation.toDoubleOrNull()
+                if(score!=null){
+                    _modifyScoreErrorState.value = false
+                    _modifyScoreErrorMessage.value = StringValue.Empty
+                    classScore.copy(standard_deviation = standardDeviation.toDouble())
+                }else{
+                    _modifyScoreErrorState.value = true
+                    _modifyScoreErrorMessage.value=StringValue.StringResource(R.string.InvalidDoubleNumber)
+                    classScore
+                }
+            } else classScore
         }
         _singleSemesterScore.value = _singleSemesterScore.value.copy(data_list = updatedDataList)
     }

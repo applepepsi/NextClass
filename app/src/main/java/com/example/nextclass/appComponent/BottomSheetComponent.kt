@@ -259,7 +259,6 @@ fun DeleteOrModifyScoreBoard(
                     timeTableViewModel.setSelectScoreList(semester)
 
                     navController.navigate("modifyScoreView") {
-                        popUpTo(navController.graph.findStartDestination().id)
                         launchSingleTop = true
                     }
                 }
@@ -359,7 +358,7 @@ fun TableHeader(
                 fontStyle = FontStyle.Normal,
             ),
         )
-        TableHeaderCell(text = "학년", weight = column2Weight,
+        TableHeaderCell(text = "등급", weight = column2Weight,
             style = TextStyle(
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
@@ -483,9 +482,9 @@ fun TableRow(
             TableCell(text = "", weight = column3Weight,readOnly = true,)
             TableCell(text = "", weight = column3Weight,readOnly = true,)
         }else{
-            TableCell(text = data.student_score.toString(), weight = column3Weight,readOnly = false, onValueChange = {timeTableViewModel.updateStudentScore(index,it.toDouble())},)
-            TableCell(text = data.average_score.toString(), weight = column3Weight,readOnly = false, onValueChange = {timeTableViewModel.updateStudentAverageScore(index,it.toDouble())},)
-            TableCell(text = data.standard_deviation.toString(), weight = column3Weight,readOnly = false, onValueChange = {timeTableViewModel.updateStandardDeviation(index,it.toDouble())},)
+            TableCell(text = data.student_score.toString(), weight = column3Weight,readOnly = false, onValueChange = {timeTableViewModel.updateStudentScore(index,it)},)
+            TableCell(text = data.average_score.toString(), weight = column3Weight,readOnly = false, onValueChange = {timeTableViewModel.updateStudentAverageScore(index,it)},)
+            TableCell(text = data.standard_deviation.toString(), weight = column3Weight,readOnly = false, onValueChange = {timeTableViewModel.updateStandardDeviation(index,it)},)
         }
 
 
@@ -549,7 +548,7 @@ fun RowScope.TableCell(
 
 val scoreCredit=listOf("1", "2", "3")
 val achievement= listOf("A","B","C","D","E")
-val grade= listOf("1","2","3")
+val grade= listOf("1","2","3","4","5","6","7","8","9")
 val category= listOf("공통","선택")
 @SuppressLint("RememberReturnType")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -566,7 +565,7 @@ fun RowScope.ScoreDropDownMenu(
     ) {
 
     val interactionSource = remember { MutableInteractionSource() }
-    Log.d("토클상태", dropDownMenuOption.toString())
+//    Log.d("토클상태", dropDownMenuOption.toString())
     Row(
         modifier = Modifier
             .border(0.6.dp, Color.LightGray)
@@ -740,6 +739,11 @@ fun ModifyScoreComponent(
 
             item{
                 Spacer(Modifier.height(40.dp))
+                
+                TextInputHelpFieldComponent(
+                    errorMessage = timeTableViewModel.modifyScoreErrorMessage.value.asString(LocalContext.current),
+                    isError = timeTableViewModel.modifyScoreErrorState.value)
+                
                 InputButtonComponent(
                     value = "수정 완료",
                     onClick = {
