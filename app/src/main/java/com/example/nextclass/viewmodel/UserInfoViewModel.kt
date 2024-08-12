@@ -218,12 +218,12 @@ class UserInfoViewModel @Inject constructor(
     }
 
     fun updateOldPassword(password:String){
-        _changePasswordData.value=_changePasswordData.value.copy(existingPassword = password)
+        _changePasswordData.value=_changePasswordData.value.copy(existing_password = password)
 
     }
 
     fun updateNewPassword(password:String){
-        _changePasswordData.value=_changePasswordData.value.copy(newPassword = password)
+        _changePasswordData.value=_changePasswordData.value.copy(new_password = password)
     }
 
     fun updateNewPasswordConfirm(password:String){
@@ -376,19 +376,19 @@ class UserInfoViewModel @Inject constructor(
     }
 
     private fun passwordCheck(): Boolean {
-        return if (_changePasswordData.value.newPassword != _newPasswordConfirm.value) {
+        return if (_changePasswordData.value.new_password != _newPasswordConfirm.value) {
             _passwordChangeErrorMessage.value = StringValue.StringResource(R.string.wrongPasswordConfirm)
             _passwordChangeErrorState.value = true
             false
-        } else if (_changePasswordData.value.newPassword.isEmpty()) {
+        } else if (_changePasswordData.value.new_password.isEmpty()) {
             _passwordChangeErrorMessage.value = StringValue.StringResource(R.string.joinFailError)
             _passwordChangeErrorState.value = true
             false
-        } else if (_changePasswordData.value.newPassword.length !in 9..18) {
+        } else if (_changePasswordData.value.new_password.length !in 9..18) {
             _passwordChangeErrorMessage.value = StringValue.StringResource(R.string.wrongPasswordLimit)
             _passwordChangeErrorState.value = true
             false
-        } else if (!_changePasswordData.value.newPassword.matches(Regex("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#\$%^&*(),.?\":{}|<>]).+$"))) {
+        } else if (!_changePasswordData.value.new_password.matches(Regex("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#\$%^&*(),.?\":{}|<>]).+$"))) {
             _passwordChangeErrorMessage.value = StringValue.StringResource(R.string.wrongPasswordRule)
             _passwordChangeErrorState.value = true
             false
