@@ -136,7 +136,9 @@ fun UserProfileItemComponent(
     image:ImageVector,
     text:String,
     address: String,
-    navController:NavController,
+    navController:NavController= rememberNavController(),
+    logOut:Boolean=false,
+    onClick:()->Unit={}
 ){
     Row(
         modifier = Modifier
@@ -202,9 +204,12 @@ fun UserProfileItemComponent(
                 )
             },
             onClick = {
-                navController.navigate(address) {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
+                if(logOut){
+                    onClick()
+                }else{
+                    navController.navigate(address) {
+                        launchSingleTop = true
+                    }
                 }
             },
         )
@@ -246,7 +251,7 @@ fun ChangePasswordComponent(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     PasswordInputFieldComponent(
-                        value = userInfoViewModel.changePasswordData.value.existingPassword,
+                        value = userInfoViewModel.changePasswordData.value.existing_password,
                         onValueChange = {
                             userInfoViewModel.updateOldPassword(it)
                         },
@@ -258,7 +263,7 @@ fun ChangePasswordComponent(
                         })
 
                     PasswordInputFieldComponent(
-                        value = userInfoViewModel.changePasswordData.value.newPassword,
+                        value = userInfoViewModel.changePasswordData.value.existing_password,
                         onValueChange = {
                             userInfoViewModel.updateNewPassword(it)
                         },

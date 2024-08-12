@@ -22,6 +22,7 @@ import com.example.nextclass.Data.VerifyCodeData
 import com.example.nextclass.utils.CHANGE_EMAIL
 import com.example.nextclass.utils.CHANGE_INFO
 import com.example.nextclass.utils.CHANGE_PASSWORD
+import com.example.nextclass.utils.DELETE_ID
 import com.example.nextclass.utils.DUPLICATED_CHECK_ADDRESS
 import com.example.nextclass.utils.FIND_ID
 import com.example.nextclass.utils.FIND_PASSWORD
@@ -88,6 +89,10 @@ interface API {
 
     @POST(CHANGE_EMAIL)
     suspend fun postChangeEmailRequest(@Body changeEmailData: ChangeEmail):Response<ServerResponse<Any>>
+
+    @POST(DELETE_ID)
+    suspend fun deleteUser(@Body password: String):Response<ServerResponse<Any>>
+
 
     @POST(GET_TIME_TABLE)
     suspend fun getCurrentTimeTable(@Body semester: PostSemester):Response<ServerResponse<List<ClassData>>>

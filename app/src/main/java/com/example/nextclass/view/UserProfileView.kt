@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.R
@@ -190,10 +191,24 @@ fun UserProfileView(
                         Spacer(modifier = Modifier.height(40.dp))
 
                         UserProfileItemComponent(
-                            image = ImageVector.vectorResource(R.drawable.notification_icon),
-                            text = "알림 설정",
+                            image = ImageVector.vectorResource(R.drawable.log_out_icon),
+                            text = "로그 아웃",
                             address = "passwordConfirmView",
-                            navController = navController
+                            navController = navController,
+                            logOut = true,
+                            onClick = {
+                                loginViewModel.logOut()
+
+                                UserInfoManager.clearUserInfo(context)
+                                TokenManager.clearToken(context)
+
+                                mainNavController.navigate("loginOrJoinGraph") {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        inclusive = true
+                                    }
+//                                    popUpTo("mainNav") { inclusive = true }
+                                }
+                            }
                         )
 
                         Spacer(modifier = Modifier.height(40.dp))
@@ -208,20 +223,14 @@ fun UserProfileView(
                         TextButton(
                             content={
                                 Text(
-                                text="로그아웃",
+                                text="회원 탈퇴",
                                     color=Color.White,
                                     fontSize = 17.sp
 
                             )},
                             onClick = {
-                                //todo 토큰을 제거하는 기능도 추가해야함
-                                loginViewModel.logOut()
-
-                                UserInfoManager.clearUserInfo(context)
-                                TokenManager.clearToken(context)
-
-                                mainNavController.navigate("loginOrJoinGraph") {
-                                    popUpTo("mainNav") { inclusive = true }
+                                navController.navigate("memberDeletePasswordConfirmView") {
+                                    launchSingleTop = true
                                 }
                             },
                             modifier = Modifier)
@@ -318,6 +327,103 @@ fun PasswordConfirm(
         }
     }
 }
+
+@Composable
+fun MemberDeletePasswordConfirmView(
+    loginViewModel: LoginViewModel,
+    navController: NavController,
+    mainNavHostController: NavHostController,
+
+    ) {
+    val context = LocalContext.current
+
+    if(loginViewModel.deleteUserResult.value) {
+        loginViewModel.logOut()
+
+        UserInfoManager.clearUserInfo(context)
+        TokenManager.clearToken(context)
+
+        mainNavHostController.navigate("loginOrJoinGraph") {
+            popUpTo(navController.graph.findStartDestination().id) {
+                inclusive = true
+            }
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 20.dp),
+
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+
+    ){
+        AppBarTextAndButtonComponent(
+            value = "회원 탈퇴",
+            navController=navController)
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 100.dp),
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Surface(
+            shape = RoundedCornerShape(30.dp),
+            modifier = Modifier
+                .height(350.dp)
+                .padding(start = 20.dp, end = 20.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .background(Background_Color2)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    MainTextComponent(
+                        value = "회원 탈퇴",
+                        modifier=Modifier
+                            .padding(top=20.dp)
+                    )
+
+                    DescriptionTextComponent(
+                        value= "회원을 탈퇴하기 위해서는 비밀번호 확인이 필요합니다.",
+                        modifier=Modifier.padding(start = 15.dp,top=10.dp,end=15.dp)
+                    )
+
+                    FindFieldComponent(
+                        value = loginViewModel.deleteUserPasswordConfirm.value,
+                        onValueChange = { loginViewModel.updateDeleteUserPasswordConfirm(it) },
+
+                        placeholderValue = stringResource(id = R.string.input_password),
+                    )
+
+                    Spacer(modifier = Modifier.height(30.dp))
+
+                    TextInputHelpFieldComponent(
+                        errorMessage = loginViewModel.deleteUserPasswordConfirmErrorMessage.value.asString(LocalContext.current),
+                        isError = loginViewModel.deleteUserPasswordConfirmErrorState.value,
+                    )
+
+                    InputButtonComponent(
+                        value = "비밀번호 확인",
+                        onClick = { loginViewModel.submitDeleteUserPassword() },
+                        modifier = Modifier.padding(start=15.dp,end=15.dp))
+
+                    Spacer(modifier = Modifier.height(20.dp))
+                }
+            }
+        }
+    }
+}
+
 
 @Composable
 fun ChangeUserInfoView(
@@ -629,9 +735,9 @@ fun ChangeEmailComponentPreview() {
     val loginViewModel = LoginViewModel(testRepository)
     val mainNavHostController= rememberNavController()
     val userInfoViewModel=UserInfoViewModel(testRepository)
-    ChangeEmailView(
-
-        navController,
-        userInfoViewModel
+    MemberDeletePasswordConfirmView(
+        loginViewModel = loginViewModel,
+        navController = navController,
+        mainNavHostController = mainNavHostController
     )
 }

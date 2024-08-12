@@ -223,6 +223,19 @@ class LoginViewModel @Inject constructor(
     private val _findPasswordSuccessState=mutableStateOf(false)
     val findPasswordSuccessState: State<Boolean> = _findPasswordSuccessState
 
+
+    private val _deleteUserPasswordConfirm=mutableStateOf<String>("")
+    val deleteUserPasswordConfirm: State<String> = _deleteUserPasswordConfirm
+
+    private val _deleteUserPasswordConfirmErrorMessage=mutableStateOf<StringValue>(StringValue.Empty)
+    val deleteUserPasswordConfirmErrorMessage: State<StringValue> = _deleteUserPasswordConfirmErrorMessage
+
+    private val _deleteUserPasswordConfirmErrorState=mutableStateOf(false)
+    val deleteUserPasswordConfirmErrorState: State<Boolean> = _deleteUserPasswordConfirmErrorState
+
+    private val _deleteUserResult=mutableStateOf(false)
+    val deleteUserResult: State<Boolean> = _deleteUserResult
+
     fun updateEmail(newEmail: String) {
         _email.value = newEmail
         _emailDuplicateCheck.value=false
@@ -612,12 +625,43 @@ class LoginViewModel @Inject constructor(
         _userInfoModifyPasswordConfirm.value=value
     }
 
+    fun updateDeleteUserPasswordConfirm(value: String){
+        _deleteUserPasswordConfirm.value=value
+    }
+
     fun submitUserInfoModifyPasswordConfirm(){
         _userInfoModifyPasswordConfirmError.value=false
         _userInfoModifyPasswordConfirmErrorMessage.value=StringValue.StringResource(R.string.WrongVerityCodeMessage)
 
         //여기서 비밀번호가 맞다면 회원정보 변경창으로
     }
+
+    fun submitDeleteUserPassword(){
+
+        _loading.value=true
+
+        userInfoRepository.deleteUser(_deleteUserPasswordConfirm.value){ deleteUserResult->
+            if(deleteUserResult !=null) {
+                if (deleteUserResult.code == SUCCESS_CODE) {
+                    Log.d("회원탈퇴 성공", deleteUserResult.code.toString())
+                    _loginResult.value=true
+                    _loading.value=false
+
+                    _deleteUserPasswordConfirmErrorState.value=false
+                    _deleteUserPasswordConfirmErrorMessage.value=StringValue.Empty
+                    _deleteUserResult.value=true
+                }else{
+                    _deleteUserPasswordConfirmErrorState.value=true
+                    _deleteUserPasswordConfirmErrorMessage.value=StringValue.StringResource(R.string.wrongPassword)
+                    _deleteUserResult.value=false
+                }
+            }
+            _loading.value=false
+        }
+
+    }
+
+
 
     fun logOut(){
         _loginResult.value=false

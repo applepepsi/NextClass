@@ -44,4 +44,6 @@ interface UserInfoRepository {
     fun postFindId(email: FindIDOrPasswordData, callback: (ServerResponse<Any>?) -> Unit)
 
     fun postFindPassword(id: FindIDOrPasswordData, callback: (ServerResponse<Any>?) -> Unit)
+
+    fun deleteUser(password:String, callback: (ServerResponse<Any>?) -> Unit)
 }

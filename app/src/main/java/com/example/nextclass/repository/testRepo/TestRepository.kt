@@ -248,4 +248,8 @@ class TestRepository : UserInfoRepository {
     ) {
         TODO("Not yet implemented")
     }
+
+    override fun deleteUser(password: String, callback: (ServerResponse<Any>?) -> Unit) {
+        TODO("Not yet implemented")
+    }
 }

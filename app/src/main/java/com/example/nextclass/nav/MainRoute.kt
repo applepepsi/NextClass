@@ -20,6 +20,7 @@ import com.example.nextclass.view.ChangeUserInfoView
 import com.example.nextclass.view.CommunityView
 import com.example.nextclass.view.HomeView
 import com.example.nextclass.view.InsertOrModifyScheduleView
+import com.example.nextclass.view.MemberDeletePasswordConfirmView
 import com.example.nextclass.view.ModifyScoreView
 import com.example.nextclass.view.PostDetailView
 import com.example.nextclass.view.ScheduleView
@@ -176,6 +177,7 @@ private fun NavGraphBuilder.scheduleRoute(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 private fun NavGraphBuilder.scheduleView(
     navController: NavHostController,
     scheduleViewModel: ScheduleViewModel,
@@ -223,6 +225,7 @@ private fun NavGraphBuilder.userProfileRoute(
         changePasswordRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel)
         changeEmailRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel)
         changeUserProfileRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel)
+        memberDeleteRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel)
 
     }
 }
@@ -289,6 +292,38 @@ private fun NavGraphBuilder.changeUserProfileRoute(
 
         changeUserInfoView(navController, loginViewModel, mainNavHostController,userInfoViewModel)
 
+    }
+}
+
+
+private fun NavGraphBuilder.memberDeleteRoute(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController,
+    userInfoViewModel: UserInfoViewModel
+) {
+    navigation(
+        route = "memberSecessionRoute",
+        startDestination = "changeUserInfoView"
+    ) {
+
+        memberDeletePasswordCheckView(navController, loginViewModel, mainNavHostController,userInfoViewModel)
+
+    }
+}
+
+private fun NavGraphBuilder.memberDeletePasswordCheckView(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController,
+    userInfoViewModel: UserInfoViewModel
+) {
+    composable("memberDeletePasswordConfirmView") {
+        MemberDeletePasswordConfirmView(
+            loginViewModel = loginViewModel,
+            navController = navController,
+            mainNavHostController = mainNavHostController
+        )
     }
 }
 

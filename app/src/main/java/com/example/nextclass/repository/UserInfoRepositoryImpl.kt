@@ -332,6 +332,28 @@ class UserInfoRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun deleteUser(password: String, callback: (ServerResponse<Any>?) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = try {
+                val response = api.deleteUser(password)
+                if (response.isSuccessful){
+                    Log.d("탈퇴 성공", response.body().toString())
+                    response.body()
+                } else{
+                    Log.d("탈퇴 실패","탈퇴 실패")
+                    null
+                }
+            } catch (e: Exception) {
+                Log.d("탈퇴 실패",e.toString())
+                null
+            }
+            withContext(Dispatchers.Main) {
+
+                callback(result)
+            }
+        }
+    }
+
 }
 
 
