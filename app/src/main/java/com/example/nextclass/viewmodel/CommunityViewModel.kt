@@ -45,7 +45,7 @@ class CommunityViewModel @Inject constructor(
     private val _toggleMyPostTypeState = mutableStateOf(false)
     val toggleMyPostTypeState: State<Boolean> = _toggleMyPostTypeState
 
-    private val _myPostFilter = mutableStateOf("내가 쓴 글")
+    private val _myPostFilter = mutableStateOf("내 게시물")
     val myPostFilter: State<String> = _myPostFilter
     fun setSelectedCommunityData(communityPostData: CommunityPostData){
         _selectCommunityData.value=communityPostData

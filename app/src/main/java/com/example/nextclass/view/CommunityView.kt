@@ -10,19 +10,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -173,7 +167,8 @@ fun PostDetailView(
                         singleCommentData,
                         modifyComment = { communityViewModel.modifyComment(singleCommentData) },
                         deleteComment = { communityViewModel.deleteComment(singleCommentData) },
-                        likeComment = { communityViewModel.likeComment(singleCommentData) }
+                        likeComment = { communityViewModel.likeComment(singleCommentData) },
+                        optionVisible = false
                     )
                 }
             }
@@ -262,17 +257,31 @@ fun MyPostView(
             Spacer(modifier = Modifier.height(10.dp))
         }
 
+        if(communityViewModel.myPostFilter.value=="내 게시물"){
+            items(items = testCommunityData) { singlePostData ->
 
-        items(items = testCommunityData) { singlePostData ->
-
-            SinglePostComponent(
-                singlePostData,
-                postClick = {
-                    communityViewModel.setSelectedCommunityData(singlePostData)
+                SinglePostComponent(
+                    singlePostData,
+                    postClick = {
+                        communityViewModel.setSelectedCommunityData(singlePostData)
 //                    navController.navigate("postDetailView")
-                }
-            )
+                    }
+                )
+            }
+        }else{
+            items(items = testCommentList) { singleCommentData ->
+                //내가 쓴 댓글을 터치하면 해당 게시물로 이동
+                CommentComponent(
+                    singleCommentData = singleCommentData,
+
+                    commentClick = {
+                        communityViewModel.setSelectCommentData(singleCommentData)
+                    },
+                    optionVisible = false,
+                )
+            }
         }
+
     }
 }
 

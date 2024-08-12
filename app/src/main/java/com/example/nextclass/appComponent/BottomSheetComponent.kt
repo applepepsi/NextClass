@@ -326,9 +326,9 @@ fun TableHeader(
     modifier: Modifier
 ) {
 
-    val column1Weight = .2f
-    val column2Weight = .1f
-    val column3Weight = .2f
+    val column1Weight = .1f
+    val column2Weight = .2f
+    val column3Weight = .15f
 
     Row(
         modifier
@@ -342,41 +342,41 @@ fun TableHeader(
     ) {
         TableHeaderCell(
             text = "과목명",
-            weight = column1Weight,
+            weight = column2Weight,
             style = TextStyle(
-                fontSize = 12.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Normal,
                 ),
             )
 
 
-        TableHeaderCell(text = "학점", weight = column2Weight,
+        TableHeaderCell(text = "학점", weight = column1Weight,
             style = TextStyle(
-                fontSize = 12.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Normal,
             ),
         )
-        TableHeaderCell(text = "등급", weight = column2Weight,
+        TableHeaderCell(text = "등급", weight = column1Weight,
             style = TextStyle(
-                fontSize = 12.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Normal,
             ),
         )
         TableHeaderCell(text = "교과구분", weight = column3Weight,
             style = TextStyle(
-                fontSize = 12.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Normal,
             ),
         )
         TableHeaderCell(
-            text = "등급",
-            weight = column2Weight,
+            text = "성취도",
+            weight = column3Weight,
             style = TextStyle(
-            fontSize = 12.sp,
+            fontSize = 10.sp,
             fontWeight = FontWeight.Bold,
             fontStyle = FontStyle.Normal,
             ),
@@ -384,21 +384,21 @@ fun TableHeader(
 
         TableHeaderCell(text = "원점수", weight = column3Weight,
             style = TextStyle(
-                fontSize = 12.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Normal,
             ),
         )
         TableHeaderCell(text = "과목평균", weight = column3Weight,
             style = TextStyle(
-                fontSize = 12.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Normal,
             ),
         )
         TableHeaderCell(text = "표준편차", weight = column3Weight,
             style = TextStyle(
-                fontSize = 12.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Normal,
             ),
@@ -414,9 +414,9 @@ fun TableRow(
     index:Int=0
 ) {
 
-    val column1Weight = .2f
-    val column2Weight = .1f
-    val column3Weight = .2f
+    val column1Weight = .1f
+    val column2Weight = .2f
+    val column3Weight = .15f
     Log.d("보낸 인덱스", index.toString())
 
 
@@ -434,7 +434,7 @@ fun TableRow(
 
         TableCell(
             text = data.title,
-            weight = column1Weight,
+            weight = column2Weight,
             onValueChange = { timeTableViewModel.updateScoreTitle(index,it) },
         )
 
@@ -444,7 +444,7 @@ fun TableRow(
             dropDownMenuOption = timeTableViewModel.scoreCreditDropDownMenuState[index],
             toggleDropDownMenuOption = { timeTableViewModel.toggleScoreCreditDropDownMenuState(index) },
             menuItems = scoreCredit,
-            weight = column2Weight,
+            weight = column1Weight,
             dropDownIconVisible = dropDownIconVisible,
         )
 
@@ -454,7 +454,7 @@ fun TableRow(
             dropDownMenuOption = timeTableViewModel.scoreGradeDropDownMenuState[index],
             toggleDropDownMenuOption = { timeTableViewModel.toggleScoreGradeDownMenuState(index) },
             menuItems = grade,
-            weight = column2Weight,
+            weight = column1Weight,
             dropDownIconVisible = dropDownIconVisible,
         )
 
@@ -474,7 +474,7 @@ fun TableRow(
             dropDownMenuOption = timeTableViewModel.scoreAchievementDropDownMenuState[index],
             toggleDropDownMenuOption = { timeTableViewModel.toggleScoreAchievementDropDownState(index) },
             menuItems = achievement,
-            weight = column2Weight,
+            weight = column3Weight,
             dropDownIconVisible = dropDownIconVisible,
         )
         if(data.category=="공통"){
@@ -502,9 +502,9 @@ fun RowScope.TableHeaderCell(
         text = text,
         modifier= Modifier
             .fillMaxWidth()
+
             .border(0.6.dp, Color.LightGray)
             .weight(weight)
-
             .padding(start = 4.dp, top = 5.dp, bottom = 5.dp),
 
         style=style,
@@ -534,7 +534,7 @@ fun RowScope.TableCell(
             onValueChange = { onValueChange(it) },
             singleLine = true,
             textStyle = TextStyle(
-                fontSize = 13.sp
+                fontSize = 10.sp
             ),
             readOnly=readOnly,
             modifier = Modifier.fillMaxWidth(),
@@ -592,11 +592,12 @@ fun RowScope.ScoreDropDownMenu(
                     value = value,
                     onValueChange = onValueChange,
                     readOnly = true,
+
                     modifier = Modifier
-                        .menuAnchor()
+                        .then(if (dropDownIconVisible) Modifier.menuAnchor() else Modifier)
                         .weight(1f),
                     textStyle = TextStyle(
-                        fontSize = 13.sp
+                        fontSize = 10.sp
                     ),
 
                 )
@@ -664,12 +665,12 @@ fun ModifyScoreComponent(
                 item {
                     Text(
                         text = GetSemester.convertSemester(timeTableViewModel.singleSemesterScore.value.semester),
-                        modifier = Modifier.padding(start=14.dp)
+                        modifier = Modifier.padding(start=11.dp)
                     )
 
                 }
                 item {
-                    TableHeader(modifier = Modifier.padding(start=14.dp))
+                    TableHeader(modifier = Modifier.padding(start=11.dp))
                 }
 
                 itemsIndexed(timeTableViewModel.singleSemesterScore.value.data_list) { index,singleClassData ->
@@ -678,7 +679,7 @@ fun ModifyScoreComponent(
                     Row(){
                         Icon(
                             modifier = Modifier
-                                .size(12.dp)
+                                .size(11.dp)
                                 .align(Alignment.CenterVertically)
                                 .clickable {
                                     timeTableViewModel.deleteScoreRow(index)
@@ -704,7 +705,7 @@ fun ModifyScoreComponent(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 14.dp)
+                            .padding(start = 11.dp)
                             .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp))
                             .background(Pastel_Red),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -777,7 +778,7 @@ fun AddSemesterPopupComponent(
     Dialog(
         onDismissRequest = { timeTableViewModel.toggleAddSemesterPopupState() }) {
         Surface(
-            modifier = Modifier.height(400.dp),
+            modifier = Modifier.height(370.dp),
             shape = RoundedCornerShape(16.dp),
             color = Background_Color2,
 
@@ -824,7 +825,7 @@ fun AddSemesterPopupComponent(
                     )
 
                 InputButtonComponent(
-                    value = "수정 완료",
+                    value = "추가 완료",
                     onClick = {
                         timeTableViewModel.postNewScoreTable(year=yearPickerState.selectedItem,semester=semesterPickerState.selectedItem)
                         timeTableViewModel.toggleAddSemesterPopupState()

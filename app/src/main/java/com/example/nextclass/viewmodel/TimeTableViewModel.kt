@@ -539,13 +539,13 @@ class TimeTableViewModel @Inject constructor(
 
             if (index == scoreIndex) {
                 val score=standardDeviation.toDoubleOrNull()
-                if(score!=null){
+                if(score!=null && score > 0){
                     _modifyScoreErrorState.value = false
                     _modifyScoreErrorMessage.value = StringValue.Empty
                     classScore.copy(standard_deviation = standardDeviation.toDouble())
                 }else{
                     _modifyScoreErrorState.value = true
-                    _modifyScoreErrorMessage.value=StringValue.StringResource(R.string.InvalidDoubleNumber)
+                    _modifyScoreErrorMessage.value=StringValue.StringResource(R.string.InvalidStandardDeviation)
                     classScore
                 }
             } else classScore

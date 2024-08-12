@@ -1,7 +1,6 @@
 package com.example.nextclass.appComponent
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -500,15 +498,21 @@ fun PostDetailComponent(
 
 @Composable
 fun CommentComponent(
-    singleCommentData: CommunityCommentData=CommunityCommentData(),
-    modifyComment:()->Unit,
-    deleteComment:()->Unit,
-    likeComment:()->Unit
+    singleCommentData: CommunityCommentData = CommunityCommentData(),
+    modifyComment: () -> Unit = {},
+    deleteComment: () -> Unit = {},
+    likeComment: () -> Unit = {},
+    commentClick: () -> Unit = {},
+
+    optionVisible: Boolean = true
 ){
 
     Column(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable {
+                commentClick()
+            },
 
         ){
         DividerComponent(modifier = Modifier
@@ -532,52 +536,63 @@ fun CommentComponent(
                 ),
             )
 
+
+
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ){
-                Text(
-                    modifier = Modifier
-                        .clickable {
-                            likeComment()
-                        }
-                        .padding(5.dp),
-                    text = "추천",
-                    style = TextStyle(
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Normal,
-                        fontStyle = FontStyle.Normal
-                    ),
-                    color=Color.Gray
-                )
+                if(optionVisible){
+                    Text(
+                        modifier = Modifier
+                            .clickable {
 
-                Text(
-                    modifier = Modifier
-                        .clickable {
-                            modifyComment()
-                        }
-                        .padding(5.dp),
-                    text = "수정",
-                    style = TextStyle(
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Normal,
-                        fontStyle = FontStyle.Normal
-                    ),
-                    color=Color.Gray
-                )
-                Text(
-                    modifier = Modifier
-                        .clickable {
-                            deleteComment()
-                        }
-                        .padding(5.dp),
-                    text = "제거",
-                    style = TextStyle(
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Normal,
-                        fontStyle = FontStyle.Normal
-                    ),
-                    color=Color.Gray
-                )
+                                likeComment()
+
+                            }
+                            .padding(5.dp),
+                        text = "추천",
+                        style = TextStyle(
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontStyle = FontStyle.Normal
+                        ),
+                        color=Color.Gray
+                    )
+
+                    Text(
+                        modifier = Modifier
+                            .clickable {
+
+                                modifyComment()
+
+                            }
+                            .padding(5.dp),
+                        text = "수정",
+                        style = TextStyle(
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontStyle = FontStyle.Normal
+                        ),
+                        color=Color.Gray
+                    )
+                    Text(
+                        modifier = Modifier
+                            .clickable {
+
+                                deleteComment()
+
+                            }
+                            .padding(5.dp),
+                        text = "제거",
+                        style = TextStyle(
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontStyle = FontStyle.Normal
+                        ),
+                        color=Color.Gray
+                    )
+                }
+
             }
 
         }
@@ -895,8 +910,9 @@ fun PostOptionDropDownMenu(
                 Text(
                     text = value,
                     modifier = Modifier
-
+                        .menuAnchor()
                         .padding(start=3.dp,top=3.dp,bottom=3.dp,end=1.dp),
+
                     style = TextStyle(
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
@@ -912,7 +928,7 @@ fun PostOptionDropDownMenu(
             ExposedDropdownMenu(
                 expanded = dropDownMenuOption,
                 onDismissRequest = { toggleDropDownMenuOption() },
-
+                modifier = Modifier.width(120.dp)
             ) {
                 menuItems.forEach { item ->
                     DropdownMenuItem(
@@ -922,6 +938,7 @@ fun PostOptionDropDownMenu(
                             toggleDropDownMenuOption()
                         },
                         modifier = Modifier
+
 
                     )
                 }
@@ -989,9 +1006,10 @@ fun CommentComponentPreview() {
 
     NextClassTheme {
         CommentComponent(
-            deleteComment = {},
             modifyComment = {},
-            likeComment = {}
+            deleteComment = {},
+            likeComment = {},
+            optionVisible = false
         )
     }
 }
