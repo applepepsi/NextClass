@@ -481,7 +481,7 @@ class TimeTableViewModel @Inject constructor(
             if (index == scoreIndex && category=="공통") {
                 classScore.copy(category = category, student_score = null, average_score = null, standard_deviation = null)
             }else if(index==scoreIndex && category=="선택"){
-                classScore.copy(category = category, student_score = 0.0, average_score = 0.0, standard_deviation = 0.0)
+                classScore.copy(category = category, student_score = 10.0, average_score = 10.0, standard_deviation = 10.0)
             } else classScore
         }
 
@@ -514,7 +514,6 @@ class TimeTableViewModel @Inject constructor(
         }
         _singleSemesterScore.value = _singleSemesterScore.value.copy(data_list = updatedDataList)
     }
-
 
     fun updateStudentAverageScore(index:Int,averageScore:String){
         val updatedDataList = _singleSemesterScore.value.data_list.mapIndexed { scoreIndex, classScore ->

@@ -49,6 +49,7 @@ import com.example.nextclass.appComponent.DividerComponent
 import com.example.nextclass.appComponent.FindFieldComponent
 import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.MainTextComponent
+import com.example.nextclass.appComponent.PasswordInputFieldComponent
 import com.example.nextclass.appComponent.ProgressBarComponent
 import com.example.nextclass.appComponent.RePostPasswordCodeComponent
 import com.example.nextclass.appComponent.TextInputHelpFieldComponent
@@ -80,13 +81,15 @@ fun UserProfileView(
 
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+        ,
 
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
-        ProgressBarComponent(state = userInfoViewModel.loading.value)
+//        ProgressBarComponent(state = userInfoViewModel.loading.value)
         LaunchedEffect(Unit) {
             userInfoViewModel.getUserInfo()
         }
@@ -123,14 +126,14 @@ fun UserProfileView(
             shape = RoundedCornerShape(35.dp),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 60.dp)
+                .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 80.dp)
 
         ) {
                     Column(
                         modifier = Modifier
                             .background(Feldgrau)
                             .fillMaxSize()
-                            .verticalScroll(scrollState)
+
                             ,
 
 //                        verticalArrangement = Arrangement.SpaceBetween,
@@ -176,19 +179,7 @@ fun UserProfileView(
                         )
                         Spacer(modifier = Modifier.height(40.dp))
 
-                        DividerComponent(modifier = Modifier
-                            .padding(start = 20.dp, end = 20.dp)
-                            .height(1.dp)
-                        )
-                        Spacer(modifier = Modifier.height(40.dp))
 
-                        UserProfileItemComponent(
-                            image = ImageVector.vectorResource(R.drawable.notification_icon),
-                            text = "알림 설정",
-                            address = "passwordConfirmView",
-                            navController = navController
-                        )
-                        Spacer(modifier = Modifier.height(40.dp))
 
                         UserProfileItemComponent(
                             image = ImageVector.vectorResource(R.drawable.log_out_icon),
@@ -210,9 +201,50 @@ fun UserProfileView(
                                 }
                             }
                         )
+                        Spacer(modifier = Modifier.height(40.dp))
+
+
+                        MainTextComponent(
+                            value = "커뮤니티",
+                            modifier= Modifier
+                                .padding(bottom=20.dp)
+                            ,
+                            color = Color.White
+                        )
+
+
+                        DividerComponent(modifier = Modifier
+                            .padding(start = 20.dp, end = 20.dp)
+                            .height(1.dp)
+                        )
+                        Spacer(modifier = Modifier.height(40.dp))
+
+                        UserProfileItemComponent(
+                            image = ImageVector.vectorResource(R.drawable.my_post_icon),
+                            text = "작성한 게시물",
+                            address = "myPostView",
+                            navController = navController
+                        )
 
                         Spacer(modifier = Modifier.height(40.dp))
 
+                        UserProfileItemComponent(
+                            image = ImageVector.vectorResource(R.drawable.my_comment_icon),
+                            text = "작성한 댓글",
+                            address = "myCommentView",
+                            navController = navController
+                        )
+
+                        Spacer(modifier = Modifier.height(40.dp))
+
+
+                        MainTextComponent(
+                            value = "알림",
+                            modifier= Modifier
+                                .padding(bottom=20.dp)
+                            ,
+                            color = Color.White
+                        )
                         DividerComponent(modifier = Modifier
                             .padding(start = 20.dp, end = 20.dp)
                             .height(1.dp)
@@ -220,21 +252,32 @@ fun UserProfileView(
 
                         Spacer(modifier = Modifier.height(40.dp))
 
+                        UserProfileItemComponent(
+                            image = ImageVector.vectorResource(R.drawable.notification_icon),
+                            text = "알림 설정",
+                            address = "passwordConfirmView",
+                            navController = navController
+                        )
+
+                        Spacer(modifier = Modifier.height(40.dp))
+
+
                         TextButton(
                             content={
                                 Text(
-                                text="회원 탈퇴",
+                                    text="회원 탈퇴",
                                     color=Color.White,
                                     fontSize = 17.sp
 
-                            )},
+                                )},
                             onClick = {
                                 navController.navigate("memberDeletePasswordConfirmView") {
                                     launchSingleTop = true
                                 }
                             },
                             modifier = Modifier)
-                        Spacer(modifier = Modifier.height(40.dp))
+
+                        Spacer(modifier = Modifier.height(20.dp))
                     }
 
             }
@@ -372,7 +415,7 @@ fun MemberDeletePasswordConfirmView(
         Surface(
             shape = RoundedCornerShape(30.dp),
             modifier = Modifier
-                .height(350.dp)
+                .height(330.dp)
                 .padding(start = 20.dp, end = 20.dp)
         ) {
             Box(
@@ -392,20 +435,23 @@ fun MemberDeletePasswordConfirmView(
                         modifier=Modifier
                             .padding(top=20.dp)
                     )
+//
+//                    DescriptionTextComponent(
+//                        value= "탈퇴를 위해서는 비밀번호 확인이 필요합니다.",
+//                        modifier=Modifier.padding(start=17.dp,top=10.dp,end=5.dp).fillMaxWidth()
+//                    )
 
-                    DescriptionTextComponent(
-                        value= "회원을 탈퇴하기 위해서는 비밀번호 확인이 필요합니다.",
-                        modifier=Modifier.padding(start = 15.dp,top=10.dp,end=15.dp)
-                    )
-
-                    FindFieldComponent(
+                    PasswordInputFieldComponent(
                         value = loginViewModel.deleteUserPasswordConfirm.value,
                         onValueChange = { loginViewModel.updateDeleteUserPasswordConfirm(it) },
 
                         placeholderValue = stringResource(id = R.string.input_password),
+                        togglePassWordVisibility = { loginViewModel.toggleDeleteUserPasswordConfirmVisibleState() },
+                        passwordVisibleOption = loginViewModel.deleteUserPasswordConfirmVisibleState.value,
+                        labelValue = "탈퇴를 위해서는 비밀번호 확인이 필요합니다."
                     )
 
-                    Spacer(modifier = Modifier.height(30.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
 
                     TextInputHelpFieldComponent(
                         errorMessage = loginViewModel.deleteUserPasswordConfirmErrorMessage.value.asString(LocalContext.current),

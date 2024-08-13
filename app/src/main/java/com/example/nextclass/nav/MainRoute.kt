@@ -10,7 +10,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.nextclass.appComponent.InsertOrModifyPostComponent
-import com.example.nextclass.appComponent.ModifyScoreComponent
 import com.example.nextclass.items.BottomNavItem
 import com.example.nextclass.view.ChangeEmailInsertCodeView
 import com.example.nextclass.view.ChangeEmailView
@@ -22,6 +21,8 @@ import com.example.nextclass.view.HomeView
 import com.example.nextclass.view.InsertOrModifyScheduleView
 import com.example.nextclass.view.MemberDeletePasswordConfirmView
 import com.example.nextclass.view.ModifyScoreView
+import com.example.nextclass.view.MyCommentView
+import com.example.nextclass.view.MyPostView
 import com.example.nextclass.view.PostDetailView
 import com.example.nextclass.view.ScheduleView
 import com.example.nextclass.view.TimeTableView
@@ -50,7 +51,7 @@ fun MainNavGraph(
         timetableRoute(navController, loginViewModel, mainNavHostController,timeTableViewModel)
         communityRoute(navController, loginViewModel, mainNavHostController,communityViewModel)
         scheduleRoute(navController, loginViewModel, mainNavHostController,scheduleViewModel)
-        userProfileRoute(navController, loginViewModel, mainNavHostController,userInfoViewModel)
+        userProfileRoute(navController, loginViewModel, mainNavHostController,userInfoViewModel,communityViewModel)
     }
 }
 
@@ -214,7 +215,8 @@ private fun NavGraphBuilder.userProfileRoute(
     navController: NavHostController,
     loginViewModel: LoginViewModel,
     mainNavHostController: NavHostController,
-    userInfoViewModel: UserInfoViewModel
+    userInfoViewModel: UserInfoViewModel,
+    communityViewModel: CommunityViewModel
 ) {
     navigation(
         route = "userProfileRoute",
@@ -226,11 +228,68 @@ private fun NavGraphBuilder.userProfileRoute(
         changeEmailRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel)
         changeUserProfileRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel)
         memberDeleteRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel)
+        myPostRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel,communityViewModel=communityViewModel)
+        myCommentRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel,communityViewModel=communityViewModel)
+    }
+}
+
+private fun NavGraphBuilder.myPostRoute(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController,
+    userInfoViewModel: UserInfoViewModel,
+    communityViewModel: CommunityViewModel
+) {
+    navigation(
+        route = "myPostRoute",
+        startDestination = "myPostView"
+    ) {
+
+        myPostView(navController, loginViewModel, mainNavHostController,userInfoViewModel,communityViewModel)
 
     }
 }
 
+private fun NavGraphBuilder.myCommentRoute(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController,
+    userInfoViewModel: UserInfoViewModel,
+    communityViewModel: CommunityViewModel
+) {
+    navigation(
+        route = "myCommentRoute",
+        startDestination = "myCommentView"
+    ) {
 
+        myCommentView(navController, loginViewModel, mainNavHostController,userInfoViewModel,communityViewModel)
+
+    }
+}
+private fun NavGraphBuilder.myCommentView(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController,
+    userInfoViewModel: UserInfoViewModel,
+    communityViewModel: CommunityViewModel
+) {
+
+
+    composable("myCommentView") {
+        MyCommentView(communityViewModel = communityViewModel, )
+    }
+}
+private fun NavGraphBuilder.myPostView(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController,
+    userInfoViewModel: UserInfoViewModel,
+    communityViewModel: CommunityViewModel
+) {
+    composable("myPostView") {
+        MyPostView(communityViewModel = communityViewModel,)
+    }
+}
 
 private fun NavGraphBuilder.userProfileView(
     navController: NavHostController,

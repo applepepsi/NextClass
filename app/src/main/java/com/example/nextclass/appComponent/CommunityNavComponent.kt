@@ -46,7 +46,7 @@ fun CommunityTopNavComponent(navController: NavHostController,communityViewModel
     val screens = listOf(
         CommunityTopNavItem.AllSchool,
         CommunityTopNavItem.MySchool,
-        CommunityTopNavItem.MyPost,
+        CommunityTopNavItem.BestPost,
     )
 
 

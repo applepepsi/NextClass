@@ -236,6 +236,9 @@ class LoginViewModel @Inject constructor(
     private val _deleteUserResult=mutableStateOf(false)
     val deleteUserResult: State<Boolean> = _deleteUserResult
 
+    private val _deleteUserPasswordConfirmVisibleState=mutableStateOf(false)
+    val deleteUserPasswordConfirmVisibleState: State<Boolean> = _deleteUserPasswordConfirmVisibleState
+
     fun updateEmail(newEmail: String) {
         _email.value = newEmail
         _emailDuplicateCheck.value=false
@@ -627,6 +630,10 @@ class LoginViewModel @Inject constructor(
 
     fun updateDeleteUserPasswordConfirm(value: String){
         _deleteUserPasswordConfirm.value=value
+    }
+
+    fun toggleDeleteUserPasswordConfirmVisibleState(){
+        _deleteUserPasswordConfirmVisibleState.value=!_deleteUserPasswordConfirmVisibleState.value
     }
 
     fun submitUserInfoModifyPasswordConfirm(){

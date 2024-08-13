@@ -205,6 +205,32 @@ fun AllSchoolPostView(
     }
 }
 
+
+@Composable
+fun BestPostView(
+    communityViewModel: CommunityViewModel,
+
+    communityNavController: NavController
+) {
+
+    LazyColumn(
+        modifier = Modifier
+    ) {
+
+
+        items(items = testCommunityData) { singlePostData ->
+
+            SinglePostComponent(
+                singlePostData,
+                postClick = {
+                    communityViewModel.setSelectedCommunityData(singlePostData)
+
+                }
+            )
+        }
+    }
+}
+
 @Composable
 fun MySchoolPostView(
     communityViewModel: CommunityViewModel,
@@ -236,39 +262,16 @@ fun MySchoolPostView(
 }
 
 @Composable
-fun MyPostView(
+fun MyCommentView(
     communityViewModel: CommunityViewModel,
 
-    communityNavController: NavController
 ) {
 
     LazyColumn(
         modifier = Modifier
     ) {
 
-        item{
-            PostOptionDropDownMenu(
-                value = communityViewModel.myPostFilter.value,
-                onValueChange = { communityViewModel.updateMyPostTypeDropDownText(it) },
-                dropDownMenuOption = communityViewModel.toggleMyPostTypeState.value,
-                toggleDropDownMenuOption = { communityViewModel.toggleMyPostTypeType() },
-                menuItems = selectPostType
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-        }
 
-        if(communityViewModel.myPostFilter.value=="내 게시물"){
-            items(items = testCommunityData) { singlePostData ->
-
-                SinglePostComponent(
-                    singlePostData,
-                    postClick = {
-                        communityViewModel.setSelectedCommunityData(singlePostData)
-//                    navController.navigate("postDetailView")
-                    }
-                )
-            }
-        }else{
             items(items = testCommentList) { singleCommentData ->
                 //내가 쓴 댓글을 터치하면 해당 게시물로 이동
                 CommentComponent(
@@ -280,10 +283,46 @@ fun MyPostView(
                     optionVisible = false,
                 )
             }
-        }
+
 
     }
 }
+
+@Composable
+fun MyPostView(
+    communityViewModel: CommunityViewModel,
+
+) {
+
+    LazyColumn(
+        modifier = Modifier
+    ) {
+
+//        item{
+//            PostOptionDropDownMenu(
+//                value = communityViewModel.myPostFilter.value,
+//                onValueChange = { communityViewModel.updateMyPostTypeDropDownText(it) },
+//                dropDownMenuOption = communityViewModel.toggleMyPostTypeState.value,
+//                toggleDropDownMenuOption = { communityViewModel.toggleMyPostTypeType() },
+//                menuItems = selectPostType
+//            )
+//            Spacer(modifier = Modifier.height(10.dp))
+//        }
+
+
+            items(items = testCommunityData) { singlePostData ->
+
+                SinglePostComponent(
+                    singlePostData,
+                    postClick = {
+                        communityViewModel.setSelectedCommunityData(singlePostData)
+//                    navController.navigate("postDetailView")
+                    }
+                )
+            }
+        }
+    }
+
 
 
 @Preview(showBackground = true)

@@ -15,6 +15,7 @@ import com.example.nextclass.appComponent.MainBottomNav
 import com.example.nextclass.items.BottomNavItem
 import com.example.nextclass.items.CommunityTopNavItem
 import com.example.nextclass.view.AllSchoolPostView
+import com.example.nextclass.view.BestPostView
 import com.example.nextclass.view.MyPostView
 import com.example.nextclass.view.MySchoolPostView
 import com.example.nextclass.view.TimeTableView
@@ -42,8 +43,8 @@ fun CommunityGraph(
         composable(CommunityTopNavItem.MySchool.screenRoute) {
             MySchoolPostView(communityViewModel = communityViewModel,communityNavController = communityNavController)
         }
-        composable(CommunityTopNavItem.MyPost.screenRoute) {
-            MyPostView(communityViewModel = communityViewModel, communityNavController = communityNavController)
+        composable(CommunityTopNavItem.BestPost.screenRoute) {
+            BestPostView(communityViewModel = communityViewModel, communityNavController = communityNavController)
         }
     }
 }
