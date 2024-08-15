@@ -9,7 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.example.nextclass.appComponent.InsertOrModifyPostComponent
+import com.example.nextclass.view.InsertOrModifyPostComponent
 import com.example.nextclass.items.BottomNavItem
 import com.example.nextclass.view.ChangeEmailInsertCodeView
 import com.example.nextclass.view.ChangeEmailView

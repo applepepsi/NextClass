@@ -50,3 +50,12 @@ const val FIND_PASSWORD="/password_find"
 const val SCORE_UPDATE="/score_update"
 const val GET_SCORE="/score"
 const val DELETE_ID="/id_delete"
+
+
+const val POST_SAVE="/post_save"
+const val POST_CHANGE="/post_change"
+const val POST_DELETE="/post_delete"
+const val GET_POST="/post_list"
+const val COMMENT_SAVE="/comment_save"
+const val COMMENT_CHANGE="/comment_change"
+

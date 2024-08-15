@@ -1,6 +1,9 @@
 package com.example.oneplusone.serverConnection
 
 
+import com.example.nextclass.Data.CommunityData.CommunityPostData
+import com.example.nextclass.Data.CommunityData.PostListData
+import com.example.nextclass.Data.CommunityData.PostWriteData
 import com.example.nextclass.Data.TimeTableData.AllScore
 import com.example.nextclass.Data.UserInfoData.ChangeEmail
 import com.example.nextclass.Data.UserInfoData.ChangePassword
@@ -24,14 +27,17 @@ import com.example.nextclass.utils.DELETE_ID
 import com.example.nextclass.utils.DUPLICATED_CHECK_ADDRESS
 import com.example.nextclass.utils.FIND_ID
 import com.example.nextclass.utils.FIND_PASSWORD
+import com.example.nextclass.utils.GET_POST
 import com.example.nextclass.utils.GET_SCORE
 import com.example.nextclass.utils.GET_TIME_TABLE
 import com.example.nextclass.utils.GET_USER_INFO
 import com.example.nextclass.utils.GET_VERIFY_CODE
 import com.example.nextclass.utils.LOGIN_ADDRESS
 import com.example.nextclass.utils.MAIL_CHECK
+import com.example.nextclass.utils.POST_CHANGE
 import com.example.nextclass.utils.POST_DELETE_TIMETABLE_DATA
 import com.example.nextclass.utils.POST_MODIFY_TIMETABLE_DATA
+import com.example.nextclass.utils.POST_SAVE
 import com.example.nextclass.utils.POST_TIMETABLE_DATA
 import com.example.nextclass.utils.REGISTER_ADDRESS
 import com.example.nextclass.utils.SCORE_UPDATE
@@ -112,6 +118,23 @@ interface API {
     @POST(SCORE_UPDATE)
     suspend fun scoreUpdate(@Body scoreList: PostClassScoreList):Response<ServerResponse<Any>>
 
+    @POST(POST_SAVE)
+    suspend fun postSave(@Body postWriteData: PostWriteData):Response<ServerResponse<Any>>
+
+    @POST(POST_CHANGE)
+    suspend fun postChange(@Body postWriteData: PostWriteData):Response<ServerResponse<Any>>
+
+    @POST(SCORE_UPDATE)
+    suspend fun postDelete(@Body scoreList: PostClassScoreList):Response<ServerResponse<Any>>
+
+    @POST(GET_POST)
+    suspend fun getPostList(@Body postListData: PostListData):Response<ServerResponse<List<CommunityPostData>>>
+
+    @POST(SCORE_UPDATE)
+    suspend fun commentSave(@Body scoreList: PostClassScoreList):Response<ServerResponse<Any>>
+
+    @POST(SCORE_UPDATE)
+    suspend fun commentChange(@Body scoreList: PostClassScoreList):Response<ServerResponse<Any>>
 
     //테스트
     @POST("/test")

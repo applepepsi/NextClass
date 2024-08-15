@@ -1,6 +1,8 @@
 package com.example.nextclass.module
 
 
+import com.example.nextclass.repository.CommunityRepository
+import com.example.nextclass.repository.CommunityRepositoryImpl
 import com.example.nextclass.repository.ScheduleRepository
 import com.example.nextclass.repository.ScheduleRepositoryImpl
 import com.example.nextclass.repository.TimeTableRepository
@@ -36,6 +38,12 @@ object AppModule {
     @Singleton
     fun provideTimeTableRepository(api: API): TimeTableRepository {
         return TimeTableRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCommunityRepository(api: API): CommunityRepository {
+        return CommunityRepositoryImpl(api)
     }
 
     @Provides

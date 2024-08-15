@@ -1,6 +1,7 @@
 package com.example.nextclass.appComponent
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,13 +20,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFloatingActionButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -33,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -49,98 +50,103 @@ import com.example.nextclass.Data.CommunityData.CommunityPostData
 import com.example.nextclass.Data.TimeTableData.PostSchoolType
 import com.example.nextclass.R
 import com.example.nextclass.repository.testRepo.TestRepository
-import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.ui.theme.Pastel_Red
+import com.example.nextclass.utils.MaxTextCount
 import com.example.nextclass.utils.TimeFormatter
+import com.example.nextclass.view.InsertOrModifyPostComponent
 import com.example.nextclass.viewmodel.CommunityViewModel
 import com.example.nextclass.viewmodel.LoginViewModel
 
 
 @Composable
-fun InsertOrModifyPostComponent(
-    navController: NavController,
-    communityViewModel: CommunityViewModel,
-    loginViewModel: LoginViewModel,
-    postType:()->Unit
-) {
-    val context = LocalContext.current
-
-    Column(
+fun InsertPostContentBox(
+    text:String="",
+    onValueChange:(String)->Unit
+){
+    Box(
         modifier = Modifier
+            .padding(start = 12.dp, end = 12.dp)
+            .clip(RoundedCornerShape(15.dp))
 
-            .fillMaxSize(),
+            .background(Color.White)
+            .border(1.5.dp, Color.LightGray, shape = RoundedCornerShape(15.dp))
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center,
+    ) {
 
-        ) {
-
-        Row(
+        BasicTextField(
+            value = text,
+            onValueChange = {
+                if (it.length <= MaxTextCount) {
+                    onValueChange(it)
+                }
+            },
             modifier = Modifier
-                .padding(top = 20.dp),
-
-            ) {
-            AppBarTextAndButtonComponent(
-                value = "작성 하기",
-                navController = navController,
-                showLeftButton = true,
-                showRightButton = false,
-
-                )
-        }
-
-        Column(
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 70.dp)
-        ) {
-
-
-            Spacer(modifier = Modifier.padding(top = 15.dp))
-
-            Surface(
-                shape = RoundedCornerShape(30.dp),
-                modifier = Modifier
-                    .padding(start = 10.dp, end = 10.dp)
-                    .align(Alignment.CenterHorizontally)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .background(Background_Color2),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxWidth()
+                .defaultMinSize(minHeight = 500.dp)
+                .padding(14.dp),
+            textStyle = TextStyle.Default.copy(fontSize = 20.sp),
+            decorationBox = { innerTextField ->
+                Box(
+                    contentAlignment = Alignment.TopStart
                 ) {
-
-
-
-                    TextInputHelpFieldComponent(
-                        errorMessage = communityViewModel.postErrorMessage.value.asString(
-                            LocalContext.current
-                        ),
-                        isError = communityViewModel.postErrorState.value,
-                    )
-
-                    Spacer(modifier = Modifier.padding(top = 5.dp))
-
-                    Box(
-                        modifier = Modifier,
-                        contentAlignment = Alignment.Center
-                    ) {
-
-
-                        InputButtonComponent(
-                            value = "작성 하기",
-                            onClick = { postType() },
-                            modifier = Modifier
-                                .padding(start = 30.dp, end = 30.dp)
+                    if (text.isEmpty()) {
+                        Text(
+                            text = "내용을 입력해 주세요",
+                            style = TextStyle.Default.copy(color = Color.Gray, fontSize = 20.sp)
                         )
                     }
-
-                    Spacer(modifier = Modifier.padding(top = 40.dp))
+                    innerTextField()
                 }
             }
-        }
+        )
     }
 }
+
+@Composable
+fun InsertPostSubjectBox(
+    text:String="",
+    onValueChange:(String)->Unit
+){
+    Box(
+        modifier = Modifier
+            .padding(start = 12.dp, end = 12.dp)
+            .clip(RoundedCornerShape(15.dp))
+            .background(Color.White)
+            .border(1.5.dp, Color.LightGray, shape = RoundedCornerShape(15.dp))
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center,
+    ) {
+
+        BasicTextField(
+            value = text,
+            onValueChange = {
+                    onValueChange(it)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+//                .height(50.dp)
+                .padding(14.dp),
+            singleLine = true,
+            textStyle = TextStyle.Default.copy(fontSize = 15.sp),
+            decorationBox = { innerTextField ->
+                Box(
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    if (text.isEmpty()) {
+                        Text(
+                            text = "제목을 입력해 주세요",
+                            style = TextStyle.Default.copy(color = Color.Gray, fontSize = 15.sp)
+                        )
+                    }
+                    innerTextField()
+                }
+            }
+        )
+    }
+}
+
 @Composable
 fun SinglePostComponent(
     singlePostData: CommunityPostData = CommunityPostData(subject = "NameTest", content = "DetailTest"),
@@ -636,7 +642,7 @@ fun CommentComponent(
                 Text(
                     modifier = Modifier
                         .padding(start=3.dp),
-                    text=TimeFormatter.formatDate(singleCommentData.commentTime),
+                    text=TimeFormatter.formatDate(singleCommentData.commentTime.toString()),
                     style = TextStyle(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Normal,
@@ -911,7 +917,7 @@ fun PostOptionDropDownMenu(
                     text = value,
                     modifier = Modifier
                         .menuAnchor()
-                        .padding(start=3.dp,top=3.dp,bottom=3.dp,end=1.dp),
+                        .padding(start = 3.dp, top = 3.dp, bottom = 3.dp, end = 1.dp),
 
                     style = TextStyle(
                         fontSize = 12.sp,
@@ -1030,6 +1036,24 @@ fun PostOptionDropDownPreview() {
             dropDownMenuOption = false,
             toggleDropDownMenuOption = { /*TODO*/ },
             menuItems = selectPostType
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun InsertSubjectPreview() {
+    val testRepository = TestRepository()
+    val loginViewModel = LoginViewModel(testRepository)
+
+    val navController = rememberNavController()
+
+
+    NextClassTheme {
+        InsertPostSubjectBox(
+            text="",
+            onValueChange = {}
         )
     }
 }

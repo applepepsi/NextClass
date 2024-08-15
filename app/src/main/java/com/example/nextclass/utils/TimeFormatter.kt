@@ -1,5 +1,7 @@
 package com.example.nextclass.utils
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -15,7 +17,8 @@ object TimeFormatter {
         return date.format(formatter)
     }
 
-    fun formatDate(date: LocalDateTime): String {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun formatDate(date: String): String {
         val formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일")
 
         return date.format(formatter)

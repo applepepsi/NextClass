@@ -1,5 +1,6 @@
 package com.example.nextclass.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +12,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,12 +32,19 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.Data.CommunityData.CommunityCommentData
 import com.example.nextclass.Data.CommunityData.CommunityPostData
 import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
+import com.example.nextclass.appComponent.CheckboxComponent
 import com.example.nextclass.appComponent.CommentComponent
 import com.example.nextclass.appComponent.CommunityTopNavComponent
 import com.example.nextclass.appComponent.FloatingActionButtonComponent
+import com.example.nextclass.appComponent.InputButtonComponent
+import com.example.nextclass.appComponent.InsertPostContentBox
+import com.example.nextclass.appComponent.InsertPostSubjectBox
 import com.example.nextclass.appComponent.PostDetailComponent
 import com.example.nextclass.appComponent.SinglePostComponent
+import com.example.nextclass.appComponent.TextInputHelpFieldComponent
+import com.example.nextclass.repository.testRepo.CommunityTestRepository
 import com.example.nextclass.repository.testRepo.TestRepository
+import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.viewmodel.CommunityViewModel
 import com.example.nextclass.viewmodel.LoginViewModel
@@ -86,21 +102,21 @@ fun CommunityView(
 }
 
 val testCommunityData= listOf(
-    CommunityPostData(subject = "가나다", content = "라마바사", reg_date = LocalDateTime.now(), comment_count = 2, vote_count = 1),
-    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now(), comment_count = 3, vote_count = 2),
-    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now(), comment_count = 4, vote_count = 3),
-    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now(), comment_count = 5, vote_count = 4),
-    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now(), comment_count = 3, vote_count = 2),
-    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now(), comment_count = 4, vote_count = 3),
-    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now(), comment_count = 5, vote_count = 4),
+    CommunityPostData(subject = "가나다", content = "라마바사", reg_date = LocalDateTime.now().toString(), comment_count = 2, vote_count = 1),
+    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 3, vote_count = 2),
+    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 4, vote_count = 3),
+    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now().toString(), comment_count = 5, vote_count = 4),
+    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 3, vote_count = 2),
+    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 4, vote_count = 3),
+    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now().toString(), comment_count = 5, vote_count = 4),
 
-    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now(), comment_count = 3, vote_count = 2),
-    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now(), comment_count = 4, vote_count = 3),
-    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now(), comment_count = 5, vote_count = 4),
+    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 3, vote_count = 2),
+    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 4, vote_count = 3),
+    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now().toString(), comment_count = 5, vote_count = 4),
 
-    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now(), comment_count = 3, vote_count = 2),
-    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now(), comment_count = 4, vote_count = 3),
-    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now(), comment_count = 5, vote_count = 4),
+    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 3, vote_count = 2),
+    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 4, vote_count = 3),
+    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now().toString(), comment_count = 5, vote_count = 4),
     )
 
 
@@ -183,13 +199,17 @@ fun AllSchoolPostView(
 
     communityNavController: NavController
 ) {
+    val listState = rememberLazyListState()
+    LaunchedEffect(Unit) {
+        communityViewModel.getPostList(sort="all",post_sequence=0)
+    }
 
 
+    // LazyColumn 설정
     LazyColumn(
+        state = listState,
         modifier = Modifier
     ) {
-
-
         items(items = testCommunityData) { singlePostData ->
 
             SinglePostComponent(
@@ -201,8 +221,23 @@ fun AllSchoolPostView(
             )
         }
     }
-}
 
+    //todo 테스트 해봐야함
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.layoutInfo }
+            .collect { layoutInfo ->
+                //내가 지금 보고있는 아이템의 인덱스
+                val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
+                //전체 아이템의 수
+                val totalItemsCount = layoutInfo.totalItemsCount
+
+                //내가 지금 보고있는 아이템이 마지막 인덱스라면 새로 가져오기
+                if (lastVisibleItemIndex == totalItemsCount - 1 && totalItemsCount > 0) {
+                    communityViewModel.getPostList(sort = "all", post_sequence = totalItemsCount)
+                }
+            }
+    }
+}
 
 @Composable
 fun BestPostView(
@@ -362,7 +397,8 @@ fun CommunityViewPreview() {
 
     val communityNavController= rememberNavController()
     val loginViewModel=LoginViewModel(testRepository)
-    val communityViewModel=CommunityViewModel()
+    val communityTestRepository=CommunityTestRepository()
+    val communityViewModel=CommunityViewModel(communityTestRepository)
 
     NextClassTheme {
         CommunityView(
@@ -380,10 +416,10 @@ fun PostDetailPreview() {
     val mainNavController= rememberNavController()
     val navController= rememberNavController()
     val testRepository = TestRepository()
-
+    val communityTestRepository=CommunityTestRepository()
 
     val loginViewModel=LoginViewModel(testRepository)
-    val communityViewModel=CommunityViewModel()
+    val communityViewModel=CommunityViewModel(communityTestRepository)
 
     NextClassTheme {
         PostDetailView(
@@ -392,5 +428,115 @@ fun PostDetailPreview() {
             mainNavController = mainNavController,
             communityViewModel = communityViewModel
         )
+    }
+}
+
+@Composable
+fun InsertOrModifyPostComponent(
+    navController: NavController,
+    communityViewModel: CommunityViewModel,
+    loginViewModel: LoginViewModel,
+    postType:()->Unit
+) {
+    val context = LocalContext.current
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = Modifier
+
+            .fillMaxSize(),
+
+        ) {
+
+        Row(
+            modifier = Modifier
+                .padding(top = 20.dp),
+
+            ) {
+            AppBarTextAndButtonComponent(
+                value = "작성 하기",
+                navController = navController,
+                showLeftButton = true,
+                showRightButton = false,
+            )
+        }
+
+
+
+        Column(
+
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState),
+            verticalArrangement = Arrangement.Center,
+        ) {
+
+
+            Spacer(modifier = Modifier.padding(top = 8.dp))
+
+            Surface(
+                shape = RoundedCornerShape(30.dp),
+                modifier = Modifier
+                    .padding(start = 10.dp, end = 10.dp)
+
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .background(Background_Color2),
+//                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+
+                    Spacer(modifier = Modifier.height(25.dp))
+
+                    InsertPostSubjectBox(
+                        text = communityViewModel.postWriteData.value.subject,
+                        onValueChange = {communityViewModel.updateSubject(it)}
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    InsertPostContentBox(
+                        text = communityViewModel.postWriteData.value.content,
+                        onValueChange = {communityViewModel.updateContent(it)}
+                    )
+
+                    CheckboxComponent(
+                        checked = communityViewModel.postWriteData.value.is_secret,
+                        onClickCheckBox = { communityViewModel.togglePostSecretState() },
+                        checkBoxTextComponent = {
+                            Text(
+                                text = "익명"
+                            )
+                        })
+
+                    TextInputHelpFieldComponent(
+                        errorMessage = communityViewModel.postErrorMessage.value.asString(
+                            LocalContext.current
+                        ),
+                        isError = communityViewModel.postErrorState.value,
+                    )
+
+                    Spacer(modifier = Modifier.padding(top = 5.dp))
+
+                    Box(
+                        modifier = Modifier,
+                        contentAlignment = Alignment.Center
+                    ) {
+
+
+                        InputButtonComponent(
+                            value = "작성 하기",
+                            onClick = { postType() },
+                            modifier = Modifier
+                                .padding(start = 30.dp, end = 30.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.padding(top = 20.dp))
+                }
+            }
+        }
     }
 }
