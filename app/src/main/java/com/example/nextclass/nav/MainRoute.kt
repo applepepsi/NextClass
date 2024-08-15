@@ -276,7 +276,7 @@ private fun NavGraphBuilder.myCommentView(
 
 
     composable("myCommentView") {
-        MyCommentView(communityViewModel = communityViewModel, )
+        MyCommentView(communityViewModel = communityViewModel, navController=navController)
     }
 }
 private fun NavGraphBuilder.myPostView(
@@ -287,7 +287,7 @@ private fun NavGraphBuilder.myPostView(
     communityViewModel: CommunityViewModel
 ) {
     composable("myPostView") {
-        MyPostView(communityViewModel = communityViewModel,)
+        MyPostView(communityViewModel = communityViewModel, navController=navController)
     }
 }
 

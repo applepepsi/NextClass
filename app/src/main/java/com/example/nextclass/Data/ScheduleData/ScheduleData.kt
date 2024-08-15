@@ -1,4 +1,4 @@
-package com.example.nextclass.Data
+package com.example.nextclass.Data.ScheduleData
 
 import java.time.LocalDateTime
 import java.util.Date

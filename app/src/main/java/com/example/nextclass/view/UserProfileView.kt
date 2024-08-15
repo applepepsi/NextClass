@@ -139,7 +139,7 @@ fun UserProfileView(
 //                        verticalArrangement = Arrangement.SpaceBetween,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Spacer(modifier = Modifier.height(30.dp))
+                        Spacer(modifier = Modifier.height(20.dp))
                         MainTextComponent(
                             value = "사용자 정보",
                             modifier= Modifier
@@ -153,7 +153,7 @@ fun UserProfileView(
                             .height(1.dp)
                         )
 
-                        Spacer(modifier = Modifier.height(40.dp))
+                        Spacer(modifier = Modifier.height(30.dp))
 
                         UserProfileItemComponent(
                             image = ImageVector.vectorResource(R.drawable.email_icon),
@@ -201,7 +201,7 @@ fun UserProfileView(
                                 }
                             }
                         )
-                        Spacer(modifier = Modifier.height(40.dp))
+                        Spacer(modifier = Modifier.height(20.dp))
 
 
                         MainTextComponent(
@@ -217,7 +217,7 @@ fun UserProfileView(
                             .padding(start = 20.dp, end = 20.dp)
                             .height(1.dp)
                         )
-                        Spacer(modifier = Modifier.height(40.dp))
+                        Spacer(modifier = Modifier.height(30.dp))
 
                         UserProfileItemComponent(
                             image = ImageVector.vectorResource(R.drawable.my_post_icon),
@@ -235,7 +235,7 @@ fun UserProfileView(
                             navController = navController
                         )
 
-                        Spacer(modifier = Modifier.height(40.dp))
+                        Spacer(modifier = Modifier.height(20.dp))
 
 
                         MainTextComponent(
@@ -259,7 +259,7 @@ fun UserProfileView(
                             navController = navController
                         )
 
-                        Spacer(modifier = Modifier.height(40.dp))
+                        Spacer(modifier = Modifier.height(30.dp))
 
 
                         TextButton(

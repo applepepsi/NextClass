@@ -6,10 +6,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.State
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nextclass.Data.ChangeEmail
-import com.example.nextclass.Data.ChangePassword
-import com.example.nextclass.Data.ChangeUserData
-import com.example.nextclass.Data.PostUserData
+import com.example.nextclass.Data.UserInfoData.ChangeEmail
+import com.example.nextclass.Data.UserInfoData.ChangePassword
+import com.example.nextclass.Data.UserInfoData.ChangeUserData
+import com.example.nextclass.Data.UserInfoData.PostUserData
 import com.example.nextclass.Data.UserData
 import com.example.nextclass.Data.VerifyCodeData
 import com.example.nextclass.R
@@ -449,7 +449,7 @@ class UserInfoViewModel @Inject constructor(
             //서버로 전송
             _loading.value=true
 
-            val postUserData=PostUserData(
+            val postUserData= PostUserData(
                 name=_changeUserData.value.name,
                 member_grade = CutEntranceYear.deleteGradeEntranceYear(_changeUserData.value.member_grade),
                 member_school = _changeUserData.value.member_school

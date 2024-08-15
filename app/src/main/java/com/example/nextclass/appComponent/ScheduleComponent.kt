@@ -61,7 +61,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.nextclass.Data.ScheduleData
+import com.example.nextclass.Data.ScheduleData.ScheduleData
 import com.example.nextclass.Data.SortOption
 import com.example.nextclass.R
 import com.example.nextclass.items.BottomNavItem

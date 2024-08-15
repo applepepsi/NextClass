@@ -1,4 +1,4 @@
-package com.example.nextclass.Data
+package com.example.nextclass.Data.TimeTableData
 
 import androidx.compose.ui.graphics.Color
 import java.time.LocalDateTime

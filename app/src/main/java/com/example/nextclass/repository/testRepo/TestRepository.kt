@@ -1,13 +1,13 @@
 package com.example.nextclass.repository.testRepo
 
 import android.util.Log
-import com.example.nextclass.Data.ChangeEmail
-import com.example.nextclass.Data.ChangePassword
-import com.example.nextclass.Data.DuplicateCheckRequest
-import com.example.nextclass.Data.FindIDOrPasswordData
-import com.example.nextclass.Data.JoinRequest
-import com.example.nextclass.Data.LoginRequest
-import com.example.nextclass.Data.PostUserData
+import com.example.nextclass.Data.UserInfoData.ChangeEmail
+import com.example.nextclass.Data.UserInfoData.ChangePassword
+import com.example.nextclass.Data.SignupOrLoginData.DuplicateCheckRequest
+import com.example.nextclass.Data.SignupOrLoginData.FindIDOrPasswordData
+import com.example.nextclass.Data.SignupOrLoginData.JoinRequest
+import com.example.nextclass.Data.SignupOrLoginData.LoginRequest
+import com.example.nextclass.Data.UserInfoData.PostUserData
 import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.Data.TokenData
 import com.example.nextclass.Data.UserData

@@ -8,12 +8,12 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
-import com.example.nextclass.Data.AllScore
-import com.example.nextclass.Data.ClassData
-import com.example.nextclass.Data.ClassScore
-import com.example.nextclass.Data.ClassUUid
-import com.example.nextclass.Data.PostClassScoreList
-import com.example.nextclass.Data.SingleSemesterScore
+import com.example.nextclass.Data.TimeTableData.AllScore
+import com.example.nextclass.Data.TimeTableData.ClassData
+import com.example.nextclass.Data.TimeTableData.ClassScore
+import com.example.nextclass.Data.TimeTableData.ClassUUid
+import com.example.nextclass.Data.TimeTableData.PostClassScoreList
+import com.example.nextclass.Data.TimeTableData.SingleSemesterScore
 import com.example.nextclass.R
 import com.example.nextclass.repository.TimeTableRepository
 import com.example.nextclass.utils.CLASS_ALREADY_EXISTS_IN_TIMETABLE
@@ -23,10 +23,8 @@ import com.example.nextclass.utils.GetSemester.getCurrentSemester
 import com.example.nextclass.utils.SUCCESS_CODE
 import com.example.nextclass.utils.StringValue
 import com.example.nextclass.utils.TimeFormatter
-import com.google.gson.GsonBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import com.google.gson.Gson
 
 @HiltViewModel
 class TimeTableViewModel @Inject constructor(
@@ -245,6 +243,7 @@ class TimeTableViewModel @Inject constructor(
                         _addClassErrorMessage.value = StringValue.Empty
                         _addClassError.value = false
                         getTimeTable()
+                        getTimeTableScore()
                         toggleInsertClassDataDialogState()
                     }
                 }
@@ -282,7 +281,7 @@ class TimeTableViewModel @Inject constructor(
                     else->{
                         _addClassErrorMessage.value = StringValue.Empty
                         _addClassError.value = false
-
+                        getTimeTableScore()
                         _timeTableDataList.value=replaceModifyClassData()
                         toggleSetShowClassDataModifyDialogState()
                     }
@@ -312,7 +311,7 @@ class TimeTableViewModel @Inject constructor(
 
 
 //            _selectClassData.value = _selectClassData.value.copy(week=_selectClassData.value.week)
-            val classUUid=ClassUUid(_selectClassData.value.uuid!!)
+            val classUUid= ClassUUid(_selectClassData.value.uuid!!)
             //전송
             timeTableRepository.postDeleteTimeTableData(classUUid){serverResponse ->
                 if(serverResponse?.code==200){
@@ -320,6 +319,7 @@ class TimeTableViewModel @Inject constructor(
                     deleteScheduleDataByList()
                     toggleSetShowClassDetailDialogState()
                     Log.d("시간표 제거 성공", serverResponse.toString())
+                    getTimeTableScore()
                 }else{
                     _timeTableToastMessage.value = serverResponse!!.errorDescription
                 }
@@ -570,7 +570,7 @@ class TimeTableViewModel @Inject constructor(
         }
     }
 
-    private fun postModifyScore(newTimeTableSCore:AllScore) {
+    private fun postModifyScore(newTimeTableSCore: AllScore) {
         _loading.value=true
         val scoreList = newTimeTableSCore.semester_list.flatMap { singleSemesterScore ->
             singleSemesterScore.data_list
@@ -578,7 +578,7 @@ class TimeTableViewModel @Inject constructor(
 
         Log.d("scoreList", scoreList.toString())
         //서버로 전송
-        timeTableRepository.postUpdateScoreData(PostClassScoreList(scoreList)){serverResponse ->
+        timeTableRepository.postUpdateScoreData(PostClassScoreList(scoreList)){ serverResponse ->
             if(serverResponse!=null){
 
                 if(serverResponse.code == SUCCESS_CODE){

@@ -1,10 +1,9 @@
 package com.example.nextclass.repository
 
-import com.example.nextclass.Data.AllScore
-import com.example.nextclass.Data.ClassData
-import com.example.nextclass.Data.ClassScore
-import com.example.nextclass.Data.ClassUUid
-import com.example.nextclass.Data.PostClassScoreList
+import com.example.nextclass.Data.TimeTableData.AllScore
+import com.example.nextclass.Data.TimeTableData.ClassData
+import com.example.nextclass.Data.TimeTableData.ClassUUid
+import com.example.nextclass.Data.TimeTableData.PostClassScoreList
 import com.example.nextclass.Data.ServerResponse
 
 interface TimeTableRepository {

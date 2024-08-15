@@ -1,14 +1,13 @@
 package com.example.nextclass.repository
 
 import android.util.Log
-import com.example.nextclass.Data.ChangeEmail
-import com.example.nextclass.Data.ChangePassword
-import com.example.nextclass.Data.ChangeUserData
-import com.example.nextclass.Data.DuplicateCheckRequest
-import com.example.nextclass.Data.FindIDOrPasswordData
-import com.example.nextclass.Data.JoinRequest
-import com.example.nextclass.Data.LoginRequest
-import com.example.nextclass.Data.PostUserData
+import com.example.nextclass.Data.UserInfoData.ChangeEmail
+import com.example.nextclass.Data.UserInfoData.ChangePassword
+import com.example.nextclass.Data.SignupOrLoginData.DuplicateCheckRequest
+import com.example.nextclass.Data.SignupOrLoginData.FindIDOrPasswordData
+import com.example.nextclass.Data.SignupOrLoginData.JoinRequest
+import com.example.nextclass.Data.SignupOrLoginData.LoginRequest
+import com.example.nextclass.Data.UserInfoData.PostUserData
 import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.Data.TokenData
 import com.example.nextclass.Data.UserData
@@ -18,7 +17,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Retrofit
 import javax.inject.Inject
 
 
@@ -100,7 +98,7 @@ class UserInfoRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun postUserLoginInfo(userLoginInfo: LoginRequest,callback: (ServerResponse<TokenData>?) -> Unit){
+    override fun postUserLoginInfo(userLoginInfo: LoginRequest, callback: (ServerResponse<TokenData>?) -> Unit){
         Log.d("userLoginInfo", userLoginInfo.toString())
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
@@ -145,7 +143,7 @@ class UserInfoRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun postChangePasswordData(changePassword: ChangePassword,callback: (ServerResponse<Any>?) -> Unit) {
+    override fun postChangePasswordData(changePassword: ChangePassword, callback: (ServerResponse<Any>?) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
                 val response = api.postChangePasswordData(changePassword)
@@ -219,7 +217,7 @@ class UserInfoRepositoryImpl @Inject constructor(
     }
 
 
-    override fun postChangeUserInfoData(changeUserData: PostUserData,callback: (ServerResponse<Any>?) -> Unit) {
+    override fun postChangeUserInfoData(changeUserData: PostUserData, callback: (ServerResponse<Any>?) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
                 val response = api.postChangeUserInfoData(changeUserData)

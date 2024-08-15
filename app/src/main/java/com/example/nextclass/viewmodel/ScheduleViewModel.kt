@@ -6,7 +6,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.nextclass.Data.ScheduleData
+import com.example.nextclass.Data.ScheduleData.ScheduleData
 import com.example.nextclass.Data.TimeData
 import com.example.nextclass.R
 import com.example.nextclass.repository.ScheduleRepository
@@ -155,7 +155,7 @@ class ScheduleViewModel @Inject constructor(
     }
 
     fun resetScheduleData(){
-        _scheduleData.value=ScheduleData()
+        _scheduleData.value= ScheduleData()
     }
 
 
@@ -214,7 +214,7 @@ class ScheduleViewModel @Inject constructor(
         groupedScheduleData(_scheduleDataList.value)
     }
 
-    fun setScheduleData(scheduleData:ScheduleData){
+    fun setScheduleData(scheduleData: ScheduleData){
 
         Log.d("scheduleData", scheduleData.toString())
         _scheduleData.value=scheduleData

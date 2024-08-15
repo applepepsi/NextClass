@@ -44,9 +44,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.nextclass.Data.CommunityCommentData
-import com.example.nextclass.Data.CommunityPostData
-import com.example.nextclass.Data.PostSchoolType
+import com.example.nextclass.Data.CommunityData.CommunityCommentData
+import com.example.nextclass.Data.CommunityData.CommunityPostData
+import com.example.nextclass.Data.TimeTableData.PostSchoolType
 import com.example.nextclass.R
 import com.example.nextclass.repository.testRepo.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
@@ -143,7 +143,7 @@ fun InsertOrModifyPostComponent(
 }
 @Composable
 fun SinglePostComponent(
-    singlePostData:CommunityPostData=CommunityPostData(postName = "NameTest", postDetail = "DetailTest"),
+    singlePostData: CommunityPostData = CommunityPostData(subject = "NameTest", content = "DetailTest"),
     postClick:()->Unit
 ){
 
@@ -172,7 +172,7 @@ fun SinglePostComponent(
             verticalArrangement = Arrangement.SpaceAround
         ) {
             Text(
-                text=singlePostData.postName,
+                text=singlePostData.subject,
                 style = TextStyle(
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
@@ -185,7 +185,7 @@ fun SinglePostComponent(
             Spacer(Modifier.height(5.dp))
 
             Text(
-                text=singlePostData.postDetail,
+                text=singlePostData.content,
                 style = TextStyle(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Normal,
@@ -223,7 +223,7 @@ fun SinglePostComponent(
                 Text(
                     modifier = Modifier
                         .padding(start=3.dp),
-                    text=TimeFormatter.formatDate(singlePostData.postTime),
+                    text=TimeFormatter.formatDate(singlePostData.reg_date),
                     style = TextStyle(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Normal,
@@ -255,7 +255,7 @@ fun SinglePostComponent(
                     Text(
                         modifier = Modifier
                             .padding(start=3.dp),
-                        text = singlePostData.commentCount.toString(),
+                        text = singlePostData.comment_count.toString(),
                         style = TextStyle(
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Normal,
@@ -283,7 +283,7 @@ fun SinglePostComponent(
                     Text(
                         modifier = Modifier
                             .padding(start=3.dp),
-                        text = singlePostData.likeCount.toString(),
+                        text = singlePostData.vote_count.toString(),
                         style = TextStyle(
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Normal,
@@ -304,7 +304,7 @@ fun SinglePostComponent(
 
 @Composable
 fun PostDetailComponent(
-    selectPost:CommunityPostData=CommunityPostData(),
+    selectPost: CommunityPostData = CommunityPostData(),
     deletePost:()->Unit,
     likePost:()->Unit,
     modifyPost:()->Unit,
@@ -365,7 +365,7 @@ fun PostDetailComponent(
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = selectPost.postName,
+                    text = selectPost.subject,
                     style = TextStyle(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
@@ -383,7 +383,7 @@ fun PostDetailComponent(
                     .heightIn(min = 200.dp)
             ){
                 Text(
-                    text=selectPost.postDetail,
+                    text=selectPost.content,
                     style = TextStyle(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Normal,
@@ -417,7 +417,7 @@ fun PostDetailComponent(
                 Text(
                     modifier = Modifier
                         .padding(start=3.dp),
-                    text=TimeFormatter.formatDate(selectPost.postTime),
+                    text=TimeFormatter.formatDate(selectPost.reg_date),
                     style = TextStyle(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Normal,
@@ -447,7 +447,7 @@ fun PostDetailComponent(
                     Text(
                         modifier = Modifier
                             .padding(start=3.dp),
-                        text = selectPost.commentCount.toString(),
+                        text = selectPost.comment_count.toString(),
                         style = TextStyle(
                             fontSize = 17.sp,
                             fontWeight = FontWeight.Normal,
@@ -479,7 +479,7 @@ fun PostDetailComponent(
                     Text(
                         modifier = Modifier
                             .padding(start=3.dp),
-                        text = selectPost.likeCount.toString(),
+                        text = selectPost.vote_count.toString(),
                         style = TextStyle(
                             fontSize = 17.sp,
                             fontWeight = FontWeight.Normal,

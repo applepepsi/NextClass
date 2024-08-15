@@ -1,12 +1,11 @@
 package com.example.nextclass.repository
 
 import android.util.Log
-import com.example.nextclass.Data.AllScore
-import com.example.nextclass.Data.ClassData
-import com.example.nextclass.Data.ClassScore
-import com.example.nextclass.Data.ClassUUid
-import com.example.nextclass.Data.PostClassScoreList
-import com.example.nextclass.Data.PostSemester
+import com.example.nextclass.Data.TimeTableData.AllScore
+import com.example.nextclass.Data.TimeTableData.ClassData
+import com.example.nextclass.Data.TimeTableData.ClassUUid
+import com.example.nextclass.Data.TimeTableData.PostClassScoreList
+import com.example.nextclass.Data.TimeTableData.PostSemester
 import com.example.nextclass.Data.ServerResponse
 import com.example.oneplusone.serverConnection.API
 import com.google.gson.Gson
@@ -19,7 +18,7 @@ import javax.inject.Inject
 class TimeTableRepositoryImpl  @Inject constructor(
     private val api: API
 ) :TimeTableRepository{
-    override fun postTimeTableData(classData: ClassData,callback: (ServerResponse<Any>?) -> Unit) {
+    override fun postTimeTableData(classData: ClassData, callback: (ServerResponse<Any>?) -> Unit) {
 
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {
@@ -46,7 +45,7 @@ class TimeTableRepositoryImpl  @Inject constructor(
     }
 
 
-    override fun postModifyTimeTableData(classData: ClassData,callback: (ServerResponse<Any>?) -> Unit) {
+    override fun postModifyTimeTableData(classData: ClassData, callback: (ServerResponse<Any>?) -> Unit) {
 
         CoroutineScope(Dispatchers.IO).launch {
             val result = try {

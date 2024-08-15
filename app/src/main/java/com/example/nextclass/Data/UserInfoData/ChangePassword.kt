@@ -1,4 +1,4 @@
-package com.example.nextclass.Data
+package com.example.nextclass.Data.UserInfoData
 
 data class ChangePassword(
     val existing_password:String="" ,

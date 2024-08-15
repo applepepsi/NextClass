@@ -1,4 +1,4 @@
-package com.example.nextclass.Data
+package com.example.nextclass.Data.SignupOrLoginData
 
 data class DuplicateCheckRequest (
 

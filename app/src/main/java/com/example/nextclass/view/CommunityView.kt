@@ -20,16 +20,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.nextclass.Data.CommunityCommentData
-import com.example.nextclass.Data.CommunityPostData
+import com.example.nextclass.Data.CommunityData.CommunityCommentData
+import com.example.nextclass.Data.CommunityData.CommunityPostData
 import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
 import com.example.nextclass.appComponent.CommentComponent
 import com.example.nextclass.appComponent.CommunityTopNavComponent
 import com.example.nextclass.appComponent.FloatingActionButtonComponent
 import com.example.nextclass.appComponent.PostDetailComponent
-import com.example.nextclass.appComponent.PostOptionDropDownMenu
 import com.example.nextclass.appComponent.SinglePostComponent
-import com.example.nextclass.appComponent.selectPostType
 import com.example.nextclass.repository.testRepo.TestRepository
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.viewmodel.CommunityViewModel
@@ -88,21 +86,21 @@ fun CommunityView(
 }
 
 val testCommunityData= listOf(
-    CommunityPostData(postName = "가나다", postDetail = "라마바사", postTime = LocalDateTime.now(), commentCount = 2, likeCount = 1),
-    CommunityPostData(postName = "야야", postDetail = "ㅈㅇㅇㅂ", postTime = LocalDateTime.now(), commentCount = 3, likeCount = 2),
-    CommunityPostData(postName = "아아", postDetail = "ㅈㅇㅂ", postTime = LocalDateTime.now(), commentCount = 4, likeCount = 3),
-    CommunityPostData(postName = "바자", postDetail = "ㅈㅂㅈㅇ", postTime = LocalDateTime.now(), commentCount = 5, likeCount = 4),
-    CommunityPostData(postName = "야야", postDetail = "ㅈㅇㅇㅂ", postTime = LocalDateTime.now(), commentCount = 3, likeCount = 2),
-    CommunityPostData(postName = "아아", postDetail = "ㅈㅇㅂ", postTime = LocalDateTime.now(), commentCount = 4, likeCount = 3),
-    CommunityPostData(postName = "바자", postDetail = "ㅈㅂㅈㅇ", postTime = LocalDateTime.now(), commentCount = 5, likeCount = 4),
+    CommunityPostData(subject = "가나다", content = "라마바사", reg_date = LocalDateTime.now(), comment_count = 2, vote_count = 1),
+    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now(), comment_count = 3, vote_count = 2),
+    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now(), comment_count = 4, vote_count = 3),
+    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now(), comment_count = 5, vote_count = 4),
+    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now(), comment_count = 3, vote_count = 2),
+    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now(), comment_count = 4, vote_count = 3),
+    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now(), comment_count = 5, vote_count = 4),
 
-    CommunityPostData(postName = "야야", postDetail = "ㅈㅇㅇㅂ", postTime = LocalDateTime.now(), commentCount = 3, likeCount = 2),
-    CommunityPostData(postName = "아아", postDetail = "ㅈㅇㅂ", postTime = LocalDateTime.now(), commentCount = 4, likeCount = 3),
-    CommunityPostData(postName = "바자", postDetail = "ㅈㅂㅈㅇ", postTime = LocalDateTime.now(), commentCount = 5, likeCount = 4),
+    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now(), comment_count = 3, vote_count = 2),
+    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now(), comment_count = 4, vote_count = 3),
+    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now(), comment_count = 5, vote_count = 4),
 
-    CommunityPostData(postName = "야야", postDetail = "ㅈㅇㅇㅂ", postTime = LocalDateTime.now(), commentCount = 3, likeCount = 2),
-    CommunityPostData(postName = "아아", postDetail = "ㅈㅇㅂ", postTime = LocalDateTime.now(), commentCount = 4, likeCount = 3),
-    CommunityPostData(postName = "바자", postDetail = "ㅈㅂㅈㅇ", postTime = LocalDateTime.now(), commentCount = 5, likeCount = 4),
+    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now(), comment_count = 3, vote_count = 2),
+    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now(), comment_count = 4, vote_count = 3),
+    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now(), comment_count = 5, vote_count = 4),
     )
 
 
@@ -264,39 +262,68 @@ fun MySchoolPostView(
 @Composable
 fun MyCommentView(
     communityViewModel: CommunityViewModel,
+    navController: NavHostController,
 
-) {
+    ) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 20.dp),
+
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+
+    ){
+        AppBarTextAndButtonComponent(
+            value = "회원 탈퇴",
+            navController=navController)
+
+        Spacer(modifier = Modifier.height(15.dp))
 
     LazyColumn(
         modifier = Modifier
     ) {
 
 
-            items(items = testCommentList) { singleCommentData ->
-                //내가 쓴 댓글을 터치하면 해당 게시물로 이동
-                CommentComponent(
-                    singleCommentData = singleCommentData,
+        items(items = testCommentList) { singleCommentData ->
+            //내가 쓴 댓글을 터치하면 해당 게시물로 이동
+            CommentComponent(
+                singleCommentData = singleCommentData,
 
-                    commentClick = {
-                        communityViewModel.setSelectCommentData(singleCommentData)
-                    },
-                    optionVisible = false,
-                )
-            }
+                commentClick = {
+                    communityViewModel.setSelectCommentData(singleCommentData)
+                },
+                optionVisible = false,
+            )
+        }
 
-
+        }
     }
 }
 
 @Composable
 fun MyPostView(
     communityViewModel: CommunityViewModel,
+    navController: NavHostController,
 
-) {
-
-    LazyColumn(
-        modifier = Modifier
     ) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 20.dp),
+
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+
+    ) {
+        AppBarTextAndButtonComponent(
+            value = "회원 탈퇴",
+            navController = navController
+        )
+        Spacer(modifier = Modifier.height(15.dp))
+        LazyColumn(
+            modifier = Modifier
+        ) {
 
 //        item{
 //            PostOptionDropDownMenu(
@@ -322,6 +349,7 @@ fun MyPostView(
             }
         }
     }
+}
 
 
 

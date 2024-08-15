@@ -1,6 +1,6 @@
 package com.example.nextclass.utils
 
-import com.example.nextclass.Data.ScheduleData
+import com.example.nextclass.Data.ScheduleData.ScheduleData
 
 object SortScheduleList {
 

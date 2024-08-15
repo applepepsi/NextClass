@@ -1,14 +1,11 @@
 package com.example.nextclass.repository.testRepo
 
-import com.example.nextclass.Data.AllScore
-import com.example.nextclass.Data.ClassData
-import com.example.nextclass.Data.ClassScore
-import com.example.nextclass.Data.ClassUUid
-import com.example.nextclass.Data.PostClassScoreList
+import com.example.nextclass.Data.TimeTableData.AllScore
+import com.example.nextclass.Data.TimeTableData.ClassData
+import com.example.nextclass.Data.TimeTableData.ClassUUid
+import com.example.nextclass.Data.TimeTableData.PostClassScoreList
 import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.repository.TimeTableRepository
-import com.example.oneplusone.serverConnection.API
-import retrofit2.Retrofit
 
 class TimeTableTestRepo:TimeTableRepository {
 

@@ -47,7 +47,6 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -58,8 +57,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.example.nextclass.Data.ClassData
-import com.example.nextclass.R
+import com.example.nextclass.Data.TimeTableData.ClassData
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.Pastel_Red
 import com.example.nextclass.utils.ConvertDayOfWeek
@@ -76,7 +74,7 @@ fun OneClassCellDetailComponent(
     setShowClassDetailDialog: () -> Unit,
     setShowClassDataModifyDialog: () -> Unit,
 
-) {
+    ) {
     val backGroundColor= Pastel_Red
 
     Column(
@@ -252,7 +250,7 @@ fun TimeTableComponent(
         )
     },
 
-) {
+    ) {
     val classTimeHeight = 60.dp
     var sidebarWidth by remember { mutableIntStateOf(0) }
 
@@ -294,7 +292,7 @@ fun TimeTableComponent(
 }
 @Composable
 fun ClassDetail(
-    classData:ClassData,
+    classData: ClassData,
     setShowClassDetailDialog: () -> Unit,
     setShowClassDataModifyDialog: () -> Unit,
     deleteClassData: () -> Unit

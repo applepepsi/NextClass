@@ -6,10 +6,10 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nextclass.Data.FindIDOrPasswordData
-import com.example.nextclass.Data.JoinRequest
-import com.example.nextclass.Data.LoginRequest
-import com.example.nextclass.Data.ModifyUserData
+import com.example.nextclass.Data.SignupOrLoginData.FindIDOrPasswordData
+import com.example.nextclass.Data.SignupOrLoginData.JoinRequest
+import com.example.nextclass.Data.SignupOrLoginData.LoginRequest
+import com.example.nextclass.Data.UserInfoData.ModifyUserData
 import com.example.nextclass.Data.TokenData
 import com.example.nextclass.Data.VerifyCodeData
 import com.example.nextclass.R
@@ -517,7 +517,7 @@ class LoginViewModel @Inject constructor(
     fun tryLogin(fcmToken: String?) {
         if(fcmToken!=null){
             if(!loginInputCheck()){
-                val loginRequest=LoginRequest(
+                val loginRequest= LoginRequest(
                     id=id.value,
                     password=password.value,
                     app_token = fcmToken
@@ -563,7 +563,7 @@ class LoginViewModel @Inject constructor(
             if(fcmToken!=null){
                 Log.d("자동 로그인시도","자동")
                 _loading.value=true
-                val loginRequest=LoginRequest(
+                val loginRequest= LoginRequest(
                     id=autoLoginId,
                     password=autoLoginPassword,
                     app_token = fcmToken
@@ -824,7 +824,7 @@ class LoginViewModel @Inject constructor(
 
     fun findPassword(){
 
-        val findPasswordData=FindIDOrPasswordData(null,findIDOrPassword.value.id)
+        val findPasswordData= FindIDOrPasswordData(null,findIDOrPassword.value.id)
 
         userInfoRepository.postFindPassword(findPasswordData){ findPasswordResult->
             _loading.value=true

@@ -4,9 +4,8 @@ import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.nextclass.Data.CommunityCommentData
-import com.example.nextclass.Data.CommunityPostData
-import com.example.nextclass.repository.UserInfoRepository
+import com.example.nextclass.Data.CommunityData.CommunityCommentData
+import com.example.nextclass.Data.CommunityData.CommunityPostData
 import com.example.nextclass.utils.StringValue
 import javax.inject.Inject
 
