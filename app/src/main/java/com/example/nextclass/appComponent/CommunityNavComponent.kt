@@ -33,6 +33,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.items.CommunityTopNavItem
 import com.example.nextclass.nav.CommunityGraph
+import com.example.nextclass.repository.testRepo.CommunityTestRepository
 import com.example.nextclass.repository.testRepo.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.NextClassTheme
@@ -150,7 +151,8 @@ fun CommunityTopNavPreview() {
 
     val mainNavController= rememberNavController()
     val testRepository = TestRepository()
-    val communityViewModel = CommunityViewModel()
+    val communityTestRepository=CommunityTestRepository()
+    val communityViewModel = CommunityViewModel(communityTestRepository)
 
     NextClassTheme {
         CommunityTopNavComponent(navController = mainNavController,communityViewModel, communityNavController = mainNavController)

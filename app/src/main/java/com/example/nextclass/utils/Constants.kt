@@ -58,4 +58,5 @@ const val POST_DELETE="/post_delete"
 const val GET_POST="/post_list"
 const val COMMENT_SAVE="/comment_save"
 const val COMMENT_CHANGE="/comment_change"
+const val POST_DETAIL="/post/{post_sequence}"
 

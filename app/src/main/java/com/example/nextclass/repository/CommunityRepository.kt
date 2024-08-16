@@ -19,4 +19,6 @@ interface CommunityRepository {
 
     fun commentChange(callback: (ServerResponse<Any>?) -> Unit)
 
+    fun postDetail(post_sequence:String,callback: (ServerResponse<CommunityPostData>?) -> Unit)
+
 }

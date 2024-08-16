@@ -52,4 +52,11 @@ class CommunityTestRepository: CommunityRepository {
     override fun commentChange(callback: (ServerResponse<Any>?) -> Unit) {
         TODO("Not yet implemented")
     }
+
+    override fun postDetail(
+        post_sequence: String,
+        callback: (ServerResponse<CommunityPostData>?) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
 }

@@ -90,6 +90,7 @@ fun Greeting() {
 
     if(loginViewModel.loginResult.value){
         TokenManager.saveToken(context,loginViewModel.tokenData.value)
+        Log.d("토큰데이터", loginViewModel.tokenData.value.toString())
     }
 
 

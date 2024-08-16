@@ -2,6 +2,7 @@ package com.example.oneplusone.serverConnection
 
 
 import com.example.nextclass.Data.CommunityData.CommunityPostData
+import com.example.nextclass.Data.CommunityData.PostDetail
 import com.example.nextclass.Data.CommunityData.PostListData
 import com.example.nextclass.Data.CommunityData.PostWriteData
 import com.example.nextclass.Data.TimeTableData.AllScore
@@ -36,6 +37,7 @@ import com.example.nextclass.utils.LOGIN_ADDRESS
 import com.example.nextclass.utils.MAIL_CHECK
 import com.example.nextclass.utils.POST_CHANGE
 import com.example.nextclass.utils.POST_DELETE_TIMETABLE_DATA
+import com.example.nextclass.utils.POST_DETAIL
 import com.example.nextclass.utils.POST_MODIFY_TIMETABLE_DATA
 import com.example.nextclass.utils.POST_SAVE
 import com.example.nextclass.utils.POST_TIMETABLE_DATA
@@ -44,7 +46,9 @@ import com.example.nextclass.utils.SCORE_UPDATE
 import com.example.nextclass.utils.SEND_CHANGE_MAIL
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface API {
 
@@ -135,6 +139,10 @@ interface API {
 
     @POST(SCORE_UPDATE)
     suspend fun commentChange(@Body scoreList: PostClassScoreList):Response<ServerResponse<Any>>
+
+    @GET(POST_DETAIL)
+    suspend fun postDetail(@Path("post_sequence") post_sequence:String):Response<ServerResponse<CommunityPostData>>
+
 
     //테스트
     @POST("/test")

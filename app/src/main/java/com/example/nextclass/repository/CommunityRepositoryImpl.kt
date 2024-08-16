@@ -103,5 +103,29 @@ class CommunityRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    override fun postDetail(post_sequence: String, callback: (ServerResponse<CommunityPostData>?) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = api.postDetail(post_sequence)
+            val result = try {
+
+                Log.d("게시물 세부 결과", response.toString())
+                if (response.isSuccessful){
+                    Log.d("게시물 세부 가져오기 성공", response.body().toString())
+                    response.body()
+                } else {
+                    Log.d("게시물 세부 가져오기 실패","게시물 세부 가져오기 실패")
+                    null
+                }
+
+            } catch (e: Exception) {
+                Log.d("게시물 세부가져오기 실패", e.toString())
+                response.body()
+            }
+            withContext(Dispatchers.Main) {
+                callback(result)
+            }
+        }
+    }
+
 
 }

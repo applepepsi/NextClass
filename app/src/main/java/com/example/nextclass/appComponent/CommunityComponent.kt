@@ -49,6 +49,7 @@ import com.example.nextclass.Data.CommunityData.CommunityCommentData
 import com.example.nextclass.Data.CommunityData.CommunityPostData
 import com.example.nextclass.Data.TimeTableData.PostSchoolType
 import com.example.nextclass.R
+import com.example.nextclass.repository.testRepo.CommunityTestRepository
 import com.example.nextclass.repository.testRepo.TestRepository
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.ui.theme.Pastel_Red
@@ -311,9 +312,10 @@ fun SinglePostComponent(
 @Composable
 fun PostDetailComponent(
     selectPost: CommunityPostData = CommunityPostData(),
-    deletePost:()->Unit,
-    likePost:()->Unit,
-    modifyPost:()->Unit,
+    deletePost: () -> Unit,
+    likePost: () -> Unit,
+    modifyPost: () -> Unit,
+    postOwner: Boolean,
 ){
 
     Column(
@@ -327,34 +329,36 @@ fun PostDetailComponent(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.End
         ){
-            Text(
-                modifier = Modifier
-                    .clickable {
-                        modifyPost()
-                    }
-                    .padding(5.dp),
-                text = "수정",
-                style = TextStyle(
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Normal,
-                    fontStyle = FontStyle.Normal
-                ),
-                color=Color.Gray
-            )
-            Text(
-                modifier = Modifier
-                    .clickable {
-                        deletePost()
-                    }
-                    .padding(5.dp),
-                text = "제거",
-                style = TextStyle(
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Normal,
-                    fontStyle = FontStyle.Normal
-                ),
-                color=Color.Gray
-            )
+            if(postOwner){
+                Text(
+                    modifier = Modifier
+                        .clickable {
+                            modifyPost()
+                        }
+                        .padding(5.dp),
+                    text = "수정",
+                    style = TextStyle(
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Normal,
+                        fontStyle = FontStyle.Normal
+                    ),
+                    color=Color.Gray
+                )
+                Text(
+                    modifier = Modifier
+                        .clickable {
+                            deletePost()
+                        }
+                        .padding(5.dp),
+                    text = "제거",
+                    style = TextStyle(
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Normal,
+                        fontStyle = FontStyle.Normal
+                    ),
+                    color=Color.Gray
+                )
+            }
         }
 
         DividerComponent(modifier = Modifier
@@ -973,9 +977,9 @@ fun PostPreview() {
 fun InsertPostPreview() {
     val testRepository = TestRepository()
     val loginViewModel = LoginViewModel(testRepository)
-
+    val communityTestRepository=CommunityTestRepository()
     val navController = rememberNavController()
-    val communityViewModel=CommunityViewModel()
+    val communityViewModel=CommunityViewModel(communityTestRepository)
 
     NextClassTheme {
         InsertOrModifyPostComponent(communityViewModel = communityViewModel, navController = navController, loginViewModel = loginViewModel, postType = {})
@@ -994,8 +998,9 @@ fun PostDetailPreview() {
     NextClassTheme {
         PostDetailComponent(
             deletePost = {},
+            likePost = {},
             modifyPost = {},
-            likePost = {}
+            postOwner = true
         )
     }
 }

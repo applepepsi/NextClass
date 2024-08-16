@@ -1,5 +1,6 @@
 package com.example.nextclass.view
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -169,14 +170,16 @@ fun PostDetailView(
                 selectPost=communityViewModel.selectCommunityData.value,
                 deletePost = { communityViewModel.deletePost() },
                 modifyPost = {
+                    communityViewModel.setPostModifyData()
                     navController.navigate("modifyPostView")
                 },
                 likePost = { communityViewModel.likePost() },
+                postOwner=communityViewModel.selectCommunityData.value.owner
             )
 
             LazyColumn {
 
-                items(items = testCommentList){singleCommentData->
+                items(items = communityViewModel.communityCommentDataList.value){singleCommentData->
                     CommentComponent(
                         singleCommentData,
                         modifyComment = { communityViewModel.modifyComment(singleCommentData) },
@@ -197,25 +200,34 @@ fun PostDetailView(
 fun AllSchoolPostView(
     communityViewModel: CommunityViewModel,
 
-    communityNavController: NavController
+    communityNavController: NavController,
+    navController: NavHostController
 ) {
     val listState = rememberLazyListState()
+
+
     LaunchedEffect(Unit) {
         communityViewModel.getPostList(sort="all",post_sequence=0)
     }
 
+
+
+    if(communityViewModel.getPostDetailResultState.value){
+        navController.navigate("postDetailView")
+        communityViewModel.togglePostDetailState()
+    }
 
     // LazyColumn 설정
     LazyColumn(
         state = listState,
         modifier = Modifier
     ) {
-        items(items = testCommunityData) { singlePostData ->
+        items(items = communityViewModel.communityDataList.value) { singlePostData ->
 
             SinglePostComponent(
                 singlePostData,
                 postClick = {
-                    communityViewModel.setSelectedCommunityData(singlePostData)
+                    communityViewModel.setSelectedCommunityData(singlePostData.post_sequence)
 
                 }
             )
@@ -228,12 +240,17 @@ fun AllSchoolPostView(
             .collect { layoutInfo ->
                 //내가 지금 보고있는 아이템의 인덱스
                 val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
+                Log.d("lastVisibleItemIndex", lastVisibleItemIndex.toString())
                 //전체 아이템의 수
                 val totalItemsCount = layoutInfo.totalItemsCount
 
+                val lastVisiblePostSequence = communityViewModel.communityDataList.value.minByOrNull { it.post_sequence.toInt() }?.post_sequence?.toInt() ?:0
+
+                Log.d("totalItemsCount", totalItemsCount.toString())
+                Log.d("lastVisiblePostSequence", lastVisiblePostSequence.toString())
                 //내가 지금 보고있는 아이템이 마지막 인덱스라면 새로 가져오기
                 if (lastVisibleItemIndex == totalItemsCount - 1 && totalItemsCount > 0) {
-                    communityViewModel.getPostList(sort = "all", post_sequence = totalItemsCount)
+                    communityViewModel.getPostList(sort = "all", post_sequence = lastVisiblePostSequence-1)
                 }
             }
     }
@@ -243,7 +260,8 @@ fun AllSchoolPostView(
 fun BestPostView(
     communityViewModel: CommunityViewModel,
 
-    communityNavController: NavController
+    communityNavController: NavController,
+    navController: NavHostController
 ) {
 
     LazyColumn(
@@ -256,7 +274,7 @@ fun BestPostView(
             SinglePostComponent(
                 singlePostData,
                 postClick = {
-                    communityViewModel.setSelectedCommunityData(singlePostData)
+                    communityViewModel.setSelectedCommunityData(singlePostData.post_sequence)
 
                 }
             )
@@ -268,7 +286,8 @@ fun BestPostView(
 fun MySchoolPostView(
     communityViewModel: CommunityViewModel,
 
-    communityNavController: NavController
+    communityNavController: NavController,
+    navController: NavHostController
 ) {
 
 
@@ -286,7 +305,7 @@ fun MySchoolPostView(
             SinglePostComponent(
                 singlePostData,
                 postClick = {
-                    communityViewModel.setSelectedCommunityData(singlePostData)
+                    communityViewModel.setSelectedCommunityData(singlePostData.post_sequence)
 
                 }
             )
@@ -377,7 +396,7 @@ fun MyPostView(
                 SinglePostComponent(
                     singlePostData,
                     postClick = {
-                        communityViewModel.setSelectedCommunityData(singlePostData)
+                        communityViewModel.setSelectedCommunityData(singlePostData.post_sequence)
 //                    navController.navigate("postDetailView")
                     }
                 )
@@ -440,6 +459,14 @@ fun InsertOrModifyPostComponent(
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
+
+    if(communityViewModel.postResultState.value){
+        navController.navigateUp()
+        communityViewModel.togglePostResultState()
+        communityViewModel.resetWritePostData()
+    }
+
+
 
     Column(
         modifier = Modifier

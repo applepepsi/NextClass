@@ -12,8 +12,10 @@ import com.example.nextclass.R
 import com.example.nextclass.repository.CommunityRepository
 import com.example.nextclass.utils.SUCCESS_CODE
 import com.example.nextclass.utils.StringValue
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+@HiltViewModel
 class CommunityViewModel @Inject constructor(
     private val communityRepository: CommunityRepository
 ): ViewModel(){
@@ -64,9 +66,40 @@ class CommunityViewModel @Inject constructor(
     private val _postListType=mutableStateOf(PostListData())
     val postListType: State<PostListData> = _postListType
 
-    fun setSelectedCommunityData(communityPostData: CommunityPostData){
-        _selectCommunityData.value=communityPostData
-        Log.d("선택된 게시물", _selectCommunityData.value.toString())
+    private val _getPostDetailResultState=mutableStateOf(false)
+    val getPostDetailResultState: State<Boolean> = _getPostDetailResultState
+
+    fun setSelectedCommunityData(selectPostSequence: String){
+
+        _loading.value=true
+        communityRepository.postDetail(selectPostSequence){ postDetailResult->
+            if(postDetailResult !=null) {
+                if (postDetailResult.code == SUCCESS_CODE) {
+                    _selectCommunityData.value= postDetailResult.data!!
+                    Log.d("선택된 게시물", _selectCommunityData.value.toString())
+                    togglePostDetailState()
+                }else{
+
+                }
+            }
+            _loading.value=false
+        }
+        _loading.value=false
+
+    }
+
+    fun setPostModifyData(){
+        val anonymityState= _selectCommunityData.value.author=="익명"
+
+        _postWriteData.value=_postWriteData.value.copy(
+            post_sequence = _selectCommunityData.value.post_sequence,
+            subject = _selectCommunityData.value.subject,
+            content = _selectCommunityData.value.content,
+            is_secret = anonymityState)
+    }
+
+    fun togglePostDetailState(){
+        _getPostDetailResultState.value=!_getPostDetailResultState.value
     }
 
     fun updateSubject(subject: String){
@@ -100,7 +133,7 @@ class CommunityViewModel @Inject constructor(
             if(postSaveResult !=null) {
                 if (postSaveResult.code == SUCCESS_CODE) {
 
-                    _postResultState.value=true
+                    togglePostResultState()
                 }else{
 
                 }
@@ -110,13 +143,31 @@ class CommunityViewModel @Inject constructor(
         _loading.value=false
     }
 
+    fun updatePostDetail(){
+
+        _postWriteData.value
+//        _selectCommunityData.value=_selectCommunityData.value.copy(
+//            post_sequence = _selectCommunityData.value.post_sequence,
+//            subject = _selectCommunityData.value.subject,
+//            content = _selectCommunityData.value.content,
+//
+//        )
+    }
+
+    fun togglePostResultState(){
+        _postResultState.value=!_postResultState.value
+    }
+
     fun postModifyPostData(){
         _loading.value=true
         communityRepository.postChange(_postWriteData.value){ postSaveResult->
             if(postSaveResult !=null) {
                 if (postSaveResult.code == SUCCESS_CODE) {
+                    Log.d("수정 성공","")
 
-                    _postResultState.value=true
+                    //todo 게시물을 수정한 후 다시 게시물을 로드해야함 테스트해봐야함
+                    setSelectedCommunityData(_postWriteData.value.post_sequence!!)
+                    togglePostResultState()
                 }else{
 
                 }
@@ -126,13 +177,17 @@ class CommunityViewModel @Inject constructor(
     }
 
     fun getPostList(sort: String, post_sequence: Int) {
-        _loading.value=true
 
-        communityRepository.getPostList(PostListData(post_sequence=post_sequence,sort=sort,)){ getPostListResult->
+
+        _loading.value=true
+        val postListData=PostListData(post_sequence=post_sequence.toString(),sort=sort,)
+        Log.d("postListData", postListData.toString())
+        communityRepository.getPostList(postListData){ getPostListResult->
             if(getPostListResult !=null) {
                 if (getPostListResult.code == SUCCESS_CODE) {
 
-                    _communityDataList.value=getPostListResult.data!!
+                    _communityDataList.value = getPostListResult.data!!
+                    Log.d("새로운 게시물 로드됨", _communityDataList.value.toString())
                 }else{
                     //토스트 메세지
                 }
@@ -189,7 +244,7 @@ class CommunityViewModel @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    fun toggleMyPostTypeType(){
+    fun toggleMyPostType(){
 
         _toggleMyPostTypeState.value=!_toggleMyPostTypeState.value
         Log.d("_toggleMyPostTypeState", _toggleMyPostTypeState.value.toString())

@@ -144,7 +144,7 @@ private fun NavGraphBuilder.insertPostView(
     communityViewModel: CommunityViewModel
 ) {
     composable("insertPostView") {
-        InsertOrModifyPostComponent(navController, communityViewModel,loginViewModel, postType = {communityViewModel.insertPostData()})
+        InsertOrModifyPostComponent(navController, communityViewModel,loginViewModel, postType = {communityViewModel.postWritePostData()})
     }
 }
 
@@ -155,7 +155,7 @@ private fun NavGraphBuilder.modifyPostView(
     communityViewModel: CommunityViewModel
 ) {
     composable("modifyPostView") {
-        InsertOrModifyPostComponent(navController, communityViewModel,loginViewModel, postType = {communityViewModel.modifyPostData()})
+        InsertOrModifyPostComponent(navController, communityViewModel,loginViewModel, postType = {communityViewModel.postModifyPostData()})
     }
 }
 
