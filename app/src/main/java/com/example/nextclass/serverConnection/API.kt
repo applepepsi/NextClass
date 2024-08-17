@@ -36,6 +36,7 @@ import com.example.nextclass.utils.GET_VERIFY_CODE
 import com.example.nextclass.utils.LOGIN_ADDRESS
 import com.example.nextclass.utils.MAIL_CHECK
 import com.example.nextclass.utils.POST_CHANGE
+import com.example.nextclass.utils.POST_DELETE
 import com.example.nextclass.utils.POST_DELETE_TIMETABLE_DATA
 import com.example.nextclass.utils.POST_DETAIL
 import com.example.nextclass.utils.POST_MODIFY_TIMETABLE_DATA
@@ -128,8 +129,8 @@ interface API {
     @POST(POST_CHANGE)
     suspend fun postChange(@Body postWriteData: PostWriteData):Response<ServerResponse<Any>>
 
-    @POST(SCORE_UPDATE)
-    suspend fun postDelete(@Body scoreList: PostClassScoreList):Response<ServerResponse<Any>>
+    @POST(POST_DELETE)
+    suspend fun postDelete(@Body post_sequence: String):Response<ServerResponse<Any>>
 
     @POST(GET_POST)
     suspend fun getPostList(@Body postListData: PostListData):Response<ServerResponse<List<CommunityPostData>>>

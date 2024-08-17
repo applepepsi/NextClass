@@ -41,6 +41,7 @@ import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.InsertPostContentBox
 import com.example.nextclass.appComponent.InsertPostSubjectBox
 import com.example.nextclass.appComponent.PostDetailComponent
+import com.example.nextclass.appComponent.ProgressBarComponent
 import com.example.nextclass.appComponent.SinglePostComponent
 import com.example.nextclass.appComponent.TextInputHelpFieldComponent
 import com.example.nextclass.repository.testRepo.CommunityTestRepository
@@ -143,6 +144,11 @@ fun PostDetailView(
 ) {
     val context = LocalContext.current
 
+    if(communityViewModel.postDeleteResultState.value){
+        navController.navigateUp()
+        communityViewModel.togglePostDeleteState()
+    }
+
     Column {
         Row(
             modifier = Modifier
@@ -165,6 +171,7 @@ fun PostDetailView(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+
         ) {
             PostDetailComponent(
                 selectPost=communityViewModel.selectCommunityData.value,
@@ -205,9 +212,9 @@ fun AllSchoolPostView(
 ) {
     val listState = rememberLazyListState()
 
-
     LaunchedEffect(Unit) {
-        communityViewModel.getPostList(sort="all",post_sequence=0)
+        communityViewModel.resetPostList()
+        communityViewModel.getPostList(sort="all",post_sequence=null)
     }
 
 
@@ -221,7 +228,17 @@ fun AllSchoolPostView(
     LazyColumn(
         state = listState,
         modifier = Modifier
+            .padding(bottom = 75.dp)
     ) {
+        item {
+            Log.d("communityViewModel.loading",communityViewModel.loading.value.toString())
+
+            if (communityViewModel.loading.value) {
+                ProgressBarComponent(state = communityViewModel.loading.value)
+            }
+        }
+
+
         items(items = communityViewModel.communityDataList.value) { singlePostData ->
 
             SinglePostComponent(
@@ -238,20 +255,9 @@ fun AllSchoolPostView(
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo }
             .collect { layoutInfo ->
-                //내가 지금 보고있는 아이템의 인덱스
+                //현재 보이는 아이템의 마지막 인덱스
                 val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
-                Log.d("lastVisibleItemIndex", lastVisibleItemIndex.toString())
-                //전체 아이템의 수
-                val totalItemsCount = layoutInfo.totalItemsCount
-
-                val lastVisiblePostSequence = communityViewModel.communityDataList.value.minByOrNull { it.post_sequence.toInt() }?.post_sequence?.toInt() ?:0
-
-                Log.d("totalItemsCount", totalItemsCount.toString())
-                Log.d("lastVisiblePostSequence", lastVisiblePostSequence.toString())
-                //내가 지금 보고있는 아이템이 마지막 인덱스라면 새로 가져오기
-                if (lastVisibleItemIndex == totalItemsCount - 1 && totalItemsCount > 0) {
-                    communityViewModel.getPostList(sort = "all", post_sequence = lastVisiblePostSequence-1)
-                }
+                communityViewModel.loadMorePostsCheck(lastVisibleItemIndex, sortType = "all")
             }
     }
 }

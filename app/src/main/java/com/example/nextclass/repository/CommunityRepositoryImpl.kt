@@ -67,8 +67,28 @@ class CommunityRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun postDelete(callback: (ServerResponse<Any>?) -> Unit) {
-        TODO("Not yet implemented")
+    override fun postDelete(post_sequence: String, callback: (ServerResponse<Any>?) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = api.postDelete(post_sequence)
+            val result = try {
+
+                Log.d("게시물 삭제 결과", response.toString())
+                if (response.isSuccessful){
+                    Log.d("게시물 삭제 성공", response.body().toString())
+                    response.body()
+                } else {
+                    Log.d("게시물 삭제 실패","게시물 삭제 실패")
+                    null
+                }
+
+            } catch (e: Exception) {
+                Log.d("게시물 삭제 실패", e.toString())
+                response.body()
+            }
+            withContext(Dispatchers.Main) {
+                callback(result)
+            }
+        }
     }
 
     override fun getPostList(postListData: PostListData,callback: (ServerResponse<List<CommunityPostData>>?) -> Unit) {

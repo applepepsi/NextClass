@@ -11,7 +11,7 @@ interface CommunityRepository {
 
     fun postChange(writePostData:PostWriteData,callback: (ServerResponse<Any>?) -> Unit)
 
-    fun postDelete(callback: (ServerResponse<Any>?) -> Unit)
+    fun postDelete(post_sequence: String, callback: (ServerResponse<Any>?) -> Unit)
 
     fun getPostList(postListData: PostListData, callback: (ServerResponse<List<CommunityPostData>>?) -> Unit)
 

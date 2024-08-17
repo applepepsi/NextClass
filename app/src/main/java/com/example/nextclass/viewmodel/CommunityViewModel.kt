@@ -69,7 +69,13 @@ class CommunityViewModel @Inject constructor(
     private val _getPostDetailResultState=mutableStateOf(false)
     val getPostDetailResultState: State<Boolean> = _getPostDetailResultState
 
-    fun setSelectedCommunityData(selectPostSequence: String){
+    private val _postDeleteResultState=mutableStateOf(false)
+    val postDeleteResultState: State<Boolean> = _postDeleteResultState
+
+    private val _getPostLoadingState=mutableStateOf(false)
+    val getPostLoadingState: State<Boolean> = _getPostLoadingState
+
+    fun setSelectedCommunityData(selectPostSequence: String,postReLoad:Boolean=false){
 
         _loading.value=true
         communityRepository.postDetail(selectPostSequence){ postDetailResult->
@@ -77,7 +83,9 @@ class CommunityViewModel @Inject constructor(
                 if (postDetailResult.code == SUCCESS_CODE) {
                     _selectCommunityData.value= postDetailResult.data!!
                     Log.d("선택된 게시물", _selectCommunityData.value.toString())
-                    togglePostDetailState()
+                    if (!postReLoad) {
+                        togglePostDetailState()
+                    }
                 }else{
 
                 }
@@ -85,8 +93,8 @@ class CommunityViewModel @Inject constructor(
             _loading.value=false
         }
         _loading.value=false
-
     }
+
 
     fun setPostModifyData(){
         val anonymityState= _selectCommunityData.value.author=="익명"
@@ -166,7 +174,7 @@ class CommunityViewModel @Inject constructor(
                     Log.d("수정 성공","")
 
                     //todo 게시물을 수정한 후 다시 게시물을 로드해야함 테스트해봐야함
-                    setSelectedCommunityData(_postWriteData.value.post_sequence!!)
+                    setSelectedCommunityData(_postWriteData.value.post_sequence!!, postReLoad = false)
                     togglePostResultState()
                 }else{
 
@@ -176,25 +184,37 @@ class CommunityViewModel @Inject constructor(
         _loading.value=false
     }
 
-    fun getPostList(sort: String, post_sequence: Int) {
-
-
+    fun getPostList(sort: String, post_sequence: Int?) {
+        if(_loading.value) return
         _loading.value=true
+
         val postListData=PostListData(post_sequence=post_sequence.toString(),sort=sort,)
         Log.d("postListData", postListData.toString())
+
         communityRepository.getPostList(postListData){ getPostListResult->
             if(getPostListResult !=null) {
                 if (getPostListResult.code == SUCCESS_CODE) {
+                    Log.d("새로운 게시물 로드됨", getPostListResult.data.toString())
+                    _communityDataList.value += getPostListResult.data!!
 
-                    _communityDataList.value = getPostListResult.data!!
-                    Log.d("새로운 게시물 로드됨", _communityDataList.value.toString())
                 }else{
                     //토스트 메세지
                 }
             }
-
+            _loading.value = false
         }
-        _loading.value=false
+    }
+
+    fun loadMorePostsCheck(lastVisibleItemIndex: Int,sortType:String) {
+        //개선 방안 찾아보기로
+        if (lastVisibleItemIndex-1 >= _communityDataList.value.size - 2) {
+            val lastPostSequence = _communityDataList.value.minByOrNull { it.post_sequence.toInt() }?.post_sequence?.toInt()
+            getPostList(sort = sortType, post_sequence = lastPostSequence)
+        }
+    }
+
+    fun resetPostList(){
+        _communityDataList.value= emptyList()
     }
 
     fun setSelectCommentData(communityCommentData: CommunityCommentData){
@@ -218,6 +238,22 @@ class CommunityViewModel @Inject constructor(
 
     fun deletePost() {
         _selectCommunityData.value
+
+        communityRepository.postDelete(_selectCommunityData.value.post_sequence){ deletePostResult->
+            if(deletePostResult !=null) {
+                if (deletePostResult.code == SUCCESS_CODE) {
+                    togglePostDeleteState()
+                    Log.d("삭제 성공", _communityDataList.value.toString())
+                }else{
+                    //토스트 메세지
+                }
+            }
+
+        }
+    }
+
+    fun togglePostDeleteState(){
+        _postDeleteResultState.value=!postDeleteResultState.value
     }
 
     fun modifyPost() {
