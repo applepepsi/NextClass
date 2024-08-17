@@ -1,5 +1,6 @@
 package com.example.nextclass.appComponent
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -24,9 +25,12 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFloatingActionButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -34,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
@@ -51,6 +56,7 @@ import com.example.nextclass.Data.TimeTableData.PostSchoolType
 import com.example.nextclass.R
 import com.example.nextclass.repository.testRepo.CommunityTestRepository
 import com.example.nextclass.repository.testRepo.TestRepository
+import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.ui.theme.Pastel_Red
 import com.example.nextclass.utils.MaxTextCount
@@ -613,7 +619,7 @@ fun CommentComponent(
                 .fillMaxWidth()
         ) {
             Text(
-                text = singleCommentData.commentDetail,
+                text = singleCommentData.content,
                 style = TextStyle(
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Normal,
@@ -693,8 +699,72 @@ fun CommentComponent(
             dividerColor = Color.LightGray
         )
     }
+}
 
+@Composable
+fun InsertCommentComponent(
+    communityViewModel: CommunityViewModel,
+    text: String = "",
+    onValueChange: (String) -> Unit = {},
+    isSecret: Boolean = true,
+    toggleCommentSecretState: () -> Unit = {}
+) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .background(Background_Color2)
+            .padding(5.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(40.dp)
+                .clip(RoundedCornerShape(15.dp))
+                .background(Color.White)
+                .border(1.5.dp, Color.LightGray, shape = RoundedCornerShape(15.dp)),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            CommentCheckboxComponent(
+                checked = isSecret,
+                onClickCheckBox = { toggleCommentSecretState() },
+                modifier = Modifier.padding(start = 8.dp)
+            )
 
+            Spacer(modifier = Modifier.width(8.dp))
+
+            BasicTextField(
+                value = text,
+                onValueChange = onValueChange,
+                readOnly = false,
+                singleLine = true,
+                modifier = Modifier.weight(1f), // 남은 공간을 차지하도록 설정
+                textStyle = TextStyle(
+                    fontSize = 13.sp
+                ),
+                decorationBox = { innerTextField ->
+                    Box(
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        if (text.isEmpty()) {
+                            Text(
+                                text = "댓글을 입력해 주세요",
+                                style = TextStyle.Default.copy(color = Color.Gray, fontSize = 13.sp)
+                            )
+                        }
+                        innerTextField()
+                    }
+                }
+            )
+
+            Image(
+                imageVector = ImageVector.vectorResource(R.drawable.write_icon),
+                contentDescription = null,
+                modifier = Modifier.size(20.dp),
+                colorFilter = ColorFilter.tint(Pastel_Red)
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+        }
+    }
 }
 
 @Composable
@@ -1006,44 +1076,44 @@ fun PostDetailPreview() {
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun CommentComponentPreview() {
-    val testRepository = TestRepository()
-    val loginViewModel = LoginViewModel(testRepository)
-
-    val navController = rememberNavController()
-
-
-    NextClassTheme {
-        CommentComponent(
-            modifyComment = {},
-            deleteComment = {},
-            likeComment = {},
-            optionVisible = false
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PostOptionDropDownPreview() {
-    val testRepository = TestRepository()
-    val loginViewModel = LoginViewModel(testRepository)
-
-    val navController = rememberNavController()
-
-
-    NextClassTheme {
-        PostOptionDropDownMenu(
-            value = "내가 쓴 글",
-            onValueChange = {},
-            dropDownMenuOption = false,
-            toggleDropDownMenuOption = { /*TODO*/ },
-            menuItems = selectPostType
-        )
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun CommentComponentPreview() {
+//    val testRepository = TestRepository()
+//    val loginViewModel = LoginViewModel(testRepository)
+//
+//    val navController = rememberNavController()
+//
+//
+//    NextClassTheme {
+//        CommentComponent(
+//            modifyComment = {},
+//            deleteComment = {},
+//            likeComment = {},
+//            optionVisible = false
+//        )
+//    }
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun PostOptionDropDownPreview() {
+//    val testRepository = TestRepository()
+//    val loginViewModel = LoginViewModel(testRepository)
+//
+//    val navController = rememberNavController()
+//
+//
+//    NextClassTheme {
+//        PostOptionDropDownMenu(
+//            value = "내가 쓴 글",
+//            onValueChange = {},
+//            dropDownMenuOption = false,
+//            toggleDropDownMenuOption = { /*TODO*/ },
+//            menuItems = selectPostType
+//        )
+//    }
+//}
 
 
 @Preview(showBackground = true)
@@ -1053,12 +1123,13 @@ fun InsertSubjectPreview() {
     val loginViewModel = LoginViewModel(testRepository)
 
     val navController = rememberNavController()
+    val communityTestRepository=CommunityTestRepository()
 
+    val communityViewModel=CommunityViewModel(communityTestRepository)
 
     NextClassTheme {
-        InsertPostSubjectBox(
-            text="",
-            onValueChange = {}
+        InsertCommentComponent(
+            communityViewModel=communityViewModel
         )
     }
 }

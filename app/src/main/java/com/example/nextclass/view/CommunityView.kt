@@ -38,8 +38,10 @@ import com.example.nextclass.appComponent.CommentComponent
 import com.example.nextclass.appComponent.CommunityTopNavComponent
 import com.example.nextclass.appComponent.FloatingActionButtonComponent
 import com.example.nextclass.appComponent.InputButtonComponent
+import com.example.nextclass.appComponent.InsertCommentComponent
 import com.example.nextclass.appComponent.InsertPostContentBox
 import com.example.nextclass.appComponent.InsertPostSubjectBox
+import com.example.nextclass.appComponent.InsertSubjectPreview
 import com.example.nextclass.appComponent.PostDetailComponent
 import com.example.nextclass.appComponent.ProgressBarComponent
 import com.example.nextclass.appComponent.SinglePostComponent
@@ -123,16 +125,8 @@ val testCommunityData= listOf(
 
 
 val testCommentList= listOf(
-    CommunityCommentData(commentDetail = "가나다라", commentLikeCount = 2, commentTime = LocalDateTime.now()),
-    CommunityCommentData(commentDetail = "가나qwfqw다라", commentLikeCount = 2, commentTime = LocalDateTime.now()),
-    CommunityCommentData(commentDetail = "가나다wd라", commentLikeCount = 2, commentTime = LocalDateTime.now()),
-    CommunityCommentData(commentDetail = "가나qwfqwf다라", commentLikeCount = 2, commentTime = LocalDateTime.now()),
-    CommunityCommentData(commentDetail = "가qwfqwf나다라", commentLikeCount = 3, commentTime = LocalDateTime.now()),
-    CommunityCommentData(commentDetail = "가qwfqwf나다라", commentLikeCount = 3, commentTime = LocalDateTime.now()),
-    CommunityCommentData(commentDetail = "가qwfqwf나다라", commentLikeCount = 3, commentTime = LocalDateTime.now()),
-    CommunityCommentData(commentDetail = "가qwfqwf나다라", commentLikeCount = 3, commentTime = LocalDateTime.now()),
-    CommunityCommentData(commentDetail = "가qwfqwf나다라", commentLikeCount = 3, commentTime = LocalDateTime.now()),
-    CommunityCommentData(commentDetail = "가qwfqwf나다라", commentLikeCount = 3, commentTime = LocalDateTime.now()),
+    CommunityCommentData(content = "가나다라", commentLikeCount = 2, commentTime = LocalDateTime.now().toString()),
+    CommunityCommentData(content = "가나다라", commentLikeCount = 2, commentTime = LocalDateTime.now().toString()),
     )
 
 @Composable
@@ -154,8 +148,6 @@ fun PostDetailView(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 20.dp),
-
-
             ){
             AppBarTextAndButtonComponent(
                 value = "",
@@ -163,7 +155,6 @@ fun PostDetailView(
                 showLeftButton = true,
                 showRightButton = false,
             )
-
         }
 
         Spacer(modifier = Modifier.height(15.dp))
@@ -195,12 +186,26 @@ fun PostDetailView(
                         optionVisible = false
                     )
                 }
+
+                item{
+
+                }
             }
+            //todo 댓글입력창 테스트해봐야함
+            InsertCommentComponent(
+                communityViewModel=communityViewModel,
+                onValueChange = {},
+                text="",
+                isSecret = true,
+                toggleCommentSecretState = {}
+            )
         }
     }
 
 
 }
+
+
 
 
 @Composable

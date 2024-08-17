@@ -55,6 +55,7 @@ import com.example.nextclass.repository.testRepo.TestRepository
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.ui.theme.Pastel_Red
 import com.example.nextclass.view.JoinView
+import com.example.nextclass.view.LoginView
 import com.example.nextclass.viewmodel.LoginViewModel
 
 
@@ -602,13 +603,13 @@ fun TextInputHelpFieldComponent(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom=5.dp)
-            .heightIn(20.dp)
+            .padding(bottom = 5.dp)
+            .heightIn(15.dp)
     ) {
         if (isError) {
             Text(
                 text = errorMessage,
-                fontSize = 15.sp,
+                fontSize = 13.sp,
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
                 color = Pastel_Red,
@@ -627,9 +628,10 @@ fun TextInputHelpFieldComponent(
 fun GreetingPreview() {
     val testRepository = TestRepository()
     val loginViewModel = LoginViewModel(testRepository)
+    val mainNavController= rememberNavController()
     val navController = rememberNavController()
     NextClassTheme {
-        JoinView(loginViewModel,navController)
+        LoginView(loginViewModel,navController,mainNavController)
     }
 }
 

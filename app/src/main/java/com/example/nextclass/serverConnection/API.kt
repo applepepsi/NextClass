@@ -24,6 +24,9 @@ import com.example.nextclass.Data.VerifyCodeData
 import com.example.nextclass.utils.CHANGE_EMAIL
 import com.example.nextclass.utils.CHANGE_INFO
 import com.example.nextclass.utils.CHANGE_PASSWORD
+import com.example.nextclass.utils.COMMENT_CHANGE
+import com.example.nextclass.utils.COMMENT_DELETE
+import com.example.nextclass.utils.COMMENT_SAVE
 import com.example.nextclass.utils.DELETE_ID
 import com.example.nextclass.utils.DUPLICATED_CHECK_ADDRESS
 import com.example.nextclass.utils.FIND_ID
@@ -123,6 +126,8 @@ interface API {
     @POST(SCORE_UPDATE)
     suspend fun scoreUpdate(@Body scoreList: PostClassScoreList):Response<ServerResponse<Any>>
 
+
+    //커뮤니티
     @POST(POST_SAVE)
     suspend fun postSave(@Body postWriteData: PostWriteData):Response<ServerResponse<Any>>
 
@@ -135,14 +140,19 @@ interface API {
     @POST(GET_POST)
     suspend fun getPostList(@Body postListData: PostListData):Response<ServerResponse<List<CommunityPostData>>>
 
-    @POST(SCORE_UPDATE)
+    @POST(COMMENT_SAVE)
     suspend fun commentSave(@Body scoreList: PostClassScoreList):Response<ServerResponse<Any>>
 
-    @POST(SCORE_UPDATE)
+    @POST(COMMENT_CHANGE)
     suspend fun commentChange(@Body scoreList: PostClassScoreList):Response<ServerResponse<Any>>
+
+    @POST(COMMENT_DELETE)
+    suspend fun commentDelete(@Body scoreList: PostClassScoreList):Response<ServerResponse<Any>>
 
     @GET(POST_DETAIL)
     suspend fun postDetail(@Path("post_sequence") post_sequence:String):Response<ServerResponse<CommunityPostData>>
+
+
 
 
     //테스트
