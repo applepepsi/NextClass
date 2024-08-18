@@ -1,6 +1,9 @@
 package com.example.oneplusone.serverConnection
 
 
+import com.example.nextclass.Data.CommunityData.CommentListData
+import com.example.nextclass.Data.CommunityData.CommentWriteData
+import com.example.nextclass.Data.CommunityData.CommunityCommentData
 import com.example.nextclass.Data.CommunityData.CommunityPostData
 import com.example.nextclass.Data.CommunityData.PostDetail
 import com.example.nextclass.Data.CommunityData.PostListData
@@ -31,6 +34,7 @@ import com.example.nextclass.utils.DELETE_ID
 import com.example.nextclass.utils.DUPLICATED_CHECK_ADDRESS
 import com.example.nextclass.utils.FIND_ID
 import com.example.nextclass.utils.FIND_PASSWORD
+import com.example.nextclass.utils.GET_COMMENT
 import com.example.nextclass.utils.GET_POST
 import com.example.nextclass.utils.GET_SCORE
 import com.example.nextclass.utils.GET_TIME_TABLE
@@ -140,14 +144,17 @@ interface API {
     @POST(GET_POST)
     suspend fun getPostList(@Body postListData: PostListData):Response<ServerResponse<List<CommunityPostData>>>
 
+    @POST(GET_COMMENT)
+    suspend fun getCommentList(@Body commentListData: CommentListData):Response<ServerResponse<List<CommunityCommentData>>>
+
     @POST(COMMENT_SAVE)
-    suspend fun commentSave(@Body scoreList: PostClassScoreList):Response<ServerResponse<Any>>
+    suspend fun commentSave(@Body writeCommentData: CommentWriteData):Response<ServerResponse<Any>>
 
     @POST(COMMENT_CHANGE)
     suspend fun commentChange(@Body scoreList: PostClassScoreList):Response<ServerResponse<Any>>
 
     @POST(COMMENT_DELETE)
-    suspend fun commentDelete(@Body scoreList: PostClassScoreList):Response<ServerResponse<Any>>
+    suspend fun commentDelete(@Body commentSequence: String):Response<ServerResponse<Any>>
 
     @GET(POST_DETAIL)
     suspend fun postDetail(@Path("post_sequence") post_sequence:String):Response<ServerResponse<CommunityPostData>>

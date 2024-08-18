@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.nextclass.Data.CommunityData.CommentListData
+import com.example.nextclass.Data.CommunityData.CommentWriteData
 import com.example.nextclass.Data.CommunityData.CommunityCommentData
 import com.example.nextclass.Data.CommunityData.CommunityPostData
 import com.example.nextclass.Data.CommunityData.PostListData
@@ -74,6 +76,9 @@ class CommunityViewModel @Inject constructor(
 
     private val _getPostLoadingState=mutableStateOf(false)
     val getPostLoadingState: State<Boolean> = _getPostLoadingState
+
+    private val _commentWriteData=mutableStateOf(CommentWriteData())
+    val commentWriteData: State<CommentWriteData> = _commentWriteData
 
     fun setSelectedCommunityData(selectPostSequence: String,postReLoad:Boolean=false){
 
@@ -176,6 +181,13 @@ class CommunityViewModel @Inject constructor(
                     //todo 게시물을 수정한 후 다시 게시물을 로드해야함 테스트해봐야함
                     setSelectedCommunityData(_postWriteData.value.post_sequence!!, postReLoad = false)
                     togglePostResultState()
+
+                    //수정에 성공했다면 댓글도 업데이트함
+                    resetCommentList()
+                    getCommentList(
+                        post_sequence = _selectCommunityData.value.post_sequence,
+                        comment_sequence = null
+                    )
                 }else{
 
                 }
@@ -205,6 +217,8 @@ class CommunityViewModel @Inject constructor(
         }
     }
 
+
+
     fun loadMorePostsCheck(lastVisibleItemIndex: Int,sortType:String) {
         //개선 방안 찾아보기로
         if (lastVisibleItemIndex-1 >= _communityDataList.value.size - 2) {
@@ -226,10 +240,28 @@ class CommunityViewModel @Inject constructor(
 
     fun modifyComment(singleCommentData: CommunityCommentData) {
         Log.d("수정하려는 댓글", singleCommentData.toString())
+        _postWriteData.value
     }
 
     fun deleteComment(singleCommentData: CommunityCommentData) {
         Log.d("삭제하려는 댓글", singleCommentData.toString())
+        communityRepository.commentDelete(singleCommentData.comment_sequence){ deleteCommentResult->
+            if(deleteCommentResult !=null) {
+                if (deleteCommentResult.code == SUCCESS_CODE) {
+
+                    resetCommentList()
+                    getCommentList(
+                        post_sequence = _selectCommunityData.value.post_sequence,
+                        comment_sequence = null
+                    )
+                    Log.d("댓글 삭제 성공", _communityDataList.value.toString())
+
+                }else{
+                    //토스트 메세지
+                }
+            }
+
+        }
     }
 
     fun likeComment(singleCommentData: CommunityCommentData) {
@@ -272,13 +304,6 @@ class CommunityViewModel @Inject constructor(
         _postSortTypeBottomSheetState.value=!_postSortTypeBottomSheetState.value
     }
 
-    fun insertPostData() {
-        TODO("Not yet implemented")
-    }
-
-    fun modifyPostData() {
-        TODO("Not yet implemented")
-    }
 
     fun toggleMyPostType(){
 
@@ -288,6 +313,73 @@ class CommunityViewModel @Inject constructor(
 
     fun updateMyPostTypeDropDownText(text:String){
         _myPostFilter.value=text
+    }
+
+    fun updateCommentContent(content:String){
+        _commentWriteData.value=_commentWriteData.value.copy(content = content)
+    }
+
+    fun toggleCommentSecretState(){
+        val currentState=_commentWriteData.value.is_secret
+        _commentWriteData.value=_commentWriteData.value.copy(is_secret = !currentState)
+    }
+
+    fun resetCommentList(){
+        _communityCommentDataList.value= emptyList()
+    }
+
+    fun getCommentList(post_sequence: String, comment_sequence: Int?){
+        if(_loading.value) return
+        _loading.value=true
+
+        val commentListData=CommentListData(post_sequence=post_sequence,comment_sequence=comment_sequence)
+
+        communityRepository.getCommentList(commentListData){ getPostListResult->
+            if(getPostListResult !=null) {
+                if (getPostListResult.code == SUCCESS_CODE) {
+                    Log.d("새로운 댓글 로드됨", getPostListResult.data.toString())
+                    _communityCommentDataList.value+=getPostListResult.data!!
+
+                }else{
+                    //토스트 메세지
+                }
+            }
+            _loading.value = false
+        }
+    }
+
+    fun loadMoreCommentCheck(lastVisibleItemIndex: Int) {
+        //개선 방안 찾아보기로
+        if (lastVisibleItemIndex-1 >= _communityCommentDataList.value.size - 2) {
+            val lastCommentSequence = _communityCommentDataList.value.minByOrNull { it.comment_sequence.toInt() }?.comment_sequence?.toInt()
+            getCommentList(
+                post_sequence = _selectCommunityData.value.post_sequence,
+                comment_sequence = lastCommentSequence)
+        }
+    }
+
+    fun postCommentData(post_sequence:String){
+
+        _commentWriteData.value=_commentWriteData.value.copy(post_sequence=post_sequence)
+
+        communityRepository.commentSave(_commentWriteData.value){ saveCommentResult->
+            if(saveCommentResult !=null) {
+                if (saveCommentResult.code == SUCCESS_CODE) {
+
+                    Log.d("댓글 작성 성공", _communityDataList.value.toString())
+                    resetWriteCommentData()
+                }else{
+                    //토스트 메세지
+                }
+            }
+
+        }
+    }
+
+
+
+    fun resetWriteCommentData(){
+        _commentWriteData.value= CommentWriteData()
     }
 
 //    fun setPostType(type: String) {

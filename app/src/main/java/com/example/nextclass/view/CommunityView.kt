@@ -41,7 +41,6 @@ import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.InsertCommentComponent
 import com.example.nextclass.appComponent.InsertPostContentBox
 import com.example.nextclass.appComponent.InsertPostSubjectBox
-import com.example.nextclass.appComponent.InsertSubjectPreview
 import com.example.nextclass.appComponent.PostDetailComponent
 import com.example.nextclass.appComponent.ProgressBarComponent
 import com.example.nextclass.appComponent.SinglePostComponent
@@ -125,8 +124,18 @@ val testCommunityData= listOf(
 
 
 val testCommentList= listOf(
-    CommunityCommentData(content = "가나다라", commentLikeCount = 2, commentTime = LocalDateTime.now().toString()),
-    CommunityCommentData(content = "가나다라", commentLikeCount = 2, commentTime = LocalDateTime.now().toString()),
+    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
     )
 
 @Composable
@@ -137,18 +146,36 @@ fun PostDetailView(
     communityViewModel: CommunityViewModel
 ) {
     val context = LocalContext.current
+    val listState = rememberLazyListState()
 
     if(communityViewModel.postDeleteResultState.value){
         navController.navigateUp()
         communityViewModel.togglePostDeleteState()
     }
 
-    Column {
+    //처음 댓글 가져오기
+    LaunchedEffect(Unit) {
+        communityViewModel.resetCommentList()
+
+        communityViewModel.getCommentList(
+            post_sequence =communityViewModel.selectCommunityData.value.post_sequence,
+            comment_sequence = null
+        )
+    }
+
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+
+        if (communityViewModel.loading.value) {
+            ProgressBarComponent(state = communityViewModel.loading.value)
+        }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 20.dp),
-            ){
+                .padding(top = 20.dp)
+        ) {
             AppBarTextAndButtonComponent(
                 value = "",
                 navController = navController,
@@ -161,48 +188,57 @@ fun PostDetailView(
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
-
+                .weight(1f)
+//                .fillMaxSize()
         ) {
             PostDetailComponent(
-                selectPost=communityViewModel.selectCommunityData.value,
+                selectPost = communityViewModel.selectCommunityData.value,
                 deletePost = { communityViewModel.deletePost() },
                 modifyPost = {
                     communityViewModel.setPostModifyData()
                     navController.navigate("modifyPostView")
                 },
                 likePost = { communityViewModel.likePost() },
-                postOwner=communityViewModel.selectCommunityData.value.owner
+                postOwner = communityViewModel.selectCommunityData.value.owner
             )
 
-            LazyColumn {
+            LazyColumn(
+                modifier = Modifier.weight(1f),
+                state = listState,
 
-                items(items = communityViewModel.communityCommentDataList.value){singleCommentData->
+            ) {
+                items(items = communityViewModel.communityCommentDataList.value) { singleCommentData ->
                     CommentComponent(
                         singleCommentData,
                         modifyComment = { communityViewModel.modifyComment(singleCommentData) },
                         deleteComment = { communityViewModel.deleteComment(singleCommentData) },
                         likeComment = { communityViewModel.likeComment(singleCommentData) },
-                        optionVisible = false
+                        optionVisible = false,
+
                     )
                 }
-
-                item{
-
-                }
             }
-            //todo 댓글입력창 테스트해봐야함
-            InsertCommentComponent(
-                communityViewModel=communityViewModel,
-                onValueChange = {},
-                text="",
-                isSecret = true,
-                toggleCommentSecretState = {}
-            )
         }
+
+
+        InsertCommentComponent(
+            communityViewModel = communityViewModel,
+            onValueChange = { communityViewModel.updateCommentContent(it) },
+            text = communityViewModel.commentWriteData.value.content,
+            isSecret = communityViewModel.commentWriteData.value.is_secret,
+            toggleCommentSecretState = { communityViewModel.toggleCommentSecretState() },
+            postSequence=communityViewModel.selectCommunityData.value.post_sequence
+        )
     }
 
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.layoutInfo }
+            .collect { layoutInfo ->
 
+                val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
+                communityViewModel.loadMoreCommentCheck(lastVisibleItemIndex,)
+            }
+    }
 }
 
 

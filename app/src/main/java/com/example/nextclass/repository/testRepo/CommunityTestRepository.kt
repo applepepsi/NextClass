@@ -1,5 +1,8 @@
 package com.example.nextclass.repository.testRepo
 
+import com.example.nextclass.Data.CommunityData.CommentListData
+import com.example.nextclass.Data.CommunityData.CommentWriteData
+import com.example.nextclass.Data.CommunityData.CommunityCommentData
 import com.example.nextclass.Data.CommunityData.CommunityPostData
 import com.example.nextclass.Data.CommunityData.PostListData
 import com.example.nextclass.Data.CommunityData.PostWriteData
@@ -39,11 +42,24 @@ class CommunityTestRepository: CommunityRepository {
         TODO("Not yet implemented")
     }
 
-    override fun commentSave(callback: (ServerResponse<Any>?) -> Unit) {
+    override fun getCommentList(
+        commentListData: CommentListData,
+        callback: (ServerResponse<List<CommunityCommentData>>?) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
+
+
+    override fun commentSave(commentWriteData: CommentWriteData,callback: (ServerResponse<Any>?) -> Unit) {
         TODO("Not yet implemented")
     }
 
     override fun commentChange(callback: (ServerResponse<Any>?) -> Unit) {
+        TODO("Not yet implemented")
+    }
+
+    override fun commentDelete(commentSequence: String, callback: (ServerResponse<Any>?) -> Unit) {
         TODO("Not yet implemented")
     }
 

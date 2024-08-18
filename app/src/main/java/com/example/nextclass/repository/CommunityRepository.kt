@@ -1,5 +1,8 @@
 package com.example.nextclass.repository
 
+import com.example.nextclass.Data.CommunityData.CommentListData
+import com.example.nextclass.Data.CommunityData.CommentWriteData
+import com.example.nextclass.Data.CommunityData.CommunityCommentData
 import com.example.nextclass.Data.CommunityData.CommunityPostData
 import com.example.nextclass.Data.CommunityData.PostListData
 import com.example.nextclass.Data.CommunityData.PostWriteData
@@ -15,9 +18,14 @@ interface CommunityRepository {
 
     fun getPostList(postListData: PostListData, callback: (ServerResponse<List<CommunityPostData>>?) -> Unit)
 
-    fun commentSave(callback: (ServerResponse<Any>?) -> Unit)
+    fun getCommentList(commentListData: CommentListData, callback: (ServerResponse<List<CommunityCommentData>>?) -> Unit)
+
+
+    fun commentSave(writeCommentData:CommentWriteData,callback: (ServerResponse<Any>?) -> Unit)
 
     fun commentChange(callback: (ServerResponse<Any>?) -> Unit)
+
+    fun commentDelete(commentSequence: String,callback: (ServerResponse<Any>?) -> Unit)
 
     fun postDetail(post_sequence:String,callback: (ServerResponse<CommunityPostData>?) -> Unit)
 

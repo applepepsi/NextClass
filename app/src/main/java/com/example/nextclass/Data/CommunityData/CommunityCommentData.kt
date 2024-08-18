@@ -3,10 +3,12 @@ package com.example.nextclass.Data.CommunityData
 import java.time.LocalDateTime
 
 data class CommunityCommentData(
-    val post_sequence:String?=null,
-    val comment_sequence:String?=null,
+    val post_sequence:String="0",
+    val comment_sequence:String="0",
     val content:String="",
+    val author:String="익명",
     val is_secret:Boolean=false,
-    val commentTime: String = LocalDateTime.now().toString(),
-    val commentLikeCount:Int=0,
+    val is_owner:Boolean=false,
+    val reg_date: String = LocalDateTime.now().toString(),
+    val vote_count:Int=0,
 )

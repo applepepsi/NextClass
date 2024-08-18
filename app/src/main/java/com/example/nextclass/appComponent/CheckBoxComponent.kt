@@ -77,7 +77,7 @@ fun CommentCheckboxComponent(
 
     Row(
         modifier = modifier
-            .clickable {  }
+
         ,
         verticalAlignment = Alignment.CenterVertically,
     ){
@@ -92,7 +92,9 @@ fun CommentCheckboxComponent(
         Image(
             contentDescription = null,
             imageVector=iconImage,
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.size(20.dp).clickable {
+                onClickCheckBox()
+            }
         )
         
         Spacer(modifier = Modifier.width(3.dp))

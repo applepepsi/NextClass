@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.nextclass.nav.AppNav
 import com.example.nextclass.ui.theme.NextClassTheme
@@ -27,7 +28,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
+        // 커뮤니티 댓글작성시 키보드에 맞게 패딩시키기 위해
+//        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setAppLocale()
 

@@ -19,18 +19,17 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFloatingActionButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -267,7 +266,7 @@ fun SinglePostComponent(
 
                     Text(
                         modifier = Modifier
-                            .padding(start=3.dp),
+                            .padding(start=2.dp),
                         text = singlePostData.comment_count.toString(),
                         style = TextStyle(
                             fontSize = 12.sp,
@@ -295,8 +294,35 @@ fun SinglePostComponent(
 
                     Text(
                         modifier = Modifier
-                            .padding(start=3.dp),
+                            .padding(start=2.dp),
                         text = singlePostData.vote_count.toString(),
+                        style = TextStyle(
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontStyle = FontStyle.Normal,
+                        ),
+                    )
+                }
+
+                //익명인지 아닌지 정보도 표기
+                Row(
+                    modifier = Modifier
+                        .padding(5.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .size(14.dp)
+                            .align(Alignment.CenterVertically),
+                        imageVector = ImageVector.vectorResource(R.drawable.author_icon),
+                        contentDescription = "",
+                        tint = Color.Unspecified
+                    )
+
+                    Text(
+                        modifier = Modifier
+                            .padding(start=2.dp),
+                        text = singlePostData.author,
                         style = TextStyle(
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Normal,
@@ -326,7 +352,8 @@ fun PostDetailComponent(
 
     Column(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState()),
 
         ){
         Row(
@@ -503,6 +530,40 @@ fun PostDetailComponent(
                         ),
                     )
                 }
+
+                Row(
+                    modifier = Modifier
+                        .padding(5.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = {
+                            likePost()
+                        },
+                        modifier = Modifier.size(20.dp)
+                    )
+                    {
+                        Icon(
+                            modifier = Modifier
+                                .size(17.dp)
+                                .align(Alignment.CenterVertically),
+                            imageVector = ImageVector.vectorResource(R.drawable.author_icon),
+                            contentDescription = "",
+                            tint = Color.Unspecified
+                        )
+                    }
+                    Text(
+                        modifier = Modifier
+                            .padding(start=3.dp),
+                        text = selectPost.author,
+                        style = TextStyle(
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontStyle = FontStyle.Normal,
+                        ),
+                    )
+                }
+
             }
         }
         DividerComponent(modifier = Modifier
@@ -519,8 +580,7 @@ fun CommentComponent(
     deleteComment: () -> Unit = {},
     likeComment: () -> Unit = {},
     commentClick: () -> Unit = {},
-
-    optionVisible: Boolean = true
+    optionVisible: Boolean = true,
 ){
 
     Column(
@@ -552,18 +612,15 @@ fun CommentComponent(
                 ),
             )
 
-
-
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ){
                 if(optionVisible){
+
                     Text(
                         modifier = Modifier
                             .clickable {
-
                                 likeComment()
-
                             }
                             .padding(5.dp),
                         text = "추천",
@@ -574,39 +631,38 @@ fun CommentComponent(
                         ),
                         color=Color.Gray
                     )
+                    if(singleCommentData.is_owner){
+                        Text(
+                            modifier = Modifier
+                                .clickable {
+                                    modifyComment()
+                                }
+                                .padding(5.dp),
+                            text = "수정",
+                            style = TextStyle(
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontStyle = FontStyle.Normal
+                            ),
+                            color=Color.Gray
+                        )
+                        Text(
+                            modifier = Modifier
+                                .clickable {
 
-                    Text(
-                        modifier = Modifier
-                            .clickable {
+                                    deleteComment()
 
-                                modifyComment()
-
-                            }
-                            .padding(5.dp),
-                        text = "수정",
-                        style = TextStyle(
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal
-                        ),
-                        color=Color.Gray
-                    )
-                    Text(
-                        modifier = Modifier
-                            .clickable {
-
-                                deleteComment()
-
-                            }
-                            .padding(5.dp),
-                        text = "제거",
-                        style = TextStyle(
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal
-                        ),
-                        color=Color.Gray
-                    )
+                                }
+                                .padding(5.dp),
+                            text = "제거",
+                            style = TextStyle(
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontStyle = FontStyle.Normal
+                            ),
+                            color=Color.Gray
+                        )
+                    }
                 }
 
             }
@@ -652,7 +708,7 @@ fun CommentComponent(
                 Text(
                     modifier = Modifier
                         .padding(start=3.dp),
-                    text=TimeFormatter.formatDate(singleCommentData.commentTime.toString()),
+                    text=TimeFormatter.formatDate(singleCommentData.reg_date.toString()),
                     style = TextStyle(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Normal,
@@ -683,7 +739,33 @@ fun CommentComponent(
                     Text(
                         modifier = Modifier
                             .padding(start=3.dp),
-                        text = singleCommentData.commentLikeCount.toString(),
+                        text = singleCommentData.vote_count.toString(),
+                        style = TextStyle(
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontStyle = FontStyle.Normal,
+                        ),
+                    )
+                }
+
+                Row(
+                    modifier = Modifier
+                        .padding(5.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .size(12.dp)
+                            .align(Alignment.CenterVertically),
+                        imageVector = ImageVector.vectorResource(R.drawable.author_icon),
+                        contentDescription = "",
+                        tint = Color.Unspecified
+                    )
+
+                    Text(
+                        modifier = Modifier
+                            .padding(start=3.dp),
+                        text = singleCommentData.author,
                         style = TextStyle(
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Normal,
@@ -707,21 +789,29 @@ fun InsertCommentComponent(
     text: String = "",
     onValueChange: (String) -> Unit = {},
     isSecret: Boolean = true,
-    toggleCommentSecretState: () -> Unit = {}
+    toggleCommentSecretState: () -> Unit = {},
+    postSequence: String,
+
 ) {
+
     Column(
         Modifier
             .fillMaxWidth()
             .background(Background_Color2)
-            .padding(5.dp)
+            .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
+            .padding(8.dp),
+
+//
+//            .imePadding()
+
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(40.dp)
+                .height(55.dp)
                 .clip(RoundedCornerShape(15.dp))
-                .background(Color.White)
-                .border(1.5.dp, Color.LightGray, shape = RoundedCornerShape(15.dp)),
+                .background(Color.White),
+//                .border(1.5.dp, Color.LightGray, shape = RoundedCornerShape(15.dp)),
             verticalAlignment = Alignment.CenterVertically
         ) {
             CommentCheckboxComponent(
@@ -739,7 +829,7 @@ fun InsertCommentComponent(
                 singleLine = true,
                 modifier = Modifier.weight(1f), // 남은 공간을 차지하도록 설정
                 textStyle = TextStyle(
-                    fontSize = 13.sp
+                    fontSize = 15.sp
                 ),
                 decorationBox = { innerTextField ->
                     Box(
@@ -748,7 +838,7 @@ fun InsertCommentComponent(
                         if (text.isEmpty()) {
                             Text(
                                 text = "댓글을 입력해 주세요",
-                                style = TextStyle.Default.copy(color = Color.Gray, fontSize = 13.sp)
+                                style = TextStyle.Default.copy(color = Color.Gray, fontSize = 15.sp)
                             )
                         }
                         innerTextField()
@@ -759,8 +849,9 @@ fun InsertCommentComponent(
             Image(
                 imageVector = ImageVector.vectorResource(R.drawable.write_icon),
                 contentDescription = null,
-                modifier = Modifier.size(20.dp),
-                colorFilter = ColorFilter.tint(Pastel_Red)
+                modifier = Modifier.size(24.dp).clickable { communityViewModel.postCommentData(postSequence) },
+                colorFilter = ColorFilter.tint(Pastel_Red),
+
             )
             Spacer(modifier = Modifier.width(10.dp))
         }
@@ -1129,7 +1220,31 @@ fun InsertSubjectPreview() {
 
     NextClassTheme {
         InsertCommentComponent(
-            communityViewModel=communityViewModel
+            communityViewModel=communityViewModel,
+            postSequence = communityViewModel.selectCommunityData.value.post_sequence
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CommentPreview() {
+    val testRepository = TestRepository()
+    val loginViewModel = LoginViewModel(testRepository)
+
+    val navController = rememberNavController()
+    val communityTestRepository=CommunityTestRepository()
+
+    val communityViewModel=CommunityViewModel(communityTestRepository)
+
+    NextClassTheme {
+        CommentComponent(
+            singleCommentData= CommunityCommentData(),
+            modifyComment = { communityViewModel.modifyComment(CommunityCommentData()) },
+            deleteComment = { communityViewModel.deleteComment(CommunityCommentData()) },
+            likeComment = { communityViewModel.likeComment(CommunityCommentData()) },
+            optionVisible = false,
+
+            )
     }
 }

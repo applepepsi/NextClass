@@ -1,6 +1,9 @@
 package com.example.nextclass.repository
 
 import android.util.Log
+import com.example.nextclass.Data.CommunityData.CommentListData
+import com.example.nextclass.Data.CommunityData.CommentWriteData
+import com.example.nextclass.Data.CommunityData.CommunityCommentData
 import com.example.nextclass.Data.CommunityData.CommunityPostData
 import com.example.nextclass.Data.CommunityData.PostListData
 import com.example.nextclass.Data.CommunityData.PostWriteData
@@ -91,7 +94,11 @@ class CommunityRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getPostList(postListData: PostListData,callback: (ServerResponse<List<CommunityPostData>>?) -> Unit) {
+
+    override fun getPostList(
+        postListData: PostListData,
+        callback: (ServerResponse<List<CommunityPostData>>?) -> Unit
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             val response = api.getPostList(postListData)
             val result = try {
@@ -115,12 +122,83 @@ class CommunityRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun commentSave(callback: (ServerResponse<Any>?) -> Unit) {
-        TODO("Not yet implemented")
+    override fun getCommentList(
+        commentListData: CommentListData,
+        callback: (ServerResponse<List<CommunityCommentData>>?) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = api.getCommentList(commentListData)
+            val result = try {
+
+                Log.d("게시물 가져오기 결과", response.toString())
+                if (response.isSuccessful){
+                    Log.d("게시물 가져오기 성공", response.body().toString())
+                    response.body()
+                } else {
+                    Log.d("게시물 가져오기 실패","게시물 가져오기 실패")
+                    null
+                }
+
+            } catch (e: Exception) {
+                Log.d("게시물 가져오기 실패", e.toString())
+                response.body()
+            }
+            withContext(Dispatchers.Main) {
+                callback(result)
+            }
+        }
+    }
+
+    override fun commentSave(writeCommentData: CommentWriteData, callback: (ServerResponse<Any>?) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = api.commentSave(writeCommentData)
+            val result = try {
+
+                Log.d("댓글 작성 결과", response.toString())
+                if (response.isSuccessful){
+                    Log.d("댓글 작성 성공", response.body().toString())
+                    response.body()
+                } else {
+                    Log.d("댓글 작성 실패","댓글 작성 실패")
+                    null
+                }
+
+            } catch (e: Exception) {
+                Log.d("댓글 작성 실패", e.toString())
+                response.body()
+            }
+            withContext(Dispatchers.Main) {
+                callback(result)
+            }
+        }
     }
 
     override fun commentChange(callback: (ServerResponse<Any>?) -> Unit) {
         TODO("Not yet implemented")
+    }
+
+    override fun commentDelete(commentSequence: String, callback: (ServerResponse<Any>?) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = api.commentDelete(commentSequence)
+            val result = try {
+
+                Log.d("댓글 삭제 결과", response.toString())
+                if (response.isSuccessful){
+                    Log.d("댓글 삭제 성공", response.body().toString())
+                    response.body()
+                } else {
+                    Log.d("댓글 삭제 실패","댓글 삭제 실패")
+                    null
+                }
+
+            } catch (e: Exception) {
+                Log.d("댓글 삭제 실패", e.toString())
+                response.body()
+            }
+            withContext(Dispatchers.Main) {
+                callback(result)
+            }
+        }
     }
 
     override fun postDetail(post_sequence: String, callback: (ServerResponse<CommunityPostData>?) -> Unit) {
