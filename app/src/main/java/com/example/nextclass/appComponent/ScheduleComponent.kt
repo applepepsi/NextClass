@@ -529,7 +529,7 @@ fun SingleScheduleView(
                             Icon(
                                 modifier = Modifier
 
-                                    .size(17.dp),
+                                    .size(19.dp),
                                 imageVector = ImageVector.vectorResource(R.drawable.schedule_icon),
                                 contentDescription = "",
                                 tint = Color.Black,
@@ -550,7 +550,7 @@ fun SingleScheduleView(
                                 text = scheduleDate.second,
                                 color = Color.Black,
                                 style = TextStyle(
-                                    fontSize = 12.sp,
+                                    fontSize = 14.sp,
                                     fontWeight = FontWeight.Bold,
                                     fontStyle = FontStyle.Normal,
                                 ),
@@ -834,9 +834,9 @@ fun LazyScheduleItem(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = day,
+                    text = day+"일",
                     style = TextStyle(
-                        fontSize = 30.sp,
+                        fontSize = 25.sp,
                         fontWeight = FontWeight.Bold,
                         fontStyle = FontStyle.Normal,
                     ),

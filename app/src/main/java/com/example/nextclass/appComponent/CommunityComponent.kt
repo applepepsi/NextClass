@@ -2,6 +2,7 @@ package com.example.nextclass.appComponent
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,13 +27,21 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFloatingActionButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -40,6 +49,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
@@ -609,7 +619,7 @@ fun CommentComponent(
 
             Row(
                 modifier = Modifier
-                    .padding(end=10.dp)
+                    .padding(end = 10.dp)
 
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -650,10 +660,15 @@ fun CommentComponent(
                         Text(
                             modifier = Modifier
                                 .clickable {
-                                    if(singleCommentData.is_owner){
+                                    if (singleCommentData.is_owner) {
                                         deleteComment()
-                                    }else{
-                                        Toast.makeText(context, "자신의 댓글만 삭제할 수 있습니다.", Toast.LENGTH_SHORT,)
+                                    } else {
+                                        Toast
+                                            .makeText(
+                                                context,
+                                                "자신의 댓글만 삭제할 수 있습니다.",
+                                                Toast.LENGTH_SHORT,
+                                            )
                                             .show()
 
                                     }
@@ -674,7 +689,7 @@ fun CommentComponent(
 
         Row(
             modifier = Modifier
-                .padding(bottom=5.dp,start=5.dp,end=5.dp)
+                .padding(bottom = 5.dp, start = 5.dp, end = 5.dp)
                 .fillMaxWidth()
         ) {
             Text(
@@ -853,7 +868,9 @@ fun InsertCommentComponent(
             Image(
                 imageVector = ImageVector.vectorResource(R.drawable.write_icon),
                 contentDescription = null,
-                modifier = Modifier.size(24.dp).clickable { communityViewModel.postCommentData(postSequence) },
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable { communityViewModel.postCommentData(postSequence) },
                 colorFilter = ColorFilter.tint(Pastel_Red),
 
             )
@@ -1120,6 +1137,135 @@ fun PostOptionDropDownMenu(
             }
         }
     }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CommunitySearchBox(
+    text:String="test",
+    onValueChange: (String) -> Unit,
+    search:()->Unit,
+    deleteInputText:()->Unit
+) {
+
+    Box(
+        modifier = Modifier
+            .padding(start=5.dp,end=5.dp)
+            .fillMaxWidth()
+
+            .clip(RoundedCornerShape(8.dp))
+            .background(Color.White)
+            .border(
+                BorderStroke(
+                    0.2.dp,
+                    Color.LightGray
+                ),
+                RoundedCornerShape(8.dp)
+            )
+            ,
+        contentAlignment = Alignment.Center
+    ) {
+
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp),
+            value = text,
+            onValueChange = {
+                onValueChange(it)
+            },
+            placeholder = {
+                Text(
+                    text = "test",
+                    color = Color.Black,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            },
+            leadingIcon = {
+                IconButton(onClick = {
+                    search()
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null,
+                        tint = Pastel_Red,
+                        modifier = Modifier.size(25.dp)
+                    )
+                }
+            },
+            trailingIcon = {
+                IconButton(onClick = {
+
+                    deleteInputText()
+                }) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = null,
+                            tint = Pastel_Red,
+                            modifier = Modifier.size(25.dp)
+                        )
+
+                }
+            },
+            singleLine = true,
+            textStyle = TextStyle(
+                color = Color.Black,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Normal,
+
+                ),
+            colors = OutlinedTextFieldDefaults.colors(
+
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent,
+
+                focusedBorderColor = Color.Transparent,
+                unfocusedBorderColor = Color.Transparent,
+
+            ),
+        )
+        SearchBarDivider(
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .padding(horizontal = 50.dp)
+        )
+
+    }
+}
+
+@Composable
+fun SearchBarDivider(
+    modifier: Modifier = Modifier
+){
+    Divider(
+        modifier = modifier
+            .width(1.5.dp)
+        ,
+        color = Pastel_Red,
+        thickness = 30.dp
+    )
+}
+@Preview(showBackground = true)
+@Composable
+fun CommunitySearchBoxPreview() {
+    val testRepository = TestRepository()
+    val loginViewModel = LoginViewModel(testRepository)
+
+    val navController = rememberNavController()
+    val communityTestRepository=CommunityTestRepository()
+
+    val communityViewModel=CommunityViewModel(communityTestRepository)
+
+    CommunitySearchBox(
+        text="test",
+        onValueChange = {},
+        search = {},
+        deleteInputText = {}
+    )
 }
 
 @Preview(showBackground = true)

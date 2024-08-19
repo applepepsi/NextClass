@@ -135,7 +135,7 @@ fun ScheduleView(
                     Icon(
                         modifier = Modifier
 
-                            .size(30.dp),
+                            .size(25.dp),
                         imageVector = sortIcon,
                         contentDescription = "",
                         tint = Color.Black,

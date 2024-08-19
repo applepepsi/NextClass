@@ -36,6 +36,7 @@ import com.example.nextclass.Data.CommunityData.CommunityPostData
 import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
 import com.example.nextclass.appComponent.CheckboxComponent
 import com.example.nextclass.appComponent.CommentComponent
+import com.example.nextclass.appComponent.CommunitySearchBox
 import com.example.nextclass.appComponent.CommunityTopNavComponent
 import com.example.nextclass.appComponent.FloatingActionButtonComponent
 import com.example.nextclass.appComponent.InputButtonComponent
@@ -273,31 +274,44 @@ fun AllSchoolPostView(
         navController.navigate("postDetailView")
         communityViewModel.togglePostDetailState()
     }
-
-    // LazyColumn 설정
-    LazyColumn(
-        state = listState,
-        modifier = Modifier
-            .padding(bottom = 75.dp)
+    Column(
+        Modifier.fillMaxSize()
     ) {
-        item {
-            Log.d("communityViewModel.loading",communityViewModel.loading.value.toString())
 
-            if (communityViewModel.loading.value) {
-                ProgressBarComponent(state = communityViewModel.loading.value)
-            }
+        if (communityViewModel.loading.value) {
+            ProgressBarComponent(state = communityViewModel.loading.value)
         }
 
+        CommunitySearchBox(
+            text="",
+            onValueChange ={} ,
+            search = { /*TODO*/ },
+            deleteInputText = {}
+        )
 
-        items(items = communityViewModel.communityDataList.value) { singlePostData ->
+        // LazyColumn 설정
+        LazyColumn(
+            state = listState,
+            modifier = Modifier
+                .padding(bottom = 75.dp)
+        ) {
+            item {
+                Log.d("communityViewModel.loading", communityViewModel.loading.value.toString())
 
-            SinglePostComponent(
-                singlePostData,
-                postClick = {
-                    communityViewModel.setSelectedCommunityData(singlePostData.post_sequence)
 
-                }
-            )
+            }
+
+
+            items(items = communityViewModel.communityDataList.value) { singlePostData ->
+
+                SinglePostComponent(
+                    singlePostData,
+                    postClick = {
+                        communityViewModel.setSelectedCommunityData(singlePostData.post_sequence)
+
+                    }
+                )
+            }
         }
     }
 
