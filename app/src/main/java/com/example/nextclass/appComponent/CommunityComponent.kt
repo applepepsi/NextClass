@@ -1,5 +1,7 @@
 package com.example.nextclass.appComponent
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -39,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -350,6 +353,8 @@ fun PostDetailComponent(
     postOwner: Boolean,
 ){
 
+    val likeState=if(selectPost.is_vote) ImageVector.vectorResource(R.drawable.heart_icon) else ImageVector.vectorResource(R.drawable.empty_heart_icon)
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -512,9 +517,9 @@ fun PostDetailComponent(
                     {
                         Icon(
                             modifier = Modifier
-                                .size(17.dp)
+                                .size(20.dp)
                                 .align(Alignment.CenterVertically),
-                            imageVector = ImageVector.vectorResource(R.drawable.heart_icon),
+                            imageVector = likeState,
                             contentDescription = "",
                             tint = Color.Unspecified
                         )
@@ -582,10 +587,14 @@ fun CommentComponent(
     commentClick: () -> Unit = {},
     optionVisible: Boolean = true,
 ){
+    val context = LocalContext.current
+    val likeState=if(singleCommentData.is_vote) ImageVector.vectorResource(R.drawable.heart_icon) else ImageVector.vectorResource(R.drawable.empty_heart_icon)
+
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
+
             .clickable {
                 commentClick()
             },
@@ -596,62 +605,58 @@ fun CommentComponent(
             dividerColor = Color.LightGray
         )
 
-        Row(
-            modifier = Modifier
-                .padding(start = 10.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ){
-            Text(
-                text = "익명",
-                style = TextStyle(
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Normal,
-                    fontStyle = FontStyle.Normal
-                ),
-            )
+
 
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier
+                    .padding(end=10.dp)
+
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End
             ){
                 if(optionVisible){
+//
+//                    Text(
+//                        modifier = Modifier
+//                            .clickable {
+//                                likeComment()
+//                            }
+//                            .padding(5.dp),
+//                        text = "추천",
+//                        style = TextStyle(
+//                            fontSize = 10.sp,
+//                            fontWeight = FontWeight.Normal,
+//                            fontStyle = FontStyle.Normal
+//                        ),
+//                        color=Color.Gray
+//                    )
+//                    Log.d("주인", singleCommentData.is_owner.toString())
 
-                    Text(
-                        modifier = Modifier
-                            .clickable {
-                                likeComment()
-                            }
-                            .padding(5.dp),
-                        text = "추천",
-                        style = TextStyle(
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal
-                        ),
-                        color=Color.Gray
-                    )
-                    if(singleCommentData.is_owner){
+//                        Text(
+//                            modifier = Modifier
+//                                .clickable {
+//                                    modifyComment()
+//                                }
+//                                .padding(5.dp),
+//                            text = "수정",
+//                            style = TextStyle(
+//                                fontSize = 10.sp,
+//                                fontWeight = FontWeight.Normal,
+//                                fontStyle = FontStyle.Normal
+//                            ),
+//                            color=Color.Gray
+//                        )
                         Text(
                             modifier = Modifier
                                 .clickable {
-                                    modifyComment()
-                                }
-                                .padding(5.dp),
-                            text = "수정",
-                            style = TextStyle(
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal
-                            ),
-                            color=Color.Gray
-                        )
-                        Text(
-                            modifier = Modifier
-                                .clickable {
+                                    if(singleCommentData.is_owner){
+                                        deleteComment()
+                                    }else{
+                                        Toast.makeText(context, "자신의 댓글만 삭제할 수 있습니다.", Toast.LENGTH_SHORT,)
+                                            .show()
 
-                                    deleteComment()
-
+                                    }
                                 }
                                 .padding(5.dp),
                             text = "제거",
@@ -663,21 +668,19 @@ fun CommentComponent(
                             color=Color.Gray
                         )
                     }
-                }
+
 
             }
 
-        }
-
         Row(
             modifier = Modifier
-                .padding(10.dp)
+                .padding(bottom=5.dp,start=5.dp,end=5.dp)
                 .fillMaxWidth()
         ) {
             Text(
                 text = singleCommentData.content,
                 style = TextStyle(
-                    fontSize = 15.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Normal,
                     fontStyle = FontStyle.Normal
                 ),
@@ -729,9 +732,10 @@ fun CommentComponent(
                 ) {
                     Icon(
                         modifier = Modifier
-                            .size(12.dp)
-                            .align(Alignment.CenterVertically),
-                        imageVector = ImageVector.vectorResource(R.drawable.heart_icon),
+                            .size(15.dp)
+                            .align(Alignment.CenterVertically)
+                            .clickable { likeComment() },
+                        imageVector = likeState,
                         contentDescription = "",
                         tint = Color.Unspecified
                     )
@@ -1243,7 +1247,7 @@ fun CommentPreview() {
             modifyComment = { communityViewModel.modifyComment(CommunityCommentData()) },
             deleteComment = { communityViewModel.deleteComment(CommunityCommentData()) },
             likeComment = { communityViewModel.likeComment(CommunityCommentData()) },
-            optionVisible = false,
+            optionVisible = true,
 
             )
     }

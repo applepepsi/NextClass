@@ -5,6 +5,7 @@ import com.example.nextclass.Data.CommunityData.CommentListData
 import com.example.nextclass.Data.CommunityData.CommentWriteData
 import com.example.nextclass.Data.CommunityData.CommunityCommentData
 import com.example.nextclass.Data.CommunityData.CommunityPostData
+import com.example.nextclass.Data.CommunityData.LikePostOrComment
 import com.example.nextclass.Data.CommunityData.PostListData
 import com.example.nextclass.Data.CommunityData.PostWriteData
 import com.example.nextclass.Data.ServerResponse
@@ -130,17 +131,17 @@ class CommunityRepositoryImpl @Inject constructor(
             val response = api.getCommentList(commentListData)
             val result = try {
 
-                Log.d("게시물 가져오기 결과", response.toString())
+                Log.d("댓글 가져오기 결과", response.toString())
                 if (response.isSuccessful){
-                    Log.d("게시물 가져오기 성공", response.body().toString())
+                    Log.d("댓글 가져오기 성공", response.body().toString())
                     response.body()
                 } else {
-                    Log.d("게시물 가져오기 실패","게시물 가져오기 실패")
+                    Log.d("댓글 가져오기 실패","댓글 가져오기 실패")
                     null
                 }
 
             } catch (e: Exception) {
-                Log.d("게시물 가져오기 실패", e.toString())
+                Log.d("댓글 가져오기 실패", e.toString())
                 response.body()
             }
             withContext(Dispatchers.Main) {
@@ -181,7 +182,7 @@ class CommunityRepositoryImpl @Inject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             val response = api.commentDelete(commentSequence)
             val result = try {
-
+                Log.d("commentSequence", commentSequence.toString())
                 Log.d("댓글 삭제 결과", response.toString())
                 if (response.isSuccessful){
                     Log.d("댓글 삭제 성공", response.body().toString())
@@ -217,6 +218,33 @@ class CommunityRepositoryImpl @Inject constructor(
 
             } catch (e: Exception) {
                 Log.d("게시물 세부가져오기 실패", e.toString())
+                response.body()
+            }
+            withContext(Dispatchers.Main) {
+                callback(result)
+            }
+        }
+    }
+
+    override fun vote(
+        vote: LikePostOrComment,
+        callback: (ServerResponse<Any>?) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = api.vote(vote)
+            val result = try {
+                Log.d("vote", vote.toString())
+                Log.d("추천 결과", response.toString())
+                if (response.isSuccessful){
+                    Log.d("추천 결과 성공", response.body().toString())
+                    response.body()
+                } else {
+                    Log.d("추천 결과 실패","추천 결과 실패")
+                    null
+                }
+
+            } catch (e: Exception) {
+                Log.d("추천 결과 실패", e.toString())
                 response.body()
             }
             withContext(Dispatchers.Main) {

@@ -4,6 +4,7 @@ import com.example.nextclass.Data.CommunityData.CommentListData
 import com.example.nextclass.Data.CommunityData.CommentWriteData
 import com.example.nextclass.Data.CommunityData.CommunityCommentData
 import com.example.nextclass.Data.CommunityData.CommunityPostData
+import com.example.nextclass.Data.CommunityData.LikePostOrComment
 import com.example.nextclass.Data.CommunityData.PostListData
 import com.example.nextclass.Data.CommunityData.PostWriteData
 import com.example.nextclass.Data.ServerResponse
@@ -28,5 +29,7 @@ interface CommunityRepository {
     fun commentDelete(commentSequence: String,callback: (ServerResponse<Any>?) -> Unit)
 
     fun postDetail(post_sequence:String,callback: (ServerResponse<CommunityPostData>?) -> Unit)
+
+    fun vote(vote:LikePostOrComment,callback: (ServerResponse<Any>?) -> Unit)
 
 }

@@ -61,4 +61,5 @@ const val COMMENT_SAVE="/comment_save"
 const val COMMENT_CHANGE="/comment_change"
 const val COMMENT_DELETE="/comment_delete"
 const val POST_DETAIL="/post/{post_sequence}"
+const val VOTE="/vote"
 

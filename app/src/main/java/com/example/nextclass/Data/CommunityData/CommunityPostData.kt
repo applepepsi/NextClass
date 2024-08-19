@@ -11,7 +11,7 @@ data class CommunityPostData(
     val comment_count:Int=0,
     val reg_date:String= LocalDateTime.now().toString(),
     val owner:Boolean=false,
-
+    val is_vote:Boolean=false,
 )
 
 

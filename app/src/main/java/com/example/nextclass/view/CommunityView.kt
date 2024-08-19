@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -156,7 +157,7 @@ fun PostDetailView(
     //처음 댓글 가져오기
     LaunchedEffect(Unit) {
         communityViewModel.resetCommentList()
-
+        communityViewModel.toggleMoreCommentLoadState()
         communityViewModel.getCommentList(
             post_sequence =communityViewModel.selectCommunityData.value.post_sequence,
             comment_sequence = null
@@ -213,7 +214,7 @@ fun PostDetailView(
                         modifyComment = { communityViewModel.modifyComment(singleCommentData) },
                         deleteComment = { communityViewModel.deleteComment(singleCommentData) },
                         likeComment = { communityViewModel.likeComment(singleCommentData) },
-                        optionVisible = false,
+                        optionVisible = true,
 
                     )
                 }
@@ -234,9 +235,10 @@ fun PostDetailView(
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo }
             .collect { layoutInfo ->
-
-                val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
-                communityViewModel.loadMoreCommentCheck(lastVisibleItemIndex,)
+                if(communityViewModel.moreCommentLoadState.value){
+                    val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
+                    communityViewModel.loadMoreCommentCheck(lastVisibleItemIndex,)
+                }
             }
     }
 }
@@ -253,8 +255,15 @@ fun AllSchoolPostView(
 ) {
     val listState = rememberLazyListState()
 
+//    val pullRefreshState = rememberPullRefreshState(
+//        refreshing = true or false
+//                onRefresh = refresh
+//    )
+
+
     LaunchedEffect(Unit) {
         communityViewModel.resetPostList()
+        communityViewModel.toggleMorePostLoadState()
         communityViewModel.getPostList(sort="all",post_sequence=null)
     }
 
@@ -297,8 +306,10 @@ fun AllSchoolPostView(
         snapshotFlow { listState.layoutInfo }
             .collect { layoutInfo ->
                 //현재 보이는 아이템의 마지막 인덱스
-                val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
-                communityViewModel.loadMorePostsCheck(lastVisibleItemIndex, sortType = "all")
+                if(communityViewModel.morePostLoadState.value){
+                    val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
+                    communityViewModel.loadMorePostsCheck(lastVisibleItemIndex, sortType = "all")
+                }
             }
     }
 }
