@@ -19,9 +19,11 @@ object TimeFormatter {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun formatDate(date: String): String {
-        val formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일")
+        val dateTime = LocalDateTime.parse(date)
 
-        return date.format(formatter)
+        val formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 H시 m분")
+
+        return dateTime.format(formatter)
     }
 
     fun formatTime(time: LocalTime): String {

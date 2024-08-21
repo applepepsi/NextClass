@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -136,10 +138,13 @@ fun AppBarTextAndButtonComponent(
     value: String,
     buttonText:String="",
     navRoute:String="",
-
     navController: NavController,
     showLeftButton:Boolean=true,
     showRightButton:Boolean=false,
+    customRightButton:Boolean=false,
+    customRightButtonIcon:ImageVector=ImageVector.vectorResource(R.drawable.arrow_back),
+    rightButtonClick:()->Unit={},
+
 ) {
     val background =  Background_Color2
     Column(modifier = Modifier) {
@@ -184,7 +189,7 @@ fun AppBarTextAndButtonComponent(
             Surface(
                 shape = RoundedCornerShape(20.dp),
                 modifier = Modifier
-                    .padding(start = 15.dp)
+                    .padding(end = 15.dp)
                     .align(Alignment.CenterEnd)
             ) {
                 if (showRightButton) {
@@ -226,7 +231,19 @@ fun AppBarTextAndButtonComponent(
                         }
                     }
                 }
+                if(customRightButton){
+                        Icon(
+                            modifier = Modifier
+                                .size(30.dp)
+                                .clickable { rightButtonClick() },
+                            imageVector = customRightButtonIcon,
+                            contentDescription = "",
+                            tint = Color.Unspecified,
+                        )
+                    }
+
             }
+
 
             Text(
                 text=value,
@@ -241,6 +258,8 @@ fun AppBarTextAndButtonComponent(
                 color= Color.Black,
                 textAlign = TextAlign.Center
             )
+
+
         }
 
     }
@@ -256,6 +275,6 @@ fun HelpTextPreview() {
     var navController= rememberNavController()
 
     NextClassTheme {
-        AppBarTextAndButtonComponent(value = "test", navController = navController)
+        AppBarTextAndButtonComponent(value = "test", navController = navController, customRightButtonIcon =ImageVector.vectorResource(R.drawable.plus_icon), rightButtonClick = {} )
     }
 }

@@ -70,7 +70,7 @@ fun InsertCodeView(
 
     Column {
         if(loginViewModel.loading.value){
-            ProgressBarComponent(state = loginViewModel.loading.value)
+            ProgressBarFullComponent(state = loginViewModel.loading.value)
         }
         Column(
             modifier = Modifier

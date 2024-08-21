@@ -5,8 +5,7 @@ import com.example.nextclass.Data.CommunityData.CommentListData
 import com.example.nextclass.Data.CommunityData.CommentWriteData
 import com.example.nextclass.Data.CommunityData.CommunityCommentData
 import com.example.nextclass.Data.CommunityData.CommunityPostData
-import com.example.nextclass.Data.CommunityData.LikePostOrComment
-import com.example.nextclass.Data.CommunityData.PostDetail
+import com.example.nextclass.Data.CommunityData.PostAndCommentSequence
 import com.example.nextclass.Data.CommunityData.PostListData
 import com.example.nextclass.Data.CommunityData.PostWriteData
 import com.example.nextclass.Data.TimeTableData.AllScore
@@ -156,13 +155,13 @@ interface API {
     suspend fun commentChange(@Body scoreList: PostClassScoreList):Response<ServerResponse<Any>>
 
     @POST(COMMENT_DELETE)
-    suspend fun commentDelete(@Body comment_sequence: String):Response<ServerResponse<Any>>
+    suspend fun commentDelete(@Body sequence: PostAndCommentSequence):Response<ServerResponse<Any>>
 
     @GET(POST_DETAIL)
     suspend fun postDetail(@Path("post_sequence") post_sequence:String):Response<ServerResponse<CommunityPostData>>
 
     @POST(VOTE)
-    suspend fun vote(@Body vote:LikePostOrComment):Response<ServerResponse<Any>>
+    suspend fun vote(@Body vote:PostAndCommentSequence):Response<ServerResponse<Any>>
 
 
     //테스트

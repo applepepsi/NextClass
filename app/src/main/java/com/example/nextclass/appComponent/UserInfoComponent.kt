@@ -37,7 +37,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.R
 import com.example.nextclass.ui.theme.Background_Color2
@@ -233,7 +232,7 @@ fun ChangePasswordComponent(
                 .padding(bottom = 20.dp),
             verticalArrangement = Arrangement.Center,
         ) {
-            ProgressBarComponent(state = userInfoViewModel.loading.value)
+            ProgressBarFullComponent(state = userInfoViewModel.loading.value)
             Surface(
                 shape = RoundedCornerShape(30.dp),
                 modifier = Modifier

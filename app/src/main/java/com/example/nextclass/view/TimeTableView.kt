@@ -6,10 +6,8 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -41,11 +39,9 @@ import com.example.nextclass.appComponent.AddSemesterPopupComponent
 import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
 import com.example.nextclass.appComponent.ClassDetail
 import com.example.nextclass.appComponent.ClassModify
-import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.InsertClassData
 import com.example.nextclass.appComponent.ModifyScoreComponent
-import com.example.nextclass.appComponent.ProgressBarComponent
-import com.example.nextclass.appComponent.TextInputHelpFieldComponent
+import com.example.nextclass.appComponent.ProgressBarFullComponent
 import com.example.nextclass.appComponent.TimeTableComponent
 
 import com.example.nextclass.repository.testRepo.TestRepository
@@ -104,7 +100,7 @@ fun TimeTableView(
         sheetPeekHeight = 200.dp,
     ) {
 
-        ProgressBarComponent(state = timeTableViewModel.loading.value)
+        ProgressBarFullComponent(state = timeTableViewModel.loading.value)
 
         LaunchedEffect(Unit) {
             timeTableViewModel.getTimeTable()
@@ -206,7 +202,7 @@ fun ModifyScoreView(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        ProgressBarComponent(state = timeTableViewModel.loading.value)
+        ProgressBarFullComponent(state = timeTableViewModel.loading.value)
 
         Column(
             modifier = Modifier

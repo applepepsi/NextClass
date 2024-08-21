@@ -17,7 +17,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,7 +46,8 @@ import com.example.nextclass.appComponent.InsertCommentComponent
 import com.example.nextclass.appComponent.InsertPostContentBox
 import com.example.nextclass.appComponent.InsertPostSubjectBox
 import com.example.nextclass.appComponent.PostDetailComponent
-import com.example.nextclass.appComponent.ProgressBarComponent
+import com.example.nextclass.appComponent.ProgressBarFullComponent
+import com.example.nextclass.appComponent.ProgressBarSmallComponent
 import com.example.nextclass.appComponent.SinglePostComponent
 import com.example.nextclass.appComponent.TextInputHelpFieldComponent
 import com.example.nextclass.repository.testRepo.CommunityTestRepository
@@ -81,16 +84,33 @@ fun CommunityView(
             horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
-            AppBarTextAndButtonComponent(
-                value = "게시판",
-                navController = navController,
-                showLeftButton = false,
-                showRightButton = false,
-                buttonText = "작성하기",
-                navRoute = ""
-            )
+
+                AppBarTextAndButtonComponent(
+                    value = "게시판",
+                    navController = navController,
+                    showLeftButton = false,
+                    showRightButton = false,
+                    buttonText = "작성하기",
+                    customRightButton = true,
+                    customRightButtonIcon = Icons.Default.Search,
+                    rightButtonClick = { communityViewModel.toggleSearchBarState() }
+                )
+
+
+
 
             Spacer(modifier = Modifier.height(10.dp))
+
+            if(communityViewModel.searchBarState.value){
+                Spacer(modifier = Modifier.height(10.dp))
+                CommunitySearchBox(
+                    text="",
+                    onValueChange ={} ,
+                    search = { /*TODO*/ },
+                    deleteInputText = {}
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+            }
 
             CommunityTopNavComponent(
                 navController=navController,
@@ -166,11 +186,12 @@ fun PostDetailView(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         if (communityViewModel.loading.value) {
-            ProgressBarComponent(state = communityViewModel.loading.value)
+            ProgressBarFullComponent(state = communityViewModel.loading.value)
         }
 
         Row(
@@ -190,7 +211,9 @@ fun PostDetailView(
 
         Column(
             modifier = Modifier
-                .weight(1f)
+                .weight(1f),
+
+            horizontalAlignment = Alignment.CenterHorizontally
 //                .fillMaxSize()
         ) {
             PostDetailComponent(
@@ -208,6 +231,7 @@ fun PostDetailView(
                 modifier = Modifier.weight(1f),
                 state = listState,
 
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 items(items = communityViewModel.communityCommentDataList.value) { singleCommentData ->
                     CommentComponent(
@@ -218,6 +242,12 @@ fun PostDetailView(
                         optionVisible = true,
 
                     )
+                }
+
+                item{
+                    if(communityViewModel.commentLoading.value){
+                        ProgressBarSmallComponent(communityViewModel.commentLoading.value)
+                    }
                 }
             }
         }
@@ -275,31 +305,24 @@ fun AllSchoolPostView(
         communityViewModel.togglePostDetailState()
     }
     Column(
-        Modifier.fillMaxSize()
+        Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         if (communityViewModel.loading.value) {
-            ProgressBarComponent(state = communityViewModel.loading.value)
+            ProgressBarFullComponent(state = communityViewModel.loading.value)
         }
 
-        CommunitySearchBox(
-            text="",
-            onValueChange ={} ,
-            search = { /*TODO*/ },
-            deleteInputText = {}
-        )
+
 
         // LazyColumn 설정
         LazyColumn(
             state = listState,
             modifier = Modifier
-                .padding(bottom = 75.dp)
+                .padding(bottom = 75.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            item {
-                Log.d("communityViewModel.loading", communityViewModel.loading.value.toString())
 
-
-            }
 
 
             items(items = communityViewModel.communityDataList.value) { singlePostData ->
@@ -311,6 +334,12 @@ fun AllSchoolPostView(
 
                     }
                 )
+            }
+            item {
+                if(communityViewModel.postLoading.value){
+                    ProgressBarSmallComponent(communityViewModel.postLoading.value)
+                }
+
             }
         }
     }
@@ -559,36 +588,21 @@ fun InsertOrModifyPostComponent(
                 showRightButton = false,
             )
         }
-
-
-
+        Spacer(modifier = Modifier.height(20.dp))
         Column(
 
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(scrollState),
-            verticalArrangement = Arrangement.Center,
+//                .padding(start = 5.dp, end = 5.dp,top=10.dp)
+                .verticalScroll(scrollState)
+                .clip(RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp))
+                .background(Background_Color2),
+
         ) {
 
 
-            Spacer(modifier = Modifier.padding(top = 8.dp))
-
-            Surface(
-                shape = RoundedCornerShape(30.dp),
-                modifier = Modifier
-                    .padding(start = 10.dp, end = 10.dp)
-
-                    .align(Alignment.CenterHorizontally)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .background(Background_Color2),
-//                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
-
-                    Spacer(modifier = Modifier.height(25.dp))
+//
+                    Spacer(modifier = Modifier.height(20.dp))
 
                     InsertPostSubjectBox(
                         text = communityViewModel.postWriteData.value.subject,
@@ -633,9 +647,27 @@ fun InsertOrModifyPostComponent(
                         )
                     }
 
-                    Spacer(modifier = Modifier.padding(top = 20.dp))
-                }
-            }
+                    Spacer(modifier = Modifier.padding(top = 10.dp))
+
+
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun InsertOrModifyPostPreview() {
+    val mainNavController= rememberNavController()
+    val navController= rememberNavController()
+    val testRepository = TestRepository()
+    val communityTestRepository=CommunityTestRepository()
+
+    val loginViewModel=LoginViewModel(testRepository)
+    val communityViewModel=CommunityViewModel(communityTestRepository)
+
+    NextClassTheme {
+        InsertOrModifyPostComponent(navController = navController, communityViewModel = communityViewModel, loginViewModel = loginViewModel) {
+            
         }
     }
 }

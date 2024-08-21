@@ -41,7 +41,7 @@ import com.example.nextclass.appComponent.IdInputFieldComponent
 import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.MainTextComponent
 import com.example.nextclass.appComponent.PasswordInputFieldComponent
-import com.example.nextclass.appComponent.ProgressBarComponent
+import com.example.nextclass.appComponent.ProgressBarFullComponent
 import com.example.nextclass.appComponent.RememberUserComponent
 import com.example.nextclass.appComponent.TermsAndConditionsTextComponent
 import com.example.nextclass.appComponent.TextInputFieldComponent
@@ -183,7 +183,7 @@ fun JoinView(
         ) {
 
         if(loginViewModel.loading.value){
-            ProgressBarComponent(state = loginViewModel.loading.value)
+            ProgressBarFullComponent(state = loginViewModel.loading.value)
         }
 
         Spacer(modifier = Modifier.height(15.dp))
@@ -338,7 +338,7 @@ fun ForGotPassword(
             .fillMaxSize()
             .background(Color.White)
     ) {
-        ProgressBarComponent(state = loginViewModel.loading.value)
+        ProgressBarFullComponent(state = loginViewModel.loading.value)
 
 
         Column(
@@ -448,7 +448,7 @@ fun ForGotId(
             .background(Color.White)
 
     ) {
-        ProgressBarComponent(state = loginViewModel.loading.value)
+        ProgressBarFullComponent(state = loginViewModel.loading.value)
 
         Column(
             modifier = Modifier

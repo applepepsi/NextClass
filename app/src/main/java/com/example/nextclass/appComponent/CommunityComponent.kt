@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -518,22 +519,23 @@ fun PostDetailComponent(
                         .padding(5.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(
-                        onClick = {
-                            likePost()
-                        },
-                        modifier = Modifier.size(20.dp)
-                    )
-                    {
+
+
                         Icon(
                             modifier = Modifier
                                 .size(20.dp)
-                                .align(Alignment.CenterVertically),
+                                .align(Alignment.CenterVertically)
+                                .clickable(
+                                    indication = null,
+                                    interactionSource = remember { MutableInteractionSource() }
+                                ) {
+                                    likePost()
+                                },
                             imageVector = likeState,
                             contentDescription = "",
                             tint = Color.Unspecified
                         )
-                    }
+
                     Text(
                         modifier = Modifier
                             .padding(start=3.dp),
@@ -551,13 +553,8 @@ fun PostDetailComponent(
                         .padding(5.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(
-                        onClick = {
-                            likePost()
-                        },
-                        modifier = Modifier.size(20.dp)
-                    )
-                    {
+
+
                         Icon(
                             modifier = Modifier
                                 .size(17.dp)
@@ -566,7 +563,7 @@ fun PostDetailComponent(
                             contentDescription = "",
                             tint = Color.Unspecified
                         )
-                    }
+
                     Text(
                         modifier = Modifier
                             .padding(start=3.dp),
@@ -619,7 +616,7 @@ fun CommentComponent(
 
             Row(
                 modifier = Modifier
-                    .padding(end = 10.dp)
+                    .padding(end = 7.dp)
 
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -673,7 +670,7 @@ fun CommentComponent(
 
                                     }
                                 }
-                                .padding(5.dp),
+                                .padding(bottom=3.dp,top=3.dp,),
                             text = "제거",
                             style = TextStyle(
                                 fontSize = 10.sp,
@@ -749,7 +746,10 @@ fun CommentComponent(
                         modifier = Modifier
                             .size(15.dp)
                             .align(Alignment.CenterVertically)
-                            .clickable { likeComment() },
+                            .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() })
+                            { likeComment() },
                         imageVector = likeState,
                         contentDescription = "",
                         tint = Color.Unspecified
@@ -1158,7 +1158,7 @@ fun CommunitySearchBox(
             .background(Color.White)
             .border(
                 BorderStroke(
-                    0.2.dp,
+                    0.5.dp,
                     Color.LightGray
                 ),
                 RoundedCornerShape(8.dp)
@@ -1169,8 +1169,7 @@ fun CommunitySearchBox(
 
         OutlinedTextField(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(52.dp),
+                .fillMaxWidth(),
             value = text,
             onValueChange = {
                 onValueChange(it)
@@ -1191,7 +1190,7 @@ fun CommunitySearchBox(
                         imageVector = Icons.Default.Search,
                         contentDescription = null,
                         tint = Pastel_Red,
-                        modifier = Modifier.size(25.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                 }
             },
@@ -1204,7 +1203,7 @@ fun CommunitySearchBox(
                             imageVector = Icons.Default.Clear,
                             contentDescription = null,
                             tint = Pastel_Red,
-                            modifier = Modifier.size(25.dp)
+                            modifier = Modifier.size(24.dp)
                         )
 
                 }
@@ -1212,7 +1211,7 @@ fun CommunitySearchBox(
             singleLine = true,
             textStyle = TextStyle(
                 color = Color.Black,
-                fontSize = 14.sp,
+                fontSize = 13.sp,
                 fontWeight = FontWeight.Normal,
 
                 ),
@@ -1246,7 +1245,7 @@ fun SearchBarDivider(
             .width(1.5.dp)
         ,
         color = Pastel_Red,
-        thickness = 30.dp
+        thickness =30.dp
     )
 }
 @Preview(showBackground = true)

@@ -50,7 +50,7 @@ import com.example.nextclass.appComponent.FindFieldComponent
 import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.MainTextComponent
 import com.example.nextclass.appComponent.PasswordInputFieldComponent
-import com.example.nextclass.appComponent.ProgressBarComponent
+import com.example.nextclass.appComponent.ProgressBarFullComponent
 import com.example.nextclass.appComponent.RePostPasswordCodeComponent
 import com.example.nextclass.appComponent.TextInputHelpFieldComponent
 import com.example.nextclass.appComponent.UserProfileItemComponent
@@ -549,7 +549,7 @@ fun ChangeEmailView(
 
     Column() {
         if(userInfoViewModel.loading.value){
-            ProgressBarComponent(state = userInfoViewModel.loading.value)
+            ProgressBarFullComponent(state = userInfoViewModel.loading.value)
         }
         Column(
             modifier = Modifier
@@ -599,7 +599,7 @@ fun ChangeEmailInsertCodeView(
     Column {
 
         if(userInfoViewModel.loading.value){
-            ProgressBarComponent(state = userInfoViewModel.loading.value)
+            ProgressBarFullComponent(state = userInfoViewModel.loading.value)
         }
 
         Column(

@@ -5,7 +5,7 @@ import com.example.nextclass.Data.CommunityData.CommentListData
 import com.example.nextclass.Data.CommunityData.CommentWriteData
 import com.example.nextclass.Data.CommunityData.CommunityCommentData
 import com.example.nextclass.Data.CommunityData.CommunityPostData
-import com.example.nextclass.Data.CommunityData.LikePostOrComment
+import com.example.nextclass.Data.CommunityData.PostAndCommentSequence
 import com.example.nextclass.Data.CommunityData.PostListData
 import com.example.nextclass.Data.CommunityData.PostWriteData
 import com.example.nextclass.Data.ServerResponse
@@ -178,11 +178,11 @@ class CommunityRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override fun commentDelete(commentSequence: String, callback: (ServerResponse<Any>?) -> Unit) {
+    override fun commentDelete(sequence: PostAndCommentSequence, callback: (ServerResponse<Any>?) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = api.commentDelete(commentSequence)
+            val response = api.commentDelete(sequence)
             val result = try {
-                Log.d("commentSequence", commentSequence.toString())
+                Log.d("commentSequence", sequence.toString())
                 Log.d("댓글 삭제 결과", response.toString())
                 if (response.isSuccessful){
                     Log.d("댓글 삭제 성공", response.body().toString())
@@ -227,7 +227,7 @@ class CommunityRepositoryImpl @Inject constructor(
     }
 
     override fun vote(
-        vote: LikePostOrComment,
+        vote: PostAndCommentSequence,
         callback: (ServerResponse<Any>?) -> Unit
     ) {
         CoroutineScope(Dispatchers.IO).launch {

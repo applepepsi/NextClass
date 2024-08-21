@@ -8,7 +8,7 @@ import com.example.nextclass.Data.CommunityData.CommentListData
 import com.example.nextclass.Data.CommunityData.CommentWriteData
 import com.example.nextclass.Data.CommunityData.CommunityCommentData
 import com.example.nextclass.Data.CommunityData.CommunityPostData
-import com.example.nextclass.Data.CommunityData.LikePostOrComment
+import com.example.nextclass.Data.CommunityData.PostAndCommentSequence
 import com.example.nextclass.Data.CommunityData.PostListData
 import com.example.nextclass.Data.CommunityData.PostWriteData
 import com.example.nextclass.R
@@ -87,6 +87,15 @@ class CommunityViewModel @Inject constructor(
     private val _moreCommentLoadState=mutableStateOf(false)
     val moreCommentLoadState: State<Boolean> = _moreCommentLoadState
 
+    private val _searchBarState=mutableStateOf(false)
+    val searchBarState: State<Boolean> = _searchBarState
+
+    private val _postLoading=mutableStateOf(false)
+    val postLoading: State<Boolean> = _postLoading
+
+
+    private val _commentLoading=mutableStateOf(false)
+    val commentLoading: State<Boolean> = _commentLoading
     fun setSelectedCommunityData(selectPostSequence: String,postReLoad:Boolean=false){
 
 
@@ -175,6 +184,10 @@ class CommunityViewModel @Inject constructor(
 //        )
     }
 
+    fun toggleSearchBarState(){
+        _searchBarState.value=!_searchBarState.value
+    }
+
     fun togglePostResultState(){
         _postResultState.value=!_postResultState.value
     }
@@ -187,7 +200,7 @@ class CommunityViewModel @Inject constructor(
                     Log.d("수정 성공","")
 
                     //todo 게시물을 수정한 후 다시 게시물을 로드해야함 테스트해봐야함
-                    setSelectedCommunityData(_postWriteData.value.post_sequence!!, postReLoad = false)
+                    setSelectedCommunityData(_postWriteData.value.post_sequence!!, postReLoad = true)
                     togglePostResultState()
 
                     //수정에 성공했다면 댓글도 업데이트함
@@ -206,8 +219,8 @@ class CommunityViewModel @Inject constructor(
 
     fun getPostList(sort: String, post_sequence: Int?) {
         Log.d("로딩", _loading.value.toString())
-        if(_loading.value) return
-        _loading.value=true
+        if(_postLoading.value) return
+        _postLoading.value=true
 
         val postListData=PostListData(post_sequence=post_sequence.toString(),sort=sort,)
         Log.d("postListData", postListData.toString())
@@ -228,7 +241,7 @@ class CommunityViewModel @Inject constructor(
                 //게시물이 더 없으면 게시물을 가져오는것을 멈춤
                 toggleMorePostLoadState()
             }
-            _loading.value = false
+            _postLoading.value = false
         }
     }
 
@@ -271,7 +284,10 @@ class CommunityViewModel @Inject constructor(
 
     fun deleteComment(singleCommentData: CommunityCommentData) {
         Log.d("삭제하려는 댓글", singleCommentData.toString())
-        communityRepository.commentDelete(singleCommentData.comment_sequence){ deleteCommentResult->
+
+        val sequence=PostAndCommentSequence(post_sequence = _selectCommunityData.value.post_sequence,comment_sequence = singleCommentData.comment_sequence)
+
+        communityRepository.commentDelete(sequence){ deleteCommentResult->
             if(deleteCommentResult !=null) {
                 if (deleteCommentResult.code == SUCCESS_CODE) {
 
@@ -293,12 +309,33 @@ class CommunityViewModel @Inject constructor(
     fun likeComment(singleCommentData: CommunityCommentData) {
         Log.d("좋아요를 누르려는 댓글", singleCommentData.toString())
 
-        val postSequence=LikePostOrComment(post_sequence = _selectCommunityData.value.post_sequence, comment_sequence = singleCommentData.comment_sequence)
+        val postSequence=PostAndCommentSequence(post_sequence = _selectCommunityData.value.post_sequence, comment_sequence = singleCommentData.comment_sequence)
         communityRepository.vote(postSequence){ postVoteResult->
             if(postVoteResult !=null) {
+
                 if (postVoteResult.code == SUCCESS_CODE) {
-                    val currentVoteState=_selectCommunityCommentData.value.is_vote
-                    _selectCommunityCommentData.value=_selectCommunityCommentData.value.copy(is_vote = !currentVoteState)
+                    val currentVoteState = singleCommentData.is_vote
+                    val currentVoteCount = singleCommentData.vote_count
+
+                    // 새로운 투표 상태와 카운트 계산
+                    val newVoteState = !currentVoteState
+                    val newVoteCount = if (newVoteState) {
+                        currentVoteCount + 1
+                    } else {
+                        currentVoteCount - 1
+                    }
+
+                    // 댓글 리스트 업데이트
+                    _communityCommentDataList.value = _communityCommentDataList.value.map { singleComment ->
+                        if (singleComment.comment_sequence == singleCommentData.comment_sequence) {
+                            singleComment.copy(
+                                is_vote = newVoteState,
+                                vote_count = newVoteCount
+                            )
+                        } else {
+                            singleComment
+                        }
+                    }
                     Log.d("추천됨", postVoteResult.data.toString())
 
                 }else{
@@ -336,14 +373,21 @@ class CommunityViewModel @Inject constructor(
     }
 
     fun likePost() {
-        val postSequence=LikePostOrComment(post_sequence = _selectCommunityData.value.post_sequence, comment_sequence = null)
+        val postSequence=PostAndCommentSequence(post_sequence = _selectCommunityData.value.post_sequence, comment_sequence = null)
         communityRepository.vote(postSequence){ postVoteResult->
             if(postVoteResult !=null) {
                 if (postVoteResult.code == SUCCESS_CODE) {
 
                     Log.d("추천됨", postVoteResult.data.toString())
                     val currentVoteState=_selectCommunityData.value.is_vote
-                    _selectCommunityData.value=_selectCommunityData.value.copy(is_vote = !currentVoteState)
+                    val currentVoteCount=_selectCommunityData.value.vote_count
+
+                    val newVoteCount = if (!currentVoteState) {
+                        currentVoteCount + 1
+                    } else {
+                        currentVoteCount - 1
+                    }
+                    _selectCommunityData.value=_selectCommunityData.value.copy(is_vote = !currentVoteState, vote_count = newVoteCount)
                 }else{
                     //토스트 메세지
                 }
@@ -387,8 +431,8 @@ class CommunityViewModel @Inject constructor(
     }
 
     fun getCommentList(post_sequence: String, comment_sequence: Int?){
-        if(_loading.value) return
-        _loading.value=true
+        if(_commentLoading.value) return
+        _commentLoading.value=true
 
         val commentListData=CommentListData(post_sequence=post_sequence,comment_sequence=comment_sequence)
 
@@ -409,7 +453,7 @@ class CommunityViewModel @Inject constructor(
             }else{
                 toggleMoreCommentLoadState()
             }
-            _loading.value = false
+            _commentLoading.value = false
         }
     }
 
@@ -459,7 +503,7 @@ class CommunityViewModel @Inject constructor(
             post_sequence = selectCommunityData.value.post_sequence,
             comment_sequence = null
         )
-        setSelectedCommunityData(_selectCommunityData.value.post_sequence,postReLoad = false)
+        setSelectedCommunityData(_selectCommunityData.value.post_sequence,postReLoad = true)
 
     }
 
