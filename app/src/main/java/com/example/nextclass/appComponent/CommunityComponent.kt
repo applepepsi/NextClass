@@ -1,7 +1,9 @@
 package com.example.nextclass.appComponent
 
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -322,12 +324,12 @@ fun SinglePostComponent(
                 Row(
                     modifier = Modifier
                         .padding(5.dp),
-                    verticalAlignment = Alignment.CenterVertically
+
                 ) {
+
                     Icon(
                         modifier = Modifier
-                            .size(14.dp)
-                            .align(Alignment.CenterVertically),
+                            .size(14.dp),
                         imageVector = ImageVector.vectorResource(R.drawable.author_icon),
                         contentDescription = "",
                         tint = Color.Unspecified
@@ -355,6 +357,7 @@ fun SinglePostComponent(
 
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PostDetailComponent(
     selectPost: CommunityPostData = CommunityPostData(),
@@ -369,51 +372,109 @@ fun PostDetailComponent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+
             .verticalScroll(rememberScrollState()),
 
         ){
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.End
+
+            horizontalArrangement = Arrangement.SpaceBetween
         ){
-            if(postOwner){
-                Text(
+            Row(
+                modifier = Modifier
+                    .padding(5.dp)
+                    .padding(start = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Box(
                     modifier = Modifier
-                        .clickable {
-                            modifyPost()
-                        }
-                        .padding(5.dp),
-                    text = "수정",
-                    style = TextStyle(
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Normal,
-                        fontStyle = FontStyle.Normal
-                    ),
-                    color=Color.Gray
-                )
-                Text(
-                    modifier = Modifier
-                        .clickable {
-                            deletePost()
-                        }
-                        .padding(5.dp),
-                    text = "제거",
-                    style = TextStyle(
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Normal,
-                        fontStyle = FontStyle.Normal
-                    ),
-                    color=Color.Gray
-                )
+                        .clip(RoundedCornerShape(5.dp))
+                        .background(Pastel_Red)
+                        .size(45.dp),
+                    contentAlignment = Alignment.Center
+                ){
+                    Icon(
+                        modifier = Modifier
+                            .size(35.dp),
+                        imageVector = ImageVector.vectorResource(R.drawable.author_icon),
+                        contentDescription = "",
+                        tint = Color.White
+                    )
+                }
+                Column() {
+                    Text(
+                        modifier = Modifier
+                            .padding(start=8.dp),
+                        text = selectPost.author,
+                        style = TextStyle(
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontStyle = FontStyle.Normal,
+                        ),
+                    )
+
+                    Spacer(modifier = Modifier.height(3.dp))
+
+                    Text(
+                        modifier = Modifier
+                            .padding(start=8.dp),
+                        text = TimeFormatter.timeAgo(selectPost.reg_date),
+                        style = TextStyle(
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontStyle = FontStyle.Normal,
+                            color = Color.Gray
+                        ),
+                    )
+                }
+
             }
+            Row(
+                Modifier.padding(end=5.dp)
+            ){
+                if(postOwner){
+                    Text(
+                        modifier = Modifier
+                            .clickable {
+                                modifyPost()
+                            }
+                            .padding(5.dp),
+                        text = "수정",
+                        style = TextStyle(
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontStyle = FontStyle.Normal
+                        ),
+                        color=Color.Gray
+                    )
+                    Text(
+                        modifier = Modifier
+                            .clickable {
+                                deletePost()
+                            }
+                            .padding(5.dp),
+                        text = "제거",
+                        style = TextStyle(
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontStyle = FontStyle.Normal
+                        ),
+                        color=Color.Gray
+                    )
+
+                }
+            }
+
+
         }
 
-        DividerComponent(modifier = Modifier
-            .height(0.5.dp),
-            dividerColor = Color.LightGray
-        )
+//        DividerComponent(modifier = Modifier
+//            .height(0.5.dp),
+//            dividerColor = Color.LightGray
+//        )
         Column(
             modifier = Modifier
                 .padding(10.dp)
@@ -426,7 +487,7 @@ fun PostDetailComponent(
                 Text(
                     text = selectPost.subject,
                     style = TextStyle(
-                        fontSize = 20.sp,
+                        fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         fontStyle = FontStyle.Normal,
                     ),
@@ -439,7 +500,7 @@ fun PostDetailComponent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(min = 200.dp)
+                    .heightIn(min = 150.dp)
             ){
                 Text(
                     text=selectPost.content,
@@ -466,16 +527,16 @@ fun PostDetailComponent(
                 ){
                 Icon(
                     modifier = Modifier
-                        .size(18.dp)
+                        .size(23.dp)
                         .align(Alignment.CenterVertically),
-                    imageVector = ImageVector.vectorResource(R.drawable.schedule_icon),
+                    imageVector = ImageVector.vectorResource(R.drawable.calender_icon),
                     contentDescription = "",
                     tint =  Color.Black,
                 )
 
                 Text(
                     modifier = Modifier
-                        .padding(start=3.dp),
+                        .padding(start=4.dp),
                     text=TimeFormatter.formatDate(selectPost.reg_date),
                     style = TextStyle(
                         fontSize = 15.sp,
@@ -496,7 +557,7 @@ fun PostDetailComponent(
                 ) {
                     Icon(
                         modifier = Modifier
-                            .size(20.dp)
+                            .size(25.dp)
                             .align(Alignment.CenterVertically),
                         imageVector = ImageVector.vectorResource(R.drawable.chat_icon),
                         contentDescription = "",
@@ -516,14 +577,15 @@ fun PostDetailComponent(
                 }
                 Row(
                     modifier = Modifier
-                        .padding(5.dp),
+                        .padding(5.dp)
+                        .padding(end = 5.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
 
 
                         Icon(
                             modifier = Modifier
-                                .size(20.dp)
+                                .size(23.dp)
                                 .align(Alignment.CenterVertically)
                                 .clickable(
                                     indication = null,
@@ -548,33 +610,7 @@ fun PostDetailComponent(
                     )
                 }
 
-                Row(
-                    modifier = Modifier
-                        .padding(5.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
 
-
-                        Icon(
-                            modifier = Modifier
-                                .size(17.dp)
-                                .align(Alignment.CenterVertically),
-                            imageVector = ImageVector.vectorResource(R.drawable.author_icon),
-                            contentDescription = "",
-                            tint = Color.Unspecified
-                        )
-
-                    Text(
-                        modifier = Modifier
-                            .padding(start=3.dp),
-                        text = selectPost.author,
-                        style = TextStyle(
-                            fontSize = 17.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal,
-                        ),
-                    )
-                }
 
             }
         }
@@ -601,27 +637,57 @@ fun CommentComponent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-
+            .padding(top = 7.dp, end = 7.dp)
             .clickable {
                 commentClick()
             },
 
         ){
-        DividerComponent(modifier = Modifier
-            .height(0.5.dp),
-            dividerColor = Color.LightGray
-        )
-
-
-
+//        DividerComponent(modifier = Modifier
+//            .height(0.5.dp),
+//            dividerColor = Color.LightGray
+//        )
             Row(
                 modifier = Modifier
                     .padding(end = 7.dp)
 
                     .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End
+
+                horizontalArrangement = Arrangement.SpaceBetween
             ){
+                Row(
+                    modifier = Modifier
+                        .padding(5.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(5.dp))
+                            .background(Pastel_Red)
+                            .size(23.dp),
+                        contentAlignment = Alignment.Center
+                    ){
+                        Icon(
+                            modifier = Modifier
+                                .size(17.dp),
+                            imageVector = ImageVector.vectorResource(R.drawable.author_icon),
+                            contentDescription = "",
+                            tint = Color.White
+                        )
+                    }
+
+                    Text(
+                        modifier = Modifier
+                            .padding(start=5.dp),
+                        text = singleCommentData.author,
+                        style = TextStyle(
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontStyle = FontStyle.Normal,
+                        ),
+                    )
+                }
+
                 if(optionVisible){
 //
 //                    Text(
@@ -670,7 +736,7 @@ fun CommentComponent(
 
                                     }
                                 }
-                                .padding(bottom=3.dp,top=3.dp,),
+                                .padding(bottom = 3.dp, top = 3.dp,),
                             text = "제거",
                             style = TextStyle(
                                 fontSize = 10.sp,
@@ -713,9 +779,9 @@ fun CommentComponent(
                 ){
                 Icon(
                     modifier = Modifier
-                        .size(15.dp)
+                        .size(18.dp)
                         .align(Alignment.CenterVertically),
-                    imageVector = ImageVector.vectorResource(R.drawable.schedule_icon),
+                    imageVector = ImageVector.vectorResource(R.drawable.calender_icon),
                     contentDescription = "",
                     tint =  Color.Black,
                 )
@@ -744,7 +810,7 @@ fun CommentComponent(
                 ) {
                     Icon(
                         modifier = Modifier
-                            .size(15.dp)
+                            .size(20.dp)
                             .align(Alignment.CenterVertically)
                             .clickable(
                                 indication = null,
@@ -767,38 +833,14 @@ fun CommentComponent(
                     )
                 }
 
-                Row(
-                    modifier = Modifier
-                        .padding(5.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        modifier = Modifier
-                            .size(12.dp)
-                            .align(Alignment.CenterVertically),
-                        imageVector = ImageVector.vectorResource(R.drawable.author_icon),
-                        contentDescription = "",
-                        tint = Color.Unspecified
-                    )
 
-                    Text(
-                        modifier = Modifier
-                            .padding(start=3.dp),
-                        text = singleCommentData.author,
-                        style = TextStyle(
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal,
-                        ),
-                    )
-                }
             }
         }
 
-        DividerComponent(modifier = Modifier
-            .height(0.5.dp),
-            dividerColor = Color.LightGray
-        )
+//        DividerComponent(modifier = Modifier
+//            .height(0.5.dp),
+//            dividerColor = Color.LightGray
+//        )
     }
 }
 
@@ -1151,7 +1193,7 @@ fun CommunitySearchBox(
 
     Box(
         modifier = Modifier
-            .padding(start=5.dp,end=5.dp)
+            .padding(start = 5.dp, end = 5.dp)
             .fillMaxWidth()
 
             .clip(RoundedCornerShape(8.dp))

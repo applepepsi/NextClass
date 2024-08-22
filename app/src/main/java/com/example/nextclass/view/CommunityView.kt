@@ -27,6 +27,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,6 +41,7 @@ import com.example.nextclass.appComponent.CheckboxComponent
 import com.example.nextclass.appComponent.CommentComponent
 import com.example.nextclass.appComponent.CommunitySearchBox
 import com.example.nextclass.appComponent.CommunityTopNavComponent
+import com.example.nextclass.appComponent.DividerComponent
 import com.example.nextclass.appComponent.FloatingActionButtonComponent
 import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.InsertCommentComponent
@@ -242,6 +244,10 @@ fun PostDetailView(
                         optionVisible = true,
 
                     )
+                DividerComponent(modifier = Modifier
+                    .height(0.5.dp),
+                    dividerColor = Color.LightGray
+                )
                 }
 
                 item{

@@ -11,6 +11,7 @@ import com.example.nextclass.Data.TimeData
 import com.example.nextclass.R
 import com.example.nextclass.repository.ScheduleRepository
 import com.example.nextclass.utils.EXPIRED_REFRESH_TOKEN
+import com.example.nextclass.utils.SUCCESS_CODE
 import com.example.nextclass.utils.SortScheduleList
 import com.example.nextclass.utils.StringValue
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import javax.inject.Inject
-
+import java.time.format.DateTimeFormatter
 @HiltViewModel
 class ScheduleViewModel @Inject constructor(
     private val scheduleRepository: ScheduleRepository
@@ -70,7 +71,8 @@ class ScheduleViewModel @Inject constructor(
 //    private var _selectScheduleData= mutableStateOf(ScheduleData())
 //    val selectScheduleData: State<ScheduleData> = _selectScheduleData
 
-
+    private val _saveScheduleState= mutableStateOf(false)
+    val saveScheduleState: State<Boolean> = _saveScheduleState
 
     fun updateScheduleDate(selectDate: LocalDate) {
         Log.d("selectDate", selectDate.toString())
@@ -101,15 +103,16 @@ class ScheduleViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun postScheduleData(){
-        _scheduleData.value=_scheduleData.value.copy(alarm_time = combinedDateTime())
+        _scheduleData.value=_scheduleData.value.copy(alarm_time = combinedDateTime().toString())
 
         Log.d("스케쥴 시간", _scheduleData.value.toString())
         if(checkScheduleData()){
             //서버로 전송
-            scheduleRepository.tokenCheck { ServerResponse->
-                if (ServerResponse != null) {
-                    if(ServerResponse.errorCode== EXPIRED_REFRESH_TOKEN){
-                        _tokenCheckResult.value=true
+            scheduleRepository.saveSchedule(_scheduleData.value) { SaveScheduleResult->
+                if (SaveScheduleResult != null) {
+                    if(SaveScheduleResult.code== SUCCESS_CODE){
+                        Log.d("스케쥴 저장 성공", SaveScheduleResult.data.toString())
+                        toggleSaveScheduleResult()
                     }
                 }
                 resetScheduleData()
@@ -117,9 +120,13 @@ class ScheduleViewModel @Inject constructor(
         }
     }
 
+    fun toggleSaveScheduleResult(){
+        _saveScheduleState.value=!_saveScheduleState.value
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun postModifyScheduleData(){
-        _scheduleData.value=_scheduleData.value.copy(alarm_time = combinedDateTime())
+        _scheduleData.value=_scheduleData.value.copy(alarm_time = combinedDateTime().toString())
 
         Log.d("스케쥴 시간", _scheduleData.value.toString())
         if(checkScheduleData()){
@@ -137,7 +144,7 @@ class ScheduleViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun checkScheduleData():Boolean{
-        if(_scheduleData.value.alarm_time<=LocalDateTime.now()){
+        if(_scheduleData.value.alarm_time<=LocalDateTime.now().toString()){
             //에러 처리
             _scheduleErrorState.value=true
             _scheduleErrorMessage.value=StringValue.StringResource(R.string.WrongDate)
@@ -209,9 +216,19 @@ class ScheduleViewModel @Inject constructor(
 
     }
 
-    fun getScheduleData(scheduleDataList:List<ScheduleData>){
-        _scheduleDataList.value=scheduleDataList
-        groupedScheduleData(_scheduleDataList.value)
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getScheduleData(){
+
+        scheduleRepository.getTodoList { getTodoListResult->
+            if (getTodoListResult != null) {
+                if(getTodoListResult.code== SUCCESS_CODE){
+                    groupedScheduleData(getTodoListResult.data!!)
+                }
+            }
+
+        }
+
+
     }
 
     fun setScheduleData(scheduleData: ScheduleData){
@@ -221,9 +238,13 @@ class ScheduleViewModel @Inject constructor(
     }
 
     //날짜별로 그룹화
+    @RequiresApi(Build.VERSION_CODES.O)
     fun groupedScheduleData(groupScheduleData: List<ScheduleData>) {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
 
-        _groupByDateScheduleData.value=groupScheduleData.groupBy { it.alarm_time.toLocalDate() }.toSortedMap(compareByDescending { it })
+        _groupByDateScheduleData.value = groupScheduleData.groupBy {
+            LocalDateTime.parse(it.alarm_time, formatter).toLocalDate()
+        }.toSortedMap(compareByDescending { it })
     }
 
     fun deleteScheduleData(){

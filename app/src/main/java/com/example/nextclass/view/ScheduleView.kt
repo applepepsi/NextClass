@@ -72,24 +72,25 @@ fun ScheduleView(
 
     LaunchedEffect(Unit) {
         scheduleViewModel.resetScheduleData()
-        scheduleViewModel.getScheduleData(scheduleDataList)
+        scheduleViewModel.getScheduleData()
     }
+
 
 
     val context = LocalContext.current
 
-    val itemDeploymentIcon=if(!scheduleViewModel.toggleLazyType.value){
-        ImageVector.vectorResource(R.drawable.lazy_colum_icon)
-    }else{
-        ImageVector.vectorResource(R.drawable.lazy_grid_icon)
-    }
+//    val itemDeploymentIcon=if(!scheduleViewModel.toggleLazyType.value){
+//        ImageVector.vectorResource(R.drawable.lazy_colum_icon)
+//    }else{
+//        ImageVector.vectorResource(R.drawable.lazy_grid_icon)
+//    }
 
     val sortIcon=ImageVector.vectorResource(R.drawable.sorting_icon)
 
     //todo 정렬 타입에 따라 데이터 재배치 코드 추가
     SortBottomSheetComponent(
         bottomSheetShowState = scheduleViewModel.toggleShowSortBottomSheet.value,
-        setSortType = {selectSortType->
+        setSortType = { selectSortType->
             scheduleViewModel.setSortTypeScheduleDataList(selectSortType)
         },
         toggleBottomSheetState = {
@@ -98,8 +99,6 @@ fun ScheduleView(
     )
 
     Column {
-
-
             Row(
                 modifier = Modifier
 
@@ -221,7 +220,10 @@ fun InsertOrModifyScheduleView(
 ) {
     val context = LocalContext.current
 
-
+    if(scheduleViewModel.saveScheduleState.value){
+        navController.navigateUp()
+        scheduleViewModel.toggleSaveScheduleResult()
+    }
 
     Column(
         modifier = Modifier

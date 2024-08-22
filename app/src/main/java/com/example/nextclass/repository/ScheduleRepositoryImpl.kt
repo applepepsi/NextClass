@@ -1,6 +1,7 @@
 package com.example.nextclass.repository
 
 import android.util.Log
+import com.example.nextclass.Data.ScheduleData.ScheduleData
 import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.utils.EXPIRED_ACCESS_TOKEN
 import com.example.nextclass.utils.TokenManager
@@ -19,6 +20,57 @@ import javax.inject.Inject
 class ScheduleRepositoryImpl @Inject constructor(
     private val api: API
 ) : ScheduleRepository {
+    override fun saveSchedule(singleScheduleData: ScheduleData,callback: (ServerResponse<Any>?) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = api.saveSchedule(singleScheduleData)
+            val result = try {
+
+                Log.d("스케쥴 저장결과", response.toString())
+                if (response.isSuccessful) {
+
+                    Log.d("스케쥴 저장 성공", response.body().toString())
+
+                    response.body()
+                } else {
+
+                    Log.d("스케쥴 저장 실패", "실패")
+                }
+                response.body()
+            } catch (e: Exception) {
+                Log.d("스케쥴 저장 실패", e.toString())
+                response.body()
+            }
+            withContext(Dispatchers.Main) {
+                callback(result)
+            }
+        }
+    }
+
+    override fun getTodoList(callback: (ServerResponse<List<ScheduleData>>?) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = api.getTodoList()
+            val result = try {
+
+                Log.d("투두리스트 가져오기 결과", response.toString())
+                if (response.isSuccessful) {
+
+                    Log.d("투두리스트 가져오기 성공", response.body().toString())
+
+                    response.body()
+                } else {
+                    Log.d("투두리스트 가져오기 실패", "실패")
+                    response.body()
+                }
+
+            } catch (e: Exception) {
+                Log.d("투두리스트 가져오기 실패", e.toString())
+                response.body()
+            }
+            withContext(Dispatchers.Main) {
+                callback(result)
+            }
+        }
+    }
 
 
     override fun tokenCheck(callback: (ServerResponse<Any>?) -> Unit) {

@@ -399,59 +399,59 @@ fun ScheduleTextInsertView(
 val scheduleDataList=listOf(
     ScheduleData(
         content = "물방울이 떨어지는 소리를 들으며 창밖을 바라보는 시간은 참 평화로워awfafafafaffqqfqwfwfawfawfqwfqwfqwfqfwqfqf.",
-        alarm_time = LocalDateTime.now().plusDays(1)
+        alarm_time = LocalDateTime.now().plusDays(1).toString()
     ),
     ScheduleData(
         content = "가나다라",
-        alarm_time = LocalDateTime.now().plusDays(1)
+        alarm_time = LocalDateTime.now().plusDays(1).toString()
     ),
     ScheduleData(
         content = "가나다라",
-        alarm_time = LocalDateTime.now().minusDays(1)
+        alarm_time = LocalDateTime.now().minusDays(1).toString()
     ),
     ScheduleData(
         content = "가나다라",
-        alarm_time = LocalDateTime.now().plusDays(1)
+        alarm_time = LocalDateTime.now().plusDays(1).toString()
     ),
     ScheduleData(
         content = "가나다라",
-        alarm_time = LocalDateTime.now().minusDays(1)
+        alarm_time = LocalDateTime.now().minusDays(1).toString()
     ),
     ScheduleData(
         content = "가나다라",
-        alarm_time = LocalDateTime.now().plusDays(2)
+        alarm_time = LocalDateTime.now().plusDays(2).toString()
     ),
     ScheduleData(
         content = "가나다라",
-        alarm_time = LocalDateTime.now().plusDays(1)
+        alarm_time = LocalDateTime.now().plusDays(1).toString()
     ),
     ScheduleData(
         content = "가나다라",
-        alarm_time = LocalDateTime.now().minusDays(1)
+        alarm_time = LocalDateTime.now().minusDays(1).toString()
     ),
     ScheduleData(
         content = "가나다라",
-        alarm_time = LocalDateTime.now().plusDays(2)
+        alarm_time = LocalDateTime.now().plusDays(2).toString()
     ),
     ScheduleData(
         content = "가나다라",
-        alarm_time = LocalDateTime.now().minusDays(2)
+        alarm_time = LocalDateTime.now().minusDays(2).toString()
     ),
     ScheduleData(
         content = "가나다라",
-        alarm_time = LocalDateTime.now().plusDays(1)
+        alarm_time = LocalDateTime.now().plusDays(1).toString()
     ),
     ScheduleData(
         content = "가나다라",
-        alarm_time = LocalDateTime.now().minusDays(3)
+        alarm_time = LocalDateTime.now().minusDays(3).toString()
     ),
     ScheduleData(
         content = "가나다라",
-        alarm_time = LocalDateTime.now().minusDays(3)
+        alarm_time = LocalDateTime.now().minusDays(3).toString()
     ),
     ScheduleData(
         content = "가나다라",
-        alarm_time = LocalDateTime.now().minusDays(3)
+        alarm_time = LocalDateTime.now().minusDays(3).toString()
     ),
 )
 
@@ -459,15 +459,15 @@ val scheduleDataList=listOf(
 val scheduleDataList2=listOf(
     ScheduleData(
         content = "물방울이 떨어지는 소리를 들으며 창밖을 바라보는 시간은 참 평화로워.",
-        alarm_time = LocalDateTime.now().plusDays(1)
+        alarm_time = LocalDateTime.now().plusDays(1).toString()
     ),
     ScheduleData(
         content = "가나다라",
-        alarm_time = LocalDateTime.now().plusDays(1)
+        alarm_time = LocalDateTime.now().plusDays(1).toString()
     ),
     ScheduleData(
         content = "가나다라",
-        alarm_time = LocalDateTime.now().plusDays(1)
+        alarm_time = LocalDateTime.now().plusDays(1).toString()
     ),
 )
 
@@ -475,7 +475,7 @@ val scheduleDataList2=listOf(
 @Composable
 fun SingleScheduleView(
     scheduleDetail: String = "물방울이 떨어지는 소리를 들으며 창밖을 바라보는 시간은 참 평화로워.",
-    scheduleDate: Pair<String, String> = TimeFormatter.formatTimeAndSplit(LocalDateTime.now()),
+    scheduleDate: Pair<String, String> = TimeFormatter.formatTimeAndSplit(LocalDateTime.now().toString()),
     modifySchedule: () -> Unit,
     deleteSchedule: () -> Unit
     ) {
@@ -630,7 +630,7 @@ fun SingleScheduleOptionIcon(
 @Composable
 fun SingleScheduleGridView(
     scheduleDetail:String="물방울이 떨어지는 소리를 들으며 창밖을 바라보는 시간은 참 평화로워.",
-    scheduleDate:Pair<String,String> = TimeFormatter.formatTimeAndSplit( LocalDateTime.now()),
+    scheduleDate:Pair<String,String> = TimeFormatter.formatTimeAndSplit( LocalDateTime.now().toString()),
     modifySchedule: (ScheduleData) -> Unit,
     deleteSchedule: (ScheduleData) -> Unit
     ) {

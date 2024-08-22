@@ -8,6 +8,7 @@ import com.example.nextclass.Data.CommunityData.CommunityPostData
 import com.example.nextclass.Data.CommunityData.PostAndCommentSequence
 import com.example.nextclass.Data.CommunityData.PostListData
 import com.example.nextclass.Data.CommunityData.PostWriteData
+import com.example.nextclass.Data.ScheduleData.ScheduleData
 import com.example.nextclass.Data.TimeTableData.AllScore
 import com.example.nextclass.Data.UserInfoData.ChangeEmail
 import com.example.nextclass.Data.UserInfoData.ChangePassword
@@ -38,6 +39,7 @@ import com.example.nextclass.utils.GET_COMMENT
 import com.example.nextclass.utils.GET_POST
 import com.example.nextclass.utils.GET_SCORE
 import com.example.nextclass.utils.GET_TIME_TABLE
+import com.example.nextclass.utils.GET_TO_DO_LIST
 import com.example.nextclass.utils.GET_USER_INFO
 import com.example.nextclass.utils.GET_VERIFY_CODE
 import com.example.nextclass.utils.LOGIN_ADDRESS
@@ -50,6 +52,7 @@ import com.example.nextclass.utils.POST_MODIFY_TIMETABLE_DATA
 import com.example.nextclass.utils.POST_SAVE
 import com.example.nextclass.utils.POST_TIMETABLE_DATA
 import com.example.nextclass.utils.REGISTER_ADDRESS
+import com.example.nextclass.utils.SAVE_SCHEDULE
 import com.example.nextclass.utils.SCORE_UPDATE
 import com.example.nextclass.utils.SEND_CHANGE_MAIL
 import com.example.nextclass.utils.VOTE
@@ -162,6 +165,13 @@ interface API {
 
     @POST(VOTE)
     suspend fun vote(@Body vote:PostAndCommentSequence):Response<ServerResponse<Any>>
+
+    //투두리스트
+    @POST(SAVE_SCHEDULE)
+    suspend fun saveSchedule(@Body singleSchedule:ScheduleData):Response<ServerResponse<Any>>
+
+    @POST(GET_TO_DO_LIST)
+    suspend fun getTodoList():Response<ServerResponse<List<ScheduleData>>>
 
 
     //테스트

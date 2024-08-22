@@ -4,17 +4,7 @@ import com.example.nextclass.Data.ScheduleData.ScheduleData
 
 object SortScheduleList {
 
-    fun sortByAscendingCreationTime(scheduleDataList: List<ScheduleData>): List<ScheduleData> {
-        return scheduleDataList.sortedBy {
-            it.create_time
-        }
-    }
 
-    fun sortByDescendingCreationTime(scheduleDataList: List<ScheduleData>): List<ScheduleData> {
-        return scheduleDataList.sortedByDescending {
-            it.create_time
-        }
-    }
 
     fun sortByAscendingAlarmTime(scheduleDataList: List<ScheduleData>): List<ScheduleData> {
         return scheduleDataList.sortedBy {

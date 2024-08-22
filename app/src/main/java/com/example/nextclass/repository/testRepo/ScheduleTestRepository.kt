@@ -1,6 +1,7 @@
 package com.example.nextclass.repository.testRepo
 
 import android.util.Log
+import com.example.nextclass.Data.ScheduleData.ScheduleData
 import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.repository.ScheduleRepository
 import com.example.oneplusone.serverConnection.API
@@ -17,6 +18,16 @@ class ScheduleTestRepository: ScheduleRepository {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val api: API = retrofit.create(API::class.java)
+    override fun saveSchedule(
+        singleScheduleData: ScheduleData,
+        callback: (ServerResponse<Any>?) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getTodoList(callback: (ServerResponse<List<ScheduleData>>?) -> Unit) {
+        TODO("Not yet implemented")
+    }
 
     override fun tokenCheck(callback: (ServerResponse<Any>?) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
