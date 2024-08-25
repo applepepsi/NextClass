@@ -240,7 +240,9 @@ class ScheduleViewModel @Inject constructor(
     //날짜별로 그룹화
     @RequiresApi(Build.VERSION_CODES.O)
     fun groupedScheduleData(groupScheduleData: List<ScheduleData>) {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+
+        Log.d("groupScheduleData", groupScheduleData.toString())
 
         _groupByDateScheduleData.value = groupScheduleData.groupBy {
             LocalDateTime.parse(it.alarm_time, formatter).toLocalDate()

@@ -52,10 +52,13 @@ fun UserProfilePreviewComponent(
     schoolName:String,
     grade:Int,
 ){
+
+    val gradeText=if(grade==0) "졸업생" else "$grade 학년"
+
     Row(
         modifier = Modifier
             .padding(start = 10.dp, end = 10.dp)
-            .clip(RoundedCornerShape(35.dp))
+            .clip(RoundedCornerShape(20.dp))
             .fillMaxWidth()
             .height(100.dp)
 //            .border(1.dp, Color.LightGray, shape = RoundedCornerShape(15.dp))
@@ -117,7 +120,7 @@ fun UserProfilePreviewComponent(
                 Text(
                     modifier = Modifier
                         .padding(2.dp),
-                    text = "$grade 학년",
+                    text = gradeText,
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Normal,

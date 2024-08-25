@@ -48,7 +48,7 @@ object TimeFormatter {
     }
 
     fun formatTimeAndSplit(timeString: String):Pair<String,String>{
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
         val time = LocalDateTime.parse(timeString, formatter)
 
         // LocalDate와 LocalTime을 포맷팅

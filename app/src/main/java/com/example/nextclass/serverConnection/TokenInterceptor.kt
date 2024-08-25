@@ -7,6 +7,7 @@ import com.example.nextclass.Data.TokenData
 import com.example.nextclass.utils.DUPLICATED_CHECK_ADDRESS
 import com.example.nextclass.utils.EXPIRED_ACCESS_TOKEN
 import com.example.nextclass.utils.EXPIRED_REFRESH_TOKEN
+import com.example.nextclass.utils.GlobalNavigator
 import com.example.nextclass.utils.LOGIN_ADDRESS
 import com.example.nextclass.utils.REGISTER_ADDRESS
 import com.example.nextclass.utils.TokenManager
@@ -36,13 +37,15 @@ class TokenInterceptor(
         }
 
 
-        // 토큰을 가져옴
+        // 토큰을 가져옴 todo
         val accessToken = TokenManager.getAccessToken(context)
 
 
         if (accessToken != null) {
             Log.d("newToken",accessToken)
         }
+        val testAccessToken="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NjM3NmM4ZS1lNDkwLTQyOWUtOGQ5Yy0wYzczYjczMmE0ZDc6VVNFUiIsImlzcyI6IkRhZUhhbiIsImlhdCI6MTcyMzYxMDI0MSwiZXhwIjoxNzIzNjIxMDQxfQ.IKutGRUxsUmHK-5370gY7p7ImGjcIesC_Q7z64h9hNfMdwCjlr9PfPDtT1W4J-8yOyaylxoAB24ylhl5IvzGnA"
+
         // 새로운 요청 빌더 생성
         val newRequest = originalRequest.newBuilder().apply {
             accessToken?.let {
@@ -61,12 +64,15 @@ class TokenInterceptor(
         if (isTokenExpired(response)) {
             Log.d("토큰만료","만료")
             // 토큰 갱신 로직을 실행
-            response.close()
+
+//            response.close()
 
             //새로운 엑세스 키를 가져옴
             val newAccessToken = refreshAccessToken(chain, originalRequest)
+
             //새로운 엑세스 키를 받아왔다면
             if (newAccessToken != null) {
+                Log.d("뉴엑세스토큰",newAccessToken)
                 // 처음 시도했던 통신을 이어가기 위해 새로운 Access Token을 사용하여 요청을 다시 보냄
                 val lastRequest = originalRequest.newBuilder().apply {
                     header("Authorization", "Bearer $newAccessToken")
@@ -75,22 +81,12 @@ class TokenInterceptor(
             }else {
                 //새로운 엑세스 키를 받아오지 못했다면
 
-                // 임시로 리프레시요청을 보내보기로함
-//                val newAccessTokenRequest = originalRequest.newBuilder()
-//                    .header("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxOTY1N2VjNy0zYzA3LTRlN2ItOTU0NC0zMDA4M2M2MjgxYWM6VVNFUiIsImlzcyI6IkRhZUhhbiIsImlhdCI6MTcxOTg0MjYyMSwiZXhwIjoxNzE5ODUzNDIxfQ.UUl12nnhbMUjqgC5MQc3axo3tLvTppkAmVD-vBEEYxPg7RFJ6cf3wlemG7Y7AF6X15HkTUdwafMUVmO7Ba4nXQ")
-//                    .header("refresh-token", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxOTY1N2VjNy0zYzA3LTRlN2ItOTU0NC0zMDA4M2M2MjgxYWM6VVNFUiIsImlzcyI6IkRhZUhhbiIsImlhdCI6MTcxOTY3NzMyMiwiZXhwIjoxNzEwODg2OTIyfQ.9tMOXIy1rkMcSGcjDtftshSFT4L6Kf9bJnjFTfdCFJTlGw7iqBriv2bWdwURz-2qqXfM_iOWGlm4MJZH1KN5pg")
-//                    .build()
-                val refreshToken = TokenManager.getRefreshToken(context)
-                val newAccessTokenRequest = originalRequest.newBuilder()
-                    .header("Authorization", "Bearer $newAccessToken")
-                    .header("refresh-token", refreshToken!!)
-                    .build()
+                GlobalNavigator.logout()
 
-                return chain.proceed(newAccessTokenRequest)
             }
         }
 
-        Log.d("newRequest", newRequest.toString())
+//        Log.d("newRequest", newRequest.toString())
 
 //        return response
         return response
@@ -105,7 +101,7 @@ class TokenInterceptor(
     private fun isRefreshTokenExpired(response: Response): Boolean {
 
         val responseBody = response.peekBody(Long.MAX_VALUE).string()
-        Log.d("responseBody",responseBody)
+        Log.d("RefreshTokenExpiredResponseBody",responseBody)
         return responseBody.contains(EXPIRED_REFRESH_TOKEN)
     }
 
@@ -115,20 +111,33 @@ class TokenInterceptor(
                 // 리프레시 토큰 가져옴
                 val refreshToken = TokenManager.getRefreshToken(context)
                 val accessToken = TokenManager.getAccessToken(context)
+
+                val testAccessToken="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NjM3NmM4ZS1lNDkwLTQyOWUtOGQ5Yy0wYzczYjczMmE0ZDc6VVNFUiIsImlzcyI6IkRhZUhhbiIsImlhdCI6MTcyMzYxMDI0MSwiZXhwIjoxNzIzNjIxMDQxfQ.IKutGRUxsUmHK-5370gY7p7ImGjcIesC_Q7z64h9hNfMdwCjlr9PfPDtT1W4J-8yOyaylxoAB24ylhl5IvzGnA"
+                val testRefreshToken="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNzJiMDAyMS05ZDhjLTRhZmYtOGMwOC03NmMzNDc4ZjY2NzY6VVNFUiIsImlzcyI6IkRhZUhhbiIsImlhdCI6MTcyMzU0OTM0OCwiZXhwIjoxNzI0NzU4OTQ4fQ.hLMniwbvKAXbaUhpiP_O732IsNejpZ1j4k955HnIc68UwrDrGcjOgP9Jz4SI-EC_17q88iDsYpTFAd_BZBsxJw"
+
                 // 토큰 갱신 요청 생성
                 val newAccessTokenRequest = originalRequest.newBuilder()
                     .header("Authorization", "Bearer $accessToken")
                     .header("refresh-token", refreshToken!!)
                     .build()
 
+
+
                 // 토큰 갱신 요청
                 val refreshTokenResponse = chain.proceed(newAccessTokenRequest)
+
+//                Log.d("엑세스 재발급 응답", refreshTokenResponse.toString())
 
                 if(isRefreshTokenExpired(refreshTokenResponse)){
                     //만약 리프레쉬 토큰도 만료라면 로그인화면으로 이동
                     Log.d("리프레시 만료", EXPIRED_REFRESH_TOKEN)
                     return@runBlocking null
-                }else{
+                }
+                //나중에 제거해야함
+                else if(isTokenExpired(refreshTokenResponse)){
+                    return@runBlocking null
+                }
+                else{
                     if (refreshTokenResponse.isSuccessful) {
                         // 새로운 엑세스키 추출
                         val responseBody = refreshTokenResponse.peekBody(Long.MAX_VALUE).string()

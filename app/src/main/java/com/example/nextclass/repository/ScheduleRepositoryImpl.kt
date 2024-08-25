@@ -24,7 +24,7 @@ class ScheduleRepositoryImpl @Inject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             val response = api.saveSchedule(singleScheduleData)
             val result = try {
-
+                Log.d("보내는 스케쥴", singleScheduleData.toString())
                 Log.d("스케쥴 저장결과", response.toString())
                 if (response.isSuccessful) {
 
