@@ -73,6 +73,7 @@ fun ScheduleView(
     LaunchedEffect(Unit) {
         scheduleViewModel.resetScheduleData()
         scheduleViewModel.getScheduleData()
+        scheduleViewModel.groupedScheduleData()
     }
 
 

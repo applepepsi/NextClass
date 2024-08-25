@@ -8,8 +8,11 @@ import com.example.nextclass.utils.DUPLICATED_CHECK_ADDRESS
 import com.example.nextclass.utils.EXPIRED_ACCESS_TOKEN
 import com.example.nextclass.utils.EXPIRED_REFRESH_TOKEN
 import com.example.nextclass.utils.GlobalNavigator
+import com.example.nextclass.utils.INVALID_ACCESS_TOKEN
+import com.example.nextclass.utils.INVALID_REFRESH_TOKEN
 import com.example.nextclass.utils.LOGIN_ADDRESS
 import com.example.nextclass.utils.REGISTER_ADDRESS
+import com.example.nextclass.utils.TOKEN_USER_NOT_EXIST
 import com.example.nextclass.utils.TokenManager
 import com.example.nextclass.viewmodel.LoginViewModel
 import kotlinx.coroutines.Dispatchers
@@ -95,14 +98,21 @@ class TokenInterceptor(
         //서버의 응답에서 EXPIRED_ACCESS_TOKEN코드가 온다면 토큰 재발급 시작
         val responseBody = response.peekBody(Long.MAX_VALUE).string()
         Log.d("responseBody",responseBody)
-        return responseBody.contains(EXPIRED_ACCESS_TOKEN)
+
+        return responseBody.contains(EXPIRED_ACCESS_TOKEN) || responseBody.contains(INVALID_ACCESS_TOKEN) || responseBody.contains(
+                TOKEN_USER_NOT_EXIST)
+
+//        return responseBody.contains(EXPIRED_ACCESS_TOKEN)
     }
 
     private fun isRefreshTokenExpired(response: Response): Boolean {
 
         val responseBody = response.peekBody(Long.MAX_VALUE).string()
         Log.d("RefreshTokenExpiredResponseBody",responseBody)
-        return responseBody.contains(EXPIRED_REFRESH_TOKEN)
+        return responseBody.contains(EXPIRED_REFRESH_TOKEN) || responseBody.contains(
+            INVALID_REFRESH_TOKEN) || responseBody.contains(TOKEN_USER_NOT_EXIST)
+
+//        return responseBody.contains(EXPIRED_REFRESH_TOKEN)
     }
 
     private fun refreshAccessToken(chain: Interceptor.Chain, originalRequest: Request): String? {
@@ -113,7 +123,7 @@ class TokenInterceptor(
                 val accessToken = TokenManager.getAccessToken(context)
 
                 val testAccessToken="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NjM3NmM4ZS1lNDkwLTQyOWUtOGQ5Yy0wYzczYjczMmE0ZDc6VVNFUiIsImlzcyI6IkRhZUhhbiIsImlhdCI6MTcyMzYxMDI0MSwiZXhwIjoxNzIzNjIxMDQxfQ.IKutGRUxsUmHK-5370gY7p7ImGjcIesC_Q7z64h9hNfMdwCjlr9PfPDtT1W4J-8yOyaylxoAB24ylhl5IvzGnA"
-                val testRefreshToken="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNzJiMDAyMS05ZDhjLTRhZmYtOGMwOC03NmMzNDc4ZjY2NzY6VVNFUiIsImlzcyI6IkRhZUhhbiIsImlhdCI6MTcyMzU0OTM0OCwiZXhwIjoxNzI0NzU4OTQ4fQ.hLMniwbvKAXbaUhpiP_O732IsNejpZ1j4k955HnIc68UwrDrGcjOgP9Jz4SI-EC_17q88iDsYpTFAd_BZBsxJw"
+                val testRefreshToken="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNzJiMDAyMS05ZDhjLTRhZmYtOGMwOC03NmMzNDc4ZjY2NzY6VVNFUiIsImlzcyI6IkRhZUhhbiIsImlhdCI6MTcyMzU0OTM0OCwiZXhwIjoxNzIzNzU2OTQ4fQ.Ruj60RcEr_xA16sRMXUcKhmC3yzi7j0ySAos9Q9n5_UNqF9S6N_PRXXTgPByMrroVVhhTdLmYJ6eNCMzeiWcWA"
 
                 // 토큰 갱신 요청 생성
                 val newAccessTokenRequest = originalRequest.newBuilder()
@@ -131,10 +141,6 @@ class TokenInterceptor(
                 if(isRefreshTokenExpired(refreshTokenResponse)){
                     //만약 리프레쉬 토큰도 만료라면 로그인화면으로 이동
                     Log.d("리프레시 만료", EXPIRED_REFRESH_TOKEN)
-                    return@runBlocking null
-                }
-                //나중에 제거해야함
-                else if(isTokenExpired(refreshTokenResponse)){
                     return@runBlocking null
                 }
                 else{

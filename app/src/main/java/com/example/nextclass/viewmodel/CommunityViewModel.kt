@@ -217,12 +217,12 @@ class CommunityViewModel @Inject constructor(
         _loading.value=false
     }
 
-    fun getPostList(sort: String, post_sequence: Int?) {
+    fun getPostList(sort: String, post_sequence: Int?,size:Int=10) {
         Log.d("로딩", _loading.value.toString())
         if(_postLoading.value) return
         _postLoading.value=true
 
-        val postListData=PostListData(post_sequence=post_sequence.toString(),sort=sort,)
+        val postListData=PostListData(post_sequence=post_sequence.toString(),sort=sort,size=size)
         Log.d("postListData", postListData.toString())
 
         communityRepository.getPostList(postListData){ getPostListResult->

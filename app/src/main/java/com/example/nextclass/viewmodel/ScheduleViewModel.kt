@@ -222,7 +222,8 @@ class ScheduleViewModel @Inject constructor(
         scheduleRepository.getTodoList { getTodoListResult->
             if (getTodoListResult != null) {
                 if(getTodoListResult.code== SUCCESS_CODE){
-                    groupedScheduleData(getTodoListResult.data!!)
+                    _scheduleDataList.value=getTodoListResult.data!!
+
                 }
             }
 
@@ -239,15 +240,19 @@ class ScheduleViewModel @Inject constructor(
 
     //날짜별로 그룹화
     @RequiresApi(Build.VERSION_CODES.O)
-    fun groupedScheduleData(groupScheduleData: List<ScheduleData>) {
+    fun groupedScheduleData(splitToday:Boolean=false) {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+        val filterScheduleData = _scheduleDataList.value
 
-        Log.d("groupScheduleData", groupScheduleData.toString())
+        val today = if (splitToday) LocalDate.now() else null
 
-        _groupByDateScheduleData.value = groupScheduleData.groupBy {
-            LocalDateTime.parse(it.alarm_time, formatter).toLocalDate()
-        }.toSortedMap(compareByDescending { it })
+        _groupByDateScheduleData.value = filterScheduleData
+            .filter { !splitToday || LocalDateTime.parse(it.alarm_time, formatter).toLocalDate() == today }
+            .groupBy { LocalDateTime.parse(it.alarm_time, formatter).toLocalDate() }
+            .toSortedMap(compareByDescending { it })
     }
+
+
 
     fun deleteScheduleData(){
 

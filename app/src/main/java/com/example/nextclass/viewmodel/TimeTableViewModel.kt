@@ -125,6 +125,9 @@ class TimeTableViewModel @Inject constructor(
     private val _modifyScoreErrorState = mutableStateOf(false)
     val modifyScoreErrorState: State<Boolean> = _modifyScoreErrorState
 
+    private val _todayClassDataList = mutableStateOf(listOf<ClassData>())
+    val todayClassDataList: State<List<ClassData>> = _todayClassDataList
+
     fun toggleInsertClassDataDialogState(){
         resetClassData()
         _insertClassDataDialogState.value=!_insertClassDataDialogState.value
@@ -379,6 +382,18 @@ class TimeTableViewModel @Inject constructor(
             _loading.value=false
         }
         _loading.value=false
+    }
+
+    fun splitTodayClass(){
+
+        val currentDay=ConvertDayOfWeek.getCurrentDay()
+        Log.d("오늘의 요일", currentDay.toString())
+         val todayClassList= _timeTableDataList.value.filter { singleClassData ->
+            singleClassData.week == currentDay
+        }
+
+        Log.d("오늘의 수업", todayClassList.toString())
+        _todayClassDataList.value=todayClassList
     }
 
     fun getTimeTableScore(){

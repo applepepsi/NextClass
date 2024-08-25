@@ -47,7 +47,7 @@ fun MainNavGraph(
 
 
     NavHost(navController = navController, startDestination = "homeRoute") {
-        homeRoute(navController, loginViewModel, mainNavHostController)
+        homeRoute(navController, loginViewModel, mainNavHostController,scheduleViewModel,userInfoViewModel,communityViewModel,timeTableViewModel)
         timetableRoute(navController, loginViewModel, mainNavHostController,timeTableViewModel)
         communityRoute(navController, loginViewModel, mainNavHostController,communityViewModel)
         scheduleRoute(navController, loginViewModel, mainNavHostController,scheduleViewModel)
@@ -59,14 +59,18 @@ fun MainNavGraph(
 private fun NavGraphBuilder.homeRoute(
     navController: NavHostController,
     loginViewModel: LoginViewModel,
-    mainNavHostController: NavHostController
+    mainNavHostController: NavHostController,
+    scheduleViewModel: ScheduleViewModel,
+    userInfoViewModel: UserInfoViewModel,
+    communityViewModel: CommunityViewModel,
+    timeTableViewModel: TimeTableViewModel
 ) {
     navigation(
         route = "homeRoute",
         startDestination = BottomNavItem.Home.screenRoute
     ) {
         composable(BottomNavItem.Home.screenRoute) {
-            HomeView(navController, loginViewModel, mainNavHostController)
+            HomeView(navController, loginViewModel, mainNavHostController,communityViewModel,scheduleViewModel,timeTableViewModel,userInfoViewModel)
         }
     }
 }
