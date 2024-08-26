@@ -32,6 +32,7 @@ import com.example.nextclass.utils.COMMENT_CHANGE
 import com.example.nextclass.utils.COMMENT_DELETE
 import com.example.nextclass.utils.COMMENT_SAVE
 import com.example.nextclass.utils.DELETE_ID
+import com.example.nextclass.utils.DELETE_SCHEDULE
 import com.example.nextclass.utils.DUPLICATED_CHECK_ADDRESS
 import com.example.nextclass.utils.FIND_ID
 import com.example.nextclass.utils.FIND_PASSWORD
@@ -55,6 +56,7 @@ import com.example.nextclass.utils.REGISTER_ADDRESS
 import com.example.nextclass.utils.SAVE_SCHEDULE
 import com.example.nextclass.utils.SCORE_UPDATE
 import com.example.nextclass.utils.SEND_CHANGE_MAIL
+import com.example.nextclass.utils.UPDATE_SCHEDULE
 import com.example.nextclass.utils.VOTE
 import retrofit2.Response
 import retrofit2.http.Body
@@ -169,6 +171,12 @@ interface API {
     //투두리스트
     @POST(SAVE_SCHEDULE)
     suspend fun saveSchedule(@Body singleSchedule:ScheduleData):Response<ServerResponse<Any>>
+
+    @POST(UPDATE_SCHEDULE)
+    suspend fun updateSchedule(@Body singleSchedule:ScheduleData):Response<ServerResponse<Any>>
+
+    @POST(DELETE_SCHEDULE)
+    suspend fun deleteSchedule(@Body singleSchedule:ScheduleData):Response<ServerResponse<Any>>
 
     @POST(GET_TO_DO_LIST)
     suspend fun getTodoList():Response<ServerResponse<List<ScheduleData>>>

@@ -64,5 +64,7 @@ const val POST_DETAIL="/post/{post_sequence}"
 const val VOTE="/vote"
 
 const val SAVE_SCHEDULE="/to_do_list_create"
+const val UPDATE_SCHEDULE="/to_do_list_update"
+const val DELETE_SCHEDULE="/to_do_list_delete"
 const val GET_TO_DO_LIST="/to_do_list_read_all"
 

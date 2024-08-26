@@ -46,6 +46,64 @@ class ScheduleRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun updateSchedule(
+        singleScheduleData: ScheduleData,
+        callback: (ServerResponse<Any>?) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = api.updateSchedule(singleScheduleData)
+            val result = try {
+                Log.d("보내는 스케쥴", singleScheduleData.toString())
+                Log.d("스케쥴 변경 결과", response.toString())
+                if (response.isSuccessful) {
+
+                    Log.d("스케쥴 변경 성공", response.body().toString())
+
+                    response.body()
+                } else {
+
+                    Log.d("스케쥴 변경 실패", "실패")
+                }
+                response.body()
+            } catch (e: Exception) {
+                Log.d("스케쥴 변경 실패", e.toString())
+                response.body()
+            }
+            withContext(Dispatchers.Main) {
+                callback(result)
+            }
+        }
+    }
+
+    override fun deleteSchedule(
+        singleScheduleData: ScheduleData,
+        callback: (ServerResponse<Any>?) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = api.deleteSchedule(singleScheduleData)
+            val result = try {
+                Log.d("보내는 스케쥴", singleScheduleData.toString())
+                Log.d("스케쥴 제거 결과", response.toString())
+                if (response.isSuccessful) {
+
+                    Log.d("스케쥴 제거 성공", response.body().toString())
+
+                    response.body()
+                } else {
+
+                    Log.d("스케쥴 제거 실패", "실패")
+                }
+                response.body()
+            } catch (e: Exception) {
+                Log.d("스케쥴 제거 실패", e.toString())
+                response.body()
+            }
+            withContext(Dispatchers.Main) {
+                callback(result)
+            }
+        }
+    }
+
     override fun getTodoList(callback: (ServerResponse<List<ScheduleData>>?) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             val response = api.getTodoList()

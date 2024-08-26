@@ -78,8 +78,8 @@ fun HomeView(
     LaunchedEffect(Unit) {
 
         //오늘의 수업
-        timeTableViewModel.getTimeTable()
-        timeTableViewModel.splitTodayClass()
+        timeTableViewModel.getTimeTable(splitTodayClass = true)
+//        timeTableViewModel.splitTodayClass()
 
         //투두리스트 가져오기
         scheduleViewModel.resetScheduleData()
@@ -131,7 +131,7 @@ fun HomeView(
 //                .clip(RoundedCornerShape(13.dp))
 //                .background(Background_Color2),
                     ,
-            contentPadding =  PaddingValues(10.dp)
+            contentPadding =  PaddingValues(start=5.dp)
         ) {
             items(items=timeTableViewModel.todayClassDataList.value){ singleClassData->
                 Log.d("singleClassData",singleClassData.toString())

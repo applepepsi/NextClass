@@ -131,15 +131,49 @@ class ScheduleViewModel @Inject constructor(
         Log.d("스케쥴 시간", _scheduleData.value.toString())
         if(checkScheduleData()){
             //서버로 전송
-            scheduleRepository.tokenCheck { ServerResponse->
-                if (ServerResponse != null) {
-                    if(ServerResponse.errorCode== EXPIRED_REFRESH_TOKEN){
-                        _tokenCheckResult.value=true
+            scheduleRepository.updateSchedule(_scheduleData.value) { UpdateScheduleResult->
+                if (UpdateScheduleResult != null) {
+                    if(UpdateScheduleResult.code== SUCCESS_CODE){
+                        Log.d("스케쥴 수정 성공", UpdateScheduleResult.data.toString())
+                        toggleSaveScheduleResult()
                     }
                 }
                 resetScheduleData()
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setSelectScheduleData(selectScheduleData: ScheduleData){
+
+
+        val alarmTimeString = selectScheduleData.alarm_time
+        val alarmTime = LocalDateTime.parse(alarmTimeString)
+
+        _timeData.value = _timeData.value.copy(
+            selectDate = alarmTime.toLocalDate(),
+            selectTime = alarmTime.toLocalTime())
+
+        updateScheduleDetail(selectScheduleData.content)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun deleteScheduleData(){
+
+
+        Log.d("스케쥴 시간", _scheduleData.value.toString())
+
+            //서버로 전송
+            scheduleRepository.deleteSchedule(_scheduleData.value) { DeleteScheduleResult->
+                if (DeleteScheduleResult != null) {
+                    if(DeleteScheduleResult.code== SUCCESS_CODE){
+                        Log.d("스케쥴 제거 성공", DeleteScheduleResult.data.toString())
+                        getScheduleData()
+                    }
+                }
+                resetScheduleData()
+            }
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -232,11 +266,11 @@ class ScheduleViewModel @Inject constructor(
 
     }
 
-    fun setScheduleData(scheduleData: ScheduleData){
-
-        Log.d("scheduleData", scheduleData.toString())
-        _scheduleData.value=scheduleData
-    }
+//    fun setScheduleData(scheduleData: ScheduleData){
+//
+//        Log.d("scheduleData", scheduleData.toString())
+//        _scheduleData.value=scheduleData
+//    }
 
     //날짜별로 그룹화
     @RequiresApi(Build.VERSION_CODES.O)
@@ -253,9 +287,5 @@ class ScheduleViewModel @Inject constructor(
     }
 
 
-
-    fun deleteScheduleData(){
-
-    }
 
 }

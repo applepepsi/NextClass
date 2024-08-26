@@ -1,6 +1,7 @@
 package com.example.nextclass.appComponent
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,6 +37,7 @@ import com.example.nextclass.R
 import com.example.nextclass.repository.testRepo.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.Pastel_Red
+import com.example.nextclass.utils.ConvertDayOfWeek
 import com.example.nextclass.viewmodel.LoginViewModel
 import com.example.nextclass.viewmodel.TimeTableViewModel
 
@@ -50,21 +52,25 @@ fun TodaySingleClassComponent(
             .padding(start=10.dp,end=10.dp)
             .clip(RoundedCornerShape(13.dp))
             .background(Background_Color2),
+        verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text=singleClassData.title+"wdwdwdwd",
+            text=singleClassData.title,
             style = TextStyle(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Normal,
             ),
+            modifier = Modifier.padding(top=3.dp,start=8.dp,end=8.dp)
         )
-        Row(){
+        Row(
+            modifier = Modifier.padding(top=3.dp,start=8.dp,end=8.dp)
+        ){
             Text(
-                text=singleClassData.week,
+                text= ConvertDayOfWeek.convertDayOfWeekKorea(singleClassData.week),
                 style = TextStyle(
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Normal,
                     fontStyle = FontStyle.Normal,
                 ),
             )
@@ -79,12 +85,21 @@ fun TodaySingleClassComponent(
                 },
                 style = TextStyle(
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Normal,
                     fontStyle = FontStyle.Normal,
                 ),
             )
 
         }
+        Text(
+            text=singleClassData.school,
+            style = TextStyle(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Normal,
+                fontStyle = FontStyle.Normal,
+            ),
+            modifier = Modifier.padding(top=3.dp,start=8.dp,end=8.dp,bottom=3.dp)
+        )
 
     }
 }

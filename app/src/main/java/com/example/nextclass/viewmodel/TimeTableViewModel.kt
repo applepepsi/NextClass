@@ -370,13 +370,17 @@ class TimeTableViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getTimeTable(){
+    fun getTimeTable(splitTodayClass:Boolean=false){
         _loading.value=true
         val currentSemester=getCurrentSemester()
         timeTableRepository.getCurrentTimeTableData(currentSemester){serverResponse ->
             if(serverResponse?.data != null){
                 Log.d("시간표 가져오기 성공", serverResponse.toString())
                 _timeTableDataList.value=serverResponse.data
+
+                if(splitTodayClass){
+                    splitTodayClass()
+                }
             }
 
             _loading.value=false
@@ -388,9 +392,13 @@ class TimeTableViewModel @Inject constructor(
 
         val currentDay=ConvertDayOfWeek.getCurrentDay()
         Log.d("오늘의 요일", currentDay.toString())
-         val todayClassList= _timeTableDataList.value.filter { singleClassData ->
-            singleClassData.week == currentDay
-        }
+        val todayClassList = _timeTableDataList.value
+            .filter { singleClassData ->
+                singleClassData.week == currentDay
+            }
+            .sortedBy { singleClassData ->
+                singleClassData.class_start_time
+            }
 
         Log.d("오늘의 수업", todayClassList.toString())
         _todayClassDataList.value=todayClassList

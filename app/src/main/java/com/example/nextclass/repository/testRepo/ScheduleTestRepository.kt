@@ -25,6 +25,20 @@ class ScheduleTestRepository: ScheduleRepository {
         TODO("Not yet implemented")
     }
 
+    override fun updateSchedule(
+        singleScheduleData: ScheduleData,
+        callback: (ServerResponse<Any>?) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteSchedule(
+        singleScheduleData: ScheduleData,
+        callback: (ServerResponse<Any>?) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
     override fun getTodoList(callback: (ServerResponse<List<ScheduleData>>?) -> Unit) {
         TODO("Not yet implemented")
     }

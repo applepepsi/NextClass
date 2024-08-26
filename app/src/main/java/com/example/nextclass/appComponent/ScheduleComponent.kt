@@ -865,15 +865,16 @@ fun LazyScheduleItem(
                         scheduleDate = TimeFormatter.formatTimeAndSplit(singleSchedule.alarm_time),
                         modifySchedule = {
                             // 수정 버튼을 누르면 수정 페이지로 이동
-                            scheduleViewModel.setScheduleData(singleSchedule)
+                            scheduleViewModel.setSelectScheduleData(singleSchedule)
                             navController.navigate("modifyScheduleView") {
-                                popUpTo(BottomNavItem.Schedule.screenRoute) {
-                                    inclusive = true
-                                }
+//                                popUpTo(BottomNavItem.Schedule.screenRoute) {
+//                                    inclusive = true
+//                                }
                             }
                         },
                         deleteSchedule = {
-                            scheduleViewModel.setScheduleData(singleSchedule)
+                            scheduleViewModel.setSelectScheduleData(singleSchedule)
+                            scheduleViewModel.deleteScheduleData()
                         },
                     )
                 }
@@ -945,7 +946,7 @@ fun GridScheduleItem(
                         scheduleDate = TimeFormatter.formatTimeAndSplit(singleSchedule.alarm_time),
                         modifySchedule = {
                             // 수정 버튼을 누르면 수정 페이지로 이동
-                            scheduleViewModel.setScheduleData(singleSchedule)
+                            scheduleViewModel.setSelectScheduleData(singleSchedule)
                             navController.navigate("modifyScheduleView") {
                                 popUpTo(BottomNavItem.Schedule.screenRoute) {
                                     inclusive = true
@@ -953,7 +954,7 @@ fun GridScheduleItem(
                             }
                         },
                         deleteSchedule = {
-                            scheduleViewModel.setScheduleData(singleSchedule)
+                            scheduleViewModel.setSelectScheduleData(singleSchedule)
                         },
                     )
                 }

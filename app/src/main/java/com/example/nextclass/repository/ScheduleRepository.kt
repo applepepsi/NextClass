@@ -7,6 +7,10 @@ interface ScheduleRepository {
 
     fun saveSchedule(singleScheduleData: ScheduleData,callback: (ServerResponse<Any>?)->Unit)
 
+    fun updateSchedule(singleScheduleData: ScheduleData,callback: (ServerResponse<Any>?)->Unit)
+
+    fun deleteSchedule(singleScheduleData: ScheduleData,callback: (ServerResponse<Any>?)->Unit)
+
     fun getTodoList(callback: (ServerResponse<List<ScheduleData>>?)->Unit)
 
     fun tokenCheck(callback: (ServerResponse<Any>?) -> Unit)
