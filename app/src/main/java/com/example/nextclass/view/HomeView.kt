@@ -46,6 +46,7 @@ import com.example.nextclass.appComponent.ProgressBarFullComponent
 import com.example.nextclass.appComponent.ScheduleTextInsertPreview
 import com.example.nextclass.appComponent.SinglePostComponent
 import com.example.nextclass.appComponent.TodaySingleClassComponent
+import com.example.nextclass.appComponent.UserProfilePreviewComponent
 import com.example.nextclass.repository.testRepo.CommunityTestRepository
 import com.example.nextclass.repository.testRepo.ScheduleTestRepository
 import com.example.nextclass.repository.testRepo.TestRepository
@@ -89,6 +90,8 @@ fun HomeView(
         //베스트 게시물 가져오기
         communityViewModel.resetPostList()
         communityViewModel.getPostList(sort="vote",post_sequence=null, size = 4)
+
+        userInfoViewModel.getUserInfo()
     }
 
 
@@ -98,21 +101,15 @@ fun HomeView(
     ) {
         ProgressBarFullComponent(state = timeTableViewModel.loading.value)
 
-        Row(
-            modifier= Modifier
-                .fillMaxWidth()
-        ){
-            Text(
-                text="아산고등학교",
-                style = TextStyle(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Normal,
-                    fontStyle = FontStyle.Normal,
-                ),
+        Spacer(Modifier.height(30.dp))
 
-            )
-        }
+        UserProfilePreviewComponent(
+            name = userInfoViewModel.userProfile.value.name,
+            schoolName = userInfoViewModel.userProfile.value.member_school,
+            grade = userInfoViewModel.userProfile.value.member_grade
+        )
 
+        Spacer(Modifier.height(15.dp))
 
         Text(
             text="오늘의 수업",
@@ -121,7 +118,7 @@ fun HomeView(
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Normal,
             ),
-            modifier = Modifier.padding(start=10.dp)
+            modifier = Modifier.padding(start=10.dp,bottom=5.dp)
         )
         LazyRow(
             modifier = Modifier
@@ -139,7 +136,7 @@ fun HomeView(
             }
         }
 
-
+        Spacer(Modifier.height(15.dp))
         Text(
             text="오늘의 할일",
             style = TextStyle(
@@ -147,7 +144,7 @@ fun HomeView(
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Normal,
             ),
-            modifier = Modifier.padding(start=10.dp)
+            modifier = Modifier.padding(start=10.dp,bottom=5.dp)
         )
         LazyColumn(
             modifier = Modifier
@@ -173,6 +170,8 @@ fun HomeView(
 
         }
 
+        Spacer(Modifier.height(15.dp))
+
         Text(
             text="오늘의 인기글",
             style = TextStyle(
@@ -180,7 +179,7 @@ fun HomeView(
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Normal,
             ),
-            modifier = Modifier.padding(start=10.dp)
+            modifier = Modifier.padding(start=10.dp,bottom=5.dp)
         )
         LazyColumn(
             modifier = Modifier

@@ -1,6 +1,6 @@
 package com.example.nextclass.view
 
-import android.util.Log
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,10 +19,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,6 +61,7 @@ import com.example.nextclass.viewmodel.CommunityViewModel
 import com.example.nextclass.viewmodel.LoginViewModel
 import java.time.LocalDateTime
 
+@SuppressLint("RememberReturnType")
 @Composable
 fun CommunityView(
     navController: NavHostController,
@@ -70,7 +72,7 @@ fun CommunityView(
 ) {
     val context = LocalContext.current
     val communityNavController= rememberNavController()
-
+    val currentRoute = remember { mutableStateOf("") }
 //todo 테스트 해야함
 
     Box(
@@ -98,9 +100,6 @@ fun CommunityView(
                     rightButtonClick = { communityViewModel.toggleSearchBarState() }
                 )
 
-
-
-
             Spacer(modifier = Modifier.height(10.dp))
 
             if(communityViewModel.searchBarState.value){
@@ -117,14 +116,18 @@ fun CommunityView(
             CommunityTopNavComponent(
                 navController=navController,
                 communityViewModel=communityViewModel,
-                communityNavController=communityNavController
+                communityNavController=communityNavController,
+
             )
 
+
         }
-        FloatingActionButtonComponent(
-            navController=navController,
-            navRoute = "insertPostView"
-        )
+        if(communityViewModel.currentRoute.value!="BEST_POST"){
+            FloatingActionButtonComponent(
+                navController=navController,
+                navRoute = "insertPostView",
+            )
+        }
     }
 }
 
@@ -242,13 +245,11 @@ fun PostDetailView(
                         deleteComment = { communityViewModel.deleteComment(singleCommentData) },
                         likeComment = { communityViewModel.likeComment(singleCommentData) },
                         optionVisible = true,
-
                     )
                 DividerComponent(modifier = Modifier
                     .height(0.5.dp),
                     dividerColor = Color.LightGray
-                )
-                }
+                ) }
 
                 item{
                     if(communityViewModel.commentLoading.value){
@@ -280,7 +281,68 @@ fun PostDetailView(
     }
 }
 
+@Composable
+fun CommunityPostView(
+    communityViewModel: CommunityViewModel,
+    navController: NavHostController,
+    sortType: String,
+    padding: Boolean=true
+) {
+    val listState = rememberLazyListState()
 
+
+    LaunchedEffect(Unit) {
+        communityViewModel.resetPostList()
+        communityViewModel.toggleMorePostLoadState()
+        communityViewModel.getPostList(sort = sortType, post_sequence = null)
+    }
+
+    if (communityViewModel.getPostDetailResultState.value) {
+        navController.navigate("postDetailView")
+        communityViewModel.togglePostDetailState()
+    }
+
+    Column(
+        modifier = Modifier.fillMaxSize().then(
+            if (!padding) Modifier.padding(top = 10.dp) else Modifier
+        ),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        if (communityViewModel.loading.value) {
+            ProgressBarFullComponent(state = communityViewModel.loading.value)
+        }
+
+        LazyColumn(
+            state = listState,
+            modifier =  if (padding) Modifier.padding(bottom = 75.dp) else Modifier,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            items(items = communityViewModel.communityDataList.value) { singlePostData ->
+                SinglePostComponent(
+                    singlePostData,
+                    postClick = {
+                        communityViewModel.setSelectedCommunityData(singlePostData.post_sequence)
+                    }
+                )
+            }
+            item {
+                if (communityViewModel.postLoading.value) {
+                    ProgressBarSmallComponent(communityViewModel.postLoading.value)
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.layoutInfo }
+            .collect { layoutInfo ->
+                if (communityViewModel.morePostLoadState.value) {
+                    val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
+                    communityViewModel.loadMorePostsCheck(lastVisibleItemIndex, sortType = sortType)
+                }
+            }
+    }
+}
 
 
 @Composable
@@ -290,77 +352,12 @@ fun AllSchoolPostView(
     communityNavController: NavController,
     navController: NavHostController
 ) {
-    val listState = rememberLazyListState()
-
-//    val pullRefreshState = rememberPullRefreshState(
-//        refreshing = true or false
-//                onRefresh = refresh
-//    )
-
-
-    LaunchedEffect(Unit) {
-        communityViewModel.resetPostList()
-        communityViewModel.toggleMorePostLoadState()
-        communityViewModel.getPostList(sort="all",post_sequence=null)
-    }
-
-
-
-    if(communityViewModel.getPostDetailResultState.value){
-        navController.navigate("postDetailView")
-        communityViewModel.togglePostDetailState()
-    }
-    Column(
-        Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        if (communityViewModel.loading.value) {
-            ProgressBarFullComponent(state = communityViewModel.loading.value)
-        }
-
-
-
-        // LazyColumn 설정
-        LazyColumn(
-            state = listState,
-            modifier = Modifier
-                .padding(bottom = 75.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-
-
-            items(items = communityViewModel.communityDataList.value) { singlePostData ->
-
-                SinglePostComponent(
-                    singlePostData,
-                    postClick = {
-                        communityViewModel.setSelectedCommunityData(singlePostData.post_sequence)
-
-                    }
-                )
-            }
-            item {
-                if(communityViewModel.postLoading.value){
-                    ProgressBarSmallComponent(communityViewModel.postLoading.value)
-                }
-
-            }
-        }
-    }
-
-    //todo 테스트 해봐야함
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.layoutInfo }
-            .collect { layoutInfo ->
-                //현재 보이는 아이템의 마지막 인덱스
-                if(communityViewModel.morePostLoadState.value){
-                    val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
-                    communityViewModel.loadMorePostsCheck(lastVisibleItemIndex, sortType = "all")
-                }
-            }
-    }
+    CommunityPostView(
+        communityViewModel = communityViewModel,
+        navController = navController,
+        sortType = "all",
+        padding = true
+    )
 }
 
 @Composable
@@ -370,23 +367,12 @@ fun BestPostView(
     communityNavController: NavController,
     navController: NavHostController
 ) {
-
-    LazyColumn(
-        modifier = Modifier
-    ) {
-
-
-        items(items = testCommunityData) { singlePostData ->
-
-            SinglePostComponent(
-                singlePostData,
-                postClick = {
-                    communityViewModel.setSelectedCommunityData(singlePostData.post_sequence)
-
-                }
-            )
-        }
-    }
+    CommunityPostView(
+        communityViewModel = communityViewModel,
+        navController = navController,
+        sortType = "vote",
+        padding = true
+    )
 }
 
 @Composable
@@ -396,28 +382,12 @@ fun MySchoolPostView(
     communityNavController: NavController,
     navController: NavHostController
 ) {
-
-
-    LazyColumn(
-        modifier = Modifier
-    ) {
-
-//        item{
-//            Text(
-//                text="내학교"
-//            )
-//        }
-        items(items = testCommunityData) { singlePostData ->
-
-            SinglePostComponent(
-                singlePostData,
-                postClick = {
-                    communityViewModel.setSelectedCommunityData(singlePostData.post_sequence)
-
-                }
-            )
-        }
-    }
+    CommunityPostView(
+        communityViewModel = communityViewModel,
+        navController = navController,
+        sortType = "my_school",
+        padding = true
+    )
 }
 
 @Composable
@@ -429,36 +399,102 @@ fun MyCommentView(
     Column(
         modifier = Modifier
             .fillMaxSize()
+
             .padding(top = 20.dp),
 
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
 
-    ){
-        AppBarTextAndButtonComponent(
-            value = "회원 탈퇴",
-            navController=navController)
-
-        Spacer(modifier = Modifier.height(15.dp))
-
-    LazyColumn(
-        modifier = Modifier
     ) {
+        AppBarTextAndButtonComponent(
+            value = "작성한 댓글",
+            navController = navController,
+            showLeftButton = true,
+            showRightButton = false,
+            buttonText = "작성하기",
+            customRightButton = true,
+            customRightButtonIcon = Icons.Default.Search,
+            rightButtonClick = { communityViewModel.toggleSearchBarState() }
+        )
 
+        if(communityViewModel.searchBarState.value){
+            Spacer(modifier = Modifier.height(10.dp))
+            CommunitySearchBox(
+                text="",
+                onValueChange ={} ,
+                search = { /*TODO*/ },
+                deleteInputText = {}
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+        Spacer(modifier = Modifier.height(10.dp))
 
-        items(items = testCommentList) { singleCommentData ->
-            //내가 쓴 댓글을 터치하면 해당 게시물로 이동
-            CommentComponent(
-                singleCommentData = singleCommentData,
+        Column(
+            Modifier.background(Background_Color2)
+        ) {
 
-                commentClick = {
-                    communityViewModel.setSelectCommentData(singleCommentData)
-                },
-                optionVisible = false,
+            CommunityPostView(
+                communityViewModel = communityViewModel,
+                navController = navController,
+                sortType = "my_comment",
+                padding=false
             )
         }
 
+    }
+}
+
+@Composable
+fun MyFavoritePostView(
+    communityViewModel: CommunityViewModel,
+    navController: NavHostController,
+
+    ) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+
+            .padding(top = 20.dp),
+
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+
+    ) {
+        AppBarTextAndButtonComponent(
+            value = "추천한 게시물",
+            navController = navController,
+            showLeftButton = true,
+            showRightButton = false,
+            buttonText = "작성하기",
+            customRightButton = true,
+            customRightButtonIcon = Icons.Default.Search,
+            rightButtonClick = { communityViewModel.toggleSearchBarState() }
+        )
+
+        if(communityViewModel.searchBarState.value){
+            Spacer(modifier = Modifier.height(10.dp))
+            CommunitySearchBox(
+                text="",
+                onValueChange ={} ,
+                search = { /*TODO*/ },
+                deleteInputText = {}
+            )
+            Spacer(modifier = Modifier.height(10.dp))
         }
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Column(
+            Modifier.background(Background_Color2)
+        ) {
+
+            CommunityPostView(
+                communityViewModel = communityViewModel,
+                navController = navController,
+                sortType = "my_vote",
+                padding=false
+            )
+        }
+
     }
 }
 
@@ -471,6 +507,7 @@ fun MyPostView(
     Column(
         modifier = Modifier
             .fillMaxSize()
+
             .padding(top = 20.dp),
 
         verticalArrangement = Arrangement.Top,
@@ -478,38 +515,42 @@ fun MyPostView(
 
     ) {
         AppBarTextAndButtonComponent(
-            value = "회원 탈퇴",
-            navController = navController
+            value = "작성한 게시물",
+            navController = navController,
+            showLeftButton = true,
+            showRightButton = false,
+            buttonText = "작성하기",
+            customRightButton = true,
+            customRightButtonIcon = Icons.Default.Search,
+            rightButtonClick = { communityViewModel.toggleSearchBarState() }
         )
-        Spacer(modifier = Modifier.height(15.dp))
-        LazyColumn(
-            modifier = Modifier
+
+        if(communityViewModel.searchBarState.value){
+            Spacer(modifier = Modifier.height(10.dp))
+            CommunitySearchBox(
+                text="",
+                onValueChange ={} ,
+                search = { /*TODO*/ },
+                deleteInputText = {}
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+        
+        Column(
+            Modifier.background(Background_Color2)
         ) {
 
-//        item{
-//            PostOptionDropDownMenu(
-//                value = communityViewModel.myPostFilter.value,
-//                onValueChange = { communityViewModel.updateMyPostTypeDropDownText(it) },
-//                dropDownMenuOption = communityViewModel.toggleMyPostTypeState.value,
-//                toggleDropDownMenuOption = { communityViewModel.toggleMyPostTypeType() },
-//                menuItems = selectPostType
-//            )
-//            Spacer(modifier = Modifier.height(10.dp))
-//        }
-
-
-            items(items = testCommunityData) { singlePostData ->
-
-                SinglePostComponent(
-                    singlePostData,
-                    postClick = {
-                        communityViewModel.setSelectedCommunityData(singlePostData.post_sequence)
-//                    navController.navigate("postDetailView")
-                    }
-                )
-            }
+            CommunityPostView(
+                communityViewModel = communityViewModel,
+                navController = navController,
+                sortType = "my_post",
+                padding=false
+            )
         }
+
     }
+
 }
 
 

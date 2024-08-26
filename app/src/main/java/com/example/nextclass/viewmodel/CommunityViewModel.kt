@@ -96,6 +96,10 @@ class CommunityViewModel @Inject constructor(
 
     private val _commentLoading=mutableStateOf(false)
     val commentLoading: State<Boolean> = _commentLoading
+
+    private val _currentRoute=mutableStateOf("")
+    val currentRoute: State<String> = _currentRoute
+
     fun setSelectedCommunityData(selectPostSequence: String,postReLoad:Boolean=false){
 
 
@@ -505,6 +509,10 @@ class CommunityViewModel @Inject constructor(
         )
         setSelectedCommunityData(_selectCommunityData.value.post_sequence,postReLoad = true)
 
+    }
+
+    fun setCurrentRoute(screenRoute: String) {
+        _currentRoute.value=screenRoute
     }
 
 //    fun setPostType(type: String) {

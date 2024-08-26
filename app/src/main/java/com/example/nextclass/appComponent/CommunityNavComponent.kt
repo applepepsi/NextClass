@@ -43,7 +43,12 @@ import com.example.nextclass.viewmodel.CommunityViewModel
 
 
 @Composable
-fun CommunityTopNavComponent(navController: NavHostController,communityViewModel:CommunityViewModel,communityNavController:NavHostController) {
+fun CommunityTopNavComponent(
+    navController: NavHostController,
+    communityViewModel:CommunityViewModel,
+    communityNavController:NavHostController,
+
+) {
     val screens = listOf(
         CommunityTopNavItem.AllSchool,
         CommunityTopNavItem.MySchool,
@@ -56,22 +61,19 @@ fun CommunityTopNavComponent(navController: NavHostController,communityViewModel
     Column {
         Spacer(modifier = Modifier.height(15.dp))
 
-        Surface(modifier = Modifier
-            .fillMaxWidth())
-
-        {
-
-            Row(modifier = Modifier
-//            .background(Color.White)
-            ) {
-
-
-
+        Surface(modifier = Modifier.fillMaxWidth()) {
+            Row(modifier = Modifier) {
                 screens.forEach { screen ->
-                    AddCommunityTopNavItem(screen = screen, currentDestination = currentDestination, communityNavController = communityNavController)
+                    AddCommunityTopNavItem(
+                        screen = screen,
+                        currentDestination = currentDestination,
+                        communityNavController = communityNavController,
+                        communityViewModel=communityViewModel
+                    )
                 }
             }
         }
+    }
 
         Column(
             modifier = Modifier.background(Background_Color2)
@@ -80,14 +82,15 @@ fun CommunityTopNavComponent(navController: NavHostController,communityViewModel
             CommunityGraph(navController = navController, communityViewModel = communityViewModel, communityNavController = communityNavController)
 
         }
-    }
+
 }
 
 @Composable
 fun RowScope.AddCommunityTopNavItem(
     screen: CommunityTopNavItem,
     currentDestination: NavDestination?,
-    communityNavController: NavHostController
+    communityNavController: NavHostController,
+    communityViewModel: CommunityViewModel
 ) {
     val selected = currentDestination?.hierarchy?.any { it.route == screen.screenRoute } == true
     val selectTextColor = if (selected) Color.Black else Color.LightGray
@@ -101,6 +104,8 @@ fun RowScope.AddCommunityTopNavItem(
             .clickable(
                 onClick = {
                     Log.d("선택된 루트", screen.screenRoute)
+
+                    communityViewModel.setCurrentRoute(screen.screenRoute)
                     communityNavController.navigate(screen.screenRoute) {
                         popUpTo(communityNavController.graph.findStartDestination().id)
                         launchSingleTop = true
@@ -155,7 +160,7 @@ fun CommunityTopNavPreview() {
     val communityViewModel = CommunityViewModel(communityTestRepository)
 
     NextClassTheme {
-        CommunityTopNavComponent(navController = mainNavController,communityViewModel, communityNavController = mainNavController)
+        CommunityTopNavComponent(navController = mainNavController,communityViewModel, communityNavController = mainNavController,)
 
     }
 }

@@ -234,6 +234,14 @@ fun UserProfileView(
                             address = "myCommentView",
                             navController = navController
                         )
+                        Spacer(modifier = Modifier.height(40.dp))
+                        UserProfileItemComponent(
+                            image = ImageVector.vectorResource(R.drawable.empty_heart_icon),
+                            text = "추천한 게시물",
+                            address = "myFavoritePostView",
+                            navController = navController
+                        )
+
 
                         Spacer(modifier = Modifier.height(20.dp))
 

@@ -58,7 +58,7 @@ fun UserProfilePreviewComponent(
     Row(
         modifier = Modifier
             .padding(start = 10.dp, end = 10.dp)
-            .clip(RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(13.dp))
             .fillMaxWidth()
             .height(100.dp)
 //            .border(1.dp, Color.LightGray, shape = RoundedCornerShape(15.dp))

@@ -155,6 +155,8 @@ class ScheduleViewModel @Inject constructor(
             selectTime = alarmTime.toLocalTime())
 
         updateScheduleDetail(selectScheduleData.content)
+
+        _scheduleData.value=_scheduleData.value.copy(uuid = selectScheduleData.uuid)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -168,7 +170,9 @@ class ScheduleViewModel @Inject constructor(
                 if (DeleteScheduleResult != null) {
                     if(DeleteScheduleResult.code== SUCCESS_CODE){
                         Log.d("스케쥴 제거 성공", DeleteScheduleResult.data.toString())
+
                         getScheduleData()
+                        groupedScheduleData()
                     }
                 }
                 resetScheduleData()
@@ -256,15 +260,19 @@ class ScheduleViewModel @Inject constructor(
         scheduleRepository.getTodoList { getTodoListResult->
             if (getTodoListResult != null) {
                 if(getTodoListResult.code== SUCCESS_CODE){
+                    Log.d("스케쥴 가져오기 성공", getTodoListResult.data.toString())
                     _scheduleDataList.value=getTodoListResult.data!!
 
                 }
             }
 
         }
-
-
     }
+
+    fun resetScheduleDataList(){
+        _scheduleDataList.value= emptyList()
+    }
+
 
 //    fun setScheduleData(scheduleData: ScheduleData){
 //

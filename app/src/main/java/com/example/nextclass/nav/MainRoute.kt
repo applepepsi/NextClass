@@ -22,6 +22,7 @@ import com.example.nextclass.view.InsertOrModifyScheduleView
 import com.example.nextclass.view.MemberDeletePasswordConfirmView
 import com.example.nextclass.view.ModifyScoreView
 import com.example.nextclass.view.MyCommentView
+import com.example.nextclass.view.MyFavoritePostView
 import com.example.nextclass.view.MyPostView
 import com.example.nextclass.view.PostDetailView
 import com.example.nextclass.view.ScheduleView
@@ -234,6 +235,7 @@ private fun NavGraphBuilder.userProfileRoute(
         memberDeleteRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel)
         myPostRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel,communityViewModel=communityViewModel)
         myCommentRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel,communityViewModel=communityViewModel)
+        myFavoritePostRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel,communityViewModel=communityViewModel)
     }
 }
 
@@ -283,6 +285,38 @@ private fun NavGraphBuilder.myCommentView(
         MyCommentView(communityViewModel = communityViewModel, navController=navController)
     }
 }
+
+private fun NavGraphBuilder.myFavoritePostRoute(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController,
+    userInfoViewModel: UserInfoViewModel,
+    communityViewModel: CommunityViewModel
+) {
+    navigation(
+        route = "myFavoritePostRoute",
+        startDestination = "myFavoritePostView"
+    ) {
+
+        myFavoritePostView(navController, loginViewModel, mainNavHostController,userInfoViewModel,communityViewModel)
+
+    }
+}
+private fun NavGraphBuilder.myFavoritePostView(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController,
+    userInfoViewModel: UserInfoViewModel,
+    communityViewModel: CommunityViewModel
+) {
+
+
+    composable("myFavoritePostView") {
+        MyFavoritePostView(communityViewModel = communityViewModel, navController=navController)
+    }
+}
+
+
 private fun NavGraphBuilder.myPostView(
     navController: NavHostController,
     loginViewModel: LoginViewModel,
