@@ -16,6 +16,7 @@ import com.example.nextclass.view.ChangeEmailView
 import com.example.nextclass.view.ChangePasswordView
 
 import com.example.nextclass.view.ChangeUserInfoView
+import com.example.nextclass.view.CommunitySearchView
 import com.example.nextclass.view.CommunityView
 import com.example.nextclass.view.HomeView
 import com.example.nextclass.view.InsertOrModifyScheduleView
@@ -114,6 +115,7 @@ private fun NavGraphBuilder.communityRoute(
         postDetailView(navController,loginViewModel,mainNavHostController,communityViewModel)
         insertPostView(navController,loginViewModel,mainNavHostController,communityViewModel)
         modifyPostView(navController,loginViewModel,mainNavHostController,communityViewModel)
+        communitySearchView(navController, loginViewModel, mainNavHostController,communityViewModel)
     }
 }
 
@@ -252,10 +254,23 @@ private fun NavGraphBuilder.myPostRoute(
     ) {
 
         myPostView(navController, loginViewModel, mainNavHostController,userInfoViewModel,communityViewModel)
-
+        communitySearchView(navController, loginViewModel, mainNavHostController,communityViewModel)
     }
 }
 
+
+
+private fun NavGraphBuilder.myPostView(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel,
+    mainNavHostController: NavHostController,
+    userInfoViewModel: UserInfoViewModel,
+    communityViewModel: CommunityViewModel
+) {
+    composable("myPostView") {
+        MyPostView(communityViewModel = communityViewModel, navController=navController)
+    }
+}
 private fun NavGraphBuilder.myCommentRoute(
     navController: NavHostController,
     loginViewModel: LoginViewModel,
@@ -269,7 +284,7 @@ private fun NavGraphBuilder.myCommentRoute(
     ) {
 
         myCommentView(navController, loginViewModel, mainNavHostController,userInfoViewModel,communityViewModel)
-
+        communitySearchView(navController, loginViewModel, mainNavHostController,communityViewModel)
     }
 }
 private fun NavGraphBuilder.myCommentView(
@@ -299,7 +314,7 @@ private fun NavGraphBuilder.myFavoritePostRoute(
     ) {
 
         myFavoritePostView(navController, loginViewModel, mainNavHostController,userInfoViewModel,communityViewModel)
-
+        communitySearchView(navController, loginViewModel, mainNavHostController,communityViewModel)
     }
 }
 private fun NavGraphBuilder.myFavoritePostView(
@@ -316,18 +331,19 @@ private fun NavGraphBuilder.myFavoritePostView(
     }
 }
 
-
-private fun NavGraphBuilder.myPostView(
+private fun NavGraphBuilder.communitySearchView(
     navController: NavHostController,
     loginViewModel: LoginViewModel,
     mainNavHostController: NavHostController,
-    userInfoViewModel: UserInfoViewModel,
+
     communityViewModel: CommunityViewModel
 ) {
-    composable("myPostView") {
-        MyPostView(communityViewModel = communityViewModel, navController=navController)
+    composable("communitySearchView") {
+        CommunitySearchView(communityViewModel = communityViewModel, navController=navController)
     }
 }
+
+
 
 private fun NavGraphBuilder.userProfileView(
     navController: NavHostController,

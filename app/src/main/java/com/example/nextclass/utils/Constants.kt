@@ -61,6 +61,7 @@ const val COMMENT_SAVE="/comment_save"
 const val COMMENT_CHANGE="/comment_change"
 const val COMMENT_DELETE="/comment_delete"
 const val POST_DETAIL="/post/{post_sequence}"
+const val SEARCH="/post_list_search"
 const val VOTE="/vote"
 
 const val SAVE_SCHEDULE="/to_do_list_create"

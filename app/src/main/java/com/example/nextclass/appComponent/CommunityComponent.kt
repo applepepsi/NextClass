@@ -37,6 +37,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFloatingActionButton
@@ -59,6 +60,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -1102,6 +1104,59 @@ fun FloatingActionButtonComponent(
     }
 }
 
+@Composable
+fun RecentSearchWordComponent(
+    text:String="test",
+    deleteSearchWord:()->Unit,
+    search:()->Unit
+) {
+    Row(
+        modifier = Modifier
+//            .background(Background_Color2)
+//            .clip(RoundedCornerShape(5.dp))
+            .padding(end=8.dp)
+            .clip(RoundedCornerShape(5.dp))
+            .background(Color.White)
+
+            .border(
+                BorderStroke(
+                    0.5.dp,
+                    Color.LightGray
+                ),
+                RoundedCornerShape(5.dp)
+            )
+            .padding(start=8.dp,end=5.dp,top=7.dp,bottom=7.dp)
+
+        ,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text=text,
+            style = TextStyle(
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Normal,
+                fontStyle = FontStyle.Normal,
+            ),
+            modifier = Modifier.padding(end=5.dp).clickable { search() }
+        )
+
+        IconButton(
+            onClick = {
+                      deleteSearchWord()
+            },
+            modifier = Modifier.size(23.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Clear,
+                contentDescription = null,
+                tint = Color.Gray,
+                modifier = Modifier.size(23.dp)
+            )
+
+        }
+    }
+}
+
 val selectPostType= listOf("내 게시물","내가 쓴 댓글")
 
 
@@ -1185,7 +1240,7 @@ fun PostOptionDropDownMenu(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommunitySearchBox(
-    text:String="test",
+    text:String="",
     onValueChange: (String) -> Unit,
     search:()->Unit,
     deleteInputText:()->Unit
@@ -1218,9 +1273,9 @@ fun CommunitySearchBox(
             },
             placeholder = {
                 Text(
-                    text = "test",
+                    text = "",
                     color = Color.Black,
-                    fontSize = 14.sp,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
                 )
             },
@@ -1253,7 +1308,7 @@ fun CommunitySearchBox(
             singleLine = true,
             textStyle = TextStyle(
                 color = Color.Black,
-                fontSize = 13.sp,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Normal,
 
                 ),
@@ -1290,6 +1345,94 @@ fun SearchBarDivider(
         thickness =30.dp
     )
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CommunitySortTypeDownMenuComponent(
+    value: String="",
+    onValueChange: (String) -> Unit,
+    dropDownMenuOption: Boolean,
+    toggleDropDownMenuOption: () -> Unit,
+    menuItems: List<String>,
+    dropDownMenuName:String,
+
+    ) {
+    Column(
+        Modifier
+        .padding(start = 5.dp)
+    ) {
+//        Text(
+//            text = dropDownMenuName,
+//            fontSize = 15.sp,
+//            fontWeight = FontWeight.Bold,
+//            fontStyle = FontStyle.Normal,
+//            color = Color.DarkGray,
+//            textAlign = TextAlign.Start,
+//            modifier = Modifier
+//
+//                .padding(start = 3.dp, bottom = 5.dp, top = 10.dp)
+//        )
+        ExposedDropdownMenuBox(
+            expanded = dropDownMenuOption,
+            onExpandedChange = { toggleDropDownMenuOption() }
+        ) {
+            OutlinedTextField(
+                value = value,
+                onValueChange = onValueChange,
+                readOnly = true,
+
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = dropDownMenuOption)
+                },
+
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                    disabledContainerColor = Color.White,
+                    errorContainerColor = Color.White,
+                    focusedBorderColor = Color.Transparent,
+                    unfocusedBorderColor = Color.Transparent,
+                    disabledBorderColor = Color.Transparent,
+                ),
+                modifier = Modifier
+                    .width(180.dp)
+
+                    .menuAnchor()
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color.White)
+                    .border(
+                        BorderStroke(
+                            0.5.dp,
+                            Color.LightGray
+                        ),
+                        RoundedCornerShape(8.dp)
+                    )
+                ,
+                shape = RoundedCornerShape(15.dp),
+            )
+
+            ExposedDropdownMenu(
+                expanded = dropDownMenuOption,
+                onDismissRequest = { toggleDropDownMenuOption() }
+            ) {
+                menuItems.forEach { item ->
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = item,
+                                fontSize = 15.sp
+                                ) },
+                        onClick = {
+                            onValueChange(item)
+                            toggleDropDownMenuOption()
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun CommunitySearchBoxPreview() {
@@ -1437,5 +1580,24 @@ fun CommentPreview() {
             optionVisible = true,
 
             )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun RecentSearchWordPreview() {
+    val testRepository = TestRepository()
+    val loginViewModel = LoginViewModel(testRepository)
+
+    val navController = rememberNavController()
+    val communityTestRepository=CommunityTestRepository()
+
+    val communityViewModel=CommunityViewModel(communityTestRepository)
+
+    NextClassTheme {
+        RecentSearchWordComponent(
+            deleteSearchWord = {},
+            search = {}
+        )
     }
 }

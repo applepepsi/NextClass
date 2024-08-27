@@ -7,6 +7,7 @@ import com.example.nextclass.Data.CommunityData.CommunityPostData
 import com.example.nextclass.Data.CommunityData.PostAndCommentSequence
 import com.example.nextclass.Data.CommunityData.PostListData
 import com.example.nextclass.Data.CommunityData.PostWriteData
+import com.example.nextclass.Data.CommunityData.SearchData
 import com.example.nextclass.Data.ServerResponse
 
 interface CommunityRepository {
@@ -21,6 +22,7 @@ interface CommunityRepository {
 
     fun getCommentList(commentListData: CommentListData, callback: (ServerResponse<List<CommunityCommentData>>?) -> Unit)
 
+    fun communitySearch(searchData: SearchData, callback: (ServerResponse<List<CommunityPostData>>?) -> Unit)
 
     fun commentSave(writeCommentData:CommentWriteData,callback: (ServerResponse<Any>?) -> Unit)
 
@@ -31,5 +33,7 @@ interface CommunityRepository {
     fun postDetail(post_sequence:String,callback: (ServerResponse<CommunityPostData>?) -> Unit)
 
     fun vote(vote:PostAndCommentSequence, callback: (ServerResponse<Any>?) -> Unit)
+
+
 
 }

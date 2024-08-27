@@ -1,5 +1,6 @@
 package com.example.nextclass.viewmodel
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -11,6 +12,7 @@ import com.example.nextclass.Data.CommunityData.CommunityPostData
 import com.example.nextclass.Data.CommunityData.PostAndCommentSequence
 import com.example.nextclass.Data.CommunityData.PostListData
 import com.example.nextclass.Data.CommunityData.PostWriteData
+import com.example.nextclass.Data.CommunityData.SearchData
 import com.example.nextclass.R
 import com.example.nextclass.repository.CommunityRepository
 import com.example.nextclass.utils.SUCCESS_CODE
@@ -29,6 +31,9 @@ class CommunityViewModel @Inject constructor(
 
     private val _communityDataList = mutableStateOf(listOf<CommunityPostData>())
     val communityDataList: State<List<CommunityPostData>> = _communityDataList
+
+    private val _communitySearchDataList = mutableStateOf(listOf<CommunityPostData>())
+    val communitySearchDataList: State<List<CommunityPostData>> = _communitySearchDataList
 
     private val _selectCommunityData = mutableStateOf(CommunityPostData())
     val selectCommunityData: State<CommunityPostData> = _selectCommunityData
@@ -99,6 +104,21 @@ class CommunityViewModel @Inject constructor(
 
     private val _currentRoute=mutableStateOf("")
     val currentRoute: State<String> = _currentRoute
+
+    private val _searchData=mutableStateOf(SearchData())
+    val searchData: State<SearchData> = _searchData
+
+    private val _searchSortTypeDropDownMenuState=mutableStateOf(false)
+    val searchSortTypeDropDownMenuState: State<Boolean> = _searchSortTypeDropDownMenuState
+
+    private val _currentSortType=mutableStateOf("all")
+    val currentSortType: State<String> = _currentSortType
+
+    private val _currentSortWord=mutableStateOf("")
+    val currentSortWord: State<String> = _currentSortWord
+
+    private val _recentSearchList=mutableStateOf(listOf<String>())
+    val recentSearchList: State<List<String>> = _recentSearchList
 
     fun setSelectedCommunityData(selectPostSequence: String,postReLoad:Boolean=false){
 
@@ -255,7 +275,7 @@ class CommunityViewModel @Inject constructor(
 
 
 
-    fun loadMorePostsCheck(lastVisibleItemIndex: Int,sortType:String) {
+    fun loadMorePostsCheck(lastVisibleItemIndex: Int,sortType:String,searchWord:String?=null) {
 
         if (_communityDataList.value.isEmpty()) {
             return
@@ -265,7 +285,12 @@ class CommunityViewModel @Inject constructor(
         if (lastVisibleItemIndex >= _communityDataList.value.size - 1) {
             val lastPostSequence = _communityDataList.value.minByOrNull { it.post_sequence.toInt() }?.post_sequence?.toInt()
 
-            getPostList(sort = sortType, post_sequence = lastPostSequence)
+            if(searchWord==null){
+                getPostList(sort = sortType, post_sequence = lastPostSequence)
+
+            }else{
+                postSearchText(post_sequence = lastPostSequence)
+            }
 
         }
     }
@@ -519,4 +544,101 @@ class CommunityViewModel @Inject constructor(
 //        _postList.value=_postList.value.copy(sort = type)
 //    }
 
+    fun updateSearchWord(searchWord:String){
+        _searchData.value=_searchData.value.copy(search_word = searchWord)
+    }
+
+    fun updateSearchType(searchType:String){
+
+        _searchData.value=_searchData.value.copy(sort=searchType)
+    }
+
+    fun resetSearchWord(){
+        _searchData.value= _searchData.value.copy(search_word = "")
+    }
+
+    fun postSearchText(post_sequence: Int?=null){
+//        _searchData.value=_searchData.value.copy(sort=convertSearchType())
+
+        resetCommunitySearchDataList()
+
+        _currentSortType.value=convertSearchType()
+        _currentSortWord.value=_searchData.value.search_word
+
+        val searchData=SearchData(post_sequence=post_sequence.toString(),sort=_currentSortType.value, search_word = _currentSortWord.value)
+        Log.d("검색 데이터", searchData.toString())
+        //서버로 전송
+        communityRepository.communitySearch(searchData){ searchResult->
+            if(searchResult !=null) {
+                if (searchResult.code == SUCCESS_CODE) {
+
+                    Log.d("검색 성공", searchResult.toString())
+                    if(searchResult.data!!.isEmpty()){
+                        toggleMorePostLoadState()
+                    }else{
+                        _communitySearchDataList.value += searchResult.data
+                    }
+                }else{
+                    //토스트 메세지
+                }
+            }else{
+                toggleMorePostLoadState()
+            }
+            _postLoading.value = false
+        }
+    }
+
+    private fun convertSearchType(): String {
+        return when(_searchData.value.sort){
+            "모든 게시물"->"all"
+            "내 학교"->"my_school"
+            "베스트 게시물"->"vote"
+
+            else -> "all"
+        }
+
+    }
+
+    fun toggleSearchSortTypeDropDownMenuState(){
+        _searchSortTypeDropDownMenuState.value=!_searchSortTypeDropDownMenuState.value
+    }
+
+    fun resetCommunitySearchDataList(){
+        _communitySearchDataList.value= emptyList()
+    }
+
+    fun setRecentSearchList(recentSearchWordList: MutableList<String>) {
+        Log.d("최근검색어", recentSearchWordList.toString())
+        _recentSearchList.value=recentSearchWordList
+    }
+
+
+//    fun getSearchPostList(sort: String, post_sequence: Int?,size:Int=10) {
+//        Log.d("로딩", _loading.value.toString())
+//        if(_postLoading.value) return
+//        _postLoading.value=true
+//
+//        val postListData=PostListData(post_sequence=post_sequence.toString(),sort=sort,size=size)
+//        val sear
+//        Log.d("postListData", postListData.toString())
+//
+//        communityRepository.getPostList(postListData){ getPostListResult->
+//            if(getPostListResult !=null) {
+//                if (getPostListResult.code == SUCCESS_CODE) {
+//                    Log.d("새로운 게시물 로드됨", getPostListResult.data.toString())
+//                    if(getPostListResult.data!!.isEmpty()){
+//                        toggleMorePostLoadState()
+//                    }else{
+//                        _communityDataList.value += getPostListResult.data
+//                    }
+//                }else{
+//                    //토스트 메세지
+//                }
+//            }else{
+//                //게시물이 더 없으면 게시물을 가져오는것을 멈춤
+//                toggleMorePostLoadState()
+//            }
+//            _postLoading.value = false
+//        }
+//    }
 }

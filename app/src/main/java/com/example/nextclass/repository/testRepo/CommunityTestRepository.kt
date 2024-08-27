@@ -7,6 +7,7 @@ import com.example.nextclass.Data.CommunityData.CommunityPostData
 import com.example.nextclass.Data.CommunityData.PostAndCommentSequence
 import com.example.nextclass.Data.CommunityData.PostListData
 import com.example.nextclass.Data.CommunityData.PostWriteData
+import com.example.nextclass.Data.CommunityData.SearchData
 import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.repository.CommunityRepository
 import com.example.oneplusone.serverConnection.API
@@ -50,6 +51,12 @@ class CommunityTestRepository: CommunityRepository {
         TODO("Not yet implemented")
     }
 
+    override fun communitySearch(
+        searchData: SearchData,
+        callback: (ServerResponse<List<CommunityPostData>>?) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
 
 
     override fun commentSave(commentWriteData: CommentWriteData,callback: (ServerResponse<Any>?) -> Unit) {

@@ -235,7 +235,12 @@ fun AppBarTextAndButtonComponent(
                         Icon(
                             modifier = Modifier
                                 .size(30.dp)
-                                .clickable { rightButtonClick() },
+//                                .clickable { rightButtonClick() }
+                                .clickable(
+                                    onClick = {
+                                        navController.navigate(navRoute)
+                                    },
+                                ),
                             imageVector = customRightButtonIcon,
                             contentDescription = "",
                             tint = Color.Unspecified,

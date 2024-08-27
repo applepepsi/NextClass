@@ -8,6 +8,7 @@ import com.example.nextclass.Data.CommunityData.CommunityPostData
 import com.example.nextclass.Data.CommunityData.PostAndCommentSequence
 import com.example.nextclass.Data.CommunityData.PostListData
 import com.example.nextclass.Data.CommunityData.PostWriteData
+import com.example.nextclass.Data.CommunityData.SearchData
 import com.example.nextclass.Data.ScheduleData.ScheduleData
 import com.example.nextclass.Data.TimeTableData.AllScore
 import com.example.nextclass.Data.UserInfoData.ChangeEmail
@@ -55,6 +56,7 @@ import com.example.nextclass.utils.POST_TIMETABLE_DATA
 import com.example.nextclass.utils.REGISTER_ADDRESS
 import com.example.nextclass.utils.SAVE_SCHEDULE
 import com.example.nextclass.utils.SCORE_UPDATE
+import com.example.nextclass.utils.SEARCH
 import com.example.nextclass.utils.SEND_CHANGE_MAIL
 import com.example.nextclass.utils.UPDATE_SCHEDULE
 import com.example.nextclass.utils.VOTE
@@ -152,6 +154,10 @@ interface API {
 
     @POST(GET_COMMENT)
     suspend fun getCommentList(@Body commentListData: CommentListData):Response<ServerResponse<List<CommunityCommentData>>>
+
+    @POST(SEARCH)
+    suspend fun getSearchResultPostList(@Body searchData: SearchData):Response<ServerResponse<List<CommunityPostData>>>
+
 
     @POST(COMMENT_SAVE)
     suspend fun commentSave(@Body writeCommentData: CommentWriteData):Response<ServerResponse<Any>>

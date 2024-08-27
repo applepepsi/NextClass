@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
@@ -30,17 +32,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.nextclass.Data.CommunityData.CommunityCommentData
-import com.example.nextclass.Data.CommunityData.CommunityPostData
 import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
 import com.example.nextclass.appComponent.CheckboxComponent
 import com.example.nextclass.appComponent.CommentComponent
 import com.example.nextclass.appComponent.CommunitySearchBox
+import com.example.nextclass.appComponent.CommunitySortTypeDownMenuComponent
 import com.example.nextclass.appComponent.CommunityTopNavComponent
 import com.example.nextclass.appComponent.DividerComponent
 import com.example.nextclass.appComponent.FloatingActionButtonComponent
@@ -51,15 +56,16 @@ import com.example.nextclass.appComponent.InsertPostSubjectBox
 import com.example.nextclass.appComponent.PostDetailComponent
 import com.example.nextclass.appComponent.ProgressBarFullComponent
 import com.example.nextclass.appComponent.ProgressBarSmallComponent
+import com.example.nextclass.appComponent.RecentSearchWordComponent
 import com.example.nextclass.appComponent.SinglePostComponent
 import com.example.nextclass.appComponent.TextInputHelpFieldComponent
 import com.example.nextclass.repository.testRepo.CommunityTestRepository
 import com.example.nextclass.repository.testRepo.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.NextClassTheme
+import com.example.nextclass.utils.RecentSearchWordManager
 import com.example.nextclass.viewmodel.CommunityViewModel
 import com.example.nextclass.viewmodel.LoginViewModel
-import java.time.LocalDateTime
 
 @SuppressLint("RememberReturnType")
 @Composable
@@ -97,21 +103,12 @@ fun CommunityView(
                     buttonText = "작성하기",
                     customRightButton = true,
                     customRightButtonIcon = Icons.Default.Search,
-                    rightButtonClick = { communityViewModel.toggleSearchBarState() }
+                    navRoute = "communitySearchView"
                 )
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            if(communityViewModel.searchBarState.value){
-                Spacer(modifier = Modifier.height(10.dp))
-                CommunitySearchBox(
-                    text="",
-                    onValueChange ={} ,
-                    search = { /*TODO*/ },
-                    deleteInputText = {}
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-            }
+
 
             CommunityTopNavComponent(
                 navController=navController,
@@ -131,39 +128,39 @@ fun CommunityView(
     }
 }
 
-val testCommunityData= listOf(
-    CommunityPostData(subject = "가나다", content = "라마바사", reg_date = LocalDateTime.now().toString(), comment_count = 2, vote_count = 1),
-    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 3, vote_count = 2),
-    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 4, vote_count = 3),
-    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now().toString(), comment_count = 5, vote_count = 4),
-    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 3, vote_count = 2),
-    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 4, vote_count = 3),
-    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now().toString(), comment_count = 5, vote_count = 4),
-
-    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 3, vote_count = 2),
-    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 4, vote_count = 3),
-    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now().toString(), comment_count = 5, vote_count = 4),
-
-    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 3, vote_count = 2),
-    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 4, vote_count = 3),
-    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now().toString(), comment_count = 5, vote_count = 4),
-    )
-
-
-val testCommentList= listOf(
-    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-    )
+//val testCommunityData= listOf(
+//    CommunityPostData(subject = "가나다", content = "라마바사", reg_date = LocalDateTime.now().toString(), comment_count = 2, vote_count = 1),
+//    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 3, vote_count = 2),
+//    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 4, vote_count = 3),
+//    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now().toString(), comment_count = 5, vote_count = 4),
+//    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 3, vote_count = 2),
+//    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 4, vote_count = 3),
+//    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now().toString(), comment_count = 5, vote_count = 4),
+//
+//    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 3, vote_count = 2),
+//    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 4, vote_count = 3),
+//    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now().toString(), comment_count = 5, vote_count = 4),
+//
+//    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 3, vote_count = 2),
+//    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 4, vote_count = 3),
+//    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now().toString(), comment_count = 5, vote_count = 4),
+//    )
+//
+//
+//val testCommentList= listOf(
+//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
+//    )
 
 @Composable
 fun PostDetailView(
@@ -303,9 +300,11 @@ fun CommunityPostView(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().then(
-            if (!padding) Modifier.padding(top = 10.dp) else Modifier
-        ),
+        modifier = Modifier
+            .fillMaxSize()
+            .then(
+                if (!padding) Modifier.padding(top = 10.dp) else Modifier
+            ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (communityViewModel.loading.value) {
@@ -343,6 +342,8 @@ fun CommunityPostView(
             }
     }
 }
+
+
 
 
 @Composable
@@ -412,21 +413,11 @@ fun MyCommentView(
             showLeftButton = true,
             showRightButton = false,
             buttonText = "작성하기",
-            customRightButton = true,
+            customRightButton = false,
             customRightButtonIcon = Icons.Default.Search,
-            rightButtonClick = { communityViewModel.toggleSearchBarState() }
+            navRoute = "communitySearchView"
         )
 
-        if(communityViewModel.searchBarState.value){
-            Spacer(modifier = Modifier.height(10.dp))
-            CommunitySearchBox(
-                text="",
-                onValueChange ={} ,
-                search = { /*TODO*/ },
-                deleteInputText = {}
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-        }
         Spacer(modifier = Modifier.height(10.dp))
 
         Column(
@@ -466,21 +457,12 @@ fun MyFavoritePostView(
             showLeftButton = true,
             showRightButton = false,
             buttonText = "작성하기",
-            customRightButton = true,
+            customRightButton = false,
             customRightButtonIcon = Icons.Default.Search,
-            rightButtonClick = { communityViewModel.toggleSearchBarState() }
+            navRoute = "communitySearchView"
         )
 
-        if(communityViewModel.searchBarState.value){
-            Spacer(modifier = Modifier.height(10.dp))
-            CommunitySearchBox(
-                text="",
-                onValueChange ={} ,
-                search = { /*TODO*/ },
-                deleteInputText = {}
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-        }
+
         Spacer(modifier = Modifier.height(10.dp))
 
         Column(
@@ -520,21 +502,12 @@ fun MyPostView(
             showLeftButton = true,
             showRightButton = false,
             buttonText = "작성하기",
-            customRightButton = true,
+            customRightButton = false,
             customRightButtonIcon = Icons.Default.Search,
-            rightButtonClick = { communityViewModel.toggleSearchBarState() }
+            navRoute = "communitySearchView"
         )
 
-        if(communityViewModel.searchBarState.value){
-            Spacer(modifier = Modifier.height(10.dp))
-            CommunitySearchBox(
-                text="",
-                onValueChange ={} ,
-                search = { /*TODO*/ },
-                deleteInputText = {}
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-        }
+
         Spacer(modifier = Modifier.height(10.dp))
         
         Column(
@@ -700,6 +673,139 @@ fun InsertOrModifyPostComponent(
         }
     }
 }
+val communitySortType = listOf("모든 게시물","내 학교","베스트 게시물")
+@Composable
+fun CommunitySearchView(
+    communityViewModel: CommunityViewModel,
+    navController: NavHostController,
+
+) {
+    val listState = rememberLazyListState()
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+//        communityViewModel.resetPostList()
+        communityViewModel.toggleMorePostLoadState()
+        communityViewModel.setRecentSearchList(RecentSearchWordManager.loadRecentSearchList(context))
+    }
+
+    if (communityViewModel.getPostDetailResultState.value) {
+        navController.navigate("postDetailView")
+        communityViewModel.togglePostDetailState()
+    }
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+
+//        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(top = 20.dp),
+
+            ) {
+            AppBarTextAndButtonComponent(
+                value = "검색",
+                navController = navController,
+                showLeftButton = true,
+                showRightButton = false,
+            )
+        }
+        Spacer(modifier = Modifier.height(25.dp))
+
+        if (communityViewModel.loading.value) {
+            ProgressBarFullComponent(state = communityViewModel.loading.value)
+        }
+
+        CommunitySortTypeDownMenuComponent(
+            onValueChange = {communityViewModel.updateSearchType(it)},
+            value = communityViewModel.searchData.value.sort,
+            dropDownMenuOption = communityViewModel.searchSortTypeDropDownMenuState.value,
+            menuItems = communitySortType,
+            dropDownMenuName = "게시판 종류",
+            toggleDropDownMenuOption = {communityViewModel.toggleSearchSortTypeDropDownMenuState()}
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+        CommunitySearchBox(
+            text=communityViewModel.searchData.value.search_word,
+            onValueChange ={ communityViewModel.updateSearchWord(it) } ,
+            search = {
+                communityViewModel.postSearchText()
+                communityViewModel.setRecentSearchList(RecentSearchWordManager.saveSearchText(context = context,communityViewModel.searchData.value.search_word))
+            },
+            deleteInputText = { communityViewModel.resetSearchWord() }
+        )
+
+        Spacer(modifier = Modifier.height(15.dp))
+
+        Text(
+            text="최근 검색어",
+            style = TextStyle(
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Normal,
+                fontStyle = FontStyle.Normal,
+                color = Color.Black
+            ),
+            modifier = Modifier.padding(start=7.dp)
+        )
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            contentPadding = PaddingValues(top=5.dp,bottom=12.dp,end=5.dp,start=7.dp),
+        ){
+
+            items(items = communityViewModel.recentSearchList.value) { searchWord ->
+                if(searchWord!=""){
+                    RecentSearchWordComponent(
+                        text=searchWord,
+                        deleteSearchWord = {
+                            communityViewModel.setRecentSearchList(RecentSearchWordManager.deleteRecentSearchText(context = context,searchWord))
+                        },
+                        search = {
+                            communityViewModel.updateSearchWord(searchWord)
+                            communityViewModel.postSearchText()
+
+                        }
+                    )
+                }else{
+                    Spacer(modifier = Modifier.height(35.dp))
+                }
+            }
+        }
+
+        LazyColumn(
+            state = listState,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Background_Color2),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            items(items = communityViewModel.communitySearchDataList.value) { singlePostData ->
+                SinglePostComponent(
+                    singlePostData,
+                    postClick = {
+                        communityViewModel.setSelectedCommunityData(singlePostData.post_sequence)
+                    }
+                )
+            }
+            item {
+                if (communityViewModel.postLoading.value) {
+                    ProgressBarSmallComponent(communityViewModel.postLoading.value)
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.layoutInfo }
+            .collect { layoutInfo ->
+                if (communityViewModel.morePostLoadState.value) {
+                    val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
+                    communityViewModel.loadMorePostsCheck(lastVisibleItemIndex, sortType = communityViewModel.currentSortType.value,)
+                }
+            }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
@@ -716,5 +822,22 @@ fun InsertOrModifyPostPreview() {
         InsertOrModifyPostComponent(navController = navController, communityViewModel = communityViewModel, loginViewModel = loginViewModel) {
             
         }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun SearchViewPreview() {
+    val mainNavController= rememberNavController()
+    val navController= rememberNavController()
+    val testRepository = TestRepository()
+    val communityTestRepository=CommunityTestRepository()
+
+    val loginViewModel=LoginViewModel(testRepository)
+    val communityViewModel=CommunityViewModel(communityTestRepository)
+
+    NextClassTheme {
+        CommunitySearchView(navController = navController, communityViewModel = communityViewModel,)
     }
 }

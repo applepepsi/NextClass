@@ -22,8 +22,9 @@ class ScheduleRepositoryImpl @Inject constructor(
 ) : ScheduleRepository {
     override fun saveSchedule(singleScheduleData: ScheduleData,callback: (ServerResponse<Any>?) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = api.saveSchedule(singleScheduleData)
+
             val result = try {
+                val response = api.saveSchedule(singleScheduleData)
                 Log.d("보내는 스케쥴", singleScheduleData.toString())
                 Log.d("스케쥴 저장결과", response.toString())
                 if (response.isSuccessful) {
@@ -38,7 +39,7 @@ class ScheduleRepositoryImpl @Inject constructor(
                 response.body()
             } catch (e: Exception) {
                 Log.d("스케쥴 저장 실패", e.toString())
-                response.body()
+                null
             }
             withContext(Dispatchers.Main) {
                 callback(result)
@@ -51,8 +52,9 @@ class ScheduleRepositoryImpl @Inject constructor(
         callback: (ServerResponse<Any>?) -> Unit
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = api.updateSchedule(singleScheduleData)
+
             val result = try {
+                val response = api.updateSchedule(singleScheduleData)
                 Log.d("보내는 스케쥴", singleScheduleData.toString())
                 Log.d("스케쥴 변경 결과", response.toString())
                 if (response.isSuccessful) {
@@ -67,7 +69,7 @@ class ScheduleRepositoryImpl @Inject constructor(
                 response.body()
             } catch (e: Exception) {
                 Log.d("스케쥴 변경 실패", e.toString())
-                response.body()
+                null
             }
             withContext(Dispatchers.Main) {
                 callback(result)
@@ -80,8 +82,9 @@ class ScheduleRepositoryImpl @Inject constructor(
         callback: (ServerResponse<Any>?) -> Unit
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = api.deleteSchedule(singleScheduleData)
+
             val result = try {
+                val response = api.deleteSchedule(singleScheduleData)
                 Log.d("보내는 스케쥴", singleScheduleData.toString())
                 Log.d("스케쥴 제거 결과", response.toString())
                 if (response.isSuccessful) {
@@ -96,7 +99,7 @@ class ScheduleRepositoryImpl @Inject constructor(
                 response.body()
             } catch (e: Exception) {
                 Log.d("스케쥴 제거 실패", e.toString())
-                response.body()
+                null
             }
             withContext(Dispatchers.Main) {
                 callback(result)
@@ -106,9 +109,9 @@ class ScheduleRepositoryImpl @Inject constructor(
 
     override fun getTodoList(callback: (ServerResponse<List<ScheduleData>>?) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = api.getTodoList()
-            val result = try {
 
+            val result = try {
+                val response = api.getTodoList()
                 Log.d("투두리스트 가져오기 결과", response.toString())
                 if (response.isSuccessful) {
 
@@ -122,7 +125,7 @@ class ScheduleRepositoryImpl @Inject constructor(
 
             } catch (e: Exception) {
                 Log.d("투두리스트 가져오기 실패", e.toString())
-                response.body()
+                null
             }
             withContext(Dispatchers.Main) {
                 callback(result)
@@ -133,9 +136,9 @@ class ScheduleRepositoryImpl @Inject constructor(
 
     override fun tokenCheck(callback: (ServerResponse<Any>?) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = api.tokenTest()
-            val result = try {
 
+            val result = try {
+                val response = api.tokenTest()
                 Log.d("토큰체크 결과", response.toString())
                 if (response.isSuccessful) {
 
@@ -149,7 +152,7 @@ class ScheduleRepositoryImpl @Inject constructor(
                 response.body()
             } catch (e: Exception) {
                 Log.d("알 수 없는 오류", e.toString())
-                response.body()
+                null
             }
             withContext(Dispatchers.Main) {
                 callback(result)
