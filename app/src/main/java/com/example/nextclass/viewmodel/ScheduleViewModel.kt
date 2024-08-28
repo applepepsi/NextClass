@@ -171,8 +171,8 @@ class ScheduleViewModel @Inject constructor(
                     if(DeleteScheduleResult.code== SUCCESS_CODE){
                         Log.d("스케쥴 제거 성공", DeleteScheduleResult.data.toString())
 
-                        getScheduleData()
-                        groupedScheduleData()
+                        getScheduleData(splitToday = false)
+
                     }
                 }
                 resetScheduleData()
@@ -255,14 +255,14 @@ class ScheduleViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getScheduleData(){
+    fun getScheduleData(splitToday:Boolean=false){
 
         scheduleRepository.getTodoList { getTodoListResult->
             if (getTodoListResult != null) {
                 if(getTodoListResult.code== SUCCESS_CODE){
                     Log.d("스케쥴 가져오기 성공", getTodoListResult.data.toString())
                     _scheduleDataList.value=getTodoListResult.data!!
-
+                    groupedScheduleData(splitToday)
                 }
             }
 
@@ -285,13 +285,15 @@ class ScheduleViewModel @Inject constructor(
     fun groupedScheduleData(splitToday:Boolean=false) {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
         val filterScheduleData = _scheduleDataList.value
-
+        Log.d("홈화면 서버데이터", _groupByDateScheduleData.value.toString())
         val today = if (splitToday) LocalDate.now() else null
 
         _groupByDateScheduleData.value = filterScheduleData
             .filter { !splitToday || LocalDateTime.parse(it.alarm_time, formatter).toLocalDate() == today }
             .groupBy { LocalDateTime.parse(it.alarm_time, formatter).toLocalDate() }
             .toSortedMap(compareByDescending { it })
+
+        Log.d("홈화면 스케쥴", _groupByDateScheduleData.value.toString())
     }
 
 

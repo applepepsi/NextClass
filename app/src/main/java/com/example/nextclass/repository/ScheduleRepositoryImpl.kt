@@ -65,8 +65,9 @@ class ScheduleRepositoryImpl @Inject constructor(
                 } else {
 
                     Log.d("스케쥴 변경 실패", "실패")
+                    null
                 }
-                response.body()
+
             } catch (e: Exception) {
                 Log.d("스케쥴 변경 실패", e.toString())
                 null
@@ -147,9 +148,9 @@ class ScheduleRepositoryImpl @Inject constructor(
                     response.body()
                 } else {
 
-
+                    response.body()
                 }
-                response.body()
+
             } catch (e: Exception) {
                 Log.d("알 수 없는 오류", e.toString())
                 null

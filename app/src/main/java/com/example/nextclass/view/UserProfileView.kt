@@ -55,6 +55,7 @@ import com.example.nextclass.appComponent.RePostPasswordCodeComponent
 import com.example.nextclass.appComponent.TextInputHelpFieldComponent
 import com.example.nextclass.appComponent.UserProfileItemComponent
 import com.example.nextclass.appComponent.UserProfilePreviewComponent
+import com.example.nextclass.appComponent.UserProfileSwitchItemComponent
 import com.example.nextclass.appComponent.VerifyCodeInputComponent
 import com.example.nextclass.repository.testRepo.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
@@ -89,7 +90,7 @@ fun UserProfileView(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
-//        ProgressBarComponent(state = userInfoViewModel.loading.value)
+
         LaunchedEffect(Unit) {
             userInfoViewModel.getUserInfo()
         }
@@ -263,7 +264,7 @@ fun UserProfileView(
                         UserProfileItemComponent(
                             image = ImageVector.vectorResource(R.drawable.notification_icon),
                             text = "알림 설정",
-                            address = "passwordConfirmView",
+                            address = "notificationSettingView",
                             navController = navController
                         )
 
@@ -476,6 +477,93 @@ fun MemberDeletePasswordConfirmView(
             }
         }
     }
+}
+
+
+@Composable
+fun NotificationSettingView(
+
+    navController: NavController,
+    userInfoViewModel: UserInfoViewModel
+
+    ) {
+    val context = LocalContext.current
+
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 20.dp),
+
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+
+    ) {
+        AppBarTextAndButtonComponent(
+            value = "알림 설정",
+            navController = navController
+        )
+
+
+        Surface(
+            shape = RoundedCornerShape(35.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 10.dp, end = 10.dp, top = 20.dp, bottom = 10.dp)
+
+        ) {
+            Column(
+                modifier = Modifier
+                    .background(Feldgrau)
+                    .fillMaxSize(),
+
+//                        verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(20.dp))
+                MainTextComponent(
+                    value = "알림 설정",
+                    modifier = Modifier
+                        .padding(bottom = 20.dp),
+                    color = Color.White
+                )
+
+                DividerComponent(
+                    modifier = Modifier
+                        .padding(start = 20.dp, end = 20.dp)
+                        .height(1.dp)
+                )
+
+                Spacer(modifier = Modifier.height(30.dp))
+
+                UserProfileSwitchItemComponent(
+                    image = ImageVector.vectorResource(R.drawable.notification_icon),
+                    text = "커뮤니티 알림 설정",
+                    switchState = userInfoViewModel.communityNotificationState.value,
+                    switchClick = {
+                        userInfoViewModel.toggleCommunityNotificationState()
+                    }
+                )
+                Spacer(modifier = Modifier.height(40.dp))
+
+                UserProfileSwitchItemComponent(
+                    image = ImageVector.vectorResource(R.drawable.notification_icon),
+                    text = "스케쥴 알림 설정",
+                    switchState = userInfoViewModel.scheduleNotificationState.value,
+                    switchClick = {
+                        userInfoViewModel.toggleScheduleNotificationState()
+                    }
+                )
+                Spacer(modifier = Modifier.height(40.dp))
+
+            }
+
+        }
+
+
+
+    }
+
 }
 
 
@@ -793,5 +881,21 @@ fun ChangeEmailComponentPreview() {
         loginViewModel = loginViewModel,
         navController = navController,
         mainNavHostController = mainNavHostController
+    )
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun NotificationSettingPreview() {
+    val navController=rememberNavController()
+    val testRepository = TestRepository()
+    val loginViewModel = LoginViewModel(testRepository)
+    val mainNavHostController= rememberNavController()
+    val userInfoViewModel=UserInfoViewModel(testRepository)
+    NotificationSettingView(
+
+        navController = navController,
+        userInfoViewModel
     )
 }

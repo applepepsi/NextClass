@@ -1,7 +1,10 @@
 package com.example.nextclass.appComponent
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,24 +19,35 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -218,6 +232,124 @@ fun UserProfileItemComponent(
     }
 
 }
+
+
+@Composable
+fun UserProfileSwitchItemComponent(
+    image:ImageVector,
+    text:String,
+    switchState:Boolean,
+    switchClick:()->Unit
+){
+    Row(
+        modifier = Modifier
+            .padding(start = 30.dp, end = 30.dp)
+//            .background(Color.Black)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(
+            modifier = Modifier,
+        ) {
+
+
+            Icon(
+                modifier = Modifier
+                    .size(25.dp),
+                imageVector = image,
+                contentDescription = "",
+                tint = Color.White,
+
+                )
+
+            Text(
+                text = text,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(start = 10.dp),
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontStyle = FontStyle.Normal,
+                ),
+                color =  Color.White
+            )
+        }
+        Switch(
+            checked = switchState,
+            onCheckedChange = { switchClick() },
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = Pastel_Red,
+
+                checkedTrackColor = Color.White,
+                uncheckedThumbColor = Color.Gray,
+                uncheckedTrackColor = Color.LightGray
+            ),
+            modifier = Modifier.scale(0.8f)
+        )
+    }
+}
+
+@Composable
+fun CustomSwitch(
+    scale: Float = 2f,
+    width: Dp = 36.dp,
+    height: Dp = 20.dp,
+    strokeWidth: Dp = 2.dp,
+    checkedTrackColor: Color = Color(0xFF35898F),
+    uncheckedTrackColor: Color = Color(0xFFe0e0e0),
+    gapBetweenThumbAndTrackEdge: Dp = 4.dp,
+    switchON: Boolean,
+    switchClick:()->Unit
+) {
+
+
+
+    val thumbRadius = (height / 2) - gapBetweenThumbAndTrackEdge
+
+    // To move thumb, we need to calculate the position (along x axis)
+    val animatePosition = animateFloatAsState(
+        targetValue = if (switchON)
+            with(LocalDensity.current) { (width - thumbRadius - gapBetweenThumbAndTrackEdge).toPx() }
+        else
+            with(LocalDensity.current) { (thumbRadius + gapBetweenThumbAndTrackEdge).toPx() },
+        label = ""
+    )
+
+    Canvas(
+        modifier = Modifier
+            .size(width = width, height = height)
+            .scale(scale = scale)
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onTap = {
+                        switchClick()
+                    }
+                )
+            }
+    ) {
+        // Track
+        drawRoundRect(
+            color = if (switchON) checkedTrackColor else uncheckedTrackColor,
+            cornerRadius = CornerRadius(x = 10.dp.toPx(), y = 10.dp.toPx()),
+            style = Stroke(width = strokeWidth.toPx())
+        )
+
+        // Thumb
+        drawCircle(
+            color = if (switchON) checkedTrackColor else uncheckedTrackColor,
+            radius = thumbRadius.toPx(),
+            center = Offset(
+                x = animatePosition.value,
+                y = size.height / 2
+            )
+        )
+    }
+
+
+}
+
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -517,5 +649,18 @@ fun UserProfileItemComponentPreview() {
 
 }
 
+
+@Preview(showBackground = true)
+@Composable
+fun UserProfileSwitchItemComponentPreview() {
+    val navController=rememberNavController()
+    UserProfileSwitchItemComponent(
+        ImageVector.vectorResource(R.drawable.user_profile_icon),
+        "사용자 정보 변경",
+        switchState = false,
+        {}
+    )
+
+}
 
 

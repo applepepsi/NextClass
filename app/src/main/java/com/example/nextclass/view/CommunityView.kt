@@ -777,9 +777,13 @@ fun CommunitySearchView(
             state = listState,
             modifier = Modifier
                 .fillMaxSize()
-                .background(Background_Color2),
+                .background(Background_Color2)
+                .padding(top=8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+
+
             items(items = communityViewModel.communitySearchDataList.value) { singlePostData ->
                 SinglePostComponent(
                     singlePostData,

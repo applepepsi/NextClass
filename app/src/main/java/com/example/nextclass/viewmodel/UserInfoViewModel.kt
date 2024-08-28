@@ -132,11 +132,23 @@ class UserInfoViewModel @Inject constructor(
     private val _changeEmailErrorMessage=mutableStateOf<StringValue>(StringValue.Empty)
     val changeEmailErrorMessage: State<StringValue> = _changeEmailErrorMessage
 
+    private val _communityNotificationState=mutableStateOf(true)
+    val communityNotificationState: State<Boolean> = _communityNotificationState
+
+    private val _scheduleNotificationState=mutableStateOf(true)
+    val scheduleNotificationState: State<Boolean> = _scheduleNotificationState
+
     fun updateVerifyCode(code: String) {
         _verifyCode.value = code
     }
 
+    fun toggleCommunityNotificationState(){
+        _communityNotificationState.value=!_communityNotificationState.value
+    }
 
+    fun toggleScheduleNotificationState(){
+        _scheduleNotificationState.value=!_scheduleNotificationState.value
+    }
 
     fun submitVerifyCode(){
 

@@ -84,8 +84,8 @@ fun HomeView(
 
         //투두리스트 가져오기
         scheduleViewModel.resetScheduleData()
-        scheduleViewModel.getScheduleData()
-        scheduleViewModel.groupedScheduleData(splitToday = true)
+        scheduleViewModel.getScheduleData(splitToday = true)
+
 
         //베스트 게시물 가져오기
         communityViewModel.resetPostList()
@@ -109,7 +109,7 @@ fun HomeView(
             grade = userInfoViewModel.userProfile.value.member_grade
         )
 
-        Spacer(Modifier.height(15.dp))
+        Spacer(Modifier.height(30.dp))
 
         Text(
             text="오늘의 수업",
@@ -136,7 +136,7 @@ fun HomeView(
             }
         }
 
-        Spacer(Modifier.height(15.dp))
+        Spacer(Modifier.height(30.dp))
         Text(
             text="오늘의 할일",
             style = TextStyle(
@@ -170,7 +170,7 @@ fun HomeView(
 
         }
 
-        Spacer(Modifier.height(15.dp))
+        Spacer(Modifier.height(30.dp))
 
         Text(
             text="오늘의 인기글",

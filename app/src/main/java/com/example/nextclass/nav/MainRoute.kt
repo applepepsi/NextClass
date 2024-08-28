@@ -25,6 +25,7 @@ import com.example.nextclass.view.ModifyScoreView
 import com.example.nextclass.view.MyCommentView
 import com.example.nextclass.view.MyFavoritePostView
 import com.example.nextclass.view.MyPostView
+import com.example.nextclass.view.NotificationSettingView
 import com.example.nextclass.view.PostDetailView
 import com.example.nextclass.view.ScheduleView
 import com.example.nextclass.view.TimeTableView
@@ -238,8 +239,35 @@ private fun NavGraphBuilder.userProfileRoute(
         myPostRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel,communityViewModel=communityViewModel)
         myCommentRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel,communityViewModel=communityViewModel)
         myFavoritePostRoute(loginViewModel = loginViewModel, navController = navController,mainNavHostController=mainNavHostController, userInfoViewModel = userInfoViewModel,communityViewModel=communityViewModel)
+        notificationSettingRoute(navController=navController,userInfoViewModel=userInfoViewModel)
     }
 }
+
+private fun NavGraphBuilder.notificationSettingRoute(
+    navController: NavHostController,
+    userInfoViewModel: UserInfoViewModel,
+
+) {
+    navigation(
+        route = "notificationSettingRoute",
+        startDestination = "notificationSettingView"
+    ) {
+
+        notificationSettingView(navController=navController,userInfoViewModel=userInfoViewModel)
+    }
+}
+
+private fun NavGraphBuilder.notificationSettingView(
+    navController: NavHostController,
+
+    userInfoViewModel: UserInfoViewModel,
+
+) {
+    composable("notificationSettingView") {
+        NotificationSettingView(navController = navController, userInfoViewModel = userInfoViewModel)
+    }
+}
+
 
 private fun NavGraphBuilder.myPostRoute(
     navController: NavHostController,
