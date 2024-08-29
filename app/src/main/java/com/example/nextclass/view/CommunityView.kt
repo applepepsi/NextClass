@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -764,7 +765,6 @@ fun CommunitySearchView(
                         search = {
                             communityViewModel.updateSearchWord(searchWord)
                             communityViewModel.postSearchText()
-
                         }
                     )
                 }else{
@@ -778,23 +778,38 @@ fun CommunitySearchView(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Background_Color2)
-                .padding(top=8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(top = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+
+
         ) {
 
+            if (communityViewModel.communitySearchDataList.value.isEmpty()) {
+                item {
 
-
-            items(items = communityViewModel.communitySearchDataList.value) { singlePostData ->
-                SinglePostComponent(
-                    singlePostData,
-                    postClick = {
-                        communityViewModel.setSelectedCommunityData(singlePostData.post_sequence)
+                    Spacer(modifier = Modifier.height(20.dp))
+                        Text(
+                            text = "해당 게시물이 존재하지 않습니다.",
+                            style = TextStyle(
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontStyle = FontStyle.Normal,
+                            ),
+                        )
+                }
+            } else {
+                items(items = communityViewModel.communitySearchDataList.value) { singlePostData ->
+                    SinglePostComponent(
+                        singlePostData,
+                        postClick = {
+                            communityViewModel.setSelectedCommunityData(singlePostData.post_sequence)
+                        }
+                    )
+                }
+                item {
+                    if (communityViewModel.postLoading.value) {
+                        ProgressBarSmallComponent(communityViewModel.postLoading.value)
                     }
-                )
-            }
-            item {
-                if (communityViewModel.postLoading.value) {
-                    ProgressBarSmallComponent(communityViewModel.postLoading.value)
                 }
             }
         }

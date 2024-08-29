@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -104,8 +106,18 @@ fun TodaySingleClassComponent(
     }
 }
 
+@Composable
+fun EmptyHomeItemComponent(){
+    Box(
+        modifier = Modifier
+            .height(110.dp)
+            .fillMaxWidth()
 
-
+            .padding(start = 10.dp, end = 10.dp)
+            .clip(RoundedCornerShape(13.dp))
+            .background(Background_Color2)
+    )
+}
 
 @Preview(showBackground = true)
 @Composable

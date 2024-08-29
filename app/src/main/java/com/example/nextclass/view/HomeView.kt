@@ -19,8 +19,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,6 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
+import com.example.nextclass.appComponent.EmptyHomeItemComponent
 import com.example.nextclass.appComponent.GridScheduleItem
 import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.LazyScheduleItem
@@ -73,7 +77,7 @@ fun HomeView(
     val context = LocalContext.current
 
 
-
+    val scrollState = rememberScrollState()
 
 
     LaunchedEffect(Unit) {
@@ -89,109 +93,148 @@ fun HomeView(
 
         //베스트 게시물 가져오기
         communityViewModel.resetPostList()
-        communityViewModel.getPostList(sort="vote",post_sequence=null, size = 4)
+        communityViewModel.getPostList(sort = "vote", post_sequence = null, size = 4)
 
         userInfoViewModel.getUserInfo()
     }
 
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+//        contentPadding = PaddingValues(16.dp)
     ) {
-        ProgressBarFullComponent(state = timeTableViewModel.loading.value)
-
-        Spacer(Modifier.height(30.dp))
-
-        UserProfilePreviewComponent(
-            name = userInfoViewModel.userProfile.value.name,
-            schoolName = userInfoViewModel.userProfile.value.member_school,
-            grade = userInfoViewModel.userProfile.value.member_grade
-        )
-
-        Spacer(Modifier.height(30.dp))
-
-        Text(
-            text="오늘의 수업",
-            style = TextStyle(
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                fontStyle = FontStyle.Normal,
-            ),
-            modifier = Modifier.padding(start=10.dp,bottom=5.dp)
-        )
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-//                .heightIn(110.dp)
-//                .padding(start=10.dp,end=10.dp)
-//                .clip(RoundedCornerShape(13.dp))
-//                .background(Background_Color2),
-                    ,
-            contentPadding =  PaddingValues(start=5.dp)
-        ) {
-            items(items=timeTableViewModel.todayClassDataList.value){ singleClassData->
-                Log.d("singleClassData",singleClassData.toString())
-                TodaySingleClassComponent(singleClassData = singleClassData)
-            }
+        item {
+            ProgressBarFullComponent(state = timeTableViewModel.loading.value)
         }
 
-        Spacer(Modifier.height(30.dp))
-        Text(
-            text="오늘의 할일",
-            style = TextStyle(
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                fontStyle = FontStyle.Normal,
-            ),
-            modifier = Modifier.padding(start=10.dp,bottom=5.dp)
-        )
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(110.dp)
-                .padding(start=10.dp,end=10.dp)
-                .clip(RoundedCornerShape(13.dp))
-                .background(Background_Color2),
-            verticalArrangement = Arrangement.spacedBy(18.dp),
+//        item {
+//            Column(
+//                modifier = Modifier
+//                    .padding(top = 20.dp,bottom=10.dp),
+//
+//                verticalArrangement = Arrangement.Top,
+//                horizontalAlignment = Alignment.CenterHorizontally
+//
+//            ) {
+//
+//                AppBarTextAndButtonComponent(
+//                    value = "다음 수업",
+//                    navController = navController,
+//                    showRightButton = false,
+//                    showLeftButton = false,
+//                )
+//            }
+//        }
 
-        ) {
-            scheduleViewModel.groupByDateScheduleData.value.forEach { (date, schedules) ->
-                    item {
-                        Log.d("date", date.toString())
-                        LazyScheduleItem(
-                            date = date.toString(),
-                            schedules = schedules,
-                            scheduleViewModel = scheduleViewModel,
-                            navController = navController
-                    )
+        item {
+            Spacer(Modifier.height(30.dp))
+        }
+
+        item {
+            UserProfilePreviewComponent(
+                name = userInfoViewModel.userProfile.value.name,
+                schoolName = userInfoViewModel.userProfile.value.member_school,
+                grade = userInfoViewModel.userProfile.value.member_grade
+            )
+        }
+
+        item {
+            Spacer(Modifier.height(30.dp))
+        }
+
+        item {
+            Text(
+                text = "오늘의 수업",
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontStyle = FontStyle.Normal,
+                ),
+                modifier = Modifier.padding(start = 10.dp, bottom = 5.dp)
+            )
+        }
+
+        item {
+
+            if(timeTableViewModel.todayClassDataList.value.isEmpty()){
+                EmptyHomeItemComponent()
+            }else{
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(110.dp),
+                    contentPadding = PaddingValues(start = 5.dp)
+                ) {
+                    items(items = timeTableViewModel.todayClassDataList.value) { singleClassData ->
+                        Log.d("singleClassData", singleClassData.toString())
+                        TodaySingleClassComponent(singleClassData = singleClassData)
+                    }
                 }
             }
-
         }
 
-        Spacer(Modifier.height(30.dp))
+        item {
+            Spacer(Modifier.height(30.dp))
+        }
 
-        Text(
-            text="오늘의 인기글",
-            style = TextStyle(
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                fontStyle = FontStyle.Normal,
-            ),
-            modifier = Modifier.padding(start=10.dp,bottom=5.dp)
-        )
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(110.dp)
-                .padding(start=10.dp,end=10.dp)
-                .clip(RoundedCornerShape(13.dp))
-                .background(Background_Color2),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        item {
+            Text(
+                text = "오늘의 할일",
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontStyle = FontStyle.Normal,
+                ),
+                modifier = Modifier.padding(start = 10.dp, bottom = 5.dp)
+            )
+        }
+
+        if(scheduleViewModel.groupByDateScheduleData.value.toList().isEmpty()){
+
+            item{
+                EmptyHomeItemComponent()
+            }
+
+        }else{
+            items(scheduleViewModel.groupByDateScheduleData.value.toList()) { (date, schedules) ->
+                Log.d("schedules2", schedules.toString())
+
+
+
+                LazyScheduleItem(
+                    date = date.toString(),
+                    schedules = schedules,
+                    scheduleViewModel = scheduleViewModel,
+                    navController = navController
+                )
+
+
+            }
+        }
+
+        item {
+            Spacer(Modifier.height(30.dp))
+        }
+
+        item {
+            Text(
+                text = "오늘의 인기글",
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontStyle = FontStyle.Normal,
+                ),
+                modifier = Modifier.padding(start = 10.dp, bottom = 5.dp)
+            )
+        }
+
+        if(communityViewModel.communityDataList.value.isEmpty()){
+            item{
+                EmptyHomeItemComponent()
+            }
+
+        }else{
             items(items = communityViewModel.communityDataList.value) { singlePostData ->
-
                 SinglePostComponent(
                     singlePostData,
                     postClick = {
@@ -200,6 +243,8 @@ fun HomeView(
                 )
             }
         }
+
+
     }
 }
 
