@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="836dp"
+    android:height="631dp"
+    android:viewportWidth="836"
+    android:viewportHeight="631">
+    <path
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="50"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M418 606c-59.74-32.3-127.51-58.1-196.5-58.1S84.74 573.7 25 606V74.31C84.74 42.01 152.51 25 221.5 25S358.26 42 418 74.31M418 606c59.74-32.3 127.51-58.1 196.5-58.1S751.26 573.7 811 606V74.31C751.26 42.01 683.49 25 614.5 25S477.74 42 418 74.31M418 606V74.31"/>
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M90.27 170.92c0-9.12 7.39-16.51 16.51-16.51h228.98c9.12 0 16.51 7.39 16.51 16.51v0c0 9.12-7.39 16.51-16.51 16.51h-228.98c-9.12 0-16.51-7.39-16.51-16.51z"/>
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M90.27 294.08c0-9.12 7.39-16.51 16.51-16.51h228.98c9.12 0 16.51 7.39 16.51 16.51v0c0 9.12-7.39 16.51-16.51 16.51h-228.98c-9.12 0-16.51-7.39-16.51-16.51z"/>
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M483.73 170.92c0-9.12 7.39-16.51 16.51-16.51h228.98c9.12 0 16.51 7.39 16.51 16.51v0c0 9.12-7.39 16.51-16.51 16.51h-228.98c-9.12 0-16.51-7.39-16.51-16.51z"/>
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M483.73 417.24c0-9.12 7.39-16.51 16.51-16.51h228.98c9.12 0 16.51 7.39 16.51 16.51v0c0 9.12-7.39 16.51-16.51 16.51h-228.98c-9.12 0-16.51-7.39-16.51-16.51z"/>
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M483.73 294.08c0-9.12 7.39-16.51 16.51-16.51h228.98c9.12 0 16.51 7.39 16.51 16.51v0c0 9.12-7.39 16.51-16.51 16.51h-228.98c-9.12 0-16.51-7.39-16.51-16.51z"/>
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M90.27 417.24c0-9.12 7.39-16.51 16.51-16.51h228.98c9.12 0 16.51 7.39 16.51 16.51v0c0 9.12-7.39 16.51-16.51 16.51h-228.98c-9.12 0-16.51-7.39-16.51-16.51z"/>
+</vector>

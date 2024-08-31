@@ -32,9 +32,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,6 +46,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nextclass.appComponent.AppBarTextAndButtonComponent
 import com.example.nextclass.appComponent.EmptyHomeItemComponent
 import com.example.nextclass.appComponent.GridScheduleItem
+import com.example.nextclass.appComponent.HomeScoreComponent
 import com.example.nextclass.appComponent.InputButtonComponent
 import com.example.nextclass.appComponent.LazyScheduleItem
 import com.example.nextclass.appComponent.MainTextComponent
@@ -57,6 +61,7 @@ import com.example.nextclass.repository.testRepo.TestRepository
 import com.example.nextclass.repository.testRepo.TimeTableTestRepo
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.NextClassTheme
+import com.example.nextclass.ui.theme.Pastel_Red
 import com.example.nextclass.viewmodel.CommunityViewModel
 import com.example.nextclass.viewmodel.LoginViewModel
 import com.example.nextclass.viewmodel.ScheduleViewModel
@@ -96,6 +101,9 @@ fun HomeView(
         communityViewModel.getPostList(sort = "vote", post_sequence = null, size = 4)
 
         userInfoViewModel.getUserInfo()
+
+        timeTableViewModel.getTimeTableScore()
+
     }
 
 
@@ -107,24 +115,24 @@ fun HomeView(
             ProgressBarFullComponent(state = timeTableViewModel.loading.value)
         }
 
-//        item {
-//            Column(
-//                modifier = Modifier
-//                    .padding(top = 20.dp,bottom=10.dp),
-//
-//                verticalArrangement = Arrangement.Top,
-//                horizontalAlignment = Alignment.CenterHorizontally
-//
-//            ) {
-//
-//                AppBarTextAndButtonComponent(
-//                    value = "다음 수업",
-//                    navController = navController,
-//                    showRightButton = false,
-//                    showLeftButton = false,
-//                )
-//            }
-//        }
+        item {
+            Column(
+                modifier = Modifier
+                    .padding(top = 20.dp,bottom=10.dp),
+
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
+
+            ) {
+
+                AppBarTextAndButtonComponent(
+                    value = "다음 수업",
+                    navController = navController,
+                    showRightButton = false,
+                    showLeftButton = false,
+                )
+            }
+        }
 
         item {
             Spacer(Modifier.height(30.dp))
@@ -139,7 +147,7 @@ fun HomeView(
         }
 
         item {
-            Spacer(Modifier.height(30.dp))
+            Spacer(Modifier.height(40.dp))
         }
 
         item {
@@ -174,7 +182,7 @@ fun HomeView(
         }
 
         item {
-            Spacer(Modifier.height(30.dp))
+            Spacer(Modifier.height(40.dp))
         }
 
         item {
@@ -198,9 +206,6 @@ fun HomeView(
         }else{
             items(scheduleViewModel.groupByDateScheduleData.value.toList()) { (date, schedules) ->
                 Log.d("schedules2", schedules.toString())
-
-
-
                 LazyScheduleItem(
                     date = date.toString(),
                     schedules = schedules,
@@ -213,7 +218,7 @@ fun HomeView(
         }
 
         item {
-            Spacer(Modifier.height(30.dp))
+            Spacer(Modifier.height(40.dp))
         }
 
         item {
@@ -244,7 +249,82 @@ fun HomeView(
             }
         }
 
+        item {
+            Spacer(Modifier.height(40.dp))
+        }
 
+        item {
+            Text(
+                text = "종합 성적",
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontStyle = FontStyle.Normal,
+                ),
+                modifier = Modifier.padding(start = 10.dp, bottom = 5.dp)
+            )
+        }
+
+        item {
+            LazyRow(
+                modifier = Modifier
+                    .height(110.dp)
+                    .fillMaxWidth()
+//                    .padding(start = 10.dp, end = 10.dp)
+                    .clip(RoundedCornerShape(13.dp))
+                    .background(Background_Color2)
+                    .padding(start=8.dp,end=8.dp),
+//                horizontalArrangement = Arrangement.SpaceAround,
+                contentPadding = PaddingValues(5.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                item{
+                    Column {
+                        Text(
+                            text = buildAnnotatedString {
+                                append("전체 평균 학점: ")
+                                withStyle(
+                                    style = SpanStyle(
+                                        color = Pastel_Red,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                ) {
+                                    append(timeTableViewModel.timeTableScore.value.average_grade)
+                                }
+                            },
+                            fontSize = 15.sp
+                        )
+
+                        Spacer(Modifier.height(5.dp))
+
+                        Text(
+                            text = buildAnnotatedString {
+                                append("전체 취득 학점: ")
+                                withStyle(
+                                    style = SpanStyle(
+                                        color = Pastel_Red,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                ) {
+                                    append(timeTableViewModel.timeTableScore.value.credit_sum.toString())
+                                }
+                                append("/${timeTableViewModel.timeTableScore.value.require_credit}")
+
+                            },
+                            fontSize = 15.sp
+                        )
+                    }
+                }
+                items(items = timeTableViewModel.timeTableScore.value.semester_list) { singleClassScore ->
+                    HomeScoreComponent(
+                        semester = singleClassScore.semester,
+                        averageScore = singleClassScore.score,
+                        earnedCredit = ""
+                    )
+                }
+            }
+        }
     }
 }
 

@@ -34,6 +34,9 @@ class LoginViewModel @Inject constructor(
     private val userInfoRepository: UserInfoRepository
 ):ViewModel(){
 
+    private val _splashScreenVisibility = mutableStateOf(false)
+    val splashScreenVisibility: State<Boolean> = _splashScreenVisibility
+
 
     private val _email = mutableStateOf("")
     val email: State<String> = _email
@@ -577,14 +580,28 @@ class LoginViewModel @Inject constructor(
                             _tokenData.value= loginRequestResult.data!!
                         }else{
                             _loading.value=false
+
+                            _loginFailMessage.value=StringValue.StringResource(R.string.autoLoginFail)
+                            _loginFail.value=true
+
                         }
+                    }else{
+                        _loading.value=false
+
+                        _loginFailMessage.value=StringValue.StringResource(R.string.autoLoginFail)
+                        _loginFail.value=true
+
+
                     }
                 }
             }else{
                 _loginFailMessage.value=StringValue.StringResource(R.string.autoLoginFail)
                 _loginFail.value=true
+
+
             }
         }
+
     }
 
 
@@ -864,6 +881,11 @@ class LoginViewModel @Inject constructor(
 
     fun resetFindInputData(){
         _findIDOrPassword.value= FindIDOrPasswordData()
+    }
+
+    fun toggleSplashVisibleState() {
+        _splashScreenVisibility.value=!_splashScreenVisibility.value
+        Log.d("스플래시 상태", _splashScreenVisibility.value.toString())
     }
 
 }

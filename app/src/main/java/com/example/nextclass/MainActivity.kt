@@ -16,10 +16,13 @@ import com.example.nextclass.nav.AppNav
 import com.example.nextclass.ui.theme.NextClassTheme
 import com.example.nextclass.utils.TokenManager
 import com.example.nextclass.utils.UserInfoManager
+import com.example.nextclass.view.SplashScreen
 import com.example.nextclass.viewmodel.LoginViewModel
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import java.util.Locale
+import kotlin.math.log
 
 
 @AndroidEntryPoint
@@ -55,6 +58,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting() {
 
+
+
     //저장된 사용자 정보가있다면 로그인 시도
     val context = LocalContext.current
 
@@ -64,50 +69,58 @@ fun Greeting() {
 
 
 
-    FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-        if (task.isSuccessful) {
 
-            TokenManager.saveFcmToken(context,task.result)
-            Log.d("FCM Token", task.result)
+    LaunchedEffect(Unit) {
 
-        } else {
-            Log.w("FCM Token", "FCM 토큰 발급 실패")
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+
+                TokenManager.saveFcmToken(context,task.result)
+                Log.d("FCM Token", task.result)
+
+            } else {
+                Log.w("FCM Token", "FCM 토큰 발급 실패")
+            }
         }
     }
+
 
     val fcmToken=TokenManager.getFcmToken(context)
 
 
-
-    if (autoLoginId != null) {
-        Log.d("자동로그인 id", autoLoginId)
-    }
-    if (autoLoginPassword != null) {
-        Log.d("자동로그인 password", autoLoginPassword)
-    }
-
     LaunchedEffect(autoLoginId, autoLoginPassword) {
-        loginViewModel.tryAutoLogin(autoLoginId, autoLoginPassword,fcmToken)
+
+
+
+        if (autoLoginId != null && autoLoginPassword != null) {
+            loginViewModel.tryAutoLogin(autoLoginId, autoLoginPassword, fcmToken)
+
+        } else {
+
+        }
+        loginViewModel.toggleSplashVisibleState()
+        delay(2000)
+        loginViewModel.toggleSplashVisibleState()
     }
 
-    if(loginViewModel.loginResult.value){
-        TokenManager.saveToken(context,loginViewModel.tokenData.value)
-        Log.d("토큰데이터", loginViewModel.tokenData.value.toString())
+
+    LaunchedEffect(loginViewModel.loginResult.value) {
+        if (loginViewModel.loginResult.value) {
+            TokenManager.saveToken(context, loginViewModel.tokenData.value)
+            Log.d("토큰데이터", loginViewModel.tokenData.value.toString())
+
+        }
     }
 
 
 
+    if(loginViewModel.splashScreenVisibility.value){
+        SplashScreen()
+    }else{
+        AppNav(loginViewModel)
+    }
 
-    //스플래시화면으로 변경예정
-//    if (!loginViewModel.loading.value) {
-//
-//    } else {
-//        // 로딩 중일때 로딩 화면 표시
-//        ProgressBarComponent()
-//    }
-    AppNav(loginViewModel)
-
-//    AppNav(loginViewModel)
 }
 
 

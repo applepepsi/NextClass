@@ -26,9 +26,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,6 +43,7 @@ import com.example.nextclass.repository.testRepo.TestRepository
 import com.example.nextclass.ui.theme.Background_Color2
 import com.example.nextclass.ui.theme.Pastel_Red
 import com.example.nextclass.utils.ConvertDayOfWeek
+import com.example.nextclass.utils.GetSemester
 import com.example.nextclass.viewmodel.LoginViewModel
 import com.example.nextclass.viewmodel.TimeTableViewModel
 
@@ -49,9 +53,9 @@ fun TodaySingleClassComponent(
 ) {
     Column(
         modifier = Modifier
-        .widthIn(150.dp)
+            .widthIn(150.dp)
             .heightIn(110.dp)
-            .padding(start=10.dp,end=10.dp)
+            .padding(start = 10.dp, end = 10.dp)
             .clip(RoundedCornerShape(13.dp))
             .background(Background_Color2),
         verticalArrangement = Arrangement.Center
@@ -119,6 +123,75 @@ fun EmptyHomeItemComponent(){
     )
 }
 
+@Composable
+fun HomeScoreComponent(
+    semester:String,
+    averageScore:String,
+    earnedCredit:String
+){
+    Column(
+        modifier = Modifier
+            .heightIn(110.dp)
+            .widthIn(150.dp)
+            .background(Background_Color2)
+        ,
+
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+
+        Column(
+            modifier = Modifier.clip(RoundedCornerShape(13.dp)).background(Color.White).padding(start=12.dp,end=12.dp,bottom=5.dp,top=8.dp)
+
+        ){
+            Text(
+                text = buildAnnotatedString {
+                    append("평균 학점: ")
+                    withStyle(
+                        style = SpanStyle(
+                            color = Pastel_Red,
+                            fontWeight = FontWeight.Bold
+                        )
+                    ) {
+                        append(averageScore)
+                    }
+                },
+                fontSize = 15.sp
+            )
+            Spacer(Modifier.height(5.dp))
+            Text(
+                text = buildAnnotatedString {
+                    append("취득 학점: ")
+                    withStyle(
+                        style = SpanStyle(
+                            color = Pastel_Red,
+                            fontWeight = FontWeight.Bold
+                        )
+                    ) {
+                        append(earnedCredit)
+                    }
+
+
+                },
+                fontSize = 15.sp
+            )
+        }
+
+        Text(
+            text= GetSemester.convertSemester(semester),
+            style = TextStyle(
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Normal,
+                fontStyle = FontStyle.Normal,
+                color = Color.Black
+            ),
+            modifier = Modifier.padding(top=5.dp)
+        )
+    }
+}
+
+
 @Preview(showBackground = true)
 @Composable
 fun TodayClassPreview() {
@@ -129,6 +202,20 @@ fun TodayClassPreview() {
 
     TodaySingleClassComponent(
         singleClassData = ClassData()
+    )
+
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeScorePreview() {
+    val navController= rememberNavController()
+    val testRepository = TestRepository()
+    val loginViewModel = LoginViewModel(testRepository)
+
+
+    HomeScoreComponent(
+        "2025-1","25","25"
     )
 
 }

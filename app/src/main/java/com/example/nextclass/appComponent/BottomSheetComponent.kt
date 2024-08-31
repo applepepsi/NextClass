@@ -187,7 +187,8 @@ fun AccreditationCalculationComponent(
                         verticalAlignment = Alignment.CenterVertically
                     ){
                         SemesterScore(
-                            score=semester.score
+                            score=semester.score,
+
                         )
                         DeleteOrModifyScoreBoard(
                             index = semesterIndex,

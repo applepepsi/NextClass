@@ -92,7 +92,7 @@ fun OneClassCellDetailComponent(
             text = classData.title,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
-            fontSize = 13.sp
+            fontSize = 12.sp
         )
 
         Text(
@@ -109,6 +109,7 @@ fun OneClassCellDetailComponent(
             text = ConvertDayOfWeek.convertDayOfWeekKorea(classData.week),
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
+            fontSize = 10.sp
         )
 
 
@@ -340,7 +341,7 @@ fun ClassDetail(
                         )
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = classData.class_grade.toString(),
+                            text = classData.class_grade.toString()+"학년",
                             style = TextStyle(
                                 fontSize = 15.sp,
                                 fontFamily = FontFamily.Default,
