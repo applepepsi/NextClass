@@ -188,6 +188,7 @@ fun AccreditationCalculationComponent(
                     ){
                         SemesterScore(
                             score=semester.score,
+                            creditSum = timeTableViewModel.singleSemesterScore.value.credit_sum,
 
                         )
                         DeleteOrModifyScoreBoard(
@@ -259,7 +260,8 @@ fun DeleteOrModifyScoreBoard(
 
 @Composable
 fun SemesterScore(
-    score:String="0"
+    score: String = "0",
+    creditSum: Int
 ) {
     Row(
         Modifier
@@ -289,7 +291,7 @@ fun SemesterScore(
                 withStyle(style = SpanStyle(
 //                                    color = Color.White,
                     fontWeight = FontWeight.Bold)) {
-                    append("15")
+                    append(creditSum.toString())
                 }
 
             },
@@ -693,7 +695,8 @@ fun ModifyScoreComponent(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ){
                         SemesterScore(
-                            score=timeTableViewModel.singleSemesterScore.value.score
+                            score=timeTableViewModel.singleSemesterScore.value.score,
+                            creditSum=timeTableViewModel.singleSemesterScore.value.credit_sum
                         )
 
                         //todo수업추가하기 테스트 해야함

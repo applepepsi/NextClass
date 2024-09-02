@@ -11,6 +11,7 @@ import com.example.nextclass.Data.UserInfoData.PostUserData
 import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.Data.TokenData
 import com.example.nextclass.Data.UserData
+import com.example.nextclass.Data.UserInfoData.NotificationConfig
 import com.example.nextclass.Data.VerifyCodeData
 import com.example.nextclass.repository.UserInfoRepository
 import com.example.oneplusone.serverConnection.API
@@ -250,6 +251,17 @@ class TestRepository : UserInfoRepository {
     }
 
     override fun deleteUser(password: String, callback: (ServerResponse<Any>?) -> Unit) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getNotificationState(callback: (ServerResponse<List<NotificationConfig>>?) -> Unit) {
+        TODO("Not yet implemented")
+    }
+
+    override fun changeNotificationState(
+        notificationConfig: NotificationConfig,
+        callback: (ServerResponse<Any>?) -> Unit
+    ) {
         TODO("Not yet implemented")
     }
 }

@@ -50,6 +50,8 @@ const val FIND_PASSWORD="/password_find"
 const val SCORE_UPDATE="/score_update"
 const val GET_SCORE="/score"
 const val DELETE_ID="/id_delete"
+const val GET_NOTIFICATION_CONFIG="/notification_config"
+const val CHANGE_NOTIFICATION_CONFIG="/notification_config_update"
 
 
 const val POST_SAVE="/post_save"

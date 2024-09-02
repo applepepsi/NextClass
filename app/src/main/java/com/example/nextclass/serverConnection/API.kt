@@ -25,9 +25,11 @@ import com.example.nextclass.Data.UserInfoData.PostUserData
 import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.Data.TokenData
 import com.example.nextclass.Data.UserData
+import com.example.nextclass.Data.UserInfoData.NotificationConfig
 import com.example.nextclass.Data.VerifyCodeData
 import com.example.nextclass.utils.CHANGE_EMAIL
 import com.example.nextclass.utils.CHANGE_INFO
+import com.example.nextclass.utils.CHANGE_NOTIFICATION_CONFIG
 import com.example.nextclass.utils.CHANGE_PASSWORD
 import com.example.nextclass.utils.COMMENT_CHANGE
 import com.example.nextclass.utils.COMMENT_DELETE
@@ -38,6 +40,7 @@ import com.example.nextclass.utils.DUPLICATED_CHECK_ADDRESS
 import com.example.nextclass.utils.FIND_ID
 import com.example.nextclass.utils.FIND_PASSWORD
 import com.example.nextclass.utils.GET_COMMENT
+import com.example.nextclass.utils.GET_NOTIFICATION_CONFIG
 import com.example.nextclass.utils.GET_POST
 import com.example.nextclass.utils.GET_SCORE
 import com.example.nextclass.utils.GET_TIME_TABLE
@@ -114,6 +117,13 @@ interface API {
 
     @POST(FIND_PASSWORD)
     suspend fun findPassword(@Body id: FindIDOrPasswordData):Response<ServerResponse<Any>>
+
+    @GET(GET_NOTIFICATION_CONFIG)
+    suspend fun getNotificationConfig():Response<ServerResponse<List<NotificationConfig>>>
+
+    @POST(CHANGE_NOTIFICATION_CONFIG)
+    suspend fun changeNotificationConfig(@Body notificationConfig: NotificationConfig):Response<ServerResponse<Any>>
+
 
     //시간표
     @POST(POST_TIMETABLE_DATA)

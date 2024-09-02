@@ -11,6 +11,8 @@ import com.example.nextclass.Data.UserInfoData.ChangePassword
 import com.example.nextclass.Data.UserInfoData.ChangeUserData
 import com.example.nextclass.Data.UserInfoData.PostUserData
 import com.example.nextclass.Data.UserData
+import com.example.nextclass.Data.UserInfoData.NotificationConfig
+import com.example.nextclass.Data.UserInfoData.NotificationStates
 import com.example.nextclass.Data.VerifyCodeData
 import com.example.nextclass.R
 import com.example.nextclass.repository.UserInfoRepository
@@ -132,22 +134,56 @@ class UserInfoViewModel @Inject constructor(
     private val _changeEmailErrorMessage=mutableStateOf<StringValue>(StringValue.Empty)
     val changeEmailErrorMessage: State<StringValue> = _changeEmailErrorMessage
 
-    private val _communityNotificationState=mutableStateOf(true)
-    val communityNotificationState: State<Boolean> = _communityNotificationState
+    private val _notificationStates = mutableStateOf(NotificationStates())
+    val notificationStates: State<NotificationStates> = _notificationStates
 
-    private val _scheduleNotificationState=mutableStateOf(true)
-    val scheduleNotificationState: State<Boolean> = _scheduleNotificationState
+    private val _userInfoToastMessage = mutableStateOf<String?>(null)
+    val userInfoToastMessage: State<String?> = _userInfoToastMessage
 
     fun updateVerifyCode(code: String) {
         _verifyCode.value = code
     }
 
-    fun toggleCommunityNotificationState(){
-        _communityNotificationState.value=!_communityNotificationState.value
+    fun toggleNotificationState(category: String, state:Boolean){
+
+        val changeNotificationConfig=NotificationConfig(
+            category = category,
+            is_notification_activated = !state)
+
+//        _loading.value=true
+        Log.d("바꾸려는 상태", changeNotificationConfig.toString())
+        userInfoRepository.changeNotificationState(changeNotificationConfig){serverResponse ->
+            Log.d("serverResponse", serverResponse.toString())
+            if(serverResponse !=null){
+
+                if(serverResponse.code== SUCCESS_CODE){
+
+                    updateNotificationState(category, state)
+
+                }else{
+                    _userInfoToastMessage.value = serverResponse.errorDescription
+                }
+            }else{
+                _userInfoToastMessage.value = "서버와의 연결이 원활하지 않습니다."
+            }
+
+//            _loading.value=false
+        }
     }
 
-    fun toggleScheduleNotificationState(){
-        _scheduleNotificationState.value=!_scheduleNotificationState.value
+    private fun updateNotificationState(category: String, state: Boolean) {
+        _notificationStates.value = _notificationStates.value.copy(
+            community = if (category == "comment_notification") {
+                _notificationStates.value.community.copy(is_notification_activated = !state)
+            } else {
+                _notificationStates.value.community
+            },
+            schedule = if (category == "to_do_list_notification") {
+                _notificationStates.value.schedule.copy(is_notification_activated = !state)
+            } else {
+                _notificationStates.value.schedule
+            }
+        )
     }
 
     fun submitVerifyCode(){
@@ -500,6 +536,48 @@ class UserInfoViewModel @Inject constructor(
             member_grade = CutEntranceYear.addGradeEntranceYear(value.member_grade),
             member_school = value.member_school
         )
+    }
+
+    fun getNotificationState() {
+        _loading.value = true
+
+        userInfoRepository.getNotificationState { serverResponse ->
+            Log.d("serverResponse", serverResponse.toString())
+            if (serverResponse != null) {
+                if (serverResponse.code == SUCCESS_CODE) {
+                    val notifications = serverResponse.data
+
+                    notifications!!.forEach { notification ->
+                        when (notification.category) {
+                            "to_do_list_notification" -> {
+                                _notificationStates.value = _notificationStates.value.copy(
+                                    schedule = _notificationStates.value.schedule.copy(
+                                        is_notification_activated = notification.is_notification_activated
+                                    )
+                                )
+                            }
+                            "comment_notification" -> {
+                                _notificationStates.value = _notificationStates.value.copy(
+                                    community = _notificationStates.value.community.copy(
+                                        is_notification_activated = notification.is_notification_activated
+                                    )
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    _userInfoToastMessage.value = serverResponse.errorDescription
+                }
+            } else {
+                _userInfoToastMessage.value = "서버와의 연결이 원활하지 않습니다."
+            }
+
+            _loading.value = false
+        }
+    }
+
+    fun clearToastMessage() {
+        _userInfoToastMessage.value = null
     }
 
 

@@ -17,6 +17,7 @@ import com.example.nextclass.Data.TimeTableData.SingleSemesterScore
 import com.example.nextclass.R
 import com.example.nextclass.repository.TimeTableRepository
 import com.example.nextclass.utils.CLASS_ALREADY_EXISTS_IN_TIMETABLE
+import com.example.nextclass.utils.ColorSelector
 import com.example.nextclass.utils.ConvertDayOfWeek
 import com.example.nextclass.utils.CutEntranceYear
 import com.example.nextclass.utils.GetSemester.getCurrentSemester
@@ -230,29 +231,31 @@ class TimeTableViewModel @Inject constructor(
         if(scheduleDataCheck()){
 
 //            _classData.value = _classData.value.copy(week=_classData.value.week)
-            //전송
-            val postClassData = _classData.value.copy(semester = getCurrentSemester(), week = ConvertDayOfWeek.convertDayOfWeek(_classData.value.week))
 
-            Log.d("시간표", postClassData.toString())
+            val classColor=ColorSelector.colorSelector(_timeTableDataList.value)
+
+            Log.d("선택된 색", classColor)
+            //전송
+            val postClassData = _classData.value.copy(semester = getCurrentSemester(), week = ConvertDayOfWeek.convertDayOfWeek(_classData.value.week), color = classColor)
+
+            Log.d("추가 수업", postClassData.toString())
             timeTableRepository.postTimeTableData(postClassData){serverResponse ->
                 Log.d("시간표 전송 성공", serverResponse.toString())
 
-                when(serverResponse?.errorCode){
-                    CLASS_ALREADY_EXISTS_IN_TIMETABLE->{
-                        _addClassErrorMessage.value = StringValue.StringResource(R.string.DuplicatedClassTime)
-                        _addClassError.value = true
-                    }
-                    else->{
-                        _addClassErrorMessage.value = StringValue.Empty
-                        _addClassError.value = false
+                if (serverResponse != null) {
+                    if(serverResponse.code== SUCCESS_CODE){
+
                         getTimeTable()
                         getTimeTableScore()
                         toggleInsertClassDataDialogState()
-                    }
-                }
-//                _addClassErrorMessage.value = StringValue.Empty
-//                _addClassError.value = false
 
+
+                    }else{
+                        _timeTableToastMessage.value = serverResponse.errorDescription
+                    }
+                }else{
+                    _timeTableToastMessage.value = "서버와의 연결이 불안정 합니다."
+                }
 
             }
         }else{
@@ -272,23 +275,25 @@ class TimeTableViewModel @Inject constructor(
             //전송
 //            _classData.value = _classData.value.copy(semester = getCurrentSemester())
             val postClassData = _classData.value.copy(week = ConvertDayOfWeek.convertDayOfWeek(_classData.value.week))
-
+            Log.d("수정 수업", postClassData.toString())
 
             timeTableRepository.postModifyTimeTableData(postClassData){serverResponse ->
 
-                when(serverResponse?.errorCode){
-                    CLASS_ALREADY_EXISTS_IN_TIMETABLE->{
-                        _addClassErrorMessage.value = StringValue.StringResource(R.string.DuplicatedClassTime)
-                        _addClassError.value = true
-                    }
-                    else->{
-                        _addClassErrorMessage.value = StringValue.Empty
-                        _addClassError.value = false
+                if (serverResponse != null) {
+                    if(serverResponse.code== SUCCESS_CODE){
+
                         getTimeTableScore()
                         _timeTableDataList.value=replaceModifyClassData()
                         toggleSetShowClassDataModifyDialogState()
+
+
+                    }else{
+                        _timeTableToastMessage.value = serverResponse.errorDescription
                     }
+                }else{
+                    _timeTableToastMessage.value = "서버와의 연결이 불안정 합니다."
                 }
+
 
             }
 
@@ -434,8 +439,7 @@ class TimeTableViewModel @Inject constructor(
 
     fun addScoreRow(){
         val emptyScoreList = ClassScore(student_score = null, average_score = null, standard_deviation = null, semester = _singleSemesterScore.value.semester, achievement = "A")
-        Log.d("행추가", emptyScoreList.toString())
-        Log.d("행추가", _singleSemesterScore.value.toString())
+
         _singleSemesterScore.value = _singleSemesterScore.value.copy(
             data_list = _singleSemesterScore.value.data_list + emptyScoreList
         )

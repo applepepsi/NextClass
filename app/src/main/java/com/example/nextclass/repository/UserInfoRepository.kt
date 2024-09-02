@@ -9,6 +9,7 @@ import com.example.nextclass.Data.UserInfoData.PostUserData
 import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.Data.TokenData
 import com.example.nextclass.Data.UserData
+import com.example.nextclass.Data.UserInfoData.NotificationConfig
 import com.example.nextclass.Data.VerifyCodeData
 
 interface UserInfoRepository {
@@ -41,4 +42,8 @@ interface UserInfoRepository {
     fun postFindPassword(id: FindIDOrPasswordData, callback: (ServerResponse<Any>?) -> Unit)
 
     fun deleteUser(password:String, callback: (ServerResponse<Any>?) -> Unit)
+
+    fun getNotificationState(callback: (ServerResponse<List<NotificationConfig>>?) -> Unit)
+
+    fun changeNotificationState(notificationConfig: NotificationConfig,callback: (ServerResponse<Any>?) -> Unit)
 }

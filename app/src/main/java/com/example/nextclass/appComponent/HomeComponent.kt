@@ -127,7 +127,7 @@ fun EmptyHomeItemComponent(){
 fun HomeScoreComponent(
     semester:String,
     averageScore:String,
-    earnedCredit:String
+    creditSum:String
 ){
     Column(
         modifier = Modifier
@@ -169,7 +169,7 @@ fun HomeScoreComponent(
                             fontWeight = FontWeight.Bold
                         )
                     ) {
-                        append(earnedCredit)
+                        append(creditSum)
                     }
 
 

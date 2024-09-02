@@ -1,6 +1,7 @@
 package com.example.nextclass.view
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -489,6 +490,18 @@ fun NotificationSettingView(
     ) {
     val context = LocalContext.current
 
+    LaunchedEffect(Unit) {
+        userInfoViewModel.getNotificationState()
+    }
+
+    LaunchedEffect(userInfoViewModel.userInfoToastMessage.value) {
+        userInfoViewModel.userInfoToastMessage.value?.let{
+            Toast.makeText(context, userInfoViewModel.userInfoToastMessage.value, Toast.LENGTH_SHORT,)
+                .show()
+            userInfoViewModel.clearToastMessage()
+        }
+    }
+
 
     Column(
         modifier = Modifier
@@ -499,6 +512,10 @@ fun NotificationSettingView(
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
+        if(userInfoViewModel.loading.value){
+            ProgressBarFullComponent(state = userInfoViewModel.loading.value)
+        }
+
         AppBarTextAndButtonComponent(
             value = "알림 설정",
             navController = navController
@@ -539,9 +556,12 @@ fun NotificationSettingView(
                 UserProfileSwitchItemComponent(
                     image = ImageVector.vectorResource(R.drawable.notification_icon),
                     text = "커뮤니티 알림 설정",
-                    switchState = userInfoViewModel.communityNotificationState.value,
+                    switchState = userInfoViewModel.notificationStates.value.community.is_notification_activated,
                     switchClick = {
-                        userInfoViewModel.toggleCommunityNotificationState()
+                        userInfoViewModel.toggleNotificationState(
+                            category = userInfoViewModel.notificationStates.value.community.category,
+                            state = userInfoViewModel.notificationStates.value.community.is_notification_activated
+                        )
                     }
                 )
                 Spacer(modifier = Modifier.height(40.dp))
@@ -549,9 +569,12 @@ fun NotificationSettingView(
                 UserProfileSwitchItemComponent(
                     image = ImageVector.vectorResource(R.drawable.notification_icon),
                     text = "스케쥴 알림 설정",
-                    switchState = userInfoViewModel.scheduleNotificationState.value,
+                    switchState = userInfoViewModel.notificationStates.value.schedule.is_notification_activated,
                     switchClick = {
-                        userInfoViewModel.toggleScheduleNotificationState()
+                        userInfoViewModel.toggleNotificationState(
+                            category = userInfoViewModel.notificationStates.value.schedule.category,
+                            state = userInfoViewModel.notificationStates.value.schedule.is_notification_activated
+                        )
                     }
                 )
                 Spacer(modifier = Modifier.height(40.dp))

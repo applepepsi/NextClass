@@ -320,7 +320,7 @@ fun HomeView(
                     HomeScoreComponent(
                         semester = singleClassScore.semester,
                         averageScore = singleClassScore.score,
-                        earnedCredit = ""
+                        creditSum = singleClassScore.credit_sum.toString()
                     )
                 }
             }

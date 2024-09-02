@@ -15,8 +15,8 @@ data class ClassData(
     var teacher_name: String = "",
     var score: Int = 1,
     var school: String = "",
-    var category:String="공통"
-
+    var category:String="공통",
+    var color:String=""
 )
 
 data class ClassUUid(

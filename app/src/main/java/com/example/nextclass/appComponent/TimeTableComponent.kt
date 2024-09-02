@@ -76,11 +76,12 @@ fun OneClassCellDetailComponent(
 
     ) {
     val backGroundColor= Pastel_Red
+    val classBackGroundColor=if(classData.color=="") Pastel_Red else Color(classData.color.toLong(16))
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(backGroundColor)
+            .background(classBackGroundColor)
             .padding(4.dp)
             .clickable {
                 setSelectClassData(classData)

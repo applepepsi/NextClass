@@ -96,8 +96,6 @@ fun Greeting() {
         if (autoLoginId != null && autoLoginPassword != null) {
             loginViewModel.tryAutoLogin(autoLoginId, autoLoginPassword, fcmToken)
 
-        } else {
-
         }
         loginViewModel.toggleSplashVisibleState()
         delay(2000)

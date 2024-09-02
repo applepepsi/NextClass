@@ -12,6 +12,7 @@ data class AllScore(
 data class SingleSemesterScore(
     val semester:String="",
     val score:String="",
+    val credit_sum: Int=0,
     val data_list:List<ClassScore> = emptyList()
 )
 

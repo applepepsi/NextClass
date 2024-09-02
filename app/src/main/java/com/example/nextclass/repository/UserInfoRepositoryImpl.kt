@@ -11,6 +11,7 @@ import com.example.nextclass.Data.UserInfoData.PostUserData
 import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.Data.TokenData
 import com.example.nextclass.Data.UserData
+import com.example.nextclass.Data.UserInfoData.NotificationConfig
 import com.example.nextclass.Data.VerifyCodeData
 import com.example.oneplusone.serverConnection.API
 import kotlinx.coroutines.CoroutineScope
@@ -343,6 +344,54 @@ class UserInfoRepositoryImpl @Inject constructor(
                 }
             } catch (e: Exception) {
                 Log.d("탈퇴 실패",e.toString())
+                null
+            }
+            withContext(Dispatchers.Main) {
+
+                callback(result)
+            }
+        }
+    }
+
+    override fun getNotificationState(callback: (ServerResponse<List<NotificationConfig>>?) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = try {
+                val response = api.getNotificationConfig()
+                if (response.isSuccessful){
+                    Log.d("설정 가져오기 성공", response.body().toString())
+                    response.body()
+                } else{
+                    Log.d("설정 가져오기 실패","설정 가져오기 실패")
+                    null
+                }
+            } catch (e: Exception) {
+                Log.d("설정 가져오기 실패",e.toString())
+                null
+            }
+            withContext(Dispatchers.Main) {
+
+                callback(result)
+            }
+        }
+    }
+
+    override fun changeNotificationState(
+        notificationConfig: NotificationConfig,
+        callback: (ServerResponse<Any>?) -> Unit
+    ) {
+        Log.d("현재 설정", notificationConfig.toString())
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = try {
+                val response = api.changeNotificationConfig(notificationConfig)
+                if (response.isSuccessful){
+                    Log.d("설정 변경 성공", response.body().toString())
+                    response.body()
+                } else{
+                    Log.d("설정 변경 실패","설정 변경 실패")
+                    null
+                }
+            } catch (e: Exception) {
+                Log.d("설정 변경 실패",e.toString())
                 null
             }
             withContext(Dispatchers.Main) {
