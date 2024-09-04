@@ -22,29 +22,21 @@ class MyFirebaseMsgService : FirebaseMessagingService() {
         // Check if message contains a data payload.
         if (remoteMessage.data.isNotEmpty()) {
             Log.e(TAG, "Message data payload: ${remoteMessage.data}")
-            handleNow()
+            val messageBody=remoteMessage.data["body"]
+            val messageTitle=remoteMessage.data["title"]
+            showNotification(messageBody,messageTitle)
+//            handleNow()
         }
 
         // Check if message contains a notification payload.
-        remoteMessage.notification?.let { notification ->
-            Log.e(TAG, "Message Notification Body: ${notification.body}")
-            showNotification(notification.body)
-        }
-//
-//        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//        val channelId = "default_channel_id"
-//
-//        val notificationBuilder = NotificationCompat.Builder(this, channelId)
-//            .setSmallIcon(R.drawable.schedule_icon) // 알림 아이콘
-//            .setContentTitle("알림 제목") // 알림 제목
-//            .setContentText(remoteMessage.notification!!.body) // 알림 내용
-//            .setAutoCancel(true) // 클릭 시 자동으로 사라짐
-//            .setPriority(NotificationCompat.PRIORITY_HIGH)
-//
-//        notificationManager.notify(0, notificationBuilder.build())
+//        remoteMessage.notification?.let { notification ->
+//            Log.e(TAG, "알림 전체: ${notification.title}")
+//            Log.e(TAG, "Message Notification Body: ${notification.body}")
+//            showNotification(notification.body)
+//        }
     }
 
-    private fun showNotification(messageBody: String?) {
+    private fun showNotification(messageBody: String?, messageTitle: String?) {
 
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -75,7 +67,7 @@ class MyFirebaseMsgService : FirebaseMessagingService() {
         // 알림 생성
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.schedule_icon)
-            .setContentTitle("To Do List")
+            .setContentTitle(messageTitle)
             .setContentText(messageBody)
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
