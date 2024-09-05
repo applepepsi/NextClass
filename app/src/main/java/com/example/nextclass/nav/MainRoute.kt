@@ -55,6 +55,8 @@ fun MainNavGraph(
         communityRoute(navController, loginViewModel, mainNavHostController,communityViewModel)
         scheduleRoute(navController, loginViewModel, mainNavHostController,scheduleViewModel)
         userProfileRoute(navController, loginViewModel, mainNavHostController,userInfoViewModel,communityViewModel)
+        postDetailView(navController,loginViewModel,mainNavHostController,communityViewModel)
+
     }
 }
 
@@ -134,7 +136,7 @@ private fun NavGraphBuilder.communityView(
 
 }
 
-private fun NavGraphBuilder.postDetailView(
+fun NavGraphBuilder.postDetailView(
     navController: NavHostController,
     loginViewModel: LoginViewModel,
     mainNavHostController: NavHostController,

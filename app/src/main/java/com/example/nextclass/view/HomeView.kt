@@ -84,6 +84,23 @@ fun HomeView(
 
     val scrollState = rememberScrollState()
 
+    val directPostSequence=loginViewModel.directPostSequence.value
+
+
+    if (communityViewModel.getPostDetailResultState.value) {
+        navController.navigate("postDetailView")
+        communityViewModel.togglePostDetailState()
+    }
+
+    //푸쉬알람 터치시 내 글로 이동해야하는데 이건좀 아닌것같음 다른 방법 찾아보기로
+    LaunchedEffect(Unit) {
+        if(directPostSequence !=null){
+            communityViewModel.setSelectedCommunityData(directPostSequence)
+            loginViewModel.resetDirectPostSequence()
+        }
+    }
+
+
 
     LaunchedEffect(Unit) {
 
@@ -100,6 +117,7 @@ fun HomeView(
         communityViewModel.resetPostList()
         communityViewModel.getPostList(sort = "vote", post_sequence = null, size = 4)
 
+
         userInfoViewModel.getUserInfo()
 
         timeTableViewModel.getTimeTableScore()
@@ -107,8 +125,11 @@ fun HomeView(
     }
 
 
+
+
+
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(bottom=70.dp),
 //        contentPadding = PaddingValues(16.dp)
     ) {
         item {
@@ -147,7 +168,7 @@ fun HomeView(
         }
 
         item {
-            Spacer(Modifier.height(40.dp))
+            Spacer(Modifier.height(30.dp))
         }
 
         item {
@@ -182,7 +203,7 @@ fun HomeView(
         }
 
         item {
-            Spacer(Modifier.height(40.dp))
+            Spacer(Modifier.height(30.dp))
         }
 
         item {
@@ -218,7 +239,7 @@ fun HomeView(
         }
 
         item {
-            Spacer(Modifier.height(40.dp))
+            Spacer(Modifier.height(30.dp))
         }
 
         item {
@@ -250,7 +271,7 @@ fun HomeView(
         }
 
         item {
-            Spacer(Modifier.height(40.dp))
+            Spacer(Modifier.height(30.dp))
         }
 
         item {

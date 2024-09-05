@@ -254,7 +254,7 @@ class CommunityViewModel @Inject constructor(
                 if (getPostListResult.code == SUCCESS_CODE) {
                     Log.d("새로운 게시물 로드됨", getPostListResult.data.toString())
                     if(getPostListResult.data!!.isEmpty()){
-                        toggleMorePostLoadState()
+                        toggleMorePostLoadState(false)
                     }else{
                         _communityDataList.value += getPostListResult.data
                     }
@@ -263,14 +263,15 @@ class CommunityViewModel @Inject constructor(
                 }
             }else{
                 //게시물이 더 없으면 게시물을 가져오는것을 멈춤
-                toggleMorePostLoadState()
+                toggleMorePostLoadState(false)
             }
             _postLoading.value = false
         }
     }
 
-    fun toggleMorePostLoadState(){
-        _morePostLoadState.value=!_morePostLoadState.value
+    fun toggleMorePostLoadState(boolean: Boolean){
+        _morePostLoadState.value=boolean
+        Log.d("morePostLoadState", morePostLoadState.value.toString())
     }
 
 
@@ -574,7 +575,7 @@ class CommunityViewModel @Inject constructor(
 
                     Log.d("검색 성공", searchResult.toString())
                     if(searchResult.data!!.isEmpty()){
-                        toggleMorePostLoadState()
+                        toggleMorePostLoadState(false)
                     }else{
                         _communitySearchDataList.value += searchResult.data
                     }
@@ -582,7 +583,7 @@ class CommunityViewModel @Inject constructor(
                     //토스트 메세지
                 }
             }else{
-                toggleMorePostLoadState()
+                toggleMorePostLoadState(false)
             }
             _postLoading.value = false
         }

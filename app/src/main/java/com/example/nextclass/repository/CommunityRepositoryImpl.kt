@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import javax.inject.Inject
 
 class CommunityRepositoryImpl @Inject constructor(
@@ -35,8 +36,11 @@ class CommunityRepositoryImpl @Inject constructor(
                     null
                 }
 
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("게시물 전송 실패", e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -62,8 +66,11 @@ class CommunityRepositoryImpl @Inject constructor(
                     null
                 }
 
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("게시물 수정 실패", e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -86,8 +93,11 @@ class CommunityRepositoryImpl @Inject constructor(
                     null
                 }
 
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("게시물 삭제 실패", e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -115,8 +125,11 @@ class CommunityRepositoryImpl @Inject constructor(
                     null
                 }
 
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("게시물 가져오기 실패", e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -143,8 +156,11 @@ class CommunityRepositoryImpl @Inject constructor(
                     null
                 }
 
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("댓글 가져오기 실패", e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -170,8 +186,11 @@ class CommunityRepositoryImpl @Inject constructor(
                     null
                 }
 
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("검색 게시물 가져오기 실패", e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -194,8 +213,11 @@ class CommunityRepositoryImpl @Inject constructor(
                     null
                 }
 
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("댓글 작성 실패", e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -224,8 +246,11 @@ class CommunityRepositoryImpl @Inject constructor(
                     null
                 }
 
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("댓글 삭제 실패", e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -248,8 +273,11 @@ class CommunityRepositoryImpl @Inject constructor(
                     null
                 }
 
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("게시물 세부가져오기 실패", e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -276,8 +304,11 @@ class CommunityRepositoryImpl @Inject constructor(
                     null
                 }
 
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("추천 결과 실패", e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {

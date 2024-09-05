@@ -37,8 +37,11 @@ class ScheduleRepositoryImpl @Inject constructor(
                     Log.d("스케쥴 저장 실패", "실패")
                 }
                 response.body()
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("스케쥴 저장 실패", e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -68,8 +71,11 @@ class ScheduleRepositoryImpl @Inject constructor(
                     null
                 }
 
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("스케쥴 변경 실패", e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -98,8 +104,11 @@ class ScheduleRepositoryImpl @Inject constructor(
                     Log.d("스케쥴 제거 실패", "실패")
                 }
                 response.body()
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("스케쥴 제거 실패", e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -123,9 +132,11 @@ class ScheduleRepositoryImpl @Inject constructor(
                     Log.d("투두리스트 가져오기 실패", "실패")
                     response.body()
                 }
-
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("투두리스트 가져오기 실패", e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -150,9 +161,11 @@ class ScheduleRepositoryImpl @Inject constructor(
 
                     response.body()
                 }
-
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("알 수 없는 오류", e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {

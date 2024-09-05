@@ -242,6 +242,9 @@ class LoginViewModel @Inject constructor(
     private val _deleteUserPasswordConfirmVisibleState=mutableStateOf(false)
     val deleteUserPasswordConfirmVisibleState: State<Boolean> = _deleteUserPasswordConfirmVisibleState
 
+    private val _directPostSequence=mutableStateOf<String?>(null)
+    val directPostSequence: State<String?> = _directPostSequence
+
     fun updateEmail(newEmail: String) {
         _email.value = newEmail
         _emailDuplicateCheck.value=false
@@ -886,6 +889,14 @@ class LoginViewModel @Inject constructor(
     fun toggleSplashVisibleState() {
         _splashScreenVisibility.value=!_splashScreenVisibility.value
         Log.d("스플래시 상태", _splashScreenVisibility.value.toString())
+    }
+
+    fun setDirectPostSequence(directPostSequence: String) {
+        _directPostSequence.value=directPostSequence
+    }
+
+    fun resetDirectPostSequence() {
+        _directPostSequence.value=null
     }
 
 }

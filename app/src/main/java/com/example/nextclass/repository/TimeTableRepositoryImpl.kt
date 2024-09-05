@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import javax.inject.Inject
 
 class TimeTableRepositoryImpl  @Inject constructor(
@@ -33,8 +34,11 @@ class TimeTableRepositoryImpl  @Inject constructor(
                     Log.d("id중복체크 실패","id중복체크 실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("id중복체크 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -60,8 +64,11 @@ class TimeTableRepositoryImpl  @Inject constructor(
                     Log.d("시간표 수정 실패","수정 실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("연결 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -86,8 +93,11 @@ class TimeTableRepositoryImpl  @Inject constructor(
                     Log.d("시간표 삭제 실패","삭제실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("연결 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -115,8 +125,11 @@ class TimeTableRepositoryImpl  @Inject constructor(
                     Log.d("수업 정보 받아오기 실패","id중복체크 실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("수업 정보 받아오기 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -139,8 +152,11 @@ class TimeTableRepositoryImpl  @Inject constructor(
                     Log.d("성적 받아오기 실패","성적 실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("성적 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -165,8 +181,11 @@ class TimeTableRepositoryImpl  @Inject constructor(
                     Log.d("수업 업데이트 실패","업데이트 실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("수업 업데이트 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {

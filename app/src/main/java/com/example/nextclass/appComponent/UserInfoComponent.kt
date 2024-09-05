@@ -224,7 +224,7 @@ fun UserProfileItemComponent(
                     onClick()
                 }else{
                     navController.navigate(address) {
-                        launchSingleTop = true
+//                        launchSingleTop = true
                     }
                 }
             },

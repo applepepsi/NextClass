@@ -18,6 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import javax.inject.Inject
 
 
@@ -40,8 +41,11 @@ class UserInfoRepositoryImpl @Inject constructor(
                     Log.d("id중복체크 실패","id중복체크 실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("id중복체크 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -64,8 +68,11 @@ class UserInfoRepositoryImpl @Inject constructor(
                     Log.d("id중복체크 실패","id중복체크 실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("id중복체크 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -88,8 +95,11 @@ class UserInfoRepositoryImpl @Inject constructor(
                     Log.d("id중복체크 실패","id중복체크 실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("id중복체크 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -111,8 +121,11 @@ class UserInfoRepositoryImpl @Inject constructor(
                     Log.d("로그인 실패","id중복체크 실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("로그인 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -133,8 +146,11 @@ class UserInfoRepositoryImpl @Inject constructor(
                     Log.d("사용자 정보 가져오기 실패","사용자 정보 가져오기 실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("사용자 정보 가져오기 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -155,8 +171,11 @@ class UserInfoRepositoryImpl @Inject constructor(
                     Log.d("비밀번호 변경 실패 실패","비밀번호 변경 실패 실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("비밀번호 변경 실패 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -181,8 +200,11 @@ class UserInfoRepositoryImpl @Inject constructor(
                     Log.d("이메일 변경 인증코드 발급 실패","이메일 변경 인증코드 발급 실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("이메일 변경 인증코드 발급 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -206,8 +228,11 @@ class UserInfoRepositoryImpl @Inject constructor(
                     Log.d("이메일 변경 실패","이메일 변경 실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("이메일 변경 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -229,8 +254,11 @@ class UserInfoRepositoryImpl @Inject constructor(
                     Log.d("사용자 정보 변경 성공","사용자 정보 변경 성공")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("사용자 정보 변경 성공",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -251,8 +279,11 @@ class UserInfoRepositoryImpl @Inject constructor(
                     Log.d("코드 발급 실패","코드 발급 실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("코드 발급 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -273,8 +304,11 @@ class UserInfoRepositoryImpl @Inject constructor(
                     Log.d("코드 인증 실패","코드 인증 실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("코드 인증 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -295,8 +329,11 @@ class UserInfoRepositoryImpl @Inject constructor(
                     Log.d("아이디 찾기실패","아이디 찾기 실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("아이디 찾기 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -320,8 +357,11 @@ class UserInfoRepositoryImpl @Inject constructor(
                     Log.d("비밀번호 찾기 실패","비밀번호 찾기 실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("비밀번호 찾기 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -342,8 +382,11 @@ class UserInfoRepositoryImpl @Inject constructor(
                     Log.d("탈퇴 실패","탈퇴 실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("탈퇴 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -364,8 +407,11 @@ class UserInfoRepositoryImpl @Inject constructor(
                     Log.d("설정 가져오기 실패","설정 가져오기 실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("설정 가져오기 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {
@@ -390,8 +436,11 @@ class UserInfoRepositoryImpl @Inject constructor(
                     Log.d("설정 변경 실패","설정 변경 실패")
                     null
                 }
+            } catch (e: IOException) {
+                Log.e("연결 실패", "Network Error: ${e.message}", e)
+                null
             } catch (e: Exception) {
-                Log.d("설정 변경 실패",e.toString())
+                Log.e("오류 발생", "Unexpected Error: ${e.message}", e)
                 null
             }
             withContext(Dispatchers.Main) {

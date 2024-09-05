@@ -291,7 +291,7 @@ fun CommunityPostView(
 
     LaunchedEffect(Unit) {
         communityViewModel.resetPostList()
-        communityViewModel.toggleMorePostLoadState()
+        communityViewModel.toggleMorePostLoadState(true)
         communityViewModel.getPostList(sort = sortType, post_sequence = null)
     }
 
@@ -686,7 +686,7 @@ fun CommunitySearchView(
 
     LaunchedEffect(Unit) {
 //        communityViewModel.resetPostList()
-        communityViewModel.toggleMorePostLoadState()
+        communityViewModel.toggleMorePostLoadState(true)
         communityViewModel.setRecentSearchList(RecentSearchWordManager.loadRecentSearchList(context))
     }
 

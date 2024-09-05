@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.nextclass.nav.AppNav
 import com.example.nextclass.ui.theme.NextClassTheme
@@ -22,7 +21,6 @@ import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import java.util.Locale
-import kotlin.math.log
 
 
 @AndroidEntryPoint
@@ -30,6 +28,9 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        val postSequence = intent.getStringExtra("POST_SEQUENCE")
 
         // 커뮤니티 댓글작성시 키보드에 맞게 패딩시키기 위해
 //        WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -39,7 +40,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             NextClassTheme {
 
-                Greeting()
+
+                Greeting(postSequence)
 
             }
         }
@@ -56,22 +58,23 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun Greeting() {
+fun Greeting(postSequence: String?) {
 
-
+    val loginViewModel: LoginViewModel = hiltViewModel()
 
     //저장된 사용자 정보가있다면 로그인 시도
     val context = LocalContext.current
 
-    val loginViewModel: LoginViewModel = hiltViewModel()
-
     val (autoLoginId, autoLoginPassword) = UserInfoManager.getUserInfo(context)
 
 
-
+    LaunchedEffect(Unit) {
+        if(postSequence !=null){
+            loginViewModel.setDirectPostSequence(postSequence)
+        }
+    }
 
     LaunchedEffect(Unit) {
-
 
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             if (task.isSuccessful) {
@@ -91,14 +94,12 @@ fun Greeting() {
 
     LaunchedEffect(autoLoginId, autoLoginPassword) {
 
-
-
         if (autoLoginId != null && autoLoginPassword != null) {
             loginViewModel.tryAutoLogin(autoLoginId, autoLoginPassword, fcmToken)
 
         }
         loginViewModel.toggleSplashVisibleState()
-        delay(2000)
+        delay(1000)
         loginViewModel.toggleSplashVisibleState()
     }
 

@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.nextclass.MainActivity
 import com.example.nextclass.R
+import com.example.nextclass.utils.GlobalNavigator
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -24,7 +25,13 @@ class MyFirebaseMsgService : FirebaseMessagingService() {
             Log.e(TAG, "Message data payload: ${remoteMessage.data}")
             val messageBody=remoteMessage.data["body"]
             val messageTitle=remoteMessage.data["title"]
-            showNotification(messageBody,messageTitle)
+            val postSequence=remoteMessage.data["sequence"]
+
+            if (postSequence != null) {
+                Log.d("postSequence",postSequence)
+            }
+
+            showNotification(messageBody,messageTitle,postSequence)
 //            handleNow()
         }
 
@@ -32,19 +39,24 @@ class MyFirebaseMsgService : FirebaseMessagingService() {
 //        remoteMessage.notification?.let { notification ->
 //            Log.e(TAG, "알림 전체: ${notification.title}")
 //            Log.e(TAG, "Message Notification Body: ${notification.body}")
-//            showNotification(notification.body)
+//            showNotification(notification.body,notification.title,"")
 //        }
     }
 
-    private fun showNotification(messageBody: String?, messageTitle: String?) {
+    private fun showNotification(messageBody: String?, messageTitle: String?, postSequence: String?) {
 
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelId = "NextClass"
 
+        //방법1 인텐트로 보낸다
         val notificationIntent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra("POST_SEQUENCE",postSequence)
         }
+
+        //방법2 글로벌네비게이터로 설정한다.
+        GlobalNavigator.navigateToPost(messageTitle)
 
         val pendingIntent = PendingIntent.getActivity(
             this,

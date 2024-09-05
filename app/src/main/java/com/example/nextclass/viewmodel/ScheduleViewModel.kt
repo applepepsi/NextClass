@@ -285,7 +285,6 @@ class ScheduleViewModel @Inject constructor(
     fun groupedScheduleData(splitToday:Boolean=false) {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
         val filterScheduleData = _scheduleDataList.value
-        Log.d("홈화면 서버데이터", _groupByDateScheduleData.value.toString())
         val today = if (splitToday) LocalDate.now() else null
 
         _groupByDateScheduleData.value = filterScheduleData

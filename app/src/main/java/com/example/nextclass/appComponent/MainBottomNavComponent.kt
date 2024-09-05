@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -49,6 +50,8 @@ fun MainBottomNav(loginViewModel: LoginViewModel, mainNavController: NavHostCont
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+
+
     val showBottomNavScreens = listOf(
         BottomNavItem.Home.screenRoute,
         BottomNavItem.Timetable.screenRoute,
@@ -56,6 +59,7 @@ fun MainBottomNav(loginViewModel: LoginViewModel, mainNavController: NavHostCont
         BottomNavItem.Schedule.screenRoute,
         BottomNavItem.UserProfile.screenRoute
     )
+
 
 
     Box(modifier = Modifier.fillMaxSize()) {
