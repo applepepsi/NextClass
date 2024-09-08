@@ -18,14 +18,10 @@ object GlobalNavigator {
         handler?.logout()
     }
 
-    fun navigateToPost(messageBody: String?) {
-        handler?.navigateToPost(messageBody)
-    }
 
 }
 
 interface GlobalNavigationHandler {
     fun logout()
 
-    fun navigateToPost(messageBody: String?)
 }

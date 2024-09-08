@@ -489,7 +489,7 @@ fun PostDetailComponent(
                 Text(
                     text = selectPost.subject,
                     style = TextStyle(
-                        fontSize = 30.sp,
+                        fontSize = 25.sp,
                         fontWeight = FontWeight.Bold,
                         fontStyle = FontStyle.Normal,
                     ),
@@ -502,12 +502,12 @@ fun PostDetailComponent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(min = 150.dp)
+                    .heightIn(min = 50.dp)
             ){
                 Text(
                     text=selectPost.content,
                     style = TextStyle(
-                        fontSize = 20.sp,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Normal,
                         fontStyle = FontStyle.Normal,
                     ),

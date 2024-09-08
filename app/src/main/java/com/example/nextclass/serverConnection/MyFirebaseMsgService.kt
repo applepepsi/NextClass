@@ -56,7 +56,7 @@ class MyFirebaseMsgService : FirebaseMessagingService() {
         }
 
         //방법2 글로벌네비게이터로 설정한다.
-        GlobalNavigator.navigateToPost(messageTitle)
+
 
         val pendingIntent = PendingIntent.getActivity(
             this,

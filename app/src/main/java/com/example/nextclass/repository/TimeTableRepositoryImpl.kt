@@ -31,7 +31,7 @@ class TimeTableRepositoryImpl  @Inject constructor(
                     Log.d("response.body()", response.body().toString())
                     response.body()
                 } else {
-                    Log.d("id중복체크 실패","id중복체크 실패")
+                    Log.d("시간표 실패","시간표 추가실패")
                     null
                 }
             } catch (e: IOException) {

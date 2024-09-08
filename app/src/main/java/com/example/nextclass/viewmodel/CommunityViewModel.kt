@@ -13,6 +13,7 @@ import com.example.nextclass.Data.CommunityData.PostAndCommentSequence
 import com.example.nextclass.Data.CommunityData.PostListData
 import com.example.nextclass.Data.CommunityData.PostWriteData
 import com.example.nextclass.Data.CommunityData.SearchData
+import com.example.nextclass.Data.ServerResponse
 import com.example.nextclass.R
 import com.example.nextclass.repository.CommunityRepository
 import com.example.nextclass.utils.SUCCESS_CODE
@@ -241,31 +242,40 @@ class CommunityViewModel @Inject constructor(
         _loading.value=false
     }
 
-    fun getPostList(sort: String, post_sequence: Int?,size:Int=10) {
-        Log.d("로딩", _loading.value.toString())
-        if(_postLoading.value) return
-        _postLoading.value=true
+    fun getPostList(sort: String, post_sequence: Int?, size: Int = 10) {
+        if (_postLoading.value) return
+        _postLoading.value = true
 
-        val postListData=PostListData(post_sequence=post_sequence.toString(),sort=sort,size=size)
+        val postListData = PostListData(post_sequence = post_sequence.toString(), sort = sort, size = size)
         Log.d("postListData", postListData.toString())
 
-        communityRepository.getPostList(postListData){ getPostListResult->
-            if(getPostListResult !=null) {
-                if (getPostListResult.code == SUCCESS_CODE) {
-                    Log.d("새로운 게시물 로드됨", getPostListResult.data.toString())
-                    if(getPostListResult.data!!.isEmpty()){
-                        toggleMorePostLoadState(false)
-                    }else{
-                        _communityDataList.value += getPostListResult.data
-                    }
-                }else{
-                    //토스트 메세지
-                }
-            }else{
-                //게시물이 더 없으면 게시물을 가져오는것을 멈춤
-                toggleMorePostLoadState(false)
-            }
+        communityRepository.getPostList(postListData) { getPostListResult ->
+            handlePostListResult(getPostListResult)
             _postLoading.value = false
+        }
+    }
+
+    private fun handlePostListResult(result: ServerResponse<List<CommunityPostData>>?) {
+        if (result == null) {
+            toggleMorePostLoadState(false)
+            return
+        }
+
+        if (result.code == SUCCESS_CODE) {
+            Log.d("새로운 게시물 로드됨", result.data.toString())
+
+            if (result.data.isNullOrEmpty()) {
+                toggleMorePostLoadState(false)
+            } else {
+                Log.d("새로운 게시물 로드됨2", result.data.size.toString())
+                _communityDataList.value += result.data
+
+                if (result.data.size < 10) {
+                    toggleMorePostLoadState(false)
+                }
+            }
+        } else {
+            // 토스트 메시지 처리
         }
     }
 

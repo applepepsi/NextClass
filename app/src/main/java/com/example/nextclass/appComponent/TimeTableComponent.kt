@@ -19,7 +19,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -182,55 +184,6 @@ fun OneClassCellDetailComponent(
 ////        )
 //    )
 
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showSystemUi = true)
-@Composable
-fun EventPreview() {
-    var setShowClassDetailDialog by remember { mutableStateOf(false) }
-    var setShowClassDataModifyDialog by remember { mutableStateOf(false) }
-
-//    val classData=ClassData(
-//        "컴퓨터수학2",
-//        "정보관 201호",
-//        "굴",
-//        1,
-//        "금",
-//        3,
-//        4,
-//        "아산중",
-//    )
-//    MaterialTheme {
-//        TimeTableComponent(
-//            classDataList = sampleEvents,
-//            setShowClassDetailDialog = { /*TODO*/ },
-//            setShowClassDataModifyDialog = { /*TODO*/ },
-//            setSelectClassData = {}
-//        )
-//    }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showSystemUi = true)
-@Composable
-fun InsertClassDataPreview() {
-    var setShowClassDetailDialog by remember { mutableStateOf(false) }
-    var setShowClassDataModifyDialog by remember { mutableStateOf(false) }
-    var setShowInsertClassDataDialog by remember { mutableStateOf(false) }
-
-//    val testRepository = Time()
-//    val loginViewModel = LoginViewModel(testRepository)
-
-//    MaterialTheme {
-//        InsertClassData(
-////            setShowInsertClassDataDialog = {setShowInsertClassDataDialog=it},
-//            timeTableViewModel = TimeTableViewModel(
-//                timeTableRepository = TimeTableRepository()
-//            )
-//        )
-//
-//    }
-}
 
 
 @Composable
@@ -566,7 +519,7 @@ fun InsertClassData(
     timeTableViewModel: TimeTableViewModel,
 
 ){
-
+    val scrollState = rememberScrollState()
     Dialog(onDismissRequest = { timeTableViewModel.toggleInsertClassDataDialogState() }) {
         Surface(
             shape = RoundedCornerShape(16.dp),
@@ -575,7 +528,7 @@ fun InsertClassData(
         ) {
 
 
-            Column(modifier = Modifier.padding(5.dp)) {
+            Column(modifier = Modifier.padding(5.dp).verticalScroll(scrollState),) {
 
                 MainTextComponent(value = "수업 추가하기", modifier = Modifier)
 

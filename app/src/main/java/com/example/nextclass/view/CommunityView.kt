@@ -172,6 +172,7 @@ fun PostDetailView(
 ) {
     val context = LocalContext.current
     val listState = rememberLazyListState()
+    val scrollState = rememberScrollState()
 
     if(communityViewModel.postDeleteResultState.value){
         navController.navigateUp()
@@ -189,7 +190,7 @@ fun PostDetailView(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 

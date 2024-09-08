@@ -52,17 +52,6 @@ fun AppNav(loginViewModel: LoginViewModel) {
 //                    }
 //                }
             }
-            //가능성2
-            override fun navigateToPost(messageBody: String?) {
-//                if(messageBody != null && messageBody !="To Do List"){
-//                    if(!loginViewModel.loginResult.value){
-//                        handler.postDelayed(Runnable { Toast.makeText(context, "로그인 후에 이용하실 수 있습니다.", Toast.LENGTH_SHORT).show() }, 0)
-//                    }else{
-//                        mainNavController.navigate("myPostRoute"){
-//                        }
-//                    }
-//                }
-            }
         })
         onDispose {
             GlobalNavigator.unregisterHandler()
