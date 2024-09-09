@@ -387,7 +387,7 @@ class UserInfoViewModel @Inject constructor(
 
 
         userInfoRepository.postChangeEmailRequest(changeEmail.value){ServerResponse->
-            if (ServerResponse?.code==200) {
+            if (ServerResponse?.code== SUCCESS_CODE) {
                 Log.d("이메일 변경 성공", ServerResponse.toString())
                 _changeEmailState.value=true
             }

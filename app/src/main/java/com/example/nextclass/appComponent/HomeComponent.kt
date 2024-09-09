@@ -1,6 +1,8 @@
 package com.example.nextclass.appComponent
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -55,22 +57,29 @@ fun TodaySingleClassComponent(
         modifier = Modifier
             .widthIn(150.dp)
             .heightIn(110.dp)
-            .padding(start = 10.dp, end = 10.dp)
+            .padding(horizontal = 10.dp)
             .clip(RoundedCornerShape(13.dp))
-            .background(Background_Color2),
+            .background(Color.White)
+            .border(
+                BorderStroke(
+                    0.5.dp,
+                    Color.LightGray
+                ),
+                RoundedCornerShape(13.dp)
+            ),
         verticalArrangement = Arrangement.Center
     ) {
         Text(
             text=singleClassData.title,
             style = TextStyle(
-                fontSize = 20.sp,
+                fontSize = 23.sp,
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Normal,
             ),
-            modifier = Modifier.padding(top=3.dp,start=8.dp,end=8.dp)
+            modifier = Modifier.padding(top=3.dp, start = 12.dp,end=12.dp)
         )
         Row(
-            modifier = Modifier.padding(top=3.dp,start=8.dp,end=8.dp)
+            modifier = Modifier.padding(top=3.dp, start = 12.dp,end=12.dp)
         ){
             Text(
                 text= ConvertDayOfWeek.convertDayOfWeekKorea(singleClassData.week),
@@ -104,7 +113,7 @@ fun TodaySingleClassComponent(
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
             ),
-            modifier = Modifier.padding(top=3.dp,start=8.dp,end=8.dp,bottom=3.dp)
+            modifier = Modifier.padding(top=3.dp, start = 12.dp,end=12.dp,bottom=4.dp)
         )
 
     }
@@ -114,12 +123,19 @@ fun TodaySingleClassComponent(
 fun EmptyHomeItemComponent(){
     Box(
         modifier = Modifier
-            .height(110.dp)
+            .height(100.dp)
             .fillMaxWidth()
 
             .padding(start = 10.dp, end = 10.dp)
             .clip(RoundedCornerShape(13.dp))
             .background(Background_Color2)
+            .border(
+                BorderStroke(
+                    0.5.dp,
+                    Color.LightGray
+                ),
+                RoundedCornerShape(13.dp)
+            ),
     )
 }
 
@@ -131,9 +147,10 @@ fun HomeScoreComponent(
 ){
     Column(
         modifier = Modifier
-            .heightIn(110.dp)
+            .heightIn(125.dp)
             .widthIn(150.dp)
             .background(Background_Color2)
+
         ,
 
         verticalArrangement = Arrangement.Center,
@@ -142,7 +159,18 @@ fun HomeScoreComponent(
 
 
         Column(
-            modifier = Modifier.clip(RoundedCornerShape(13.dp)).background(Color.White).padding(start=12.dp,end=12.dp,bottom=5.dp,top=8.dp)
+            modifier = Modifier
+                .clip(RoundedCornerShape(13.dp))
+                .background(Color.White)
+                .border(
+                    BorderStroke(
+                        0.5.dp,
+                        Color.LightGray
+                    ),
+                    RoundedCornerShape(13.dp)
+                )
+                .padding(start=14.dp,end=14.dp,bottom=12.dp,top=12.dp)
+
 
         ){
             Text(

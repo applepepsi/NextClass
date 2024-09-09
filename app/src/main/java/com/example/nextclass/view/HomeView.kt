@@ -129,7 +129,9 @@ fun HomeView(
 
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(bottom=70.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 80.dp),
 //        contentPadding = PaddingValues(16.dp)
     ) {
         item {
@@ -168,7 +170,7 @@ fun HomeView(
         }
 
         item {
-            Spacer(Modifier.height(30.dp))
+            Spacer(Modifier.height(40.dp))
         }
 
         item {
@@ -179,11 +181,13 @@ fun HomeView(
                     fontWeight = FontWeight.Bold,
                     fontStyle = FontStyle.Normal,
                 ),
-                modifier = Modifier.padding(start = 10.dp, bottom = 5.dp)
+                modifier = Modifier.padding(start = 15.dp, bottom = 8.dp)
             )
         }
 
         item {
+
+
 
             if(timeTableViewModel.todayClassDataList.value.isEmpty()){
                 EmptyHomeItemComponent()
@@ -191,7 +195,12 @@ fun HomeView(
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(110.dp),
+                        .heightIn(110.dp)
+//                        .clip(RoundedCornerShape(13.dp))
+//                        .background(Background_Color2)
+//
+//                        .padding(start=5.dp,end=5.dp,top=8.dp,bottom=8.dp)
+                    ,
                     contentPadding = PaddingValues(start = 5.dp)
                 ) {
                     items(items = timeTableViewModel.todayClassDataList.value) { singleClassData ->
@@ -203,7 +212,7 @@ fun HomeView(
         }
 
         item {
-            Spacer(Modifier.height(30.dp))
+            Spacer(Modifier.height(40.dp))
         }
 
         item {
@@ -214,7 +223,7 @@ fun HomeView(
                     fontWeight = FontWeight.Bold,
                     fontStyle = FontStyle.Normal,
                 ),
-                modifier = Modifier.padding(start = 10.dp, bottom = 5.dp)
+                modifier = Modifier.padding(start = 15.dp, bottom = 8.dp)
             )
         }
 
@@ -239,7 +248,7 @@ fun HomeView(
         }
 
         item {
-            Spacer(Modifier.height(30.dp))
+            Spacer(Modifier.height(40.dp))
         }
 
         item {
@@ -250,7 +259,7 @@ fun HomeView(
                     fontWeight = FontWeight.Bold,
                     fontStyle = FontStyle.Normal,
                 ),
-                modifier = Modifier.padding(start = 10.dp, bottom = 5.dp)
+                modifier = Modifier.padding(start = 15.dp, bottom = 8.dp)
             )
         }
 
@@ -260,18 +269,39 @@ fun HomeView(
             }
 
         }else{
+            item{
+                Spacer(modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Background_Color2)
+                    .height(10.dp))
+            }
+
             items(items = communityViewModel.communityDataList.value) { singlePostData ->
-                SinglePostComponent(
-                    singlePostData,
-                    postClick = {
-                        communityViewModel.setSelectedCommunityData(singlePostData.post_sequence)
-                    }
-                )
+
+                Column(
+                    Modifier
+                        .background(Background_Color2)
+                        .padding(horizontal = 5.dp)
+                ) {
+                    SinglePostComponent(
+                        singlePostData,
+                        postClick = {
+                            communityViewModel.setSelectedCommunityData(singlePostData.post_sequence)
+                        }
+                    )
+                }
+            }
+
+            item{
+                Spacer(modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Background_Color2)
+                    .height(3.dp))
             }
         }
 
         item {
-            Spacer(Modifier.height(30.dp))
+            Spacer(Modifier.height(40.dp))
         }
 
         item {
@@ -282,19 +312,19 @@ fun HomeView(
                     fontWeight = FontWeight.Bold,
                     fontStyle = FontStyle.Normal,
                 ),
-                modifier = Modifier.padding(start = 10.dp, bottom = 5.dp)
+                modifier = Modifier.padding(start = 15.dp, bottom = 8.dp)
             )
         }
 
         item {
             LazyRow(
                 modifier = Modifier
-                    .height(110.dp)
+                    .height(120.dp)
                     .fillMaxWidth()
 //                    .padding(start = 10.dp, end = 10.dp)
                     .clip(RoundedCornerShape(13.dp))
                     .background(Background_Color2)
-                    .padding(start=8.dp,end=8.dp),
+                    .padding(start = 8.dp, end = 8.dp),
 //                horizontalArrangement = Arrangement.SpaceAround,
                 contentPadding = PaddingValues(5.dp),
                 verticalAlignment = Alignment.CenterVertically

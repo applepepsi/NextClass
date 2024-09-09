@@ -2,6 +2,7 @@ package com.example.nextclass.appComponent
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -897,12 +898,14 @@ fun GridScheduleItem(
     Surface(
         modifier = Modifier
             .padding(start = 10.dp, end = 10.dp),
+
         shape = RoundedCornerShape(20.dp),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Background_Color2),
+                .background(Background_Color2)
+
 
             ) {
             Column(

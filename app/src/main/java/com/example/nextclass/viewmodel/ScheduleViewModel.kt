@@ -274,12 +274,6 @@ class ScheduleViewModel @Inject constructor(
     }
 
 
-//    fun setScheduleData(scheduleData: ScheduleData){
-//
-//        Log.d("scheduleData", scheduleData.toString())
-//        _scheduleData.value=scheduleData
-//    }
-
     //날짜별로 그룹화
     @RequiresApi(Build.VERSION_CODES.O)
     fun groupedScheduleData(splitToday:Boolean=false) {

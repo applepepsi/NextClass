@@ -310,12 +310,6 @@ class CommunityViewModel @Inject constructor(
         _communityDataList.value= emptyList()
     }
 
-    fun setSelectCommentData(communityCommentData: CommunityCommentData){
-        _selectCommunityCommentData.value=communityCommentData
-    }
-    fun resetPostResultState(){
-        _postResultState.value=false
-    }
 
     fun modifyComment(singleCommentData: CommunityCommentData) {
         Log.d("수정하려는 댓글", singleCommentData.toString())
@@ -408,10 +402,6 @@ class CommunityViewModel @Inject constructor(
         _postDeleteResultState.value=!postDeleteResultState.value
     }
 
-    fun modifyPost() {
-        _selectCommunityData.value
-    }
-
     fun likePost() {
         val postSequence=PostAndCommentSequence(post_sequence = _selectCommunityData.value.post_sequence, comment_sequence = null)
         communityRepository.vote(postSequence){ postVoteResult->
@@ -438,24 +428,6 @@ class CommunityViewModel @Inject constructor(
         }
     }
 
-    fun togglePostSchoolType(){
-        _postSchoolTypeState.value=!_postSchoolTypeState.value
-    }
-
-    fun togglePostSortTypeBottomSheetState() {
-        _postSortTypeBottomSheetState.value=!_postSortTypeBottomSheetState.value
-    }
-
-
-    fun toggleMyPostType(){
-
-        _toggleMyPostTypeState.value=!_toggleMyPostTypeState.value
-        Log.d("_toggleMyPostTypeState", _toggleMyPostTypeState.value.toString())
-    }
-
-    fun updateMyPostTypeDropDownText(text:String){
-        _myPostFilter.value=text
-    }
 
     fun updateCommentContent(content:String){
         _commentWriteData.value=_commentWriteData.value.copy(content = content)
@@ -551,9 +523,6 @@ class CommunityViewModel @Inject constructor(
         _currentRoute.value=screenRoute
     }
 
-//    fun setPostType(type: String) {
-//        _postList.value=_postList.value.copy(sort = type)
-//    }
 
     fun updateSearchWord(searchWord:String){
         _searchData.value=_searchData.value.copy(search_word = searchWord)
@@ -623,33 +592,4 @@ class CommunityViewModel @Inject constructor(
         _recentSearchList.value=recentSearchWordList
     }
 
-
-//    fun getSearchPostList(sort: String, post_sequence: Int?,size:Int=10) {
-//        Log.d("로딩", _loading.value.toString())
-//        if(_postLoading.value) return
-//        _postLoading.value=true
-//
-//        val postListData=PostListData(post_sequence=post_sequence.toString(),sort=sort,size=size)
-//        val sear
-//        Log.d("postListData", postListData.toString())
-//
-//        communityRepository.getPostList(postListData){ getPostListResult->
-//            if(getPostListResult !=null) {
-//                if (getPostListResult.code == SUCCESS_CODE) {
-//                    Log.d("새로운 게시물 로드됨", getPostListResult.data.toString())
-//                    if(getPostListResult.data!!.isEmpty()){
-//                        toggleMorePostLoadState()
-//                    }else{
-//                        _communityDataList.value += getPostListResult.data
-//                    }
-//                }else{
-//                    //토스트 메세지
-//                }
-//            }else{
-//                //게시물이 더 없으면 게시물을 가져오는것을 멈춤
-//                toggleMorePostLoadState()
-//            }
-//            _postLoading.value = false
-//        }
-//    }
 }
