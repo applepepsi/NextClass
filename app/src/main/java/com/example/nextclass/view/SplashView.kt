@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -35,16 +36,22 @@ fun SplashScreen(){
     Column(
         modifier= Modifier
             .fillMaxSize()
-            .background(Pastel_Red).padding(bottom=40.dp),
+            .background(Color.White).padding(bottom=70.dp),
 
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Image(
-            imageVector = ImageVector.vectorResource(R.drawable.book_icon),
-            contentDescription = "",
-            modifier = Modifier.size(250.dp)
+//        Image(
+//            imageVector = ImageVector.vectorResource(R.drawable.book_icon),
+//            contentDescription = "",
+//            modifier = Modifier.size(250.dp)
+//
+//        )
 
+        Image(
+            painter = painterResource(id = R.drawable.main_icon),
+            contentDescription = "",
+            modifier = Modifier.size(200.dp)
         )
 
         Text(
@@ -53,7 +60,7 @@ fun SplashScreen(){
                 fontSize = 38.sp,
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Normal,
-                color = Color.White
+                color = Color.Black
             ),
             modifier = Modifier.padding(bottom=10.dp)
         )
@@ -63,7 +70,7 @@ fun SplashScreen(){
                 fontSize = 23.sp,
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
-                color = Color.White
+                color = Color.Black
             ),
         )
 
