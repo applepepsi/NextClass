@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -1114,7 +1115,7 @@ fun RecentSearchWordComponent(
         modifier = Modifier
 //            .background(Background_Color2)
 //            .clip(RoundedCornerShape(5.dp))
-            .padding(end=8.dp)
+            .padding(end = 8.dp)
             .clip(RoundedCornerShape(5.dp))
             .background(Color.White)
 
@@ -1125,7 +1126,7 @@ fun RecentSearchWordComponent(
                 ),
                 RoundedCornerShape(5.dp)
             )
-            .padding(start=8.dp,end=5.dp,top=7.dp,bottom=7.dp)
+            .padding(start = 8.dp, end = 5.dp, top = 7.dp, bottom = 7.dp)
 
         ,
         verticalAlignment = Alignment.CenterVertically
@@ -1137,7 +1138,9 @@ fun RecentSearchWordComponent(
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
             ),
-            modifier = Modifier.padding(end=5.dp).clickable { search() }
+            modifier = Modifier
+                .padding(end = 5.dp)
+                .clickable { search() }
         )
 
         IconButton(
@@ -1232,6 +1235,7 @@ fun PostOptionDropDownMenu(
                     )
                 }
             }
+
         }
     }
 }

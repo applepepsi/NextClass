@@ -51,7 +51,7 @@ fun SplashScreen(){
         Image(
             painter = painterResource(id = R.drawable.main_icon),
             contentDescription = "",
-            modifier = Modifier.size(200.dp)
+            modifier = Modifier.size(250.dp)
         )
 
         Text(

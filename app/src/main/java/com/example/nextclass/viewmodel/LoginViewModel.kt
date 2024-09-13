@@ -493,6 +493,9 @@ class LoginViewModel @Inject constructor(
                 if(joinRequestResult !=null){
                     if(joinRequestResult.code==SUCCESS_CODE){
                         _joinResult.value=true
+                    }else{
+                        _joinFailMessage.value=StringValue.DynamicString(joinRequestResult.errorDescription!!)
+                        _joinFail.value=true
                     }
                 }else{
 
