@@ -10,7 +10,7 @@ data class ClassData(
     var class_start_time: Int = 1,
     var class_end_time: Int = 1,
     var semester : String="2025-1",
-    var title: String = "test",
+    var title: String = "",
     var class_grade: Int = 1,
     var teacher_name: String = "",
     var score: Int = 1,

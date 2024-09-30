@@ -397,7 +397,7 @@ fun ChangePasswordComponent(
                         })
 
                     PasswordInputFieldComponent(
-                        value = userInfoViewModel.changePasswordData.value.existing_password,
+                        value = userInfoViewModel.changePasswordData.value.new_password,
                         onValueChange = {
                             userInfoViewModel.updateNewPassword(it)
                         },

@@ -55,7 +55,7 @@ class MyFirebaseMsgService : FirebaseMessagingService() {
             putExtra("POST_SEQUENCE",postSequence)
         }
 
-        //방법2 글로벌네비게이터로 설정한다.
+
 
 
         val pendingIntent = PendingIntent.getActivity(
@@ -65,7 +65,7 @@ class MyFirebaseMsgService : FirebaseMessagingService() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        Log.e(TAG, "Message Body: $messageBody")
+        Log.e(TAG, "Message Body: $messageBody, $messageTitle")
         // Android O 이상에서는 NotificationChannel이 필요함
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(

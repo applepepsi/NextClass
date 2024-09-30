@@ -267,7 +267,7 @@ fun InsertOrModifyScheduleView(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 70.dp)
+                .padding(bottom = 70.dp,top=50.dp)
         ) {
             ScheduleDateTimePickerView(
                 selectDate = scheduleViewModel.timeData.value.selectDate,

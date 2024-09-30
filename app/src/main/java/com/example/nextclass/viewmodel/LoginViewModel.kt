@@ -530,7 +530,7 @@ class LoginViewModel @Inject constructor(
                     id=id.value,
                     password=password.value,
                     app_token = fcmToken
-                    )
+                )
                 userInfoRepository.postUserLoginInfo(loginRequest){ loginRequestResult->
                     if(loginRequestResult !=null){
                         if(loginRequestResult.code==SUCCESS_CODE){
