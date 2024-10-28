@@ -6,7 +6,7 @@
 다음 수업은 2025년부터 전면 도입되는 고교학점제에 맞춰, 학생들이 자신만의 시간표를 작성하거나 복잡한 성적 계산을 간편하게 처리할 수 있는 기능, 할 일을 잊지 않도록 TodoList를 작성하는 기능, 학생들끼리 정보를 원활히 공유할 수 있도록 돕는 커뮤니티 기능을 하나로 만든 앱 입니다.
 
 ### 개발 기간
-2024년 6월부터 현재까지 진행 중
+2024년 6월 8일 -> 2024년 9월 4일
 
 ### 팀 구성
 Backend 2명, Android 1명
@@ -79,11 +79,24 @@ Backend 2명, Android 1명
    - 사용자의 이메일, 비밀번호 등과 같은 몇몇 정보를 수정 할 수 있는 기능
    - 푸쉬 알림의 수신 여부를 설정 할 수 있는 기능
 
-### 프로젝트 구조
-프로젝트의 구조는 추후 자세한 정보가 제공될 예정입니다.
+### 🏙 결과
+| ![로그인](https://github.com/user-attachments/assets/5b032dd9-0728-4381-8661-e8627ca336fe) | ![회원가입](https://github.com/user-attachments/assets/8ea2d716-3bdf-4dc8-8856-0f7dee957646) |
+|---|---|
 
+|![홈](https://github.com/user-attachments/assets/b4b6ed25-4120-406a-bf00-c9555bb8aebe) | ![시간표](https://github.com/user-attachments/assets/d3b617a7-e42a-4bc6-a79f-47e8d2421edd) |
+|---|---|
 
+|![수업 추가하기](https://github.com/user-attachments/assets/18ca85c1-1e72-4c5b-901d-7436e381635c) | ![성적](https://github.com/user-attachments/assets/36e43af4-20d3-485a-aa13-978794502b56) |
+|---|---|
 
-이 README 파일은 프로젝트의 진행 상황에 따라 계속 업데이트 될 예정입니다. 다음수업 애플리케이션과 API 서버에 관심을 가져주셔서 감사합니다.
+|![커뮤](https://github.com/user-attachments/assets/93d3fdc6-e7b9-4331-a6cf-3133d118af33) | ![게시물 세부](https://github.com/user-attachments/assets/34e0cab4-63f7-4b81-9200-a6d2a7e378c8) |
+|---|---|
 
+|![검색](https://github.com/user-attachments/assets/d8fee59a-ccfd-4ebd-aa14-fdf04027f1c9) | ![투두](https://github.com/user-attachments/assets/476d88e3-6e6b-43ae-a197-c51b7b8c54cf) |
+|---|---|
 
+|![아이디 찾기](https://github.com/user-attachments/assets/d0a5bc64-e4d3-4d9b-9ad0-13cb5fdd2466) | ![비밀번호 찾기](https://github.com/user-attachments/assets/f77b21b0-5944-4548-99ff-ea889daa6811) |
+|---|---|
+
+|![사용자설정](https://github.com/user-attachments/assets/707e74a0-b036-456d-aba2-1a9236d3fbd2) | ![인증번호 확인](https://github.com/user-attachments/assets/f673f5c9-3b1d-4fb4-9fea-64d99a2ef2ca) |
+|---|---|
