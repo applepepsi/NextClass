@@ -92,7 +92,7 @@ fun HomeView(
         communityViewModel.togglePostDetailState()
     }
 
-    //푸쉬알람 터치시 내 글로 이동해야하는데 이건좀 아닌것같음 다른 방법 찾아보기로
+
     LaunchedEffect(Unit) {
         if(directPostSequence !=null){
             communityViewModel.setSelectedCommunityData(directPostSequence)

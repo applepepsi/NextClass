@@ -55,12 +55,7 @@ class TokenInterceptor(
                 header("Authorization", "Bearer $it")
             }
         }.build()
-//
-//        val newRequest = originalRequest.newBuilder().apply {
-//            accessToken?.let {
-//                header("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxOTY1N2VjNy0zYzA3LTRlN2ItOTU0NC0zMDA4M2M2MjgxYWM6VVNFUiIsImlzcyI6IkRhZUhhbiIsImlhdCI6MTcxOTg0MjYyMSwiZXhwIjoxNzE5ODUzNDIxfQ.UUl12nnhbMUjqgC5MQc3axo3tLvTppkAmVD-vBEEYxPg7RFJ6cf3wlemG7Y7AF6X15HkTUdwafMUVmO7Ba4nXQ")
-//            }
-//        }.build()
+
 
         var response=chain.proceed(newRequest)
 
@@ -68,7 +63,6 @@ class TokenInterceptor(
             Log.d("토큰만료","만료")
             // 토큰 갱신 로직을 실행
 
-//            response.close()
 
             //새로운 엑세스 키를 가져옴
             val newAccessToken = refreshAccessToken(chain, originalRequest)
@@ -89,9 +83,7 @@ class TokenInterceptor(
             }
         }
 
-//        Log.d("newRequest", newRequest.toString())
 
-//        return response
         return response
     }
     private fun isTokenExpired(response: Response): Boolean {
@@ -102,7 +94,6 @@ class TokenInterceptor(
         return responseBody.contains(EXPIRED_ACCESS_TOKEN) || responseBody.contains(INVALID_ACCESS_TOKEN) || responseBody.contains(
                 TOKEN_USER_NOT_EXIST)
 
-//        return responseBody.contains(EXPIRED_ACCESS_TOKEN)
     }
 
     private fun isRefreshTokenExpired(response: Response): Boolean {

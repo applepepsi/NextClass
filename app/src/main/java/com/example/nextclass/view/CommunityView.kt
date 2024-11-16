@@ -129,39 +129,7 @@ fun CommunityView(
     }
 }
 
-//val testCommunityData= listOf(
-//    CommunityPostData(subject = "가나다", content = "라마바사", reg_date = LocalDateTime.now().toString(), comment_count = 2, vote_count = 1),
-//    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 3, vote_count = 2),
-//    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 4, vote_count = 3),
-//    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now().toString(), comment_count = 5, vote_count = 4),
-//    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 3, vote_count = 2),
-//    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 4, vote_count = 3),
-//    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now().toString(), comment_count = 5, vote_count = 4),
-//
-//    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 3, vote_count = 2),
-//    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 4, vote_count = 3),
-//    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now().toString(), comment_count = 5, vote_count = 4),
-//
-//    CommunityPostData(subject = "야야", content = "ㅈㅇㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 3, vote_count = 2),
-//    CommunityPostData(subject = "아아", content = "ㅈㅇㅂ", reg_date = LocalDateTime.now().toString(), comment_count = 4, vote_count = 3),
-//    CommunityPostData(subject = "바자", content = "ㅈㅂㅈㅇ", reg_date = LocalDateTime.now().toString(), comment_count = 5, vote_count = 4),
-//    )
-//
-//
-//val testCommentList= listOf(
-//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-//    CommunityCommentData(content = "가나다라", vote_count = 2, reg_date = LocalDateTime.now().toString()),
-//    )
+
 
 @Composable
 fun PostDetailView(
